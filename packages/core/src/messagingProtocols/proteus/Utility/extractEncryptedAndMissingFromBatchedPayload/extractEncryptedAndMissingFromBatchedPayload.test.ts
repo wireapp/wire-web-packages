@@ -19,15 +19,12 @@
 
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
-import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
 import {constructSessionId} from '../SessionHandler';
 
 import {extractEncryptedAndMissingFromBatchedPayload} from '.';
 
 describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   it('properly extracts missing and encrypted from payload (without missing)', async () => {
-    const {cryptographyService} = (await buildProteusService())[1];
-
     const domain = 'staging.zinfra.io';
 
     const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
@@ -56,7 +53,6 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
       payload: batchedEncryptPayload,
       users: userClients,
       domain,
-      cryptographyService,
     });
 
     expect(encrypted).toEqual({
@@ -68,8 +64,6 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
   });
 
   it('properly extracts missing and encrypted from payload (with missing)', async () => {
-    const {cryptographyService} = (await buildProteusService())[1];
-
     const domain = 'staging.zinfra.io';
 
     const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
@@ -94,7 +88,6 @@ describe('extractEncryptedAndMissingFromBatchedPayload', () => {
       payload: batchedEncryptPayload,
       users: userClients,
       domain,
-      cryptographyService,
     });
 
     expect(encrypted).toEqual({
