@@ -21,11 +21,7 @@ import {keys as ProteusKeys} from '@wireapp/proteus';
 
 import {generateInitialPrekeys} from './PrekeysGenerator';
 
-describe('PrekeysState', () => {
-  beforeEach(() => {
-    //window.localStorage.clear();
-  });
-
+describe('PrekeysGenerator', () => {
   const mockPrekeyGenerator = {
     proteusNewPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
   };
