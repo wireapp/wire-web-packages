@@ -103,7 +103,7 @@ describe('ProteusService', () => {
 
   describe('"encrypt"', () => {
     const prepareDataForEncryption = async () => {
-      const [proteusService, {coreCrypto, apiClient, cryptographyService}] = await buildProteusService();
+      const [proteusService, {coreCrypto, apiClient}] = await buildProteusService();
 
       //user 1
       const firstUserId = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
@@ -135,7 +135,7 @@ describe('ProteusService', () => {
       };
 
       return {
-        services: {proteusService, apiClient, coreCryptoClient: coreCrypto, cryptographyService},
+        services: {proteusService, apiClient, coreCryptoClient: coreCrypto},
         data: {
           firstUser: {
             id: firstUserId,

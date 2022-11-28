@@ -408,7 +408,7 @@ describe('SessionHandler', () => {
       expect(sessions).toContain(sessionId);
     });
 
-    it('does not create a new session when it does exist already', async () => {
+    it('does not create a new session when it does already exist', async () => {
       const {coreCrypto} = (await buildProteusService())[1];
 
       jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValueOnce(true as any); //todo: fix type
@@ -435,6 +435,46 @@ describe('SessionHandler', () => {
 
       expect(coreCrypto.proteusSessionFromPrekey).not.toHaveBeenCalled();
       expect(sessions).toContain(sessionId);
+    });
+
+    it('creates multiple sessions and skips for already existing ones', async () => {
+      const {coreCrypto} = (await buildProteusService())[1];
+
+      jest
+        .spyOn(coreCrypto, 'proteusSessionExists')
+        //todo: fix types
+        .mockResolvedValueOnce(false as any)
+        .mockResolvedValueOnce(true as any)
+        .mockResolvedValueOnce(false as any);
+
+      const firstUserID = 'bc0c99f1-49a5-4ad2-889a-62885af37088';
+      const firstUserClient1 = '5e80ea7886680975';
+      const firstUserClient2 = '3330ea7844444975';
+      const firstUserClient3 = '3330ea7845444975';
+
+      const session1Id = constructSessionId({userId: firstUserID, clientId: firstUserClient1});
+      const session2Id = constructSessionId({userId: firstUserID, clientId: firstUserClient2});
+      const session3Id = constructSessionId({userId: firstUserID, clientId: firstUserClient3});
+
+      const validPreKey = {
+        id: 1337,
+        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+      };
+
+      const preKeyBundleMap = {
+        [firstUserID]: {
+          [firstUserClient1]: validPreKey,
+          [firstUserClient2]: validPreKey,
+          [firstUserClient3]: validPreKey,
+        },
+      };
+
+      const sessions = await createSessionsFromPreKeys({
+        preKeyBundleMap,
+        coreCryptoClient: coreCrypto,
+      });
+      expect(coreCrypto.proteusSessionFromPrekey).toHaveBeenCalledTimes(2);
+      expect(sessions).toEqual(expect.arrayContaining([session1Id, session2Id, session3Id]));
     });
 
     it('creates a list of sessions based on passed preKeyBundleMap', async () => {
