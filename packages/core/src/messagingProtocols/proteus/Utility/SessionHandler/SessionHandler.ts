@@ -72,7 +72,8 @@ const createSession = async ({sessionId, initialPrekey, coreCrypto, apiClient}: 
   const prekey =
     initialPrekey ?? (await apiClient.api.user.getClientPreKey({id: userId, domain: domain ?? ''}, clientId)).prekey;
   const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
-  return coreCrypto.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+  await coreCrypto.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+  await coreCrypto.proteusSessionSave(sessionId);
 };
 
 interface CreateSessionsBase {
@@ -274,6 +275,7 @@ const createSessionsFromPreKeys = async ({
       const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
 
       await coreCrypto.proteusSessionFromPrekey(sessionId, prekeyBuffer);
+      await coreCrypto.proteusSessionSave(sessionId);
 
       sessions.push(sessionId);
     }
