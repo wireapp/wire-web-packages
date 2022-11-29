@@ -305,7 +305,7 @@ describe('ProteusService', () => {
         .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
         .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
 
-      const {encrypted, missing} = await services.proteusService.encryptQualified(messageBuffer, userClients);
+      const encrypted = await services.proteusService.encryptQualified(messageBuffer, userClients);
 
       // console.log({encrypted, missing});
 
@@ -314,66 +314,11 @@ describe('ProteusService', () => {
         messageBuffer,
       );
 
-      expect(missing).toEqual({[domain]: {}});
-
       expect(encrypted).toEqual({
         [domain]: {
           [firstUser.id]: {
             [firstUser.clients.first]: encryptedMessageBuffer,
             [firstUser.clients.second]: encryptedMessageBuffer,
-          },
-        },
-      });
-    });
-
-    it('returns missing clients', async () => {
-      const {
-        services,
-        data: {firstUser, validPreKey, encryptedMessageBuffer, messageBuffer, domain},
-      } = await prepareDataForEncryption();
-
-      const userClients: QualifiedUserClients = {
-        [domain]: {
-          [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
-        },
-      };
-
-      const preKeyBundleMap: QualifiedUserPreKeyBundleMap = {
-        [domain]: {
-          [firstUser.id]: {
-            [firstUser.clients.first]: validPreKey,
-            [firstUser.clients.second]: null,
-          },
-        },
-      };
-
-      const encryptedPayload = new Map([[firstUser.sessions.first, encryptedMessageBuffer]]);
-
-      jest
-        .spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles')
-        .mockImplementationOnce(() => Promise.resolve(preKeyBundleMap));
-
-      jest
-        .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
-        .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
-
-      const {encrypted, missing} = await services.proteusService.encryptQualified(messageBuffer, userClients);
-
-      expect(services.coreCryptoClient.proteusEncryptBatched).toHaveBeenCalledWith(
-        [firstUser.sessions.first],
-        messageBuffer,
-      );
-
-      expect(missing).toEqual({
-        [domain]: {
-          [firstUser.id]: [firstUser.clients.second],
-        },
-      });
-
-      expect(encrypted).toEqual({
-        [domain]: {
-          [firstUser.id]: {
-            [firstUser.clients.first]: encryptedMessageBuffer,
           },
         },
       });
@@ -416,18 +361,12 @@ describe('ProteusService', () => {
         .spyOn(services.coreCryptoClient, 'proteusEncryptBatched')
         .mockImplementationOnce(() => Promise.resolve(encryptedPayload));
 
-      const {encrypted, missing} = await services.proteusService.encryptQualified(messageBuffer, userClients);
+      const encrypted = await services.proteusService.encryptQualified(messageBuffer, userClients);
 
       expect(services.coreCryptoClient.proteusEncryptBatched).toHaveBeenCalledWith(
         [firstUser.sessions.first, secondUser.sessions.first],
         messageBuffer,
       );
-
-      expect(missing).toEqual({
-        [domain]: {
-          [firstUser.id]: [firstUser.clients.second],
-        },
-      });
 
       expect(encrypted).toEqual({
         [domain]: {
