@@ -63,7 +63,7 @@ const decryptOtrMessage = async ({
 
     if (!sessionExists) {
       await coreCryptoClient.proteusSessionSave(sessionId);
-      logger.info(`Craeted a new session from message for session ID "${sessionId}" and decrypt the message`);
+      logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
     } else {
       logger.info(`Decrypted message for session ID "${sessionId}"`);
     }
