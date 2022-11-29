@@ -96,4 +96,13 @@ describe('decryptOtrMessage', () => {
 
     expect(coreCryptoClient.proteusSessionFromMessage).not.toHaveBeenCalled();
   });
+
+  it('should not decrypt the message twice when it was already decrypted during session creation', async () => {
+    mockedCoreCryptoClient.proteusSessionExists = jest.fn().mockResolvedValue(false);
+
+    await decryptOtrMessage({...decryptParams, coreCryptoClient});
+
+    expect(coreCryptoClient.proteusSessionFromMessage).toHaveBeenCalled();
+    expect(coreCryptoClient.proteusDecrypt).not.toHaveBeenCalled();
+  });
 });
