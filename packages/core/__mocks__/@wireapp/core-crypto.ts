@@ -39,6 +39,9 @@ export class CoreCrypto {
       proteusSessionFromPrekey: jest.fn(),
       proteusFingerprintRemote: jest.fn(),
       proteusEncryptBatched: jest.fn(),
+      proteusSessionSave: jest.fn(),
+      proteusDecrypt: jest.fn().mockResolvedValue(Uint8Array.from([])),
+      proteusSessionFromMessage: jest.fn(),
     };
   }
 }
