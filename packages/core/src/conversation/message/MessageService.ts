@@ -83,10 +83,7 @@ export class MessageService {
       cipherText = externalPayload.cipherText;
     }
 
-    const {encrypted, missing} = await this.proteusService.encrypt(plainTextPayload, recipients);
-    const encryptedPayload = Object.keys(missing).length
-      ? await this.reencryptAfterMismatch({missing, deleted: {}}, encrypted, plainText)
-      : encrypted;
+    const encryptedPayload = await this.proteusService.encrypt(plainTextPayload, recipients);
 
     const send = (payload: OTRRecipients<Uint8Array>) => {
       return options.sendAsProtobuf
@@ -136,10 +133,7 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const {encrypted, missing} = await this.proteusService.encryptQualified(plainText, recipients);
-    const encryptedPayload = Object.keys(missing).length
-      ? await this.reencryptAfterFederatedMismatch({missing, deleted: {}}, encrypted, plainText)
-      : encrypted;
+    const encryptedPayload = await this.proteusService.encryptQualified(plainText, recipients);
 
     try {
       return await send(encryptedPayload);
@@ -303,7 +297,7 @@ export class MessageService {
     deleted.forEach(({userId, data}) => data.forEach(clientId => delete recipients[userId.id][clientId]));
     if (missing.length) {
       const missingPreKeyBundles = await this.apiClient.api.user.postMultiPreKeyBundles(mismatch.missing);
-      const {encrypted} = await this.proteusService.encrypt(plainText, missingPreKeyBundles);
+      const encrypted = await this.proteusService.encrypt(plainText, missingPreKeyBundles);
       const reEncryptedPayloads = flattenUserClients<{[client: string]: Uint8Array}>(encrypted);
       // add missing clients to the recipients
       reEncryptedPayloads.forEach(({data, userId}) => (recipients[userId.id] = {...recipients[userId.id], ...data}));
@@ -333,7 +327,7 @@ export class MessageService {
 
     if (Object.keys(missing).length) {
       const missingPreKeyBundles = await this.apiClient.api.user.postQualifiedMultiPreKeyBundles(mismatch.missing);
-      const {encrypted} = await this.proteusService.encryptQualified(plainText, missingPreKeyBundles);
+      const encrypted = await this.proteusService.encryptQualified(plainText, missingPreKeyBundles);
       const reEncryptedPayloads = flattenQualifiedUserClients<{[client: string]: Uint8Array}>(encrypted);
       reEncryptedPayloads.forEach(
         ({data, userId}) => (recipients[userId.domain][userId.id] = {...recipients[userId.domain][userId.id], ...data}),

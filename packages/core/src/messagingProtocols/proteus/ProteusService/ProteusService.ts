@@ -43,10 +43,9 @@ import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {extractEncryptedAndMissingFromBatchedPayload} from '../Utility/extractEncryptedAndMissingFromBatchedPayload';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
-import {constructSessionId, createSession, getSessionsAndClientsFromRecipients} from '../Utility/SessionHandler';
+import {buildEncryptedPayloads, constructSessionId, initSession, initSessions} from '../Utility/SessionHandler';
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -88,18 +87,10 @@ export class ProteusService {
    *   If not provided and the session doesn't exists it will fetch a new prekey from the backend
    */
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
-    const sessionId = this.constructSessionId(userId, clientId);
-    const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
-    if (!sessionExists) {
-      await createSession({
-        sessionId,
-        userId,
-        clientId,
-        initialPrekey: prekey,
-        apiClient: this.apiClient,
-        coreCryptoClient: this.coreCryptoClient,
-      });
-    }
+    const sessionId = await initSession(
+      {userId, clientId, initialPrekey: prekey},
+      {coreCrypto: this.coreCryptoClient, apiClient: this.apiClient},
+    );
     return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
   }
 
@@ -182,41 +173,31 @@ export class ProteusService {
     plainText: Uint8Array,
     recipients: UserPreKeyBundleMap | UserClients,
     domain: string = '',
-  ): Promise<{missing: UserClients; encrypted: OTRRecipients<Uint8Array>}> {
-    const {sessions, userClients} = await getSessionsAndClientsFromRecipients({
+  ): Promise<OTRRecipients<Uint8Array>> {
+    const sessions = await initSessions({
       recipients,
       domain,
       apiClient: this.apiClient,
-      coreCryptoClient: this.coreCryptoClient,
+      coreCrypto: this.coreCryptoClient,
       logger: this.logger,
     });
 
     const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
 
-    return extractEncryptedAndMissingFromBatchedPayload({
-      payload,
-      users: userClients,
-      domain,
-      useQualifiedIds: this.config.useQualifiedIds,
-    });
+    return buildEncryptedPayloads(payload);
   }
 
   public async encryptQualified(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<{missing: QualifiedUserClients; encrypted: QualifiedOTRRecipients}> {
+  ): Promise<QualifiedOTRRecipients> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
-    const qualifiedMissing: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
       const result = await this.encrypt(plainText, preKeyBundleMap, domain);
-      qualifiedOTRRecipients[domain] = result.encrypted;
-      qualifiedMissing[domain] = result.missing;
+      qualifiedOTRRecipients[domain] = result;
     }
 
-    return {
-      encrypted: qualifiedOTRRecipients,
-      missing: qualifiedMissing,
-    };
+    return qualifiedOTRRecipients;
   }
 }

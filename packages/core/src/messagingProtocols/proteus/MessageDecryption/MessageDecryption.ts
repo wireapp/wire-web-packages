@@ -56,12 +56,21 @@ const decryptOtrMessage = async ({
   const sessionExists = (await coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
   try {
     const messageBytes = Decoder.fromBase64(encodedCiphertext).asBytes;
+
+    let decryptedMessage: Uint8Array;
+
     if (!sessionExists) {
-      logger.log(`Crate a new session from message for session ID "${sessionId}"`);
-      await coreCryptoClient.proteusSessionFromMessage(sessionId, messageBytes);
+      logger.log(`Crate a new session from message for session ID "${sessionId}" and decrypt the message`);
+
+      decryptedMessage = (await coreCryptoClient.proteusSessionFromMessage(
+        sessionId,
+        messageBytes,
+      )) as unknown as Uint8Array; //TODO: fix types once defined in core-crypto
+    } else {
+      logger.log(`Decrypting message for session ID "${sessionId}"`);
+      decryptedMessage = await coreCryptoClient.proteusDecrypt(sessionId, messageBytes);
     }
-    logger.log(`Decrypting message for session ID "${sessionId}"`);
-    const decryptedMessage = await coreCryptoClient.proteusDecrypt(sessionId, messageBytes);
+
     return GenericMessage.decode(decryptedMessage);
   } catch (error) {
     throw generateDecryptionError(otrMessage, error, logger);
