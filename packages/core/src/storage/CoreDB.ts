@@ -17,7 +17,7 @@
  *
  */
 
-import {DBSchema, IDBPDatabase, openDB as idbOpenDb} from 'idb';
+import {DBSchema, deleteDB as idbDeleteDB, IDBPDatabase, openDB as idbOpenDb} from 'idb';
 const VERSION = 1;
 
 interface CoreDBSchema extends DBSchema {
@@ -39,4 +39,8 @@ export async function openDB(dbName: string): Promise<CoreDatabase> {
     },
   });
   return db;
+}
+
+export async function deleteDB(db: CoreDatabase): Promise<void> {
+  return idbDeleteDB(db.name);
 }

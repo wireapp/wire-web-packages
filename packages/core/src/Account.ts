@@ -60,7 +60,7 @@ import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types
 import {ProteusService} from './messagingProtocols/proteus';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
-import {openDB} from './storage/CoreDB';
+import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, deleteEncryptedStore} from './util/encryptedStore';
@@ -134,6 +134,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
+  private db?: CoreDatabase;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
   private coreCryptoClient?: CoreCrypto;
@@ -416,7 +417,7 @@ export class Account<T = any> extends EventEmitter {
   public async initServices(context: Context): Promise<void> {
     this.coreCryptoClient = await this.initCoreCrypto(context);
     this.storeEngine = await this.initEngine(context);
-    const db = await openDB(this.generateCoreDbName(context));
+    this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
     const cryptographyService = new CryptographyService(this.apiClient, this.storeEngine, {
@@ -429,7 +430,7 @@ export class Account<T = any> extends EventEmitter {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
-    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, db, {
+    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
     });
@@ -521,9 +522,13 @@ export class Account<T = any> extends EventEmitter {
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
   public async logout(clearData: boolean = false): Promise<void> {
+    this.db?.close();
     if (clearData && this.coreCryptoClient) {
       await this.coreCryptoClient.wipe();
       await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
+      if (this.db) {
+        await deleteDB(this.db);
+      }
     }
     await this.apiClient.logout();
     this.resetContext();
