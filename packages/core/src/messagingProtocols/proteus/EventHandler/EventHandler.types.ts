@@ -18,9 +18,7 @@
  */
 
 import {BackendEvent} from '@wireapp/api-client/lib/event';
-import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
-import {APIClient} from '@wireapp/api-client';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {NotificationSource} from '../../../notification';
 
@@ -30,7 +28,5 @@ export type EventHandlerParams = {
   dryRun?: boolean;
   event: BackendEvent;
   source: NotificationSource;
-  coreCryptoClient: CoreCrypto;
-  apiClient: APIClient;
-  useQualifiedIds: boolean;
+  decryptMessage: (encryptedPayload: Uint8Array, userId: QualifiedId, clientId: string) => Promise<Uint8Array>;
 };

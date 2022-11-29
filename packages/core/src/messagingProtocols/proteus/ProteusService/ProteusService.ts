@@ -67,9 +67,7 @@ export class ProteusService {
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
     return handleBackendEvent({
       ...params,
-      coreCryptoClient: this.coreCryptoClient,
-      useQualifiedIds: this.config.useQualifiedIds,
-      apiClient: this.apiClient,
+      decryptMessage: (payload, userId, clientId) => this.decrypt(payload, userId, clientId),
     });
   }
 
@@ -180,6 +178,24 @@ export class ProteusService {
       sentAt: response.time,
       state: response.errored ? MessageSendingState.CANCELLED : MessageSendingState.OUTGOING_SENT,
     };
+  }
+
+  private async decrypt(encryptedText: Uint8Array, userId: QualifiedId, clientId: string) {
+    const sessionId = this.constructSessionId(userId, clientId);
+    const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+
+    const decryptedMessage: Uint8Array = !sessionExists
+      ? ((await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)) as unknown as Uint8Array) //TODO: fix types once defined in core-crypto
+      : await this.coreCryptoClient.proteusDecrypt(sessionId, encryptedText);
+
+    if (!sessionExists) {
+      await this.coreCryptoClient.proteusSessionSave(sessionId);
+      this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
+    } else {
+      this.logger.info(`Decrypted message for session ID "${sessionId}"`);
+    }
+
+    return decryptedMessage;
   }
 
   public async encrypt(

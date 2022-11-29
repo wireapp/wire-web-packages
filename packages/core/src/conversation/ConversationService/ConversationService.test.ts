@@ -25,17 +25,9 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {ConversationService, MessageSendingState} from '..';
 import {MLSService} from '../../messagingProtocols/mls';
-import * as MessagingProtocols from '../../messagingProtocols/proteus';
+import {ProteusService} from '../../messagingProtocols/proteus';
 import * as PayloadHelper from '../../test/PayloadHelper';
 import * as MessageBuilder from '../message/MessageBuilder';
-
-jest.mock('../../messagingProtocols/proteus', () => ({
-  ...jest.requireActual('../../messagingProtocols/proteus'),
-  getGenericMessageParams: jest.fn(),
-  getRecipientsForConversation: jest.fn(),
-  getConversationQualifiedMembers: jest.fn(),
-}));
-const MockedMessagingProtocols = MessagingProtocols as jest.Mocked<typeof MessagingProtocols>;
 
 jest.mock('../message/messageSender', () => ({
   ...jest.requireActual('../message/messageSender'),
@@ -50,7 +42,7 @@ const mockedMLSService = {
 const mockedProteusService = {
   encryptGenericMessage: () => Promise.resolve(),
   sendProteusMessage: () => Promise.resolve({sentAt: new Date()}),
-} as unknown as MessagingProtocols.ProteusService;
+} as unknown as ProteusService;
 
 describe('ConversationService', () => {
   beforeAll(() => {
@@ -109,9 +101,6 @@ describe('ConversationService', () => {
         const conversationService = buildConversationService();
         const sentTime = new Date().toISOString();
 
-        MockedMessagingProtocols.getGenericMessageParams.mockResolvedValue({
-          time: sentTime,
-        } as unknown as MessagingProtocols.MessageParams);
         mockedProteusService.sendMessage = jest.fn().mockResolvedValue({sentAt: sentTime});
         const promise = conversationService.send({
           protocol: ConversationProtocol.PROTEUS,
@@ -160,10 +149,6 @@ describe('ConversationService', () => {
         },
       };
       const conversationService = buildConversationService(true);
-      MockedMessagingProtocols.getConversationQualifiedMembers.mockResolvedValue([
-        {domain: 'test-domain', id: 'test-id-1'},
-        {domain: 'test-domain', id: 'test-id-2'},
-      ]);
 
       const fetchedMembers = await conversationService.fetchAllParticipantsClients('convid');
       expect(fetchedMembers).toEqual(members);

@@ -19,7 +19,7 @@
 
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
-import {BackendEvent} from '../../../EventHandler.types';
+import {BackendEvent} from '../../EventHandler.types';
 
 import {isOtrMessageAddEvent} from '.';
 
