@@ -23,7 +23,7 @@ const VERSION = 1;
 interface CoreDBSchema extends DBSchema {
   prekeys: {
     key: string;
-    value: number;
+    value: {nbPrekeys: number; highestId: number};
   };
 }
 

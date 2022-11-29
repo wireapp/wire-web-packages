@@ -55,4 +55,24 @@ describe('PrekeysGenerator', () => {
     const newPrekeys = await prekeyGenerator.generatePrekeys(1);
     expect(newPrekeys[0].id).toBe(nbPrekeys + 1);
   });
+
+  it('keeps track of how many prekeys are in store', async () => {
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
+    const nbPrekeys = Math.floor(Math.random() * 100);
+    await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
+
+    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys);
+
+    await prekeyGenerator.generatePrekeys(1);
+
+    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys + 1);
+
+    await prekeyGenerator.consumePrekey();
+    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys);
+
+    await prekeyGenerator.consumePrekey();
+    await prekeyGenerator.consumePrekey();
+
+    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys - 2);
+  });
 });

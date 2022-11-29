@@ -19,17 +19,34 @@
 
 import {CoreDatabase} from '../../../../storage/CoreDB';
 
-const STATE_PRIMARY_KEY = 'highest_id';
+const STATE_PRIMARY_KEY = 'prekeys_state';
 
+type PrekeysState = {
+  nbPrekeys: number;
+  highestId: number;
+};
 export class PrekeysGeneratorStore {
   constructor(private readonly db: CoreDatabase) {}
 
-  private async getState(): Promise<number> {
-    return (await this.db.get('prekeys', STATE_PRIMARY_KEY)) ?? 0;
+  private async getState(): Promise<PrekeysState> {
+    return (await this.db.get('prekeys', STATE_PRIMARY_KEY)) ?? {nbPrekeys: 0, highestId: 0};
   }
 
-  private async saveState(state: number): Promise<void> {
+  private async saveState(state: PrekeysState): Promise<void> {
     await this.db.put('prekeys', state, STATE_PRIMARY_KEY);
+  }
+
+  /**
+   * Will mark one prekey as consumed and decrease the total number of prekeys of 1
+   */
+  async consumePrekey() {
+    const currentState = await this.getState();
+    await this.saveState({...currentState, nbPrekeys: currentState.nbPrekeys - 1});
+  }
+
+  async getNumberOfPrekeys(): Promise<number> {
+    const currentState = await this.getState();
+    return currentState.nbPrekeys;
   }
 
   /**
@@ -38,9 +55,8 @@ export class PrekeysGeneratorStore {
    */
   async createIds(nbIds: number): Promise<number[]> {
     const currentState = await this.getState();
-    const newState = currentState + nbIds;
-    this.saveState(newState);
+    this.saveState({nbPrekeys: currentState.highestId + nbIds, highestId: currentState.highestId + nbIds});
 
-    return Array.from(new Array(nbIds)).map((_, i) => currentState + 1 + i);
+    return Array.from(new Array(nbIds)).map((_, i) => currentState.highestId + 1 + i);
   }
 }

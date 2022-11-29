@@ -50,6 +50,14 @@ export class PrekeyGenerator {
     return prekeys;
   }
 
+  async consumePrekey() {
+    return this.prekeyState.consumePrekey();
+  }
+
+  async getNumberOfPrekeys() {
+    return this.prekeyState.getNumberOfPrekeys();
+  }
+
   /**
    * Will generate the initial set of prekeys for a new device
    * @param nbPrekeys the number of prekeys to generate
