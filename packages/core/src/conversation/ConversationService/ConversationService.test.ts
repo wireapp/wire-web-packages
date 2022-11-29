@@ -50,7 +50,7 @@ describe('ConversationService', () => {
     jest.setSystemTime(new Date(0));
   });
 
-  function buildConversationService(federated?: boolean) {
+  function buildConversationService(federated?: boolean): [ConversationService, {apiClient: APIClient}] {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     jest.spyOn(client.api.conversation, 'postMlsMessage').mockReturnValue(
       Promise.resolve({
@@ -77,14 +77,17 @@ describe('ConversationService', () => {
       userId: PayloadHelper.getUUID(),
       clientId: PayloadHelper.getUUID(),
     };
-    return new ConversationService(
-      client,
-      {
-        useQualifiedIds: federated,
-      },
-      mockedMLSService,
-      mockedProteusService,
-    );
+    return [
+      new ConversationService(
+        client,
+        {
+          useQualifiedIds: federated,
+        },
+        mockedMLSService,
+        mockedProteusService,
+      ),
+      {apiClient: client},
+    ];
   }
 
   describe('"send PROTEUS"', () => {
@@ -98,7 +101,7 @@ describe('ConversationService', () => {
     ];
     messages.forEach(({type, message}) => {
       it(`calls callbacks when sending '${type}' message is successful`, async () => {
-        const conversationService = buildConversationService();
+        const [conversationService] = buildConversationService();
         const sentTime = new Date().toISOString();
 
         mockedProteusService.sendMessage = jest.fn().mockResolvedValue({sentAt: sentTime});
@@ -127,7 +130,7 @@ describe('ConversationService', () => {
     ];
     messages.forEach(({type, message}) => {
       it(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
-        const conversationService = buildConversationService();
+        const [conversationService] = buildConversationService();
         const promise = conversationService.send({
           protocol: ConversationProtocol.MLS,
           groupId,
@@ -142,13 +145,22 @@ describe('ConversationService', () => {
 
   describe('fetchAllParticipantsClients', () => {
     it('gives the members and clients of a federated conversation', async () => {
+      const [conversationService, {apiClient}] = buildConversationService(true);
+      jest.spyOn(apiClient.api.conversation, 'getConversation').mockResolvedValue({
+        members: {
+          others: [
+            {qualified_id: {domain: 'test-domain', id: 'test-id-1'}},
+            {qualified_id: {domain: 'test-domain', id: 'test-id-2'}},
+          ],
+          self: {},
+        },
+      } as any);
       const members = {
         'test-domain': {
           ['test-id-1']: ['test-client-id-1-user-1'],
           ['test-id-2']: ['test-client-id-1-user-2', 'test-client-id-2-user-2'],
         },
       };
-      const conversationService = buildConversationService(true);
 
       const fetchedMembers = await conversationService.fetchAllParticipantsClients('convid');
       expect(fetchedMembers).toEqual(members);
@@ -162,7 +174,7 @@ describe('ConversationService', () => {
         user2: ['client1', 'client2'],
         user3: ['client1', 'client2'],
       };
-      const conversationService = buildConversationService(true);
+      const [conversationService] = buildConversationService(true);
       jest
         .spyOn(conversationService['messageService'], 'sendMessage')
         .mockImplementation((_client, _recipients, _text, options) => {
@@ -179,7 +191,7 @@ describe('ConversationService', () => {
         domain1: {user1: ['client1', 'client2']},
         domain2: {user2: ['client1', 'client2'], user3: ['client1', 'client2']},
       };
-      const conversationService = buildConversationService(true);
+      const [conversationService] = buildConversationService(true);
       jest
         .spyOn(conversationService['messageService'], 'sendFederatedMessage')
         .mockImplementation((_client, _recipients, _text, options) => {
