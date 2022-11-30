@@ -239,6 +239,17 @@ const initSessions = async ({
   return [...existingSessions, ...newSessions];
 };
 
+interface DeleteSessionParams {
+  userId: QualifiedId;
+  clientId: string;
+  coreCrypto: CoreCrypto;
+  useQualifiedIds: boolean;
+}
+function deleteSession(params: DeleteSessionParams) {
+  const sessionId = constructSessionId(params);
+  return params.coreCrypto.proteusSessionDelete(sessionId);
+}
+
 interface CreateSessionsFromPreKeysProps {
   preKeyBundleMap: UserPreKeyBundleMap;
   coreCrypto: CoreCrypto;
@@ -297,4 +308,4 @@ const buildEncryptedPayloads = <T>(payloads: Map<string, T>): EncryptedPayloads<
   }, {} as EncryptedPayloads<T>);
 };
 
-export {constructSessionId, initSession, initSessions, buildEncryptedPayloads};
+export {constructSessionId, initSession, initSessions, deleteSession, buildEncryptedPayloads};
