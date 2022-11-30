@@ -17,7 +17,7 @@
  *
  */
 
-import {FC, forwardRef, useMemo} from 'react';
+import {FC, HTMLProps, PropsWithRef, forwardRef, useMemo} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
@@ -25,7 +25,6 @@ import {containerStyles, dataListOption, headingStyle, rangeStyles} from './Indi
 import {InputLabel} from './InputLabel';
 
 import {Theme} from '../Layout';
-import {TextProps} from '../Text';
 
 type DataListOptions = {
   value: number;
@@ -33,7 +32,7 @@ type DataListOptions = {
   heading?: string;
 };
 
-export interface IndicatorRangeInputProps<T = HTMLInputElement> extends TextProps<T> {
+export interface IndicatorRangeInputProps<T = HTMLInputElement> extends PropsWithRef<HTMLProps<T>> {
   label?: string;
   wrapperCSS?: CSSObject;
   onOptionClick?: (value: number) => void;
