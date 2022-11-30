@@ -39,7 +39,7 @@ export const buildProteusService = async (
 
   const coreCrypto = await CoreCrypto.deferredInit('store-name', 'key');
 
-  const proteusService = new ProteusService(apiClient, coreCrypto, {
+  const proteusService = new ProteusService(apiClient, coreCrypto, {} as any, {
     useQualifiedIds: federated,
   });
   return [proteusService, {apiClient, coreCrypto}];

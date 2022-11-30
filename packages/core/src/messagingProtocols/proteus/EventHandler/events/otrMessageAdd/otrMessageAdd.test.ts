@@ -17,27 +17,26 @@
  *
  */
 
-function storageMock() {
-  const storage: any = {};
+import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
-  return {
-    setItem: function (key: any, value: any) {
-      storage[key] = value || '';
-    },
-    getItem: function (key: any) {
-      return key in storage ? storage[key] : null;
-    },
-    removeItem: function (key: any) {
-      delete storage[key];
-    },
-    get length() {
-      return Object.keys(storage).length;
-    },
-    key: function (i: any) {
-      const keys = Object.keys(storage);
-      return keys[i] || null;
-    },
-  };
-}
+import {BackendEvent} from '../../EventHandler.types';
 
-export {storageMock};
+import {isOtrMessageAddEvent} from '.';
+
+describe('MLS messageAdd eventHandler', () => {
+  describe('isMessageAdd', () => {
+    it('returns true for a messageAdd event', () => {
+      const event = {
+        type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
+      } as BackendEvent;
+      expect(isOtrMessageAddEvent(event)).toBe(true);
+    });
+
+    it('returns false for a non-messageAdd event', () => {
+      const event = {
+        type: CONVERSATION_EVENT.MEMBER_JOIN,
+      } as BackendEvent;
+      expect(isOtrMessageAddEvent(event)).toBe(false);
+    });
+  });
+});

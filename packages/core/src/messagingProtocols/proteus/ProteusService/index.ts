@@ -19,4 +19,4 @@
 
 export * from './ProteusService';
 export * from '../Utility';
-export * from '../Utility/getGenericMessageParams';
+export * from './ProteusService.types';

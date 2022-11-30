@@ -17,17 +17,15 @@
  *
  */
 
-import {LoginData, PreKey} from '@wireapp/api-client/lib/auth/';
+import {LoginData} from '@wireapp/api-client/lib/auth/';
 import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
-import {Encoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
-import {keys as ProteusKeys} from '@wireapp/proteus';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import type {ProteusService} from '../messagingProtocols/proteus';
+import {NewDevicePrekeys} from '../messagingProtocols/proteus/ProteusService';
 
 import {ClientInfo, ClientBackendRepository, ClientDatabaseRepository} from './';
 
@@ -105,8 +103,7 @@ export class ClientService {
   public async register(
     loginData: LoginData,
     clientInfo: ClientInfo,
-    coreCryptoClient: CoreCrypto,
-    nbPrekeys: number = 100,
+    {prekeys, lastPrekey}: NewDevicePrekeys,
   ): Promise<RegisteredClient> {
     if (!this.apiClient.context) {
       throw new Error('Context is not set.');
@@ -115,18 +112,6 @@ export class ClientService {
     if (loginData.clientType === ClientType.NONE) {
       throw new Error(`Can't register client of type "${ClientType.NONE}"`);
     }
-
-    const prekeys: PreKey[] = [];
-
-    for (let i = 0; i < nbPrekeys; i++) {
-      const id = i;
-      const key = await coreCryptoClient.proteusNewPrekey(i);
-      prekeys.push({id, key: Encoder.toBase64(key).asString});
-    }
-
-    const lastPrekeyId = ProteusKeys.PreKey.MAX_PREKEY_ID;
-    const lastPrekeyBytes = await coreCryptoClient.proteusNewPrekey(lastPrekeyId);
-    const lastPrekey = {id: lastPrekeyId, key: Encoder.toBase64(lastPrekeyBytes).asString};
 
     const newClient: CreateClientPayload = {
       class: clientInfo.classification,

@@ -28,6 +28,21 @@ import {SendProteusMessageParams} from './ProteusService.types';
 import {QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {buildProteusService} from './ProteusService.mocks';
 import {constructSessionId} from '../Utility/SessionHandler';
+import {NotificationSource} from '../../../notification';
+import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {GenericMessage} from '@wireapp/protocol-messaging';
+
+jest.mock('./PrekeysGenerator', () => {
+  return {
+    PrekeyGenerator: jest.fn().mockImplementation(() => {
+      return {
+        consumePrekey: jest.fn(),
+        getNumberOfPrekeys: jest.fn().mockResolvedValue(0),
+        generateInitialPrekeys: jest.fn().mockResolvedValue({prekeys: [1, 2, 3], lastPrekey: [65000]}),
+      };
+    }),
+  };
+});
 
 jest.mock('../Utility/Recipients', () => ({
   ...jest.requireActual('../Utility/Recipients'),
@@ -168,6 +183,41 @@ describe('ProteusService', () => {
       expect(getPrekeyMock).not.toHaveBeenCalled();
       expect(sessionFromPrekeyMock).not.toHaveBeenCalled();
       expect(result).toBe(expectedFingerprint);
+    });
+  });
+
+  describe('handleEvent', () => {
+    const eventPayload = {
+      event: {
+        type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
+        qualified_from: {id: 'user1', domain: 'domain'},
+        data: {sender: 'client1', text: ''},
+      },
+      source: NotificationSource.WEBSOCKET,
+    } as any;
+    const decryptedMessage = {} as any;
+    it('decrypts incoming proteus encrypted events when session already exists', async () => {
+      const [proteusService, {coreCrypto}] = await buildProteusService();
+      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValue(true as any);
+      const createSessionSpy = jest.spyOn(coreCrypto, 'proteusSessionFromMessage');
+      jest.spyOn(GenericMessage, 'decode').mockReturnValue(decryptedMessage);
+      const result = await proteusService.handleEvent(eventPayload);
+      expect(result).toBeDefined();
+      expect(createSessionSpy).not.toHaveBeenCalled();
+      expect(result?.decryptedData).toBe(decryptedMessage);
+    });
+
+    it('decrypts incoming proteus encrypted and creates session if not already existing', async () => {
+      const [proteusService, {coreCrypto}] = await buildProteusService();
+      jest.spyOn(coreCrypto, 'proteusSessionExists').mockResolvedValue(false as any);
+      const createSessionSpy = jest.spyOn(coreCrypto, 'proteusSessionFromMessage');
+      const decryptSpy = jest.spyOn(coreCrypto, 'proteusDecrypt');
+      jest.spyOn(GenericMessage, 'decode').mockReturnValue(decryptedMessage);
+      const result = await proteusService.handleEvent(eventPayload);
+      expect(result).toBeDefined();
+      expect(createSessionSpy).toHaveBeenCalled();
+      expect(decryptSpy).not.toHaveBeenCalled();
+      expect(result?.decryptedData).toBe(decryptedMessage);
     });
   });
 
