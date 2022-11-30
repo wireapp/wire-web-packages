@@ -207,6 +207,7 @@ export class ProteusService {
 
     if (!sessionExists) {
       await this.coreCryptoClient.proteusSessionSave(sessionId);
+      this.config.onNewClient?.({userId, clientId});
       await this.prekeyGenerator.consumePrekey();
       this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
     } else {
