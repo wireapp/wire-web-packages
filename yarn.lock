@@ -4362,6 +4362,7 @@ __metadata:
     "@wireapp/core-crypto": 0.6.0-pre.5
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.42.0
+    "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.1.2
     bazinga64: 6.0.3

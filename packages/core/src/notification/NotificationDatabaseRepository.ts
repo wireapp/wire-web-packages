@@ -22,19 +22,17 @@ import {Notification} from '@wireapp/api-client/lib/notification/';
 
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {CryptographyDatabaseRepository} from '../cryptography/CryptographyDatabaseRepository';
-
-export enum DatabaseStores {
+enum DatabaseStores {
   EVENTS = 'events',
 }
 
-export enum DatabaseKeys {
+enum DatabaseKeys {
   PRIMARY_KEY_LAST_EVENT = 'z.storage.StorageKey.EVENT.LAST_DATE',
   PRIMARY_KEY_LAST_NOTIFICATION = 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
 }
 
 const STORES = {
-  ...CryptographyDatabaseRepository.STORES,
+  AMPLIFY: 'amplify',
 };
 
 export class NotificationDatabaseRepository {

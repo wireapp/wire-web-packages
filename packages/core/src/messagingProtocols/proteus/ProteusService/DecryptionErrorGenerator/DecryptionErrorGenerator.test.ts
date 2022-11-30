@@ -17,16 +17,22 @@
  *
  */
 
-import {ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import logdown from 'logdown';
 
-export const conversationOtrMessageAddEventMock: ConversationOtrMessageAddEvent = {
-  conversation: 'conversation-id',
-  from: 'user-id',
-  time: '2020-01',
-  data: {
-    recipient: 'recipient-id',
-    sender: 'sender-id',
-    text: 'text',
-  },
-  type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
-};
+import {generateDecryptionError} from './DecryptionErrorGenerator';
+
+import {DecryptionError} from '../../../../errors/DecryptionError';
+
+const logger = {
+  warn: jest.fn(),
+} as unknown as logdown.Logger;
+
+const basePayload = {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'};
+
+describe('generateDecryptionError', () => {
+  it('returns a ProteusError.DecryptError', () => {
+    const error = generateDecryptionError(basePayload, new Error(), logger);
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Unknown decryption error');
+  });
+});

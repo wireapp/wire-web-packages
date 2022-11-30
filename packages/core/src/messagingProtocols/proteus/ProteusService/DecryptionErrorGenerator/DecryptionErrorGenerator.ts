@@ -17,10 +17,8 @@
  *
  */
 
-import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
-
-import {errors as ProteusErrors} from '@wireapp/proteus';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
 
@@ -28,26 +26,26 @@ type ErrorWithCode = Error & {code?: number};
 const hasErrorCode = (error: any): ErrorWithCode => error && error.code;
 
 const generateDecryptionError = (
-  event: ConversationOtrMessageAddEvent,
+  senderInfo: {clientId: string; userId: QualifiedId},
   error: any,
   logger: logdown.Logger,
 ): DecryptionError => {
   const errorCode = hasErrorCode(error) ? error.code ?? 999 : 999;
   let message = 'Unknown decryption error';
 
-  const {data: eventData, from: remoteUserId, time: formattedTime} = event;
-  const remoteClientId = eventData.sender;
+  const remoteClientId = senderInfo.clientId;
+  const remoteUserId = senderInfo.userId.id;
 
-  const isDuplicateMessage = error instanceof ProteusErrors.DecryptError.DuplicateMessage;
-  const isOutdatedMessage = error instanceof ProteusErrors.DecryptError.OutdatedMessage;
+  const isDuplicateMessage = false; // TODO
+  const isOutdatedMessage = false; // TODO
   // We don't need to show these message errors to the user
   if (isDuplicateMessage || isOutdatedMessage) {
-    message = `Message from user ID "${remoteUserId}" at "${formattedTime}" will not be handled because it is outdated or a duplicate.`;
+    message = `Message from user ID "${remoteUserId}" will not be handled because it is outdated or a duplicate.`;
   }
 
-  const isInvalidMessage = error instanceof ProteusErrors.DecryptError.InvalidMessage;
-  const isInvalidSignature = error instanceof ProteusErrors.DecryptError.InvalidSignature;
-  const isRemoteIdentityChanged = error instanceof ProteusErrors.DecryptError.RemoteIdentityChanged;
+  const isInvalidMessage = false; // TODO
+  const isInvalidSignature = false; // TODO
+  const isRemoteIdentityChanged = false; // TODO
   // Session is broken, let's see what's really causing it...
   if (isInvalidMessage || isInvalidSignature) {
     message = `Session with user '${remoteUserId}' (${remoteClientId}) is broken.\nReset the session for possible fix.`;
@@ -56,7 +54,7 @@ const generateDecryptionError = (
   }
 
   logger.warn(
-    `Failed to decrypt event from client '${remoteClientId}' of user '${remoteUserId}' (${formattedTime}).\nError Code: '${errorCode}'\nError Message: ${error.message}`,
+    `Failed to decrypt event from client '${remoteClientId}' of user '${remoteUserId}'.\nError Code: '${errorCode}'\nError Message: ${error.message}`,
     error,
   );
   return new DecryptionError(message, errorCode);

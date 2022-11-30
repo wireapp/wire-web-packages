@@ -21,8 +21,6 @@ import {PreKey} from '@wireapp/api-client/lib/auth';
 import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
-import {keys as ProteusKeys} from '@wireapp/proteus';
-
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
 import type {CoreDatabase} from '../../../../storage/CoreDB';
@@ -41,6 +39,7 @@ interface PrekeysGeneratorConfig {
    */
   onNewPrekeys: (prekeys: PreKey[]) => void;
 }
+export const LAST_PREKEY_ID = 65535;
 
 export class PrekeyGenerator {
   private prekeyState: PrekeysGeneratorStore;
@@ -91,7 +90,7 @@ export class PrekeyGenerator {
   async generateInitialPrekeys(): Promise<NewDevicePrekeys> {
     return {
       prekeys: await this.generatePrekeys(this.config.nbPrekeys),
-      lastPrekey: await this.generatePrekey(ProteusKeys.PreKey.MAX_PREKEY_ID),
+      lastPrekey: await this.generatePrekey(LAST_PREKEY_ID),
     };
   }
 }

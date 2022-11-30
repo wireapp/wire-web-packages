@@ -17,9 +17,7 @@
  *
  */
 
-import {keys as ProteusKeys} from '@wireapp/proteus';
-
-import {PrekeyGenerator} from './PrekeysGenerator';
+import {PrekeyGenerator, LAST_PREKEY_ID} from './PrekeysGenerator';
 
 import {CoreDatabase, openDB} from '../../../../storage/CoreDB';
 
@@ -45,7 +43,7 @@ describe('PrekeysGenerator', () => {
     const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
     const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys();
     expect(prekeys).toHaveLength(baseConfig.nbPrekeys);
-    expect(lastPrekey.id).toBe(ProteusKeys.PreKey.MAX_PREKEY_ID);
+    expect(lastPrekey.id).toBe(LAST_PREKEY_ID);
   });
 
   it('triggers the threshold callback when number of prekeys hits the limit', async () => {

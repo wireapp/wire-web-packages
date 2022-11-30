@@ -41,7 +41,6 @@ import {EventEmitter} from 'events';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
-import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, error as StoreEngineError, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -318,8 +317,6 @@ export class Account<T = any> extends EventEmitter {
       }
       // There was no client so we need to "create" and "register" a client
       const notFoundInDatabase =
-        error instanceof cryptobox.error.CryptoboxError ||
-        (error as Error).constructor.name === 'CryptoboxError' ||
         error instanceof StoreEngineError.RecordNotFoundError ||
         (error as Error).constructor.name === StoreEngineError.RecordNotFoundError.name;
       const notFoundOnBackend = axios.isAxiosError(error) ? error.response?.status === HTTP_STATUS.NOT_FOUND : false;
@@ -336,9 +333,7 @@ export class Account<T = any> extends EventEmitter {
         if (shouldDeleteWholeDatabase) {
           this.logger.log('Last client was temporary - Deleting database');
 
-          if (this.storeEngine) {
-            await this.storeEngine.clearTables();
-          }
+          this.wipe();
           const context = await this.apiClient.init(loginData.clientType);
           await this.initEngine(context);
 
@@ -498,15 +493,24 @@ export class Account<T = any> extends EventEmitter {
    */
   public async logout(clearData: boolean = false): Promise<void> {
     this.db?.close();
-    if (clearData && this.coreCryptoClient) {
-      await this.coreCryptoClient.wipe();
-      await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
-      if (this.db) {
-        await deleteDB(this.db);
-      }
+    if (clearData) {
+      this.wipe();
     }
     await this.apiClient.logout();
     this.resetContext();
+  }
+
+  private async wipe(): Promise<void> {
+    if (this.storeEngine) {
+      await this.storeEngine.clearTables();
+    }
+    if (this.coreCryptoClient) {
+      await this.coreCryptoClient.wipe();
+      await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
+    }
+    if (this.db) {
+      await deleteDB(this.db);
+    }
   }
 
   /**

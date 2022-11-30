@@ -33,6 +33,7 @@ import logdown from 'logdown';
 import type {CoreCrypto} from '@wireapp/core-crypto';
 import {ClientAction} from '@wireapp/protocol-messaging';
 
+import {generateDecryptionError} from './DecryptionErrorGenerator';
 import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
   AddUsersToProteusConversationParams,
@@ -204,20 +205,23 @@ export class ProteusService {
     const sessionId = this.constructSessionId(userId, clientId);
     const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
 
-    const decryptedMessage: Uint8Array = !sessionExists
-      ? ((await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)) as unknown as Uint8Array) //TODO: fix types once defined in core-crypto
-      : await this.coreCryptoClient.proteusDecrypt(sessionId, encryptedText);
+    try {
+      const decryptedMessage: Uint8Array = !sessionExists
+        ? ((await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)) as unknown as Uint8Array) //TODO: fix types once defined in core-crypto
+        : await this.coreCryptoClient.proteusDecrypt(sessionId, encryptedText);
 
-    if (!sessionExists) {
-      await this.coreCryptoClient.proteusSessionSave(sessionId);
-      this.config.onNewClient?.({userId, clientId});
-      await this.prekeyGenerator.consumePrekey();
-      this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
-    } else {
-      this.logger.info(`Decrypted message for session ID "${sessionId}"`);
+      if (!sessionExists) {
+        await this.coreCryptoClient.proteusSessionSave(sessionId);
+        await this.prekeyGenerator.consumePrekey();
+        this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
+      } else {
+        this.logger.info(`Decrypted message for session ID "${sessionId}"`);
+      }
+
+      return decryptedMessage;
+    } catch (error) {
+      throw generateDecryptionError({userId, clientId}, error, this.logger);
     }
-
-    return decryptedMessage;
   }
 
   public async encrypt(
