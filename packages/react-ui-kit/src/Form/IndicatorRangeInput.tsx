@@ -78,17 +78,9 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
       return `${((valueNum - minNum) * 100) / (maxNum - minNum)}% 100%`;
     }, [isCustomSlider, valueNum, minNum, maxNum, listLength]);
 
-    const currentSelectedValue = useMemo(() => {
-      if (typeof value !== 'string' && typeof value !== 'number') {
-        return;
-      }
-
-      if (dataListOptions[value]?.heading) {
-        return `${dataListOptions[value].label} (${dataListOptions[value].heading})`;
-      }
-
-      return dataListOptions[value].label;
-    }, [dataListOptions, value]);
+    const valueText = dataListOptions[valueNum]?.heading
+      ? `${dataListOptions[valueNum].label} (${dataListOptions[valueNum].heading})`
+      : dataListOptions[valueNum].label;
 
     return (
       <div css={{wrapperCSS, width: '100%'}}>
@@ -125,7 +117,7 @@ export const IndicatorRangeInput: FC<IndicatorRangeInputProps> = forwardRef<
             type="range"
             list="tickMarks"
             {...(isCustomSlider && {
-              'aria-valuetext': currentSelectedValue,
+              'aria-valuetext': valueText,
             })}
             {...inputProps}
           />
