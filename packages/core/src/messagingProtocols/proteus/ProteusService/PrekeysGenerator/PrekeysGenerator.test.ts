@@ -25,6 +25,10 @@ import {CoreDatabase, openDB} from '../../../../storage/CoreDB';
 
 describe('PrekeysGenerator', () => {
   let db: CoreDatabase;
+  const baseConfig = {
+    nbPrekeys: 10,
+    onNewPrekeys: jest.fn(),
+  };
   const mockPrekeyGenerator = {
     proteusNewPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
   };
@@ -38,45 +42,27 @@ describe('PrekeysGenerator', () => {
   });
 
   it('generates initial device prekeys', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
-    const nbPrekeys = Math.floor(Math.random() * 100);
-    const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
-    expect(prekeys).toHaveLength(nbPrekeys);
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
+    const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys();
+    expect(prekeys).toHaveLength(baseConfig.nbPrekeys);
     expect(lastPrekey.id).toBe(ProteusKeys.PreKey.MAX_PREKEY_ID);
-  });
-
-  it('keeps track of the last generated prekey ID', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
-    const nbPrekeys = Math.floor(Math.random() * 100);
-    const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
-    expect(prekeys).toHaveLength(nbPrekeys);
-    expect(lastPrekey.id).toBe(ProteusKeys.PreKey.MAX_PREKEY_ID);
-
-    const newPrekeys = await prekeyGenerator.generatePrekeys(1);
-    expect(newPrekeys[0].id).toBe(nbPrekeys + 1);
   });
 
   it('triggers the threshold callback when number of prekeys hits the limit', async () => {
-    const onHitThresholdSpy = jest.fn();
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, {
-      threshold: 10,
-      onHitThreshold: onHitThresholdSpy,
-    });
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
 
-    const nbPrekeys = 12;
-    await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
+    await prekeyGenerator.generateInitialPrekeys();
 
-    expect(onHitThresholdSpy).not.toHaveBeenCalled();
-
-    await prekeyGenerator.consumePrekey();
-    expect(onHitThresholdSpy).not.toHaveBeenCalled();
-
-    await prekeyGenerator.consumePrekey();
-    expect(onHitThresholdSpy).toHaveBeenCalled();
+    expect(baseConfig.onNewPrekeys).not.toHaveBeenCalled();
 
     await prekeyGenerator.consumePrekey();
     await prekeyGenerator.consumePrekey();
+    await prekeyGenerator.consumePrekey();
+    await prekeyGenerator.consumePrekey();
+    expect(baseConfig.onNewPrekeys).not.toHaveBeenCalled();
 
-    expect(onHitThresholdSpy).toHaveBeenCalledTimes(3);
+    await prekeyGenerator.consumePrekey();
+
+    expect(baseConfig.onNewPrekeys).toHaveBeenCalledTimes(1);
   });
 });

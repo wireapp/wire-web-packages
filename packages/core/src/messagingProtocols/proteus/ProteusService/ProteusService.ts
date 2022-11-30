@@ -68,7 +68,10 @@ export class ProteusService {
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db);
+    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db, {
+      nbPrekeys: config.nbPrekeys,
+      onNewPrekeys: config.onNewPrekeys,
+    });
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -92,8 +95,8 @@ export class ProteusService {
     return this.coreCryptoClient.proteusInit();
   }
 
-  public createClient(nbPrekeys: number) {
-    return this.prekeyGenerator.generateInitialPrekeys(nbPrekeys);
+  public createClient() {
+    return this.prekeyGenerator.generateInitialPrekeys();
   }
 
   /**

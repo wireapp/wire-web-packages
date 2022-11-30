@@ -32,12 +32,16 @@ type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
 
 interface PrekeysGeneratorConfig {
   /**
-   * the minimum number of prekeys that needs to be live at any point
+   * The number of prekeys that will be generated for a new device and refilled when the low threshold is hit
    * We consuming a prekey, if this number is reached, then the `onHitThreshold` will be called
    */
-  threshold: number;
-  onHitThreshold: () => void;
+  nbPrekeys: number;
+  /**
+   * called when the number of prekeys left hit a certain threshold and some prekeys are regenerated to refill the stock
+   */
+  onNewPrekeys: (prekeys: PreKey[]) => void;
 }
+
 export class PrekeyGenerator {
   private prekeyState: PrekeysGeneratorStore;
 
@@ -54,9 +58,9 @@ export class PrekeyGenerator {
     return {id, key: Encoder.toBase64(key).asString};
   }
 
-  async generatePrekeys(nbPrekeys: number): Promise<PreKey[]> {
+  private async generatePrekeys(nb: number): Promise<PreKey[]> {
     const prekeys: PreKey[] = [];
-    const ids = await this.prekeyState.createIds(nbPrekeys);
+    const ids = await this.prekeyState.createIds(nb);
     for (const id of ids) {
       prekeys.push(await this.generatePrekey(id));
     }
@@ -65,9 +69,18 @@ export class PrekeyGenerator {
 
   async consumePrekey() {
     const nbPrekeys = await this.prekeyState.consumePrekey();
-    if (nbPrekeys <= this.config.threshold) {
-      this.config.onHitThreshold();
+    const missingPrekeys = this.numberOfMissingPrekeys(nbPrekeys);
+    if (missingPrekeys > 0) {
+      // when the number of local prekeys hit less than a quarter of what it should be, we refill the stock
+      const newPrekeys = await this.generatePrekeys(missingPrekeys);
+      this.config.onNewPrekeys(newPrekeys);
     }
+  }
+
+  private numberOfMissingPrekeys(currentNumberOfPrekeys: number): number {
+    const threshold = Math.ceil(this.config.nbPrekeys / 2);
+    const hasHitThreshold = currentNumberOfPrekeys <= threshold;
+    return hasHitThreshold ? this.config.nbPrekeys - currentNumberOfPrekeys : 0;
   }
 
   /**
@@ -75,9 +88,9 @@ export class PrekeyGenerator {
    * @param nbPrekeys the number of prekeys to generate
    * @param generator the class that will be used to generate a single prekey
    */
-  async generateInitialPrekeys(nbPrekeys: number): Promise<NewDevicePrekeys> {
+  async generateInitialPrekeys(): Promise<NewDevicePrekeys> {
     return {
-      prekeys: await this.generatePrekeys(nbPrekeys),
+      prekeys: await this.generatePrekeys(this.config.nbPrekeys),
       lastPrekey: await this.generatePrekey(ProteusKeys.PreKey.MAX_PREKEY_ID),
     };
   }
