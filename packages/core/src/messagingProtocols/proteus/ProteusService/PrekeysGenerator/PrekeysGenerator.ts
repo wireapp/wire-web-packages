@@ -30,9 +30,22 @@ import {NewDevicePrekeys} from '../ProteusService.types';
 
 type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
 
+interface PrekeysGeneratorConfig {
+  /**
+   * the minimum number of prekeys that needs to be live at any point
+   * We consuming a prekey, if this number is reached, then the `onHitThreshold` will be called
+   */
+  threshold: number;
+  onHitThreshold: () => void;
+}
 export class PrekeyGenerator {
   private prekeyState: PrekeysGeneratorStore;
-  constructor(private readonly generator: CoreCryptoPrekeyGenerator, db: CoreDatabase) {
+
+  constructor(
+    private readonly generator: CoreCryptoPrekeyGenerator,
+    db: CoreDatabase,
+    private config: PrekeysGeneratorConfig,
+  ) {
     this.prekeyState = new PrekeysGeneratorStore(db);
   }
 
@@ -51,11 +64,10 @@ export class PrekeyGenerator {
   }
 
   async consumePrekey() {
-    return this.prekeyState.consumePrekey();
-  }
-
-  async getNumberOfPrekeys() {
-    return this.prekeyState.getNumberOfPrekeys();
+    const nbPrekeys = await this.prekeyState.consumePrekey();
+    if (nbPrekeys <= this.config.threshold) {
+      this.config.onHitThreshold();
+    }
   }
 
   /**

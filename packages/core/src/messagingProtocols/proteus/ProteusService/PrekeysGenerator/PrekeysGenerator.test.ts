@@ -56,23 +56,27 @@ describe('PrekeysGenerator', () => {
     expect(newPrekeys[0].id).toBe(nbPrekeys + 1);
   });
 
-  it('keeps track of how many prekeys are in store', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db);
-    const nbPrekeys = Math.floor(Math.random() * 100);
+  it('triggers the threshold callback when number of prekeys hits the limit', async () => {
+    const onHitThresholdSpy = jest.fn();
+    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, {
+      threshold: 10,
+      onHitThreshold: onHitThresholdSpy,
+    });
+
+    const nbPrekeys = 12;
     await prekeyGenerator.generateInitialPrekeys(nbPrekeys);
 
-    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys);
-
-    await prekeyGenerator.generatePrekeys(1);
-
-    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys + 1);
+    expect(onHitThresholdSpy).not.toHaveBeenCalled();
 
     await prekeyGenerator.consumePrekey();
-    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys);
+    expect(onHitThresholdSpy).not.toHaveBeenCalled();
+
+    await prekeyGenerator.consumePrekey();
+    expect(onHitThresholdSpy).toHaveBeenCalled();
 
     await prekeyGenerator.consumePrekey();
     await prekeyGenerator.consumePrekey();
 
-    expect(await prekeyGenerator.getNumberOfPrekeys()).toBe(nbPrekeys - 2);
+    expect(onHitThresholdSpy).toHaveBeenCalledTimes(3);
   });
 });
