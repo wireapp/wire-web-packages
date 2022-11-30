@@ -25,7 +25,7 @@ import {keys as ProteusKeys} from '@wireapp/proteus';
 
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
-import {CoreDatabase} from '../../../../storage/CoreDB';
+import type {CoreDatabase} from '../../../../storage/CoreDB';
 import {NewDevicePrekeys} from '../ProteusService.types';
 
 type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;

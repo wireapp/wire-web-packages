@@ -60,7 +60,7 @@ const handleOtrMessageAdd = async ({
     if (error instanceof DecryptionError) {
       return {event, decryptionError: error};
     }
-    return {event, decryptionError: error as DecryptionError};
+    throw error;
   }
 };
 

@@ -41,7 +41,7 @@ export class CoreCrypto {
       proteusEncryptBatched: jest.fn(),
       proteusSessionSave: jest.fn(),
       proteusDecrypt: jest.fn().mockResolvedValue(Uint8Array.from([])),
-      proteusSessionFromMessage: jest.fn(),
+      proteusSessionFromMessage: jest.fn().mockResolvedValue(Uint8Array.from([])),
     };
   }
 }
