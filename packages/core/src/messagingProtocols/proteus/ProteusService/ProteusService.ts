@@ -40,7 +40,6 @@ import type {
   SendProteusMessageParams,
 } from './ProteusService.types';
 
-import {DBMigrationHooks} from '../../../Account';
 import {MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CoreDatabase} from '../../../storage/CoreDB';
@@ -65,13 +64,8 @@ export class ProteusService {
     this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db);
   }
 
-  public async init(dbMigrationHooks?: DBMigrationHooks) {
-    await this.coreCryptoClient.proteusInit();
-
-    const storeName = dbMigrationHooks?.getState()?.storeName;
-    if (storeName) {
-      this.proteusCryptoboxMigrate({storeName, onSuccess: dbMigrationHooks.onSuccess});
-    }
+  public async init() {
+    return this.coreCryptoClient.proteusInit();
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -237,14 +231,7 @@ export class ProteusService {
     return qualifiedOTRRecipients;
   }
 
-  private async proteusCryptoboxMigrate({storeName, onSuccess}: {storeName: string; onSuccess: () => void}) {
-    try {
-      this.logger.log(`Migrating data from cryptobox store (${storeName}) to corecrypto.`);
-      await this.coreCryptoClient.proteusCryptoboxMigrate(storeName);
-      this.logger.log(`Successfully migrated from cryptobox store (${storeName}) to corecrypto.`);
-      onSuccess();
-    } catch (error) {
-      this.logger.error('Client was not able to perform DB migration:', error);
-    }
+  public async proteusCryptoboxMigrate(storeName: string) {
+    return this.coreCryptoClient.proteusCryptoboxMigrate(storeName);
   }
 }

@@ -88,10 +88,6 @@ export interface Account {
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
 
-export interface DBMigrationHooks {
-  getState: () => {storeName: string} | undefined;
-  onSuccess: () => void;
-}
 interface AccountOptions<T> {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
@@ -119,12 +115,6 @@ type InitOptions = {
 
   /** fully initiate the client and register periodic checks */
   initClient?: boolean;
-
-  /**
-   * Database migration hooks object.
-   * When provided, and store name is found, the client will trigger migration script after store initialisation.
-   */
-  dbMigrationHooks?: DBMigrationHooks;
 
   /**
    * callback triggered when a message from an unknown client is received.
@@ -250,7 +240,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async init(
     clientType: ClientType,
-    {cookie, initClient = true, dbMigrationHooks, onNewClient}: InitOptions = {},
+    {cookie, initClient = true, onNewClient}: InitOptions = {},
   ): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
@@ -274,7 +264,7 @@ export class Account<T = any> extends EventEmitter {
 
     // Assumption: client gets only initialized once
     if (initClient) {
-      const {localClient} = await this.initClient({clientType}, undefined, undefined, dbMigrationHooks);
+      const {localClient} = await this.initClient({clientType});
 
       //call /access endpoint with client_id after client initialisation
       await this.apiClient.transport.http.associateClientWithSession(localClient.id);
@@ -323,19 +313,16 @@ export class Account<T = any> extends EventEmitter {
    * Will try to get the load the local client from local DB.
    * If clientInfo are provided, will also create the client on backend and DB
    * If clientInfo are not provided, the method will fail if local client cannot be found
-   * If dbMigrationHooks are provided, and store name was found, will trigger migration script
    *
    * @param loginData User's credentials
    * @param clientInfo Will allow creating the client if the local client cannot be found (else will fail if local client is not found)
    * @param entropyData Additional entropy data
-   * @param dbMigrationHooks Cryptobox to CoreCrypto migration config object
    * @returns The local existing client or newly created client
    */
   public async initClient(
     loginData: LoginData,
     clientInfo?: ClientInfo,
     entropyData?: Uint8Array,
-    dbMigrationHooks?: DBMigrationHooks,
   ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
     if (!this.service || !this.apiClient.context || !this.coreCryptoClient) {
       throw new Error('Services are not set.');
@@ -343,8 +330,7 @@ export class Account<T = any> extends EventEmitter {
 
     try {
       const localClient = await this.loadAndValidateLocalClient();
-
-      await this.service.proteus.init(dbMigrationHooks);
+      await this.service.proteus.init();
 
       if (this.backendFeatures.supportsMLS) {
         await this.coreCryptoClient.mlsInit(localClient.id);
@@ -671,6 +657,10 @@ export class Account<T = any> extends EventEmitter {
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
     };
+  }
+
+  public proteusCryptoboxMigrate(storeName: string) {
+    return this.service!.proteus.proteusCryptoboxMigrate(storeName);
   }
 
   private generateDbName(context: Context) {
