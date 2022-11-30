@@ -51,7 +51,6 @@ import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, resumeMessageSending} from './conversation/message/messageSender';
-import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
@@ -145,7 +144,6 @@ export class Account<T = any> extends EventEmitter {
     client: ClientService;
     connection: ConnectionService;
     conversation: ConversationService;
-    cryptography: CryptographyService;
     giphy: GiphyService;
     linkPreview: LinkPreviewService;
     notification: NotificationService;
@@ -348,7 +346,6 @@ export class Account<T = any> extends EventEmitter {
         }
 
         this.logger.log('Last client was permanent - Deleting cryptography stores');
-        await this.service!.cryptography.deleteCryptographyStores();
         return this.registerClient(loginData, clientInfo, entropyData);
       }
 
@@ -396,11 +393,6 @@ export class Account<T = any> extends EventEmitter {
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
-    const cryptographyService = new CryptographyService(this.apiClient, this.storeEngine, {
-      // We want to encrypt with fully qualified session ids, only if the backend is federated with other backends
-      useQualifiedIds: this.backendFeatures.isFederated,
-      nbPrekeys: this.nbPrekeys,
-    });
 
     const mlsService = new MLSService(this.apiClient, this.coreCryptoClient, {
       ...this.cryptoProtocolConfig?.mls,
@@ -449,7 +441,6 @@ export class Account<T = any> extends EventEmitter {
       client: clientService,
       connection: connectionService,
       conversation: conversationService,
-      cryptography: cryptographyService,
       giphy: giphyService,
       linkPreview: linkPreviewService,
       notification: notificationService,
