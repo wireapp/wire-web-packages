@@ -333,7 +333,9 @@ export class Account<T = any> extends EventEmitter {
         if (shouldDeleteWholeDatabase) {
           this.logger.log('Last client was temporary - Deleting database');
 
-          this.wipe();
+          if (this.storeEngine) {
+            await this.storeEngine.clearTables();
+          }
           const context = await this.apiClient.init(loginData.clientType);
           await this.initEngine(context);
 
@@ -501,9 +503,6 @@ export class Account<T = any> extends EventEmitter {
   }
 
   private async wipe(): Promise<void> {
-    if (this.storeEngine) {
-      await this.storeEngine.clearTables();
-    }
     if (this.coreCryptoClient) {
       await this.coreCryptoClient.wipe();
       await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));

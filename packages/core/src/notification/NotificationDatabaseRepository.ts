@@ -26,7 +26,7 @@ enum DatabaseStores {
   EVENTS = 'events',
 }
 
-enum DatabaseKeys {
+export enum DatabaseKeys {
   PRIMARY_KEY_LAST_EVENT = 'z.storage.StorageKey.EVENT.LAST_DATE',
   PRIMARY_KEY_LAST_NOTIFICATION = 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
 }
