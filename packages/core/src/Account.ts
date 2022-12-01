@@ -51,13 +51,12 @@ import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, resumeMessageSending} from './conversation/message/messageSender';
-import {CoreError} from './CoreError';
-import {CryptographyService, SessionId} from './cryptography/';
+import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
-import {ProteusService} from './messagingProtocols/proteus';
+import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
@@ -67,8 +66,8 @@ import {createCustomEncryptedStore, createEncryptedStore, deleteEncryptedStore} 
 
 export type ProcessedEventPayload = HandledEventPayload;
 
-enum TOPIC {
-  ERROR = 'Account.TOPIC.ERROR',
+export enum EVENTS {
+  NEW_SESSION = 'new_session',
 }
 
 export enum ConnectionState {
@@ -83,7 +82,11 @@ export enum ConnectionState {
 }
 
 export interface Account {
-  on(event: TOPIC.ERROR, listener: (payload: CoreError) => void): this;
+  /**
+   * event triggered when a message from an unknown client is received.
+   * An unknown client is a client we don't yet have a session with
+   */
+  on(event: EVENTS.NEW_SESSION, listener: (client: NewClient) => void): this;
 }
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
@@ -115,12 +118,6 @@ type InitOptions = {
 
   /** fully initiate the client and register periodic checks */
   initClient?: boolean;
-
-  /**
-   * callback triggered when a message from an unknown client is received.
-   * An unknown client is a client we don't yet have a session with
-   */
-  onNewClient?: (sessionId: SessionId) => void;
 };
 
 const coreDefaultClient: ClientInfo = {
@@ -139,7 +136,6 @@ export class Account<T = any> extends EventEmitter {
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
   private coreCryptoClient?: CoreCrypto;
 
-  public static readonly TOPIC = TOPIC;
   public service?: {
     mls: MLSService;
     proteus: ProteusService;
@@ -238,29 +234,9 @@ export class Account<T = any> extends EventEmitter {
    *
    * @param clientType The type of client the user is using (temporary or permanent)
    */
-  public async init(
-    clientType: ClientType,
-    {cookie, initClient = true, onNewClient}: InitOptions = {},
-  ): Promise<Context> {
+  public async init(clientType: ClientType, {cookie, initClient = true}: InitOptions = {}): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
-
-    /** @fixme
-     * When we will start migrating to CoreCrypto encryption/decryption, those hooks won't be available anymore
-     * We will need to implement
-     *   - the mechanism to handle messages from an unknown sender
-     *   - the mechanism to generate new prekeys when we reach a certain threshold of prekeys
-     */
-    this.service!.cryptography.setCryptoboxHooks({
-      onNewPrekeys: async prekeys => {
-        this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
-
-        await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
-        this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
-      },
-
-      onNewSession: onNewClient,
-    });
 
     // Assumption: client gets only initialized once
     if (initClient) {
@@ -433,6 +409,7 @@ export class Account<T = any> extends EventEmitter {
     const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
+      onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
     });
 
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
