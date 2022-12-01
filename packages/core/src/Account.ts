@@ -60,7 +60,7 @@ import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
-import {createCustomEncryptedStore, createEncryptedStore, deleteEncryptedStore} from './util/encryptedStore';
+import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -130,6 +130,7 @@ export class Account<T = any> extends EventEmitter {
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
+  private secretsDb?: EncryptedStore<any>;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
   private coreCryptoClient?: CoreCrypto;
@@ -355,14 +356,14 @@ export class Account<T = any> extends EventEmitter {
     const dbName = this.generateSecretsDbName(context);
 
     const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
-    const secretStore = systemCrypto
+    this.secretsDb = systemCrypto
       ? await createCustomEncryptedStore(dbName, systemCrypto)
       : await createEncryptedStore(dbName);
 
-    let key = await secretStore.getsecretValue(coreCryptoKeyId);
+    let key = await this.secretsDb.getsecretValue(coreCryptoKeyId);
     if (!key) {
       key = crypto.getRandomValues(new Uint8Array(16));
-      await secretStore.saveSecretValue(coreCryptoKeyId, key);
+      await this.secretsDb.saveSecretValue(coreCryptoKeyId, key);
     }
 
     return CoreCrypto.deferredInit(
@@ -495,6 +496,7 @@ export class Account<T = any> extends EventEmitter {
    */
   public async logout(clearData: boolean = false): Promise<void> {
     this.db?.close();
+    this.secretsDb?.close();
     if (clearData) {
       this.wipe();
     }
@@ -505,8 +507,8 @@ export class Account<T = any> extends EventEmitter {
   private async wipe(): Promise<void> {
     if (this.coreCryptoClient) {
       await this.coreCryptoClient.wipe();
-      await deleteEncryptedStore(this.generateSecretsDbName(this.apiClient.context!));
     }
+    await this.secretsDb?.wipe();
     if (this.db) {
       await deleteDB(this.db);
     }
