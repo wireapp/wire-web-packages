@@ -410,6 +410,13 @@ export class Account<T = any> extends EventEmitter {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
+      nbPrekeys: this.nbPrekeys,
+      onNewPrekeys: async prekeys => {
+        this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
+
+        await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
+        this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
+      },
     });
 
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
@@ -473,7 +480,7 @@ export class Account<T = any> extends EventEmitter {
       await this.coreCryptoClient.reseedRng(entropyData);
     }
     await this.service.proteus.init();
-    const initialPreKeys = await this.service.proteus.createClient(this.nbPrekeys);
+    const initialPreKeys = await this.service.proteus.createClient();
 
     const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 

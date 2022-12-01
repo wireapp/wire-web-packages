@@ -38,10 +38,13 @@ export class PrekeysGeneratorStore {
 
   /**
    * Will mark one prekey as consumed and decrease the total number of prekeys of 1
+   * @returns the number of valid prekeys that are left
    */
-  async consumePrekey() {
+  async consumePrekey(): Promise<number> {
     const currentState = await this.getState();
-    await this.saveState({...currentState, nbPrekeys: currentState.nbPrekeys - 1});
+    const newState = {...currentState, nbPrekeys: currentState.nbPrekeys - 1};
+    await this.saveState(newState);
+    return newState.nbPrekeys;
   }
 
   async getNumberOfPrekeys(): Promise<number> {

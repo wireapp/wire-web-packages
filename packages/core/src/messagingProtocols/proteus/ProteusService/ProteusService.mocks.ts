@@ -40,6 +40,8 @@ export const buildProteusService = async (
   const coreCrypto = await CoreCrypto.deferredInit('store-name', 'key');
 
   const proteusService = new ProteusService(apiClient, coreCrypto, {} as any, {
+    nbPrekeys: 0,
+    onNewPrekeys: jest.fn(),
     useQualifiedIds: federated,
   });
   return [proteusService, {apiClient, coreCrypto}];
