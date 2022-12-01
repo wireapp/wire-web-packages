@@ -36,16 +36,16 @@ const generateDecryptionError = (
   const remoteClientId = senderInfo.clientId;
   const remoteUserId = senderInfo.userId.id;
 
-  const isDuplicateMessage = false; // TODO
-  const isOutdatedMessage = false; // TODO
+  const isDuplicateMessage = false; // TODO when coreCrypto returns ganular errors
+  const isOutdatedMessage = false; // TODO when coreCrypto returns ganular errors
   // We don't need to show these message errors to the user
   if (isDuplicateMessage || isOutdatedMessage) {
     message = `Message from user ID "${remoteUserId}" will not be handled because it is outdated or a duplicate.`;
   }
 
-  const isInvalidMessage = false; // TODO
-  const isInvalidSignature = false; // TODO
-  const isRemoteIdentityChanged = false; // TODO
+  const isInvalidMessage = false; // TODO when coreCrypto returns ganular errors
+  const isInvalidSignature = false; // TODO when coreCrypto returns ganular errors
+  const isRemoteIdentityChanged = false; // TODO when coreCrypto returns ganular errors
   // Session is broken, let's see what's really causing it...
   if (isInvalidMessage || isInvalidSignature) {
     message = `Session with user '${remoteUserId}' (${remoteClientId}) is broken.\nReset the session for possible fix.`;
