@@ -65,9 +65,10 @@ export interface Conversation {
   access: CONVERSATION_ACCESS[];
 
   /** How users can join conversations */
-  /** @deprecated Use access_role_v2 instead */
-  access_role: CONVERSATION_ACCESS_ROLE;
-  access_role_v2: ACCESS_ROLE_V2[];
+  //CONVERSATION_ACCESS_ROLE for api <= v2, ACCESS_ROLE_V2[] since api v3
+  access_role: CONVERSATION_ACCESS_ROLE | ACCESS_ROLE_V2[];
+  /** @deprecated Use access_role instead */
+  access_role_v2?: ACCESS_ROLE_V2[];
   name?: string;
   last_event?: string;
   last_event_time?: string;
