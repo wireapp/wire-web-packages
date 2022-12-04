@@ -1989,7 +1989,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/transform@npm:^29.2.2, @jest/transform@npm:^29.3.1":
+"@jest/transform@npm:^29.3.1":
   version: 29.3.1
   resolution: "@jest/transform@npm:29.3.1"
   dependencies:
@@ -4665,7 +4665,7 @@ __metadata:
     "@types/react-dom": ^18.0.8
     "@types/rimraf": ^3.0.2
     "@types/webpack-env": 1.18.0
-    babel-jest: 29.2.2
+    babel-jest: 29.3.1
     babel-loader: 9.1.0
     color: 4.2.3
     emotion-normalize: 11.0.1
@@ -5443,24 +5443,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:29.2.2":
-  version: 29.2.2
-  resolution: "babel-jest@npm:29.2.2"
-  dependencies:
-    "@jest/transform": ^29.2.2
-    "@types/babel__core": ^7.1.14
-    babel-plugin-istanbul: ^6.1.1
-    babel-preset-jest: ^29.2.0
-    chalk: ^4.0.0
-    graceful-fs: ^4.2.9
-    slash: ^3.0.0
-  peerDependencies:
-    "@babel/core": ^7.8.0
-  checksum: 35f0eb895ab9218b55cacedbfe62dd94c99924d89a0a8096354c4fbb4c8465c0a2c4aba82e5bedf367def6c89635f4f134c7ebc22f07b6f9c930f7b43b7bbdde
-  languageName: node
-  linkType: hard
-
-"babel-jest@npm:^29.3.1":
+"babel-jest@npm:29.3.1, babel-jest@npm:^29.3.1":
   version: 29.3.1
   resolution: "babel-jest@npm:29.3.1"
   dependencies:
