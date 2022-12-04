@@ -2119,13 +2119,13 @@ __metadata:
   linkType: hard
 
 "@lerna-lite/changed@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@lerna-lite/changed@npm:1.12.0"
+  version: 1.13.0
+  resolution: "@lerna-lite/changed@npm:1.13.0"
   dependencies:
-    "@lerna-lite/core": 1.12.0
-    "@lerna-lite/list": 1.12.0
-    "@lerna-lite/listable": 1.12.0
-  checksum: 5ef448b69956a9f03da2444eecc7526dec4884417da0d64bc347095e426c6aa2fddbe4027cc4f7e5a149471d401a0888a8a15f720afbab242768a7518b1f359a
+    "@lerna-lite/core": 1.13.0
+    "@lerna-lite/list": 1.13.0
+    "@lerna-lite/listable": 1.13.0
+  checksum: 1866c1e42541ae4f55f209cc218932215f88c1cdaec0cad48749567f1dd3d49ea11eb494711ed94f49c02d0ab6012372854c17efe59da34012e8d1154d162499
   languageName: node
   linkType: hard
 
@@ -2275,14 +2275,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@lerna-lite/list@npm:1.12.0"
+"@lerna-lite/list@npm:1.13.0":
+  version: 1.13.0
+  resolution: "@lerna-lite/list@npm:1.13.0"
   dependencies:
-    "@lerna-lite/core": 1.12.0
-    "@lerna-lite/listable": 1.12.0
-    "@lerna-lite/optional-cmd-common": 1.12.0
-  checksum: b234cc0aa8d93137955376af9386b901298893254d712d8ecc1a08fbf95f7cf8617b39bfcd2da8604e793e1ada46c64a111f2a97377de265a5d782d92876369f
+    "@lerna-lite/core": 1.13.0
+    "@lerna-lite/listable": 1.13.0
+    "@lerna-lite/optional-cmd-common": 1.13.0
+  checksum: 0a83f93cc7e30cd0591e11df5ff5b18b4a30d87fe84b3514eb7b2e18e21355ca35afbf6d29f6fb1e44b430cd84ca34b4b5e98a19a4006177f2355904ba9eb4b5
   languageName: node
   linkType: hard
 
@@ -2294,6 +2294,17 @@ __metadata:
     chalk: ^4.1.2
     columnify: ^1.6.0
   checksum: fd011ad2e2a4caaabd1b10fdf4a8f4dc74cfd35812450cf6f3d602d5564869a9d80fcbb9e6d4a83f22420d0ea4d337afe2e0eb47cf86da33fcea57e9fd61b5cb
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/listable@npm:1.13.0":
+  version: 1.13.0
+  resolution: "@lerna-lite/listable@npm:1.13.0"
+  dependencies:
+    "@lerna-lite/core": 1.13.0
+    chalk: ^4.1.2
+    columnify: ^1.6.0
+  checksum: 457772fbf3a30b4ffb4b6085faf4e8df3107c6d8ae77e927af7faae1f2fce8c090eebb58d7a15f103e682bbc9de50cdcbcd2b20fc4887560f9a48eaa73914de4
   languageName: node
   linkType: hard
 
