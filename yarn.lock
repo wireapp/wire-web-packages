@@ -1659,6 +1659,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@es-joy/jsdoccomment@npm:~0.36.1":
+  version: 0.36.1
+  resolution: "@es-joy/jsdoccomment@npm:0.36.1"
+  dependencies:
+    comment-parser: 1.3.1
+    esquery: ^1.4.0
+    jsdoc-type-pratt-parser: ~3.1.0
+  checksum: 28e697779230dc6a95b1f233a8c2a72b64fbea686e407106e5d4292083421a997452731c414de26c10bee86e8e0397c5fb84d6ecfd4b472a29735e1af103ddb6
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^1.3.3":
   version: 1.3.3
   resolution: "@eslint/eslintrc@npm:1.3.3"
@@ -2305,19 +2316,6 @@ __metadata:
     chalk: ^4.1.2
     columnify: ^1.6.0
   checksum: 457772fbf3a30b4ffb4b6085faf4e8df3107c6d8ae77e927af7faae1f2fce8c090eebb58d7a15f103e682bbc9de50cdcbcd2b20fc4887560f9a48eaa73914de4
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/optional-cmd-common@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@lerna-lite/optional-cmd-common@npm:1.12.0"
-  dependencies:
-    "@lerna-lite/core": 1.12.0
-    fs-extra: ^10.1.0
-    multimatch: ^5.0.0
-    npmlog: ^7.0.0
-    upath: ^2.0.1
-  checksum: 35fc305bfe34809c63fb5df9a1e8e58f948f7f6b73c484ec4605e2d7b974515d1ecdba671f716f4c05f995026abe1f660d0014786dbdc6e73fd2fc81373f757c
   languageName: node
   linkType: hard
 
@@ -8067,7 +8065,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:39.6.2, eslint-plugin-jsdoc@npm:^39.6.2":
+"eslint-plugin-jsdoc@npm:39.6.4":
+  version: 39.6.4
+  resolution: "eslint-plugin-jsdoc@npm:39.6.4"
+  dependencies:
+    "@es-joy/jsdoccomment": ~0.36.1
+    comment-parser: 1.3.1
+    debug: ^4.3.4
+    escape-string-regexp: ^4.0.0
+    esquery: ^1.4.0
+    semver: ^7.3.8
+    spdx-expression-parse: ^3.0.1
+  peerDependencies:
+    eslint: ^7.0.0 || ^8.0.0
+  checksum: 2976112ae997b9f246eba98d849359a0df46ea07c0a9d6d90c3b76a29c253b9e92d1d46d6cf86f878e442653b97591e5ea01d05a6accdb078339c39e8767723e
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-jsdoc@npm:^39.6.2":
   version: 39.6.2
   resolution: "eslint-plugin-jsdoc@npm:39.6.2"
   dependencies:
@@ -15534,7 +15549,7 @@ __metadata:
     eslint-plugin-import: 2.26.0
     eslint-plugin-jest: 27.1.6
     eslint-plugin-jest-dom: ^4.0.2
-    eslint-plugin-jsdoc: 39.6.2
+    eslint-plugin-jsdoc: 39.6.4
     eslint-plugin-jsx-a11y: ^6.6.1
     eslint-plugin-no-unsanitized: 4.0.1
     eslint-plugin-prettier: 4.2.1
