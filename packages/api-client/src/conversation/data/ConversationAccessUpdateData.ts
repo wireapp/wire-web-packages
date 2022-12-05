@@ -29,6 +29,7 @@ export interface ConversationAccessV2UpdateData {
 export interface ConversationAccessV3UpdateData {
   access: CONVERSATION_ACCESS[];
   access_role: CONVERSATION_ACCESS_ROLE | ACCESS_ROLE_V2[];
+  /** @deprecated Use access_role instead */
   access_role_v2?: ACCESS_ROLE_V2[];
 }
 
