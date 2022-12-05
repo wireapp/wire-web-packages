@@ -260,4 +260,8 @@ export class ProteusService {
 
     return qualifiedOTRRecipients;
   }
+
+  public async proteusCryptoboxMigrate(storeName: string) {
+    return this.coreCryptoClient.proteusCryptoboxMigrate(storeName);
+  }
 }
