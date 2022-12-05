@@ -31,6 +31,7 @@ import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} fro
 import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
+import {ClientAction} from '@wireapp/protocol-messaging';
 
 import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
@@ -40,14 +41,20 @@ import type {
   SendProteusMessageParams,
 } from './ProteusService.types';
 
-import {MessageSendingState, SendResult} from '../../../conversation';
+import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {CoreDatabase} from '../../../storage/CoreDB';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
-import {buildEncryptedPayloads, constructSessionId, initSession, initSessions} from '../Utility/SessionHandler';
+import {
+  buildEncryptedPayloads,
+  constructSessionId,
+  deleteSession,
+  initSession,
+  initSessions,
+} from '../Utility/SessionHandler';
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -61,22 +68,35 @@ export class ProteusService {
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db);
-  }
-
-  public async init() {
-    return this.coreCryptoClient.proteusInit();
-  }
-
-  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
-    return handleBackendEvent({
-      ...params,
-      decryptMessage: (payload, userId, clientId) => this.decrypt(payload, userId, clientId),
+    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db, {
+      nbPrekeys: config.nbPrekeys,
+      onNewPrekeys: config.onNewPrekeys,
     });
   }
 
-  public createClient(nbPrekeys: number) {
-    return this.prekeyGenerator.generateInitialPrekeys(nbPrekeys);
+  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
+    const handledEvent = await handleBackendEvent({
+      ...params,
+      decryptMessage: (payload, userId, clientId) => this.decrypt(payload, userId, clientId),
+    });
+    if (handledEvent?.decryptedData) {
+      const isSessionReset =
+        handledEvent.decryptedData[GenericMessageType.CLIENT_ACTION] === ClientAction.RESET_SESSION;
+      if (isSessionReset) {
+        this.logger.debug('A session was reset from a remote device');
+        // If a session reset message was received, we need to count a consumed prekey (because the sender has created a new session from a new prekey)
+        await this.prekeyGenerator.consumePrekey();
+      }
+    }
+    return handledEvent;
+  }
+
+  public init() {
+    return this.coreCryptoClient.proteusInit();
+  }
+
+  public createClient() {
+    return this.prekeyGenerator.generateInitialPrekeys();
   }
 
   /**
@@ -190,6 +210,7 @@ export class ProteusService {
 
     if (!sessionExists) {
       await this.coreCryptoClient.proteusSessionSave(sessionId);
+      this.config.onNewClient?.({userId, clientId});
       await this.prekeyGenerator.consumePrekey();
       this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
     } else {
@@ -215,6 +236,15 @@ export class ProteusService {
     const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
 
     return buildEncryptedPayloads(payload);
+  }
+
+  public deleteSession(userId: QualifiedId, clientId: string) {
+    return deleteSession({
+      userId,
+      clientId,
+      useQualifiedIds: this.config.useQualifiedIds,
+      coreCrypto: this.coreCryptoClient,
+    });
   }
 
   public async encryptQualified(
