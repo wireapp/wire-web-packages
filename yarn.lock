@@ -3573,13 +3573,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:~14":
-  version: 14.18.33
-  resolution: "@types/node@npm:14.18.33"
-  checksum: 4e23f95186d8ae1d38c999bc6b46fe94e790da88744b0a3bfeedcbd0d9ffe2cb0ff39e85f43014f6739e5270292c1a1f6f97a1fc606fd573a0c17fda9a1d42de
-  languageName: node
-  linkType: hard
-
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
@@ -4263,13 +4256,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/cbor@npm:4.7.3":
-  version: 4.7.3
-  resolution: "@wireapp/cbor@npm:4.7.3"
-  checksum: 4ea1bf302e08b342b9b0160835862984653d208a902c3e1071e32644d8ea78263a88fe3e2306931e745495e6e816d3b741d0bf10f2290932692f99bb1b28c18b
-  languageName: node
-  linkType: hard
-
 "@wireapp/certificate-check@workspace:packages/certificate-check":
   version: 0.0.0-use.local
   resolution: "@wireapp/certificate-check@workspace:packages/certificate-check"
@@ -4374,9 +4360,9 @@ __metadata:
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 0.6.0-pre.5
-    "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.42.0
+    "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.1.2
     bazinga64: 6.0.3
@@ -4398,20 +4384,6 @@ __metadata:
     uuidjs: 4.2.12
   languageName: unknown
   linkType: soft
-
-"@wireapp/cryptobox@npm:12.8.0":
-  version: 12.8.0
-  resolution: "@wireapp/cryptobox@npm:12.8.0"
-  dependencies:
-    "@wireapp/lru-cache": 3.8.1
-    "@wireapp/priority-queue": 1.6.38
-    "@wireapp/proteus": 9.13.0
-    "@wireapp/store-engine": 4.9.8
-    bazinga64: 5.10.0
-    buffer: 6.0.3
-  checksum: 534fd44a8c32ddfab668f09a2682c4f72ccf6a0754c28c81c0218fd4ed8a4933eb1b7898260bbb848ade6bbacd9864bf9b6dde4295a78942f489e8ad0eadaf06
-  languageName: node
-  linkType: hard
 
 "@wireapp/eslint-config@workspace:^, @wireapp/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
@@ -4489,13 +4461,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/lru-cache@npm:3.8.1":
-  version: 3.8.1
-  resolution: "@wireapp/lru-cache@npm:3.8.1"
-  checksum: 901ae35ac6a2370ef52eeea08217f23ff7cc1db3f5e82199324d88dc8128d68e01f6b06928df9eb2ae03a6cc97587c2f501cec6aa61665a60a7d8cf415f1b21a
-  languageName: node
-  linkType: hard
-
 "@wireapp/prettier-config@workspace:packages/prettier-config":
   version: 0.0.0-use.local
   resolution: "@wireapp/prettier-config@workspace:packages/prettier-config"
@@ -4503,15 +4468,6 @@ __metadata:
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
-
-"@wireapp/priority-queue@npm:1.6.38":
-  version: 1.6.38
-  resolution: "@wireapp/priority-queue@npm:1.6.38"
-  dependencies:
-    "@types/node": ~14
-  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
-  languageName: node
-  linkType: hard
 
 "@wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
   version: 0.0.0-use.local
@@ -4543,18 +4499,6 @@ __metadata:
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
-
-"@wireapp/proteus@npm:9.13.0":
-  version: 9.13.0
-  resolution: "@wireapp/proteus@npm:9.13.0"
-  dependencies:
-    "@types/libsodium-wrappers-sumo": 0.7.5
-    "@types/node": ~14
-    "@wireapp/cbor": 4.7.3
-    libsodium-wrappers-sumo: 0.7.9
-  checksum: 46cf49b00ebe66caf67ef38dff5a6ca8ba238fa72a73eb6bda6812da370df1c7a2e20a8d47d8ac01eea90d1a4fc1c1c43119261e6a84c0eabdfc5b6bd227cc14
-  languageName: node
-  linkType: hard
 
 "@wireapp/protocol-messaging@npm:1.42.0":
   version: 1.42.0
@@ -4662,15 +4606,6 @@ __metadata:
     "@wireapp/store-engine": 5.x.x
   languageName: unknown
   linkType: soft
-
-"@wireapp/store-engine@npm:4.9.8":
-  version: 4.9.8
-  resolution: "@wireapp/store-engine@npm:4.9.8"
-  dependencies:
-    "@types/node": ~14
-  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
-  languageName: node
-  linkType: hard
 
 "@wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
@@ -5584,13 +5519,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"bazinga64@npm:5.10.0":
-  version: 5.10.0
-  resolution: "bazinga64@npm:5.10.0"
-  checksum: 26444dfd5e6abdb62ab7b6fd7fb7155651e5fd0884a30008b33693593c5838b4f5d213101751c55a6646e146d802f0783aa2b92d41f2165f1cd30568c6f6ac75
-  languageName: node
-  linkType: hard
-
 "before-after-hook@npm:^2.2.0":
   version: 2.2.3
   resolution: "before-after-hook@npm:2.2.3"
@@ -5846,16 +5774,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer@npm:6.0.3, buffer@npm:^6.0.3":
-  version: 6.0.3
-  resolution: "buffer@npm:6.0.3"
-  dependencies:
-    base64-js: ^1.3.1
-    ieee754: ^1.2.1
-  checksum: 5ad23293d9a731e4318e420025800b42bf0d264004c0286c8cc010af7a270c7a0f6522e84f54b9ad65cbd6db20b8badbfd8d2ebf4f80fa03dab093b89e68c3f9
-  languageName: node
-  linkType: hard
-
 "buffer@npm:^5.5.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
@@ -5863,6 +5781,16 @@ __metadata:
     base64-js: ^1.3.1
     ieee754: ^1.1.13
   checksum: e2cf8429e1c4c7b8cbd30834ac09bd61da46ce35f5c22a78e6c2f04497d6d25541b16881e30a019c6fd3154150650ccee27a308eff3e26229d788bbdeb08ab84
+  languageName: node
+  linkType: hard
+
+"buffer@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "buffer@npm:6.0.3"
+  dependencies:
+    base64-js: ^1.3.1
+    ieee754: ^1.2.1
+  checksum: 5ad23293d9a731e4318e420025800b42bf0d264004c0286c8cc010af7a270c7a0f6522e84f54b9ad65cbd6db20b8badbfd8d2ebf4f80fa03dab093b89e68c3f9
   languageName: node
   linkType: hard
 
@@ -11757,15 +11685,6 @@ __metadata:
   dependencies:
     libsodium-sumo: ^0.7.0
   checksum: f1ff2599e9ec6271a0ba9ee6a8ad940b9a7dbd1d14c6cb87f2e34e7c6d43f7f4622a1f432e5254875e0cae7d56b1de8697a3989b118f49959639f48f0268db88
-  languageName: node
-  linkType: hard
-
-"libsodium-wrappers-sumo@npm:0.7.9":
-  version: 0.7.9
-  resolution: "libsodium-wrappers-sumo@npm:0.7.9"
-  dependencies:
-    libsodium-sumo: ^0.7.0
-  checksum: 0b2af1f23455e1b3ecc2f721278e8b41b027e9f748f2675285e9771eeb2de062cd6b51688bb52ece14a53b4f5a51019972d9ceac1889c0381ef076a316201627
   languageName: node
   linkType: hard
 

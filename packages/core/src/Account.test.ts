@@ -168,7 +168,6 @@ describe('Account', () => {
       await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
 
       expect(account.service!.conversation).toBeDefined();
-      expect(account.service!.cryptography).toBeDefined();
 
       const message = GenericMessage.create({
         messageId: '2d7cb6d8-118f-11e8-b642-0ed5f89f718b',

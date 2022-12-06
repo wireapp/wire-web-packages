@@ -38,10 +38,10 @@ import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {createId} from './MessageBuilder';
+import {recipientsToBase64} from './RecipientsHelper';
 import {flattenUserClients, flattenQualifiedUserClients} from './UserClientsUtil';
 
 import {GenericMessageType} from '..';
-import {CryptographyService} from '../../cryptography';
 import {encryptAsset} from '../../cryptography/AssetCryptography';
 import type {ProteusService} from '../../messagingProtocols/proteus';
 import {isQualifiedIdArray, isStringArray} from '../../util';
@@ -228,7 +228,7 @@ export class MessageService {
   ): Promise<ClientMismatch> {
     const message: NewOTRMessage<string> = {
       data: options.assetData ? Encoder.toBase64(options.assetData).asString : undefined,
-      recipients: CryptographyService.convertArrayRecipientsToBase64(recipients),
+      recipients: recipientsToBase64(recipients),
       sender: sendingClientId,
       native_push: options.nativePush,
     };

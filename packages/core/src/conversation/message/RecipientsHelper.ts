@@ -17,26 +17,18 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
+import {OTRClientMap, OTRRecipients} from '@wireapp/api-client/lib/conversation/';
+import {Encoder} from 'bazinga64';
 
-export enum DatabaseStores {
-  AMPLIFY = 'amplify',
-  CLIENTS = 'clients',
-  KEYS = 'keys',
-  PRE_KEYS = 'prekeys',
-  SESSIONS = 'sessions',
-  GROUP_IDS = 'group_ids',
-}
-
-export class CryptographyDatabaseRepository {
-  public static readonly STORES = DatabaseStores;
-
-  constructor(private readonly storeEngine: CRUDEngine) {}
-
-  public deleteStores(): Promise<boolean[]> {
-    return Promise.all(
-      //make sure we use enum's lowercase values, not uppercase keys
-      Object.values(CryptographyDatabaseRepository.STORES).map(store => this.storeEngine.deleteAll(store)),
-    );
-  }
+export function recipientsToBase64(recipients: OTRRecipients<Uint8Array>): OTRRecipients<string> {
+  return Object.fromEntries(
+    Object.entries(recipients).map(([userId, otrClientMap]) => {
+      const otrClientMapWithBase64: OTRClientMap<string> = Object.fromEntries(
+        Object.entries(otrClientMap).map(([clientId, payload]) => {
+          return [clientId, Encoder.toBase64(payload).asString];
+        }),
+      );
+      return [userId, otrClientMapWithBase64];
+    }),
+  );
 }
