@@ -25,7 +25,6 @@ import {
   ClientMismatch,
   Conversation,
   ConversationCode,
-  ConversationIds,
   ConversationRolesList,
   Conversations,
   DefaultConversationRoleName,
@@ -280,27 +279,6 @@ export class ConversationAPI {
     };
 
     return getConversationChunks();
-  }
-
-  /**
-   * Get all conversation IDs.
-   * @param limit Max. number of IDs to return
-   * @param conversationId Conversation ID to start from (exclusive)
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversationIds
-   * @deprecated Use `getListConversations()` instead.
-   */
-  public async getConversationIds(limit: number, conversationId?: string): Promise<ConversationIds> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        size: limit,
-        start: conversationId,
-      },
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.IDS}`,
-    };
-
-    const response = await this.client.sendJSON<ConversationIds>(config);
-    return response.data;
   }
 
   /**
