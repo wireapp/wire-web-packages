@@ -867,14 +867,12 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
    */
   public async putAccess(
-    conversationId: QualifiedId | string,
+    conversationId: QualifiedId,
     accessData: ConversationAccessUpdateData,
   ): Promise<ConversationAccessUpdateEvent> {
-    const isQualifiedId = typeof conversationId !== 'string';
-
-    return this.backendFeatures.federationEndpoints && isQualifiedId
+    return this.backendFeatures.federationEndpoints
       ? this.putQualifiedAccess(conversationId, accessData)
-      : this.putLegacyAccess(isQualifiedId ? conversationId.id : conversationId, accessData);
+      : this.putLegacyAccess(conversationId.id, accessData);
   }
 
   private async putQualifiedAccess(
