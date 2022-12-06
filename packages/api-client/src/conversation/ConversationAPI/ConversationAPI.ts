@@ -85,7 +85,6 @@ export class ConversationAPI {
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
     MLS: '/mls',
-    IDS: 'ids',
     JOIN: '/join',
     LIST: 'list',
     LIST_IDS: 'list-ids',
@@ -868,6 +867,34 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversationAccess
    */
   public async putAccess(
+    conversationId: QualifiedId | string,
+    accessData: ConversationAccessUpdateData,
+  ): Promise<ConversationAccessUpdateEvent> {
+    const isQualifiedId = typeof conversationId !== 'string';
+
+    return this.backendFeatures.federationEndpoints && isQualifiedId
+      ? this.putQualifiedAccess(conversationId, accessData)
+      : this.putLegacyAccess(isQualifiedId ? conversationId.id : conversationId, accessData);
+  }
+
+  private async putQualifiedAccess(
+    conversationId: QualifiedId,
+    accessData: ConversationAccessUpdateData,
+  ): Promise<ConversationAccessUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: accessData,
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.ACCESS}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
+    return response.data;
+  }
+
+  /**
+   * @deprecated use putQualifiedAccess instead
+   */
+  private async putLegacyAccess(
     conversationId: string,
     accessData: ConversationAccessUpdateData,
   ): Promise<ConversationAccessUpdateEvent> {
