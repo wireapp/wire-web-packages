@@ -33,8 +33,8 @@ const generateDecryptionError = (
   const errorCode = hasErrorCode(error) ? error.code ?? 999 : 999;
   let message = 'Unknown decryption error';
 
-  const remoteClientId = senderInfo.clientId;
-  const remoteUserId = senderInfo.userId.id;
+  const {clientId: remoteClientId, userId} = senderInfo;
+  const {id: remoteUserId} = userId;
 
   const isDuplicateMessage = false; // TODO when coreCrypto returns ganular errors
   const isOutdatedMessage = false; // TODO when coreCrypto returns ganular errors
