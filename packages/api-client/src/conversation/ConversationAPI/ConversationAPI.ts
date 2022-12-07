@@ -103,6 +103,12 @@ export class ConversationAPI {
 
   constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
+  private generateBaseConversationUrl(conversationId: QualifiedId): string {
+    return this.backendFeatures.federationEndpoints
+      ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}`
+      : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}`;
+  }
+
   /**
    * Delete a conversation code.
    * @param conversationId ID of conversation to delete the code for
@@ -870,42 +876,15 @@ export class ConversationAPI {
     conversationId: QualifiedId,
     accessData: ConversationAccessUpdateData,
   ): Promise<ConversationAccessUpdateEvent> {
-    return this.backendFeatures.federationEndpoints
-      ? this.putQualifiedAccess(conversationId, accessData)
-      : this.putLegacyAccess(conversationId.id, accessData);
-  }
-
-  private async putQualifiedAccess(
-    conversationId: QualifiedId,
-    accessData: ConversationAccessUpdateData,
-  ): Promise<ConversationAccessUpdateEvent> {
     const config: AxiosRequestConfig = {
       data: accessData,
       method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.ACCESS}`,
+      url: `${this.generateBaseConversationUrl(conversationId)}/${ConversationAPI.URL.ACCESS}`,
     };
 
     const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
     return response.data;
   }
-
-  /**
-   * @deprecated use putQualifiedAccess instead
-   */
-  private async putLegacyAccess(
-    conversationId: string,
-    accessData: ConversationAccessUpdateData,
-  ): Promise<ConversationAccessUpdateEvent> {
-    const config: AxiosRequestConfig = {
-      data: accessData,
-      method: 'put',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.ACCESS}`,
-    };
-
-    const response = await this.client.sendJSON<ConversationAccessUpdateEvent>(config);
-    return response.data;
-  }
-
   /**
    * Update conversation properties.
    * @param conversationId The conversation ID to update properties of
