@@ -103,8 +103,8 @@ export class ConversationAPI {
 
   constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
-  private generateBaseConversationUrl(conversationId: QualifiedId): string {
-    return this.backendFeatures.federationEndpoints && conversationId.domain
+  private generateBaseConversationUrl(conversationId: QualifiedId, supportsQualifiedEndpoint: boolean = true): string {
+    return this.backendFeatures.federationEndpoints && supportsQualifiedEndpoint && conversationId.domain
       ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}`
       : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}`;
   }
@@ -860,7 +860,9 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: typingData,
       method: 'post',
-      url: `${this.generateBaseConversationUrl(conversationId)}/${ConversationAPI.URL.TYPING}`,
+      url: `${this.generateBaseConversationUrl(conversationId, this.backendFeatures.version >= 3)}/${
+        ConversationAPI.URL.TYPING
+      }`,
     };
 
     await this.client.sendJSON(config);
