@@ -104,7 +104,7 @@ export class ConversationAPI {
   constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
   private generateBaseConversationUrl(conversationId: QualifiedId): string {
-    return this.backendFeatures.federationEndpoints
+    return this.backendFeatures.federationEndpoints && conversationId.domain
       ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}`
       : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}`;
   }
@@ -856,11 +856,11 @@ export class ConversationAPI {
    * @param typingData The typing status
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/isTyping
    */
-  public async postTyping(conversationId: string, typingData: ConversationTypingData): Promise<void> {
+  public async postTyping(conversationId: QualifiedId, typingData: ConversationTypingData): Promise<void> {
     const config: AxiosRequestConfig = {
       data: typingData,
       method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.TYPING}`,
+      url: `${this.generateBaseConversationUrl(conversationId)}/${ConversationAPI.URL.TYPING}`,
     };
 
     await this.client.sendJSON(config);
