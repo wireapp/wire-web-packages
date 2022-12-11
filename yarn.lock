@@ -3831,7 +3831,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:5.45.1, @typescript-eslint/parser@npm:^5.42.1":
+"@typescript-eslint/parser@npm:5.46.0":
+  version: 5.46.0
+  resolution: "@typescript-eslint/parser@npm:5.46.0"
+  dependencies:
+    "@typescript-eslint/scope-manager": 5.46.0
+    "@typescript-eslint/types": 5.46.0
+    "@typescript-eslint/typescript-estree": 5.46.0
+    debug: ^4.3.4
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 34e2e8fb35050ac119ed2696293ecd9a1b40c3ccc915d06b8d48880c6656e8f40665b969807b76058eb9198227481653f1d1465a89a4ac6a98bc7ab9850ada1f
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/parser@npm:^5.42.1":
   version: 5.45.1
   resolution: "@typescript-eslint/parser@npm:5.45.1"
   dependencies:
@@ -15337,7 +15354,7 @@ __metadata:
     "@types/node": ^18.11.5
     "@types/rimraf": 3.0.2
     "@typescript-eslint/eslint-plugin": 5.46.0
-    "@typescript-eslint/parser": 5.45.1
+    "@typescript-eslint/parser": 5.46.0
     "@wireapp/eslint-config": "workspace:^"
     eslint: 8.29.0
     eslint-config-prettier: 8.5.0
