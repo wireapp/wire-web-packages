@@ -423,7 +423,8 @@ export class ConversationService {
 
       if (!isEstablished) {
         //if conversation was found bot not yet established, join
-        this.joinByExternalCommit(qualifiedId);
+        await this.joinByExternalCommit(qualifiedId);
+        return;
       }
 
       const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
@@ -432,7 +433,8 @@ export class ConversationService {
       const shouldRejoin = remoteConversationEpoch !== epoch;
       if (shouldRejoin) {
         // -if there's no match -> try to rejoin
-        this.joinByExternalCommit(qualifiedId);
+        await this.joinByExternalCommit(qualifiedId);
+        return;
       }
     }
   }
