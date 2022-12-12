@@ -53,6 +53,7 @@ import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/ful
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 import {MessageService} from '../message/MessageService';
+import {MLSConversation} from '../../messagingProtocols/mls/types';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -402,5 +403,37 @@ export class ConversationService {
 
   public async wipeMLSConversation(groupId: Uint8Array): Promise<void> {
     return this.mlsService.wipeConversation(groupId);
+  }
+
+  public isMLSConversation(conversation: Conversation): conversation is MLSConversation {
+    const {protocol, epoch, group_id} = conversation;
+    return protocol === ConversationProtocol.MLS && epoch !== undefined && group_id !== undefined;
+  }
+
+  public async handleEpochMissmatch() {
+    //fetch all the mls conversations from backend
+    const conversations = await this.apiClient.api.conversation.getConversationList();
+    const foundConversations = conversations.found || [];
+
+    const mlsConversations = foundConversations.filter(this.isMLSConversation);
+
+    //check all the established conversations' epoch with the core-crypto epoch
+    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
+      const isEstablished = await this.isMLSConversationEstablished(groupId);
+
+      if (!isEstablished) {
+        //if conversation was found bot not yet established, join
+        this.joinByExternalCommit(qualifiedId);
+      }
+
+      const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+      const remoteConversationEpoch = await this.mlsService.getEpoch(groupIdBytes);
+
+      const shouldRejoin = remoteConversationEpoch !== epoch;
+      if (shouldRejoin) {
+        // -if there's no match -> try to rejoin
+        this.joinByExternalCommit(qualifiedId);
+      }
+    }
   }
 }
