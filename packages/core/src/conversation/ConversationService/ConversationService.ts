@@ -33,6 +33,7 @@ import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
+import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 import {ExternalProposalType} from '@wireapp/core-crypto';
@@ -58,6 +59,7 @@ import {MessageService} from '../message/MessageService';
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
+  private readonly logger = logdown('@wireapp/core/ConversationService');
 
   constructor(
     private readonly apiClient: APIClient,
@@ -411,31 +413,42 @@ export class ConversationService {
   }
 
   public async handleEpochMismatch() {
+    this.logger.info(`There were some missed messages, handling possible epoch missmatch in MLS conversations.`);
+
     //fetch all the mls conversations from backend
     const conversations = await this.apiClient.api.conversation.getConversationList();
     const foundConversations = conversations.found || [];
 
     const mlsConversations = foundConversations.filter(this.isMLSConversation);
 
-    //check all the established conversations' epoch with the core-crypto epoch
-    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
-      const isEstablished = await this.isMLSConversationEstablished(groupId);
+    try {
+      //check all the established conversations' epoch with the core-crypto epoch
+      for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
+        const isEstablished = await this.isMLSConversationEstablished(groupId);
 
-      if (!isEstablished) {
-        //if conversation was found bot not yet established, join
-        await this.joinByExternalCommit(qualifiedId);
-        return;
-      }
+        if (!isEstablished) {
+          this.logger.info(
+            `MLS conversation with id ${qualifiedId.id} was found in the database, but not established yet, joining via external commit`,
+          );
+          //if conversation was found bot not yet established, join
+          await this.joinByExternalCommit(qualifiedId);
+          return;
+        }
 
-      const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-      const remoteConversationEpoch = await this.mlsService.getEpoch(groupIdBytes);
+        const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+        const remoteConversationEpoch = await this.mlsService.getEpoch(groupIdBytes);
 
-      const shouldRejoin = remoteConversationEpoch !== epoch;
-      if (shouldRejoin) {
         //if there's no match -> try to rejoin
-        await this.joinByExternalCommit(qualifiedId);
-        return;
+        const isEpochMismatched = remoteConversationEpoch !== epoch;
+        if (isEpochMismatched) {
+          this.logger.info(
+            `MLS conversation with id ${qualifiedId.id} was found in the database, epoch mismatch detected, joining via external commit`,
+          );
+          await this.joinByExternalCommit(qualifiedId);
+        }
       }
+    } catch (error) {
+      this.logger.error(`There was an error while trying to rejoin some MLS conversations user is a member of:`, error);
     }
   }
 }
