@@ -420,14 +420,13 @@ export class ConversationService {
       //check all the established conversations' epoch with the core-crypto epoch
       for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
         const isEstablished = await this.isMLSConversationEstablished(groupId);
-
         if (!isEstablished) {
           this.logger.info(
             `MLS conversation with id ${qualifiedId.id} was found in the database, but not established yet, joining via external commit`,
           );
           //if conversation was found bot not yet established, join
           await this.joinByExternalCommit(qualifiedId);
-          return;
+          continue;
         }
 
         const remoteConversationEpoch = await this.mlsService.getEpoch(groupId);
