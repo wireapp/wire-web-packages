@@ -435,8 +435,7 @@ export class ConversationService {
           return;
         }
 
-        const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-        const remoteConversationEpoch = await this.mlsService.getEpoch(groupIdBytes);
+        const remoteConversationEpoch = await this.mlsService.getEpoch(groupId);
 
         //if there's no match -> try to rejoin
         const isEpochMismatched = remoteConversationEpoch !== epoch;
