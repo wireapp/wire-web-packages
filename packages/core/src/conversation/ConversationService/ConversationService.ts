@@ -45,12 +45,12 @@ import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conver
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
-import {MLSConversation} from '../../messagingProtocols/mls/types';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
+import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
@@ -407,11 +407,6 @@ export class ConversationService {
     return this.mlsService.wipeConversation(groupId);
   }
 
-  public isMLSConversation(conversation: Conversation): conversation is MLSConversation {
-    const {protocol, epoch, group_id} = conversation;
-    return protocol === ConversationProtocol.MLS && epoch !== undefined && group_id !== undefined;
-  }
-
   public async handleEpochMismatch() {
     this.logger.info(`There were some missed messages, handling possible epoch missmatch in MLS conversations.`);
 
@@ -419,7 +414,7 @@ export class ConversationService {
     const conversations = await this.apiClient.api.conversation.getConversationList();
     const foundConversations = conversations.found || [];
 
-    const mlsConversations = foundConversations.filter(this.isMLSConversation);
+    const mlsConversations = foundConversations.filter(isMLSConversation);
 
     try {
       //check all the established conversations' epoch with the core-crypto epoch
