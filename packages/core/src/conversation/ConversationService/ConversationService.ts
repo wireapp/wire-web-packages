@@ -44,6 +44,7 @@ import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conver
 import {CryptographyService} from '../../cryptography/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {MLSConversation} from '../../messagingProtocols/mls/types';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
@@ -53,7 +54,6 @@ import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/ful
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 import {MessageService} from '../message/MessageService';
-import {MLSConversation} from '../../messagingProtocols/mls/types';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -410,7 +410,7 @@ export class ConversationService {
     return protocol === ConversationProtocol.MLS && epoch !== undefined && group_id !== undefined;
   }
 
-  public async handleEpochMissmatch() {
+  public async handleEpochMismatch() {
     //fetch all the mls conversations from backend
     const conversations = await this.apiClient.api.conversation.getConversationList();
     const foundConversations = conversations.found || [];
@@ -432,7 +432,7 @@ export class ConversationService {
 
       const shouldRejoin = remoteConversationEpoch !== epoch;
       if (shouldRejoin) {
-        // -if there's no match -> try to rejoin
+        //if there's no match -> try to rejoin
         await this.joinByExternalCommit(qualifiedId);
         return;
       }
