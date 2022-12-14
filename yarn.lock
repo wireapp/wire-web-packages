@@ -2308,19 +2308,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/optional-cmd-common@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@lerna-lite/optional-cmd-common@npm:1.12.0"
-  dependencies:
-    "@lerna-lite/core": 1.12.0
-    fs-extra: ^10.1.0
-    multimatch: ^5.0.0
-    npmlog: ^7.0.0
-    upath: ^2.0.1
-  checksum: 35fc305bfe34809c63fb5df9a1e8e58f948f7f6b73c484ec4605e2d7b974515d1ecdba671f716f4c05f995026abe1f660d0014786dbdc6e73fd2fc81373f757c
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/optional-cmd-common@npm:1.13.0":
   version: 1.13.0
   resolution: "@lerna-lite/optional-cmd-common@npm:1.13.0"
@@ -2365,17 +2352,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/run@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@lerna-lite/run@npm:1.12.0"
+"@lerna-lite/run@npm:1.13.0":
+  version: 1.13.0
+  resolution: "@lerna-lite/run@npm:1.13.0"
   dependencies:
-    "@lerna-lite/core": 1.12.0
-    "@lerna-lite/optional-cmd-common": 1.12.0
+    "@lerna-lite/core": 1.13.0
+    "@lerna-lite/optional-cmd-common": 1.13.0
     chalk: ^4.1.2
     fs-extra: ^10.1.0
-    npmlog: ^7.0.0
+    npmlog: ^7.0.1
     p-map: ^4.0.0
-  checksum: 1463b3d93679ef6fd59f8f1e519a9dbb5b130caea919f137b1842df51c2e9a1d05b74d9fc1b5ae9ffe8173538fee6b30996c669c7c486102ab907bce911ff4c3
+  checksum: 6863ee356fbcfc76ab60314036001e30f28eef2efcac8172861843c153901cd0647e919c5cb5526a3e1b8107db8a8f464c19dff5e90384c329027d0253418786
   languageName: node
   linkType: hard
 
@@ -15465,7 +15452,7 @@ __metadata:
     "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": 1.13.0
     "@lerna-lite/cli": 1.12.0
-    "@lerna-lite/run": 1.12.0
+    "@lerna-lite/run": 1.13.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/babel__core": ^7
