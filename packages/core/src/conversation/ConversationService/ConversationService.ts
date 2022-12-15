@@ -407,7 +407,7 @@ export class ConversationService {
     return this.mlsService.wipeConversation(groupId);
   }
 
-  private async isEpochMismatched(groupId: string, backendEpoch: number): Promise<boolean> {
+  private async matchesEpoch(groupId: string, backendEpoch: number): Promise<boolean> {
     const localEpoch = await this.mlsService.getEpoch(groupId);
 
     this.logger.log(
@@ -416,7 +416,7 @@ export class ConversationService {
       )}, backend: ${backendEpoch}}`,
     );
     //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
-    return BigInt(localEpoch) !== BigInt(backendEpoch);
+    return BigInt(localEpoch) === BigInt(backendEpoch);
   }
 
   public async handleEpochMismatch() {
@@ -432,7 +432,7 @@ export class ConversationService {
     for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
       try {
         //if conversation is not established or epoch does not match -> try to rejoin
-        if (!(await this.isMLSConversationEstablished(groupId)) || (await this.isEpochMismatched(groupId, epoch))) {
+        if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
           this.logger.log(
             `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
           );
