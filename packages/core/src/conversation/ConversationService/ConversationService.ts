@@ -429,13 +429,19 @@ export class ConversationService {
           continue;
         }
 
-        const remoteConversationEpoch = await this.mlsService.getEpoch(groupId);
+        const clientStoredEpoch = await this.mlsService.getEpoch(groupId);
+
+        //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
+        const isEpochMismatched = BigInt(clientStoredEpoch) !== BigInt(epoch);
 
         //if there's no match -> try to rejoin
-        const isEpochMismatched = remoteConversationEpoch !== epoch;
         if (isEpochMismatched) {
           this.logger.info(
-            `MLS conversation with id ${qualifiedId.id} was found in the database, epoch mismatch detected, joining via external commit`,
+            `MLS conversation with id ${
+              qualifiedId.id
+            } was found in the database, epoch mismatch detected {client: ${String(
+              clientStoredEpoch,
+            )}, backend: ${String(epoch)}}, joining via external commit`,
           );
           await this.joinByExternalCommit(qualifiedId);
         }
