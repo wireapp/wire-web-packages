@@ -176,19 +176,6 @@ describe('ConversationService', () => {
       } as Conversation;
     };
 
-    it('tries to re-join when not established yet conversation found', async () => {
-      const [conversationService, {apiClient}] = buildConversationService();
-
-      const mlsConversation = createConversation(1);
-      const mockedDBResponse: Conversation[] = [mlsConversation];
-      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
-
-      jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValueOnce(false);
-
-      await conversationService.handleEpochMismatch();
-      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation.qualified_id);
-    });
-
     it('re-joins multiple not-established conversations', async () => {
       const [conversationService, {apiClient}] = buildConversationService();
 
@@ -203,21 +190,6 @@ describe('ConversationService', () => {
       await conversationService.handleEpochMismatch();
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
-    });
-
-    it('tries to re-join when epoch mismatch detected', async () => {
-      const [conversationService, {apiClient, mlsService}] = buildConversationService();
-
-      const mlsConversation = createConversation(1);
-
-      const mockedDBResponse: Conversation[] = [mlsConversation];
-      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
-
-      jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(2);
-
-      await conversationService.handleEpochMismatch();
-      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation.qualified_id);
     });
 
     it('re-joins multiple conversations when mismatches detected', async () => {
