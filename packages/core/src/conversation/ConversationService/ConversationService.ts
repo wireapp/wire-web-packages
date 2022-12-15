@@ -407,6 +407,18 @@ export class ConversationService {
     return this.mlsService.wipeConversation(groupId);
   }
 
+  private async isEpochMismatched(groupId: string, backendEpoch: number): Promise<boolean> {
+    const localEpoch = await this.mlsService.getEpoch(groupId);
+
+    this.logger.log(
+      `Comparing conversation's (group_id: ${groupId}) local and backend epoch number: {local: ${BigInt(
+        localEpoch,
+      )}, backend: ${backendEpoch}}`,
+    );
+    //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
+    return BigInt(localEpoch) !== BigInt(backendEpoch);
+  }
+
   public async handleEpochMismatch() {
     this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
 
@@ -416,38 +428,22 @@ export class ConversationService {
 
     const mlsConversations = foundConversations.filter(isMLSConversation);
 
-    try {
-      //check all the established conversations' epoch with the core-crypto epoch
-      for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
-        const isEstablished = await this.isMLSConversationEstablished(groupId);
-        if (!isEstablished) {
-          this.logger.info(
-            `MLS conversation with id ${qualifiedId.id} was found in the database, but not established yet, joining via external commit`,
-          );
-          //if conversation was found bot not yet established, join
-          await this.joinByExternalCommit(qualifiedId);
-          continue;
-        }
-
-        const clientStoredEpoch = await this.mlsService.getEpoch(groupId);
-
-        //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
-        const isEpochMismatched = BigInt(clientStoredEpoch) !== BigInt(epoch);
-
-        //if there's no match -> try to rejoin
-        if (isEpochMismatched) {
-          this.logger.info(
-            `MLS conversation with id ${
-              qualifiedId.id
-            } was found in the database, epoch mismatch detected {client: ${String(
-              clientStoredEpoch,
-            )}, backend: ${String(epoch)}}, joining via external commit`,
+    //check all the established conversations' epoch with the core-crypto epoch
+    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
+      try {
+        //if conversation is not established or epoch does not match -> try to rejoin
+        if (!(await this.isMLSConversationEstablished(groupId)) || (await this.isEpochMismatched(groupId, epoch))) {
+          this.logger.log(
+            `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
           );
           await this.joinByExternalCommit(qualifiedId);
         }
+      } catch (error) {
+        this.logger.error(
+          `There was an error while handling epoch mismatch in MLS conversation (id: ${qualifiedId.id}):`,
+          error,
+        );
       }
-    } catch (error) {
-      this.logger.error(`There was an error while trying to rejoin some MLS conversations user is a member of:`, error);
     }
   }
 }
