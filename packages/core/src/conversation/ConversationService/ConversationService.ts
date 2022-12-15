@@ -411,7 +411,7 @@ export class ConversationService {
     const localEpoch = await this.mlsService.getEpoch(groupId);
 
     this.logger.log(
-      `Comparing conversation's (group_id: ${groupId}) local and backend epoch number: {local: ${BigInt(
+      `Comparing conversation's (group_id: ${groupId}) local and backend epoch number: {local: ${String(
         localEpoch,
       )}, backend: ${backendEpoch}}`,
     );
