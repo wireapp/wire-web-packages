@@ -4338,7 +4338,7 @@ __metadata:
     "@wireapp/core-crypto": 0.6.0-pre.4
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.42.0
+    "@wireapp/protocol-messaging": 1.43.0
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.2.1
     bazinga64: 6.0.3
@@ -4526,6 +4526,18 @@ __metadata:
     protobufjs-cli: 1.0.2
     typescript: 4.8.4
   checksum: 5ed5a07fdcca9ca269480ef838e5ef00dd9236e5cb7124d48732fed67065f67343c015734ace52d2d8a84ef183016b8520ad8b06386c49216904adb0b17cd72c
+  languageName: node
+  linkType: hard
+
+"@wireapp/protocol-messaging@npm:1.43.0":
+  version: 1.43.0
+  resolution: "@wireapp/protocol-messaging@npm:1.43.0"
+  dependencies:
+    long: 5.2.0
+    protobufjs: 7.1.2
+    protobufjs-cli: 1.0.2
+    typescript: 4.8.4
+  checksum: 6d6fc2e9cb6118cb5180a22898ca23a0b1bf3783b31a94840001195da8f1644b2e42009bd9513f1048208a2d469aa20d750f3a42515a4a7960efa38c1894e479
   languageName: node
   linkType: hard
 
