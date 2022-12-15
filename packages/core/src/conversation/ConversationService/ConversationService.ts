@@ -408,7 +408,7 @@ export class ConversationService {
   }
 
   public async handleEpochMismatch() {
-    this.logger.info(`There were some missed messages, handling possible epoch missmatch in MLS conversations.`);
+    this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
 
     //fetch all the mls conversations from backend
     const conversations = await this.apiClient.api.conversation.getConversationList();
