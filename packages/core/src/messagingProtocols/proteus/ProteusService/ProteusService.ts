@@ -203,11 +203,11 @@ export class ProteusService {
 
   private async decrypt(encryptedText: Uint8Array, userId: QualifiedId, clientId: string) {
     const sessionId = this.constructSessionId(userId, clientId);
-    const sessionExists = (await this.coreCryptoClient.proteusSessionExists(sessionId)) as unknown as boolean;
+    const sessionExists = await this.coreCryptoClient.proteusSessionExists(sessionId);
 
     try {
       const decryptedMessage: Uint8Array = !sessionExists
-        ? ((await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)) as unknown as Uint8Array) //TODO: fix types once defined in core-crypto
+        ? await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)
         : await this.coreCryptoClient.proteusDecrypt(sessionId, encryptedText);
 
       if (!sessionExists) {

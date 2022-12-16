@@ -94,7 +94,7 @@ export class MLSService {
     try {
       const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload.slice());
       if (isExternalCommit) {
-        await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId, {});
+        await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
       } else {
         await this.coreCryptoClient.commitAccepted(groupId);
       }

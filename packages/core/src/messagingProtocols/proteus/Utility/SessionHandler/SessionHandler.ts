@@ -153,7 +153,7 @@ const initSession = async (
   {coreCrypto, apiClient}: {apiClient: APIClient; coreCrypto: CoreCrypto},
 ): Promise<string> => {
   const sessionId = constructSessionId({userId, clientId, useQualifiedIds: !!userId.domain});
-  const sessionExists = (await coreCrypto.proteusSessionExists(sessionId)) as unknown as boolean;
+  const sessionExists = await coreCrypto.proteusSessionExists(sessionId);
   if (!sessionExists) {
     await createSession({
       sessionId,
@@ -215,7 +215,7 @@ const initSessions = async ({
     const clients = Array.isArray(data) ? data : Object.keys(data);
     for (const clientId of clients) {
       const sessionId = constructSessionId({userId, clientId, useQualifiedIds: !!domain});
-      if ((await coreCrypto.proteusSessionExists(sessionId)) as unknown as boolean) {
+      if (await coreCrypto.proteusSessionExists(sessionId)) {
         existingSessions.push(sessionId);
         continue;
       }
