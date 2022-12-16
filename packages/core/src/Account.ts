@@ -307,8 +307,7 @@ export class Account<T = any> extends EventEmitter {
       await this.service.proteus.init();
 
       if (this.backendFeatures.supportsMLS) {
-        const encoder = new TextEncoder();
-        await this.coreCryptoClient.mlsInit(encoder.encode(localClient.id));
+        await this.service.mls.initClient(localClient.id);
       }
 
       return {isNewClient: false, localClient};
@@ -475,8 +474,7 @@ export class Account<T = any> extends EventEmitter {
     const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
     if (createMlsClient && this.backendFeatures.supportsMLS) {
-      const encoder = new TextEncoder();
-      await this.coreCryptoClient.mlsInit(encoder.encode(registeredClient.id));
+      await this.service.mls.initClient(registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');

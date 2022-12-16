@@ -85,6 +85,11 @@ export class MLSService {
     };
   }
 
+  public async initClient(clientId: string) {
+    const encoder = new TextEncoder();
+    await this.coreCryptoClient.mlsInit(encoder.encode(clientId));
+  }
+
   private async uploadCommitBundle(
     groupId: Uint8Array,
     commitBundle: CommitBundle,
