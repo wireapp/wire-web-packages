@@ -11,7 +11,7 @@
     "collect-licenses": "src/cli.js"
   },
   "dependencies": {
-    "fs-extra": "10.1.0",
+    "fs-extra": "11.1.0",
     "logdown": "3.3.1",
     "npm-license-crawler": "0.2.1",
     "npm-registry-package-info": "1.0.5"
@@ -31,5 +31,5 @@
     "dist": "yarn build",
     "start": "ts-node -r tsconfig-paths/register ./src/cli.ts"
   },
-  "version": "0.11.4"
+  "version": "0.11.5"
 }

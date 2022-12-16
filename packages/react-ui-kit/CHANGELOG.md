@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.2.3...@wireapp/react-ui-kit@9.3.0) (2022-12-14)
+
+### Features
+
+* add enum for TabIndex ([#4708](https://github.com/wireapp/wire-web-packages/issues/4708)) ([59ebbbd](https://github.com/wireapp/wire-web-packages/commit/59ebbbd34c6dc19785ea8ad49512f567f2db230b))
+
+## [9.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.2.2...@wireapp/react-ui-kit@9.2.3) (2022-12-09)
+
+### Bug Fixes
+
+* improve useTimeout hook with ref ([#4697](https://github.com/wireapp/wire-web-packages/issues/4697)) ([0784341](https://github.com/wireapp/wire-web-packages/commit/07843417b3c0a3fe4fbd8dea91384124df44f774))
+
+## [9.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.2.1...@wireapp/react-ui-kit@9.2.2) (2022-12-07)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.2.0...@wireapp/react-ui-kit@9.2.1) (2022-12-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.1.0...@wireapp/react-ui-kit@9.2.0) (2022-11-30)
+
+### Features
+
+* **react-ui-kit:** Indicator range input voiceover ([#4645](https://github.com/wireapp/wire-web-packages/issues/4645)) ([969f9d7](https://github.com/wireapp/wire-web-packages/commit/969f9d747fecc550930233e861dc2ccbedacef24))
+
+# [9.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.12...@wireapp/react-ui-kit@9.1.0) (2022-11-28)
+
+### Features
+
+* **react-ui-kit:** Prepare Indicator Range Input ([#4630](https://github.com/wireapp/wire-web-packages/issues/4630)) ([0aa1e6b](https://github.com/wireapp/wire-web-packages/commit/0aa1e6b407ba904a2a46e96251386e9286cc94b6)), closes [#4641](https://github.com/wireapp/wire-web-packages/issues/4641)
+
 ## [9.0.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.0.11...@wireapp/react-ui-kit@9.0.12) (2022-11-24)
 
 ### Bug Fixes

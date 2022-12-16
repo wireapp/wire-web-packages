@@ -18,7 +18,7 @@
  */
 
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
-import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
+import {Conversation, ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 
 import {APIClient} from '@wireapp/api-client';
 import {GenericMessage} from '@wireapp/protocol-messaging';
@@ -26,8 +26,17 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ConversationService, MessageSendingState} from '..';
 import {MLSService} from '../../messagingProtocols/mls';
 import {ProteusService} from '../../messagingProtocols/proteus';
+import * as MessagingProtocols from '../../messagingProtocols/proteus';
 import * as PayloadHelper from '../../test/PayloadHelper';
 import * as MessageBuilder from '../message/MessageBuilder';
+
+jest.mock('../../messagingProtocols/proteus', () => ({
+  ...jest.requireActual('../../messagingProtocols/proteus'),
+  getGenericMessageParams: jest.fn(),
+  getRecipientsForConversation: jest.fn(),
+  getConversationQualifiedMembers: jest.fn(),
+}));
+const MockedMessagingProtocols = MessagingProtocols as jest.Mocked<typeof MessagingProtocols>;
 
 jest.mock('../message/messageSender', () => ({
   ...jest.requireActual('../message/messageSender'),
@@ -37,6 +46,8 @@ jest.mock('../message/messageSender', () => ({
 const mockedMLSService = {
   encryptMessage: () => {},
   commitPendingProposals: () => Promise.resolve(),
+  getEpoch: () => Promise.resolve(),
+  joinByExternalCommit: jest.fn(),
 } as unknown as MLSService;
 
 const mockedProteusService = {
@@ -50,7 +61,7 @@ describe('ConversationService', () => {
     jest.setSystemTime(new Date(0));
   });
 
-  function buildConversationService(federated?: boolean): [ConversationService, {apiClient: APIClient}] {
+  function buildConversationService(federated?: boolean) {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     jest.spyOn(client.api.conversation, 'postMlsMessage').mockReturnValue(
       Promise.resolve({
@@ -58,6 +69,7 @@ describe('ConversationService', () => {
         time: new Date().toISOString(),
       }),
     );
+
     jest.spyOn(client.api.user, 'postListClients').mockReturnValue(
       Promise.resolve({
         qualified_user_map: {
@@ -77,17 +89,19 @@ describe('ConversationService', () => {
       userId: PayloadHelper.getUUID(),
       clientId: PayloadHelper.getUUID(),
     };
-    return [
-      new ConversationService(
-        client,
-        {
-          useQualifiedIds: federated,
-        },
-        mockedMLSService,
-        mockedProteusService,
-      ),
-      {apiClient: client},
-    ];
+
+    const conversationService = new ConversationService(
+      client,
+      {
+        useQualifiedIds: federated,
+      },
+      mockedMLSService,
+      mockedProteusService,
+    );
+
+    jest.spyOn(conversationService, 'joinByExternalCommit');
+
+    return [conversationService, {apiClient: client, mlsService: mockedMLSService}] as const;
   }
 
   describe('"send PROTEUS"', () => {
@@ -143,6 +157,70 @@ describe('ConversationService', () => {
     });
   });
 
+  describe('"handleEpochMismatch"', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    const createConversation = (epoch: number, conversationId?: string) => {
+      return {
+        group_id: 'group-id',
+        qualified_id: {id: conversationId || 'conversation-id', domain: 'staging.zinfra.io'},
+        protocol: ConversationProtocol.MLS,
+        epoch,
+      } as Conversation;
+    };
+
+    it('re-joins multiple not-established conversations', async () => {
+      const [conversationService, {apiClient}] = buildConversationService();
+
+      const mlsConversation1 = createConversation(1, 'conversation1');
+      const mlsConversation2 = createConversation(1, 'conversation2');
+
+      const mockedDBResponse: Conversation[] = [mlsConversation1, mlsConversation2];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValue(false);
+
+      await conversationService.handleEpochMismatch();
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
+    });
+
+    it('re-joins multiple conversations when mismatches detected', async () => {
+      const [conversationService, {apiClient, mlsService}] = buildConversationService();
+
+      const mlsConversation1 = createConversation(1, 'conversation1');
+      const mlsConversation2 = createConversation(1, 'conversation2');
+
+      const mockedDBResponse: Conversation[] = [mlsConversation1, mlsConversation2];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValue(true);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValue(2);
+
+      await conversationService.handleEpochMismatch();
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
+    });
+
+    it("does not re-join when there's no mismatch", async () => {
+      const [conversationService, {apiClient, mlsService}] = buildConversationService();
+
+      const mlsConversation = createConversation(1);
+
+      const mockedDBResponse: Conversation[] = [mlsConversation];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValueOnce(true);
+
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(1);
+
+      await conversationService.handleEpochMismatch();
+      expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
+    });
+  });
+
   describe('fetchAllParticipantsClients', () => {
     it('gives the members and clients of a federated conversation', async () => {
       const [conversationService, {apiClient}] = buildConversationService(true);
@@ -161,6 +239,11 @@ describe('ConversationService', () => {
           ['test-id-2']: ['test-client-id-1-user-2', 'test-client-id-2-user-2'],
         },
       };
+
+      MockedMessagingProtocols.getConversationQualifiedMembers.mockResolvedValue([
+        {domain: 'test-domain', id: 'test-id-1'},
+        {domain: 'test-domain', id: 'test-id-2'},
+      ]);
 
       const fetchedMembers = await conversationService.fetchAllParticipantsClients('convid');
       expect(fetchedMembers).toEqual(members);

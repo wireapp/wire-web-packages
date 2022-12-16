@@ -49,7 +49,7 @@ import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
-import {getQueueLength, resumeMessageSending} from './conversation/message/messageSender';
+import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
@@ -605,19 +605,29 @@ export class Account<T = any> extends EventEmitter {
       }
     });
 
+    const handleMissedNotifications = async (notificationId: string) => {
+      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+        await this.service?.conversation.handleEpochMismatch();
+      }
+      return onMissedNotifications(notificationId);
+    };
+
     const processNotificationStream = async (abortHandler: AbortHandler) => {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
       this.apiClient.transport.ws.lock();
+      pauseMessageSending();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+
       const results = await this.service!.notification.processNotificationStream(
         async (notification, source, progress) => {
           await handleNotification(notification, source);
           onNotificationStreamProgress(progress);
         },
-        onMissedNotifications,
+        handleMissedNotifications,
         abortHandler,
       );
       this.logger.log(`Finished processing notifications ${JSON.stringify(results)}`, results);
+
       if (abortHandler.isAborted()) {
         this.logger.warn('Ending connection process as websocket was closed');
         return;

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.3.0...@wireapp/core@37.4.0) (2022-12-16)
+
+### Features
+
+* **core:** recover mls conversation from quick sync 404 error [FS-1172] ([#4706](https://github.com/wireapp/wire-web-packages/issues/4706)) ([0152aec](https://github.com/wireapp/wire-web-packages/commit/0152aecd33d0fc1fd2f14034da94ddb2f5ee66d8))
+
+# [37.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.2.4...@wireapp/core@37.3.0) (2022-12-08)
+
+### Features
+
+* **api-client, core:** api v3 support for typing endpoint [FS-1311] ([#4696](https://github.com/wireapp/wire-web-packages/issues/4696)) ([780a2bf](https://github.com/wireapp/wire-web-packages/commit/780a2bfe5535ea3f4c55e8ca0bf0904569f65405))
+
+## [37.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.2.3...@wireapp/core@37.2.4) (2022-12-07)
+
+### Bug Fixes
+
+* Block message sending when notification stream is being processed ([#4695](https://github.com/wireapp/wire-web-packages/issues/4695)) ([b90270a](https://github.com/wireapp/wire-web-packages/commit/b90270abb9bc1f9b1ddfdb85fff29079b321ce34))
+
+## [37.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.2.2...@wireapp/core@37.2.3) (2022-12-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [37.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.2.1...@wireapp/core@37.2.2) (2022-12-06)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [37.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@37.2.0...@wireapp/core@37.2.1) (2022-11-24)
 
 **Note:** Version bump only for package @wireapp/core

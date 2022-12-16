@@ -33,6 +33,7 @@ import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
+import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 import {ExternalProposalType} from '@wireapp/core-crypto';
@@ -48,6 +49,7 @@ import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
+import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
@@ -56,6 +58,7 @@ import {MessageService} from '../message/MessageService';
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly messageService: MessageService;
+  private readonly logger = logdown('@wireapp/core/ConversationService');
 
   constructor(
     private readonly apiClient: APIClient,
@@ -197,11 +200,11 @@ export class ConversationService {
     return sendMessage(() => (isMLS(params) ? this.sendMLSMessage(params) : this.proteusService.sendMessage(params)));
   }
 
-  public sendTypingStart(conversationId: string): Promise<void> {
+  public sendTypingStart(conversationId: QualifiedId): Promise<void> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STARTED});
   }
 
-  public sendTypingStop(conversationId: string): Promise<void> {
+  public sendTypingStop(conversationId: QualifiedId): Promise<void> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
@@ -400,5 +403,45 @@ export class ConversationService {
 
   public async wipeMLSConversation(groupId: Uint8Array): Promise<void> {
     return this.mlsService.wipeConversation(groupId);
+  }
+
+  private async matchesEpoch(groupId: string, backendEpoch: number): Promise<boolean> {
+    const localEpoch = await this.mlsService.getEpoch(groupId);
+
+    this.logger.log(
+      `Comparing conversation's (group_id: ${groupId}) local and backend epoch number: {local: ${String(
+        localEpoch,
+      )}, backend: ${backendEpoch}}`,
+    );
+    //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
+    return BigInt(localEpoch) === BigInt(backendEpoch);
+  }
+
+  public async handleEpochMismatch() {
+    this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
+
+    //fetch all the mls conversations from backend
+    const conversations = await this.apiClient.api.conversation.getConversationList();
+    const foundConversations = conversations.found || [];
+
+    const mlsConversations = foundConversations.filter(isMLSConversation);
+
+    //check all the established conversations' epoch with the core-crypto epoch
+    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
+      try {
+        //if conversation is not established or epoch does not match -> try to rejoin
+        if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
+          this.logger.log(
+            `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
+          );
+          await this.joinByExternalCommit(qualifiedId);
+        }
+      } catch (error) {
+        this.logger.error(
+          `There was an error while handling epoch mismatch in MLS conversation (id: ${qualifiedId.id}):`,
+          error,
+        );
+      }
+    }
   }
 }
