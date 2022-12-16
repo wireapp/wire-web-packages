@@ -4265,6 +4265,7 @@ __metadata:
     "@wireapp/core-crypto": 0.6.0-pre.5
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.43.0
+    "@wireapp/store-engine": "workspace:*"
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.2.1
     bazinga64: 6.0.3
@@ -4509,7 +4510,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@workspace:*, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
