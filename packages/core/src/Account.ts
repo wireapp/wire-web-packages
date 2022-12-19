@@ -650,14 +650,11 @@ export class Account<T = any> extends EventEmitter {
 
   public async runCryptoboxMigration() {
     const dbName = this.storeEngine.storeName;
-    console.log('patryk', dbName);
     try {
       this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
       await this.service!.proteus.proteusCryptoboxMigrate(dbName);
       this.logger.log(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
     } catch (error) {
-      //
-      throw error;
       this.logger.error('Client was not able to perform DB migration: ', error);
     }
   }
