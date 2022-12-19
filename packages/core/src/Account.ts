@@ -649,7 +649,13 @@ export class Account<T = any> extends EventEmitter {
   }
 
   public async runCryptoboxMigration() {
-    const dbName = this.storeEngine.storeName;
+    const dbName = this.storeEngine?.storeName;
+
+    if (!dbName) {
+      this.logger.error('Client was not able to perform DB migration: database was not initialised yet');
+      return;
+    }
+
     try {
       this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
       await this.service!.proteus.proteusCryptoboxMigrate(dbName);
