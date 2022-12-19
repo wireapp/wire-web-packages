@@ -12,6 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.2.0
       - name: 'Automerge dependency updates from Dependabot'
-        uses: ahmadnassri/action-dependabot-auto-merge@v2.6.4
+        uses: ahmadnassri/action-dependabot-auto-merge@v2.6.6
         with:
           github-token: ${{ secrets.WEBTEAM_AUTOMERGE_TOKEN }}
