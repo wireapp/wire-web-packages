@@ -18,6 +18,7 @@
  */
 
 export {Account, ConnectionState, ProcessedEventPayload} from './Account';
+export {AccountBuilder} from './AccountBuilder';
 export * as auth from './auth/';
 export * as conversation from './conversation/';
 export {CoreError} from './CoreError';

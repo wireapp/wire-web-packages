@@ -17,32 +17,22 @@
  *
  */
 
-import {
-  RegisterData,
-  AUTH_COOKIE_KEY,
-  AUTH_TABLE_NAME,
-  Context,
-  Cookie,
-  CookieStore,
-  LoginData,
-} from '@wireapp/api-client/lib/auth';
-import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {Context, LoginData} from '@wireapp/api-client/lib/auth';
+import {RegisteredClient} from '@wireapp/api-client/lib/client/';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import {Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
-import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
+import {CRUDEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
-import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
@@ -51,14 +41,14 @@ import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conve
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
-import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
+import {CryptoProtocolConfig, MLSCallbacks} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
-import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
+import {CoreDatabase, deleteDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
-import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
+import {EncryptedStore} from './util/encryptedStore';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -87,7 +77,7 @@ export interface Account {
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
 
-interface AccountOptions<T> {
+export interface AccountOptions<T> {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
@@ -108,70 +98,51 @@ interface AccountOptions<T> {
   cryptoProtocolConfig?: CryptoProtocolConfig<T>;
 }
 
-type InitOptions = {
-  /** cookie used to identify the current user. Will use the browser cookie if not defined */
-  cookie?: Cookie;
-};
+interface Stores {
+  app: CRUDEngine;
+  core: CoreDatabase;
+  secrets: EncryptedStore<unknown>;
+}
 
-const coreDefaultClient: ClientInfo = {
-  classification: ClientClassification.DESKTOP,
-  cookieLabel: 'default',
-  model: '@wireapp/core',
-};
+interface Services {
+  mls: MLSService;
+  proteus: ProteusService;
+  account: AccountService;
+  asset: AssetService;
+  broadcast: BroadcastService;
+  client: ClientService;
+  connection: ConnectionService;
+  conversation: ConversationService;
+  giphy: GiphyService;
+  linkPreview: LinkPreviewService;
+  notification: NotificationService;
+  self: SelfService;
+  team: TeamService;
+  user: UserService;
+}
 
 export class Account<T = any> extends EventEmitter {
-  private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
-  private readonly createStore: CreateStoreFn;
-  private storeEngine?: CRUDEngine;
-  private db?: CoreDatabase;
-  private secretsDb?: EncryptedStore<any>;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
-  private coreCryptoClient?: CoreCrypto;
-
-  public service?: {
-    mls: MLSService;
-    proteus: ProteusService;
-    account: AccountService;
-    asset: AssetService;
-    broadcast: BroadcastService;
-    client: ClientService;
-    connection: ConnectionService;
-    conversation: ConversationService;
-    giphy: GiphyService;
-    linkPreview: LinkPreviewService;
-    notification: NotificationService;
-    self: SelfService;
-    team: TeamService;
-    user: UserService;
-  };
-  public backendFeatures: BackendFeatures;
+  private localClient?: RegisteredClient;
+  public readonly service: Services;
 
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
    * @param accountOptions
    */
   constructor(
-    apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions<T> = {},
+    context: Context,
+    private readonly apiClient: APIClient,
+    private readonly coreCrypto: CoreCrypto,
+    private readonly stores: Stores,
+    {nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions<T> = {},
   ) {
     super();
-    this.apiClient = apiClient;
-    this.backendFeatures = this.apiClient.backendFeatures;
     this.cryptoProtocolConfig = cryptoProtocolConfig;
     this.nbPrekeys = nbPrekeys;
-    this.createStore = createStore;
-
-    apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
-      if (cookie && this.storeEngine) {
-        try {
-          await this.persistCookie(this.storeEngine, cookie);
-        } catch (error) {
-          this.logger.error(`Failed to save cookie: ${(error as Error).message}`, error);
-        }
-      }
-    });
+    this.service = this.buildServices(context);
 
     this.logger = logdown('@wireapp/core/Account', {
       logger: console,
@@ -179,73 +150,8 @@ export class Account<T = any> extends EventEmitter {
     });
   }
 
-  /**
-   * Will set the APIClient to use a specific version of the API (by default uses version 0)
-   * It will fetch the API Config and use the highest possible version
-   * @param acceptedVersions Which version the consumer supports
-   * @param useDevVersion allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
-   *   If we have version 2 that is a dev version, this is going to be the output of those calls
-   *   - useVersion([0, 1, 2], true) > version 2 is used
-   *   - useVersion([0, 1, 2], false) > version 1 is used
-   *   - useVersion([0, 1], true) > version 1 is used
-   * @return The highest version that is both supported by client and backend
-   */
-  public async useAPIVersion(supportedVersions: number[], useDevVersion?: boolean) {
-    const features = await this.apiClient.useVersion(supportedVersions, useDevVersion);
-    this.backendFeatures = features;
-    return features;
-  }
-
-  private persistCookie(storeEngine: CRUDEngine, cookie: Cookie): Promise<string> {
-    const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
-    return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
-  }
-
-  get clientId(): string {
-    return this.apiClient.validatedClientId;
-  }
-
-  get userId(): string {
-    return this.apiClient.validatedUserId;
-  }
-
-  /**
-   * Will register a new user to the backend
-   *
-   * @param registration The user's data
-   * @param clientType Type of client to create (temporary or permanent)
-   */
-  public async register(registration: RegisterData, clientType: ClientType): Promise<Context> {
-    const context = await this.apiClient.register(registration, clientType);
-    await this.initServices(context);
-    return context;
-  }
-
-  /**
-   * Will init the core with an already logged in user
-   *
-   * @param clientType The type of client the user is using (temporary or permanent)
-   */
-  public async init(clientType: ClientType, {cookie}: InitOptions = {}): Promise<Context> {
-    const context = await this.apiClient.init(clientType, cookie);
-    await this.initServices(context);
-    return context;
-  }
-
-  /**
-   * Will log the user in with the given credential.
-   *
-   * @param loginData The credentials of the user
-   * @param clientInfo Info about the client to create (name, type...)
-   */
-  public async login(loginData: LoginData): Promise<Context> {
-    this.resetContext();
-    LoginSanitizer.removeNonPrintableCharacters(loginData);
-
-    const context = await this.apiClient.login(loginData);
-    await this.initServices(context);
-
-    return context;
+  public get backendFeatures(): BackendFeatures {
+    return this.apiClient.backendFeatures;
   }
 
   /**
@@ -253,18 +159,18 @@ export class Account<T = any> extends EventEmitter {
    */
   public async registerClient(
     loginData: LoginData,
-    clientInfo: ClientInfo = coreDefaultClient,
+    clientInfo: ClientInfo,
     entropyData?: Uint8Array,
   ): Promise<RegisteredClient> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
+    if (!this.apiClient.context) {
       throw new Error('Services are not set or context not initialized.');
     }
     const shouldCreateMlsClient = !!this.cryptoProtocolConfig?.mls;
     this.logger.info(`Creating new client {mls: ${shouldCreateMlsClient}}`);
     if (entropyData) {
-      await this.coreCryptoClient.reseedRng(entropyData);
+      await this.coreCrypto.reseedRng(entropyData);
     }
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.stores.app, this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient();
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
@@ -288,7 +194,7 @@ export class Account<T = any> extends EventEmitter {
    * @returns The local existing client or undefined if the client does not exist or is not valid (non existing on backend)
    */
   public async initClient(client?: RegisteredClient): Promise<RegisteredClient | undefined> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
+    if (!this.apiClient.context) {
       throw new Error('Services are not set.');
     }
     const validClient = client ?? (await this.service!.client.loadClient());
@@ -300,7 +206,7 @@ export class Account<T = any> extends EventEmitter {
     // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.stores.app, this.apiClient.context);
     if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       await this.service.mls.initClient({id: userId, domain}, validClient.id);
@@ -317,52 +223,15 @@ export class Account<T = any> extends EventEmitter {
     return validClient;
   }
 
-  private async initCoreCrypto(context: Context) {
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
-
-    const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
-    this.secretsDb = systemCrypto
-      ? await createCustomEncryptedStore(dbName, systemCrypto)
-      : await createEncryptedStore(dbName);
-
-    let key = await this.secretsDb.getsecretValue(coreCryptoKeyId);
-    if (!key) {
-      key = crypto.getRandomValues(new Uint8Array(16));
-      await this.secretsDb.saveSecretValue(coreCryptoKeyId, key);
-    }
-
-    return CoreCrypto.deferredInit(
-      `corecrypto-${this.generateDbName(context)}`,
-      Encoder.toBase64(key).asString,
-      undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
-      this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-    );
-  }
-
-  /**
-   * In order to be able to send MLS messages, the core needs a few information from the consumer.
-   * Namely:
-   * - is the current user allowed to administrate a specific conversation
-   * - what is the groupId of a conversation
-   * @param mlsCallbacks
-   */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls.configureMLSCallbacks(mlsCallbacks);
-  }
-
-  public async initServices(context: Context): Promise<void> {
-    this.coreCryptoClient = await this.initCoreCrypto(context);
-    this.storeEngine = await this.initEngine(context);
-    this.db = await openDB(this.generateCoreDbName(context));
+  private buildServices(context: Context) {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const mlsService = new MLSService(this.apiClient, this.coreCryptoClient, {
+    const mlsService = new MLSService(this.apiClient, this.coreCrypto, {
       ...this.cryptoProtocolConfig?.mls,
       nbKeyPackages: this.nbPrekeys,
     });
-    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, this.db, {
+    const proteusService = new ProteusService(this.apiClient, this.coreCrypto, this.stores.core, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
@@ -375,11 +244,11 @@ export class Account<T = any> extends EventEmitter {
       },
     });
 
-    const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
+    const clientService = new ClientService(this.apiClient, proteusService, this.stores.app);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const notificationService = new NotificationService(this.apiClient, mlsService, proteusService, this.storeEngine);
+    const notificationService = new NotificationService(this.apiClient, mlsService, proteusService, this.stores.app);
     const conversationService = new ConversationService(
       this.apiClient,
       {
@@ -396,7 +265,7 @@ export class Account<T = any> extends EventEmitter {
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
     const userService = new UserService(this.apiClient, broadcastService, connectionService);
 
-    this.service = {
+    return {
       mls: mlsService,
       proteus: proteusService,
       account: accountService,
@@ -414,9 +283,15 @@ export class Account<T = any> extends EventEmitter {
     };
   }
 
-  private resetContext(): void {
-    delete this.apiClient.context;
-    delete this.service;
+  /**
+   * In order to be able to send MLS messages, the core needs a few information from the consumer.
+   * Namely:
+   * - is the current user allowed to administrate a specific conversation
+   * - what is the groupId of a conversation
+   * @param mlsCallbacks
+   */
+  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
+    this.service?.mls.configureMLSCallbacks(mlsCallbacks);
   }
 
   /**
@@ -424,22 +299,21 @@ export class Account<T = any> extends EventEmitter {
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
   public async logout(clearData: boolean = false): Promise<void> {
-    this.db?.close();
-    this.secretsDb?.close();
+    this.stores.core?.close();
+    this.stores.secrets?.close();
     if (clearData) {
       this.wipe();
     }
     await this.apiClient.logout();
-    this.resetContext();
   }
 
   private async wipe(): Promise<void> {
-    if (this.coreCryptoClient) {
-      await this.coreCryptoClient.wipe();
+    if (this.coreCrypto) {
+      await this.coreCrypto.wipe();
     }
-    await this.secretsDb?.wipe();
-    if (this.db) {
-      await deleteDB(this.db);
+    await this.stores.secrets?.wipe();
+    if (this.stores.core) {
+      await deleteDB(this.stores.core);
     }
   }
 
@@ -576,40 +450,5 @@ export class Account<T = any> extends EventEmitter {
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
     };
-  }
-
-  private generateDbName(context: Context) {
-    const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
-    return `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
-  }
-
-  private generateSecretsDbName(context: Context) {
-    return `secrets-${this.generateDbName(context)}`;
-  }
-
-  private generateCoreDbName(context: Context) {
-    return `core-${this.generateDbName(context)}`;
-  }
-
-  private async initEngine(context: Context): Promise<CRUDEngine> {
-    const dbName = this.generateDbName(context);
-    this.logger.log(`Initialising store with name "${dbName}"...`);
-    const openDb = async () => {
-      const initializedDb = await this.createStore(dbName, context);
-      if (initializedDb) {
-        this.logger.log(`Initialized store with existing engine "${dbName}".`);
-        return initializedDb;
-      }
-      this.logger.log(`Initialized store with new memory engine "${dbName}".`);
-      const memoryEngine = new MemoryEngine();
-      await memoryEngine.init(dbName);
-      return memoryEngine;
-    };
-    const storeEngine = await openDb();
-    const cookie = CookieStore.getCookie();
-    if (cookie) {
-      await this.persistCookie(storeEngine, cookie);
-    }
-    return storeEngine;
   }
 }
