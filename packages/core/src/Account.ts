@@ -659,6 +659,15 @@ export class Account<T = any> extends EventEmitter {
     try {
       this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
       await this.service!.proteus.proteusCryptoboxMigrate(dbName);
+
+      // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
+      // They will be stored in corecrypto database now.
+      const storesToClear = ['keys', 'prekeys', 'sessions'] as const;
+
+      for (const storeName of storesToClear) {
+        await this.storeEngine?.deleteAll(storeName);
+      }
+
       this.logger.log(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
     } catch (error) {
       this.logger.error('Client was not able to perform DB migration: ', error);
