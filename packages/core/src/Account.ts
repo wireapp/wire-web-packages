@@ -51,6 +51,7 @@ import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
 import {GiphyService} from './giphy/';
+import {deleteIdentity} from './identity/identityClearer';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
@@ -288,23 +289,24 @@ export class Account<T = any> extends EventEmitter {
       throw new Error('Services are not set.');
     }
 
-    //call /access endpoint with client_id after client initialisation
-    await this.apiClient.transport.http.associateClientWithSession(this.apiClient.context.clientId!);
-
-    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-      // initialize schedulers for pending mls proposals once client is initialized
-      await this.service?.mls.checkExistingPendingProposals();
-
-      // initialize schedulers for renewing key materials
-      this.service?.mls.checkForKeyMaterialsUpdate();
-
-      // initialize scheduler for syncing key packages with backend
-      this.service?.mls.checkForKeyPackagesBackendSync();
-    }
     try {
       const localClient = await this.loadAndValidateLocalClient();
-      await this.service.proteus.init();
 
+      //call /access endpoint with client_id after client initialisation
+      await this.apiClient.transport.http.associateClientWithSession(localClient.id);
+
+      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+        // initialize schedulers for pending mls proposals once client is initialized
+        await this.service.mls.checkExistingPendingProposals();
+
+        // initialize schedulers for renewing key materials
+        this.service.mls.checkForKeyMaterialsUpdate();
+
+        // initialize scheduler for syncing key packages with backend
+        this.service.mls.checkForKeyPackagesBackendSync();
+      }
+
+      await this.service.proteus.init();
       if (this.backendFeatures.supportsMLS) {
         await this.service.mls.initClient(localClient.id);
       }
@@ -338,11 +340,11 @@ export class Account<T = any> extends EventEmitter {
           }
           const context = await this.apiClient.init(loginData.clientType);
           await this.initEngine(context);
-
-          return this.registerClient(loginData, clientInfo, entropyData);
+        } else if (this.storeEngine) {
+          this.logger.log('Last client was permanent - Deleting previous identity');
+          deleteIdentity(this.storeEngine);
         }
 
-        this.logger.log('Last client was permanent - Deleting cryptography stores');
         return this.registerClient(loginData, clientInfo, entropyData);
       }
 
