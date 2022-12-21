@@ -288,23 +288,24 @@ export class Account<T = any> extends EventEmitter {
       throw new Error('Services are not set.');
     }
 
-    //call /access endpoint with client_id after client initialisation
-    await this.apiClient.transport.http.associateClientWithSession(this.apiClient.context.clientId!);
-
-    if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-      // initialize schedulers for pending mls proposals once client is initialized
-      await this.service?.mls.checkExistingPendingProposals();
-
-      // initialize schedulers for renewing key materials
-      this.service?.mls.checkForKeyMaterialsUpdate();
-
-      // initialize scheduler for syncing key packages with backend
-      this.service?.mls.checkForKeyPackagesBackendSync();
-    }
     try {
       const localClient = await this.loadAndValidateLocalClient();
-      await this.service.proteus.init();
 
+      //call /access endpoint with client_id after client initialisation
+      await this.apiClient.transport.http.associateClientWithSession(localClient.id);
+
+      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+        // initialize schedulers for pending mls proposals once client is initialized
+        await this.service?.mls.checkExistingPendingProposals();
+
+        // initialize schedulers for renewing key materials
+        this.service?.mls.checkForKeyMaterialsUpdate();
+
+        // initialize scheduler for syncing key packages with backend
+        this.service?.mls.checkForKeyPackagesBackendSync();
+      }
+
+      await this.service.proteus.init();
       if (this.backendFeatures.supportsMLS) {
         await this.service.mls.initClient(localClient.id);
       }
