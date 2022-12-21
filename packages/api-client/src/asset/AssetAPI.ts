@@ -288,10 +288,12 @@ export class AssetAPI {
     forceCaching: boolean = false,
     progressCallback?: ProgressCallback,
   ) {
+    const version2 = 2;
+
     if (!isValidUUID(assetId)) {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
-    if (this.backendFeatures.version >= 2) {
+    if (this.backendFeatures.version >= version2) {
       throw new TypeError('Asset v3 is not supported on backend version 2 or higher.');
     }
     return this.getAssetShared(`${ASSET_URLS.ASSET_V3_URL}/${assetId}`, token, forceCaching, progressCallback);
