@@ -3920,7 +3920,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:5.46.1, @typescript-eslint/parser@npm:^5.42.1":
+"@typescript-eslint/parser@npm:5.47.0":
+  version: 5.47.0
+  resolution: "@typescript-eslint/parser@npm:5.47.0"
+  dependencies:
+    "@typescript-eslint/scope-manager": 5.47.0
+    "@typescript-eslint/types": 5.47.0
+    "@typescript-eslint/typescript-estree": 5.47.0
+    debug: ^4.3.4
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 5c864ca74b86ca740c73e5b87d90d43bb832b20ba6be0a39089175435771527722a7bf0a8ef7ddbd64b85235fbb7f6dbe8ae55a8bc73c6242f5559d580a8a80c
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/parser@npm:^5.42.1":
   version: 5.46.1
   resolution: "@typescript-eslint/parser@npm:5.46.1"
   dependencies:
@@ -15468,7 +15485,7 @@ __metadata:
     "@types/node": ^18.11.5
     "@types/rimraf": 3.0.2
     "@typescript-eslint/eslint-plugin": 5.47.0
-    "@typescript-eslint/parser": 5.46.1
+    "@typescript-eslint/parser": 5.47.0
     "@wireapp/eslint-config": "workspace:^"
     eslint: 8.30.0
     eslint-config-prettier: 8.5.0
