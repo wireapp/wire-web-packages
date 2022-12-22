@@ -90,6 +90,14 @@ export class MLSService {
     await this.coreCryptoClient.mlsInit(encoder.encode(clientId));
   }
 
+  public async createClient(clientId: string) {
+    await this.initClient(clientId);
+    return {
+      publicKey: await this.coreCryptoClient.clientPublicKey(),
+      keyPackages: await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages),
+    };
+  }
+
   private async uploadCommitBundle(
     groupId: Uint8Array,
     commitBundle: CommitBundle,

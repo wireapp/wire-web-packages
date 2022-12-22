@@ -296,7 +296,11 @@ export class Account<T = any> extends EventEmitter {
       //call /access endpoint with client_id after client initialisation
       await this.apiClient.transport.http.associateClientWithSession(localClient.id);
 
-      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
+      await this.service.proteus.init();
+      if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
+        const {userId, domain} = this.apiClient.context;
+        const clientId = constructFullyQualifiedClientId(userId, localClient.id, domain || '');
+        await this.service.mls.initClient(clientId);
         // initialize schedulers for pending mls proposals once client is initialized
         await this.service.mls.checkExistingPendingProposals();
 
@@ -305,13 +309,6 @@ export class Account<T = any> extends EventEmitter {
 
         // initialize scheduler for syncing key packages with backend
         this.service.mls.checkForKeyPackagesBackendSync();
-      }
-
-      await this.service.proteus.init();
-      if (this.backendFeatures.supportsMLS) {
-        const {userId, domain} = this.apiClient.context;
-        const clientId = constructFullyQualifiedClientId(userId, localClient.id, domain || '');
-        await this.service.mls.initClient(clientId);
       }
 
       return {isNewClient: false, localClient};
@@ -477,10 +474,13 @@ export class Account<T = any> extends EventEmitter {
 
     const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
-    if (createMlsClient && this.backendFeatures.supportsMLS) {
+    if (createMlsClient) {
       const {userId, domain} = this.apiClient.context;
       const clientId = constructFullyQualifiedClientId(userId, registeredClient.id, domain || '');
-      await this.service.mls.initClient(clientId);
+      const {publicKey, keyPackages} = await this.service.mls.createClient(clientId);
+      // If the device is new, we need to upload keypackages and public key to the backend
+      await this.service.mls.uploadMLSPublicKeys(publicKey, registeredClient.id);
+      await this.service.mls.uploadMLSKeyPackages(keyPackages, registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
