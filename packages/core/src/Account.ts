@@ -62,7 +62,6 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
-import {constructFullyQualifiedClientId} from './util/fullyQualifiedClientIdUtils';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -298,9 +297,8 @@ export class Account<T = any> extends EventEmitter {
 
       await this.service.proteus.init();
       if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
-        const {userId, domain} = this.apiClient.context;
-        const clientId = constructFullyQualifiedClientId(userId, localClient.id, domain || '');
-        await this.service.mls.initClient(clientId);
+        const {userId, domain = ''} = this.apiClient.context;
+        await this.service.mls.initClient({id: userId, domain}, localClient.id);
         // initialize schedulers for pending mls proposals once client is initialized
         await this.service.mls.checkExistingPendingProposals();
 
@@ -475,12 +473,8 @@ export class Account<T = any> extends EventEmitter {
     const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
     if (createMlsClient) {
-      const {userId, domain} = this.apiClient.context;
-      const clientId = constructFullyQualifiedClientId(userId, registeredClient.id, domain || '');
-      const {publicKey, keyPackages} = await this.service.mls.createClient(clientId);
-      // If the device is new, we need to upload keypackages and public key to the backend
-      await this.service.mls.uploadMLSPublicKeys(publicKey, registeredClient.id);
-      await this.service.mls.uploadMLSKeyPackages(keyPackages, registeredClient.id);
+      const {userId, domain = ''} = this.apiClient.context;
+      await this.service.mls.createClient({id: userId, domain}, registeredClient.id);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
