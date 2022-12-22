@@ -62,6 +62,7 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
+import {constructFullyQualifiedClientId} from './util/fullyQualifiedClientIdUtils';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -308,7 +309,9 @@ export class Account<T = any> extends EventEmitter {
 
       await this.service.proteus.init();
       if (this.backendFeatures.supportsMLS) {
-        await this.service.mls.initClient(localClient.id);
+        const {userId, domain} = this.apiClient.context;
+        const clientId = constructFullyQualifiedClientId(userId, localClient.id, domain || '');
+        await this.service.mls.initClient(clientId);
       }
 
       return {isNewClient: false, localClient};
@@ -475,7 +478,9 @@ export class Account<T = any> extends EventEmitter {
     const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
     if (createMlsClient && this.backendFeatures.supportsMLS) {
-      await this.service.mls.initClient(registeredClient.id);
+      const {userId, domain} = this.apiClient.context;
+      const clientId = constructFullyQualifiedClientId(userId, registeredClient.id, domain || '');
+      await this.service.mls.initClient(clientId);
     }
     this.apiClient.context.clientId = registeredClient.id;
     this.logger.info('Client is created');
