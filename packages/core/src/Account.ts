@@ -663,11 +663,13 @@ export class Account<T = any> extends EventEmitter {
 
       // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
       // They will be stored in corecrypto database now.
+      /* TODO uncomment this code when we are sure migration for wire.com has happened successfully for enough users
       const storesToClear = ['keys', 'prekeys', 'sessions'] as const;
 
       for (const storeName of storesToClear) {
         await this.storeEngine?.deleteAll(storeName);
       }
+      */
 
       this.logger.log(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
     } catch (error) {
