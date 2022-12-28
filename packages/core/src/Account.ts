@@ -281,28 +281,28 @@ export class Account<T = any> extends EventEmitter {
     return client;
   }
 
-  public loadClient() {
-    return this.service!.client.loadClient();
-  }
-
   /**
    * Will initiate all the cryptographic material of the device and setup all the background tasks.
    *
-   * @returns The local existing client or newly created client
+   * @returns The local existing client or undefined if the client does not exist
    */
-  public async initClient(client: RegisteredClient): Promise<RegisteredClient> {
+  public async initClient(client?: RegisteredClient): Promise<RegisteredClient | undefined> {
     if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
       throw new Error('Services are not set.');
     }
-    this.apiClient.context.clientId = client.id;
+    const validClient = client ?? (await this.service!.client.loadClient());
+    if (!validClient) {
+      return undefined;
+    }
+    this.apiClient.context.clientId = validClient.id;
 
     //call /access endpoint with client_id after client initialisation
-    await this.apiClient.transport.http.associateClientWithSession(client.id);
+    await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
     if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
       const {userId, domain = ''} = this.apiClient.context;
-      await this.service.mls.initClient({id: userId, domain}, client.id);
+      await this.service.mls.initClient({id: userId, domain}, validClient.id);
       // initialize schedulers for pending mls proposals once client is initialized
       await this.service.mls.checkExistingPendingProposals();
 
@@ -313,7 +313,7 @@ export class Account<T = any> extends EventEmitter {
       this.service.mls.checkForKeyPackagesBackendSync();
     }
 
-    return client;
+    return validClient;
   }
 
   private async initCoreCrypto(context: Context) {
