@@ -259,8 +259,8 @@ export class Account<T = any> extends EventEmitter {
     if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
       throw new Error('Services are not set or context not initialized.');
     }
-    const createMlsClient = !!this.cryptoProtocolConfig?.mls;
-    this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
+    const shouldCreateMlsClient = !!this.cryptoProtocolConfig?.mls;
+    this.logger.info(`Creating new client {mls: ${shouldCreateMlsClient}}`);
     if (entropyData) {
       await this.coreCryptoClient.reseedRng(entropyData);
     }
@@ -269,7 +269,7 @@ export class Account<T = any> extends EventEmitter {
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
-    if (createMlsClient) {
+    if (shouldCreateMlsClient) {
       const {userId, domain = ''} = this.apiClient.context;
       await this.service.mls.createClient({id: userId, domain}, client.id);
     }
