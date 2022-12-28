@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client/lib/APIClient';
-import type {PreKey} from '@wireapp/api-client/lib/auth';
+import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
 import type {
   Conversation,
   NewConversation,
@@ -32,6 +32,7 @@ import logdown from 'logdown';
 
 import type {CoreCrypto} from '@wireapp/core-crypto';
 import {ClientAction} from '@wireapp/protocol-messaging';
+import {CRUDEngine} from '@wireapp/store-engine';
 
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 import {PrekeyGenerator} from './PrekeysGenerator';
@@ -41,6 +42,7 @@ import type {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
+import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 
 import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
@@ -56,6 +58,14 @@ import {
   initSession,
   initSessions,
 } from '../Utility/SessionHandler';
+
+function getLocalStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return {setItem: () => {}, getItem: () => {}, removeItem: () => {}};
+  }
+}
 
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -92,7 +102,8 @@ export class ProteusService {
     return handledEvent;
   }
 
-  public init() {
+  public async initClient(storeEngine: CRUDEngine, context: Context) {
+    await this.migrateToCoreCrypto(storeEngine, context);
     return this.coreCryptoClient.proteusInit();
   }
 
@@ -266,7 +277,34 @@ export class ProteusService {
     return qualifiedOTRRecipients;
   }
 
-  public async proteusCryptoboxMigrate(storeName: string) {
-    return this.coreCryptoClient.proteusCryptoboxMigrate(storeName);
+  private async migrateToCoreCrypto(storeEngine: CRUDEngine, context: Context) {
+    const dbName = storeEngine.storeName;
+    const migrationFlag = `${dbName}-corecrypto-ready`;
+    const localStorage = getLocalStorage();
+    if (localStorage.getItem(migrationFlag)) {
+      return;
+    }
+    // We want sessions to be fully qualified from now on
+    migrateToQualifiedSessionIds(storeEngine, context.domain ?? '');
+
+    this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
+    try {
+      await this.coreCryptoClient.proteusCryptoboxMigrate(dbName);
+
+      // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
+      // They will be stored in corecrypto database now.
+      /* TODO uncomment this code when we are sure migration for wire.com has happened successfully for enough users
+      const storesToClear = ['keys', 'prekeys', 'sessions'] as const;
+
+      for (const storeName of storesToClear) {
+        await this.storeEngine?.deleteAll(storeName);
+      }
+      */
+
+      this.logger.log(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
+      localStorage.setItem(migrationFlag, '1');
+    } catch (error) {
+      this.logger.error('Client was not able to perform DB migration: ', error);
+    }
   }
 }
