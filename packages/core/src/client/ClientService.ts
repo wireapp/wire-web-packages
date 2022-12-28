@@ -20,10 +20,14 @@
 import {LoginData} from '@wireapp/api-client/lib/auth/';
 import {ClientType, CreateClientPayload, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import axios from 'axios';
+import {StatusCodes} from 'http-status-codes';
+import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 import {CRUDEngine} from '@wireapp/store-engine';
 
+import {deleteIdentity} from '../identity/identityClearer';
 import type {ProteusService} from '../messagingProtocols/proteus';
 import {NewDevicePrekeys} from '../messagingProtocols/proteus/ProteusService';
 
@@ -40,6 +44,10 @@ export interface MetaClient extends RegisteredClient {
 export class ClientService {
   private readonly database: ClientDatabaseRepository;
   private readonly backend: ClientBackendRepository;
+  private readonly logger = logdown('@wireapp/core/Client', {
+    logger: console,
+    markdown: false,
+  });
 
   constructor(
     private readonly apiClient: APIClient,
@@ -81,8 +89,46 @@ export class ClientService {
     return this.database.deleteLocalClient();
   }
 
-  public getLocalClient(): Promise<MetaClient> {
-    return this.database.getLocalClient();
+  private async getLocalClient(): Promise<MetaClient | undefined> {
+    try {
+      return await this.database.getLocalClient();
+    } catch (error) {
+      return undefined;
+    }
+  }
+
+  /**
+   * Will try to load the local client from the database into memory.
+   * Will return undefined if the client is not found in the database or if the client does not exist on the backend.
+   * If the client doesn't exist on backend it will purge the database and return undefined.
+   *
+   * @return the loaded client or undefined
+   */
+  public async loadClient(): Promise<RegisteredClient | undefined> {
+    const loadedClient = await this.getLocalClient();
+
+    if (!loadedClient) {
+      return undefined;
+    }
+
+    try {
+      await this.apiClient.api.client.getClient(loadedClient.id);
+      return loadedClient;
+    } catch (error) {
+      const notFoundOnBackend = axios.isAxiosError(error) ? error.response?.status === StatusCodes.NOT_FOUND : false;
+      if (notFoundOnBackend && this.storeEngine) {
+        this.logger.log('Could not find valid client on backend');
+        const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
+        if (shouldDeleteWholeDatabase) {
+          this.logger.log('Last client was temporary - Deleting database');
+          await this.storeEngine.clearTables();
+        } else {
+          this.logger.log('Last client was permanent - Deleting previous identity');
+          deleteIdentity(this.storeEngine);
+        }
+      }
+    }
+    return undefined;
   }
 
   private createLocalClient(client: RegisteredClient, domain?: string): Promise<MetaClient> {

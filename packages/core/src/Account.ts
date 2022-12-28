@@ -32,16 +32,14 @@ import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import axios from 'axios';
 import {Encoder} from 'bazinga64';
-import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
-import {CRUDEngine, error as StoreEngineError, MemoryEngine} from '@wireapp/store-engine';
+import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
 import {LoginSanitizer} from './auth/';
@@ -51,7 +49,6 @@ import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
 import {GiphyService} from './giphy/';
-import {deleteIdentity} from './identity/identityClearer';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
@@ -114,9 +111,6 @@ interface AccountOptions<T> {
 type InitOptions = {
   /** cookie used to identify the current user. Will use the browser cookie if not defined */
   cookie?: Cookie;
-
-  /** fully initiate the client and register periodic checks */
-  initClient?: boolean;
 };
 
 const coreDefaultClient: ClientInfo = {
@@ -233,14 +227,9 @@ export class Account<T = any> extends EventEmitter {
    *
    * @param clientType The type of client the user is using (temporary or permanent)
    */
-  public async init(clientType: ClientType, {cookie, initClient = true}: InitOptions = {}): Promise<Context> {
+  public async init(clientType: ClientType, {cookie}: InitOptions = {}): Promise<Context> {
     const context = await this.apiClient.init(clientType, cookie);
     await this.initServices(context);
-
-    // Assumption: client gets only initialized once
-    if (initClient) {
-      await this.initClient({clientType});
-    }
     return context;
   }
 
@@ -249,105 +238,82 @@ export class Account<T = any> extends EventEmitter {
    * Will also create the local client and store it in DB
    *
    * @param loginData The credentials of the user
-   * @param initClient Should the call also create the local client
    * @param clientInfo Info about the client to create (name, type...)
    */
-  public async login(
-    loginData: LoginData,
-    initClient: boolean = true,
-    clientInfo: ClientInfo = coreDefaultClient,
-  ): Promise<Context> {
+  public async login(loginData: LoginData): Promise<Context> {
     this.resetContext();
     LoginSanitizer.removeNonPrintableCharacters(loginData);
 
     const context = await this.apiClient.login(loginData);
     await this.initServices(context);
 
-    if (initClient) {
-      await this.initClient(loginData, clientInfo);
-    }
-
     return context;
   }
 
+  public async registerClient(
+    loginData: LoginData,
+    clientInfo: ClientInfo = coreDefaultClient,
+    entropyData?: Uint8Array,
+  ): Promise<RegisteredClient> {
+    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
+      throw new Error('Services are not set or context not initialized.');
+    }
+    const createMlsClient = !!this.cryptoProtocolConfig?.mls;
+    this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
+    if (entropyData) {
+      await this.coreCryptoClient.reseedRng(entropyData);
+    }
+    await this.service.proteus.init(this.storeEngine, this.apiClient.context);
+    const initialPreKeys = await this.service.proteus.createClient();
+
+    const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
+
+    if (createMlsClient) {
+      const {userId, domain = ''} = this.apiClient.context;
+      await this.service.mls.createClient({id: userId, domain}, client.id);
+    }
+    this.logger.info('Client is created');
+
+    await this.service.notification.initializeNotificationStream();
+    await this.service.client.synchronizeClients();
+
+    await this.initClient(client);
+    return client;
+  }
+
+  public loadClient() {
+    return this.service!.client.loadClient();
+  }
+
   /**
-   * Will try to get the load the local client from local DB.
-   * If clientInfo are provided, will also create the client on backend and DB
-   * If clientInfo are not provided, the method will fail if local client cannot be found
+   * Will initiate all the cryptographic material of the device and setup all the background tasks.
    *
-   * @param loginData User's credentials
-   * @param clientInfo Will allow creating the client if the local client cannot be found (else will fail if local client is not found)
-   * @param entropyData Additional entropy data
    * @returns The local existing client or newly created client
    */
-  public async initClient(
-    loginData: LoginData,
-    clientInfo?: ClientInfo,
-    entropyData?: Uint8Array,
-  ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient) {
+  public async initClient(client: RegisteredClient): Promise<RegisteredClient> {
+    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
       throw new Error('Services are not set.');
     }
+    this.apiClient.context.clientId = client.id;
 
-    try {
-      const localClient = await this.loadAndValidateLocalClient();
+    //call /access endpoint with client_id after client initialisation
+    await this.apiClient.transport.http.associateClientWithSession(client.id);
 
-      //call /access endpoint with client_id after client initialisation
-      await this.apiClient.transport.http.associateClientWithSession(localClient.id);
+    await this.service.proteus.init(this.storeEngine, this.apiClient.context);
+    if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
+      const {userId, domain = ''} = this.apiClient.context;
+      await this.service.mls.initClient({id: userId, domain}, client.id);
+      // initialize schedulers for pending mls proposals once client is initialized
+      await this.service.mls.checkExistingPendingProposals();
 
-      await this.service.proteus.init();
-      if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
-        const {userId, domain = ''} = this.apiClient.context;
-        await this.service.mls.initClient({id: userId, domain}, localClient.id);
-        // initialize schedulers for pending mls proposals once client is initialized
-        await this.service.mls.checkExistingPendingProposals();
+      // initialize schedulers for renewing key materials
+      this.service.mls.checkForKeyMaterialsUpdate();
 
-        // initialize schedulers for renewing key materials
-        this.service.mls.checkForKeyMaterialsUpdate();
-
-        // initialize scheduler for syncing key packages with backend
-        this.service.mls.checkForKeyPackagesBackendSync();
-      }
-
-      return {isNewClient: false, localClient};
-    } catch (error) {
-      if (!clientInfo) {
-        // If no client info provided, the client should not be created
-        throw error;
-      }
-      // There was no client so we need to "create" and "register" a client
-      const notFoundInDatabase =
-        error instanceof StoreEngineError.RecordNotFoundError ||
-        (error as Error).constructor.name === StoreEngineError.RecordNotFoundError.name;
-      const notFoundOnBackend = axios.isAxiosError(error) ? error.response?.status === HTTP_STATUS.NOT_FOUND : false;
-
-      if (notFoundInDatabase) {
-        this.logger.log(`Could not find valid client in database "${this.storeEngine?.storeName}".`);
-        return this.registerClient(loginData, clientInfo, entropyData);
-      }
-
-      if (notFoundOnBackend) {
-        this.logger.log('Could not find valid client on backend');
-        const client = await this.service!.client.getLocalClient();
-        const shouldDeleteWholeDatabase = client.type === ClientType.TEMPORARY;
-        if (shouldDeleteWholeDatabase) {
-          this.logger.log('Last client was temporary - Deleting database');
-
-          if (this.storeEngine) {
-            await this.storeEngine.clearTables();
-          }
-          const context = await this.apiClient.init(loginData.clientType);
-          await this.initEngine(context);
-        } else if (this.storeEngine) {
-          this.logger.log('Last client was permanent - Deleting previous identity');
-          deleteIdentity(this.storeEngine);
-        }
-
-        return this.registerClient(loginData, clientInfo, entropyData);
-      }
-
-      throw error;
+      // initialize scheduler for syncing key packages with backend
+      this.service.mls.checkForKeyPackagesBackendSync();
     }
+
+    return client;
   }
 
   private async initCoreCrypto(context: Context) {
@@ -445,44 +411,6 @@ export class Account<T = any> extends EventEmitter {
       team: teamService,
       user: userService,
     };
-  }
-
-  public async loadAndValidateLocalClient(): Promise<RegisteredClient> {
-    const loadedClient = await this.service!.client.getLocalClient();
-    await this.apiClient.api.client.getClient(loadedClient.id);
-    this.apiClient.context!.clientId = loadedClient.id;
-    return loadedClient;
-  }
-
-  private async registerClient(
-    loginData: LoginData,
-    clientInfo: ClientInfo = coreDefaultClient,
-    entropyData?: Uint8Array,
-  ): Promise<{isNewClient: boolean; localClient: RegisteredClient}> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient) {
-      throw new Error('Services are not set or context not initialized.');
-    }
-    const createMlsClient = !!this.cryptoProtocolConfig?.mls;
-    this.logger.info(`Creating new client {mls: ${createMlsClient}}`);
-    if (entropyData) {
-      await this.coreCryptoClient.reseedRng(entropyData);
-    }
-    await this.service.proteus.init();
-    const initialPreKeys = await this.service.proteus.createClient();
-
-    const registeredClient = await this.service.client.register(loginData, clientInfo, initialPreKeys);
-
-    if (createMlsClient) {
-      const {userId, domain = ''} = this.apiClient.context;
-      await this.service.mls.createClient({id: userId, domain}, registeredClient.id);
-    }
-    this.apiClient.context.clientId = registeredClient.id;
-    this.logger.info('Client is created');
-
-    await this.service.notification.initializeNotificationStream();
-    await this.service.client.synchronizeClients();
-
-    return {isNewClient: true, localClient: registeredClient};
   }
 
   private resetContext(): void {
@@ -647,34 +575,6 @@ export class Account<T = any> extends EventEmitter {
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
     };
-  }
-
-  public async runCryptoboxMigration() {
-    const dbName = this.storeEngine?.storeName;
-
-    if (!dbName) {
-      this.logger.error('Client was not able to perform DB migration: database was not initialised yet');
-      return;
-    }
-
-    try {
-      this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
-      await this.service!.proteus.proteusCryptoboxMigrate(dbName);
-
-      // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
-      // They will be stored in corecrypto database now.
-      /* TODO uncomment this code when we are sure migration for wire.com has happened successfully for enough users
-      const storesToClear = ['keys', 'prekeys', 'sessions'] as const;
-
-      for (const storeName of storesToClear) {
-        await this.storeEngine?.deleteAll(storeName);
-      }
-      */
-
-      this.logger.log(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
-    } catch (error) {
-      this.logger.error('Client was not able to perform DB migration: ', error);
-    }
   }
 
   private generateDbName(context: Context) {
