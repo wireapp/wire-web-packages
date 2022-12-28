@@ -297,7 +297,7 @@ export class Account<T = any> extends EventEmitter {
     }
     this.apiClient.context.clientId = validClient.id;
 
-    //call /access endpoint with client_id after client initialisation
+    // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
