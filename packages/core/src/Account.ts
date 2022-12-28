@@ -222,8 +222,7 @@ export class Account<T = any> extends EventEmitter {
   }
 
   /**
-   * Will init the core with an already existing client (both on backend and local)
-   * Will fail if local client cannot be found
+   * Will init the core with an already logged in user
    *
    * @param clientType The type of client the user is using (temporary or permanent)
    */
@@ -235,7 +234,6 @@ export class Account<T = any> extends EventEmitter {
 
   /**
    * Will log the user in with the given credential.
-   * Will also create the local client and store it in DB
    *
    * @param loginData The credentials of the user
    * @param clientInfo Info about the client to create (name, type...)
@@ -250,6 +248,9 @@ export class Account<T = any> extends EventEmitter {
     return context;
   }
 
+  /**
+   * Will register a new client for the current user
+   */
   public async registerClient(
     loginData: LoginData,
     clientInfo: ClientInfo = coreDefaultClient,
@@ -284,7 +285,7 @@ export class Account<T = any> extends EventEmitter {
   /**
    * Will initiate all the cryptographic material of the device and setup all the background tasks.
    *
-   * @returns The local existing client or undefined if the client does not exist
+   * @returns The local existing client or undefined if the client does not exist or is not valid (non existing on backend)
    */
   public async initClient(client?: RegisteredClient): Promise<RegisteredClient | undefined> {
     if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
