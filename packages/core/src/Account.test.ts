@@ -184,13 +184,12 @@ describe('Account', () => {
       const account = new Account(apiClient);
 
       await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
-      const {clientId, clientType, userId} = await account.login({
+      const {clientType, userId} = await account.login({
         clientType: ClientType.TEMPORARY,
         email: 'hello@example.com',
         password: 'my-secret',
       });
 
-      expect(clientId).toBe(CLIENT_ID);
       expect(ValidationUtil.isUUIDv4(userId)).toBe(true);
       expect(clientType).toBe(ClientType.TEMPORARY);
     });
@@ -288,6 +287,9 @@ describe('Account', () => {
       jest
         .spyOn(dependencies.account.service!.notification, 'handleNotification')
         .mockImplementation(notif => notif.payload as any);
+      jest
+        .spyOn(dependencies.account.service!.notification['database'], 'getLastNotificationId')
+        .mockResolvedValue('0');
     });
 
     afterEach(() => {

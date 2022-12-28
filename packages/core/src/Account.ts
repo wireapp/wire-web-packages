@@ -263,7 +263,7 @@ export class Account<T = any> extends EventEmitter {
     if (entropyData) {
       await this.coreCryptoClient.reseedRng(entropyData);
     }
-    await this.service.proteus.init(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient();
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
@@ -299,7 +299,7 @@ export class Account<T = any> extends EventEmitter {
     //call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(client.id);
 
-    await this.service.proteus.init(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
     if (this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       await this.service.mls.initClient({id: userId, domain}, client.id);

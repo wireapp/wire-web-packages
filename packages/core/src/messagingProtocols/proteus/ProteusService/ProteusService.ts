@@ -102,7 +102,7 @@ export class ProteusService {
     return handledEvent;
   }
 
-  public async init(storeEngine: CRUDEngine, context: Context) {
+  public async initClient(storeEngine: CRUDEngine, context: Context) {
     await this.migrateToCoreCrypto(storeEngine, context);
     return this.coreCryptoClient.proteusInit();
   }
