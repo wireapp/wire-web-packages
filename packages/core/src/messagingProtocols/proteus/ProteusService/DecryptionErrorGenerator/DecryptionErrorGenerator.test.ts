@@ -17,21 +17,15 @@
  *
  */
 
-import logdown from 'logdown';
-
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
-
-const logger = {
-  warn: jest.fn(),
-} as unknown as logdown.Logger;
 
 const basePayload = {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'};
 
 describe('generateDecryptionError', () => {
   it('returns a ProteusError.DecryptError', () => {
-    const error = generateDecryptionError(basePayload, new Error(), logger);
+    const error = generateDecryptionError(basePayload, new Error());
     expect(error).toBeInstanceOf(DecryptionError);
     expect(error.message).toBe('Unknown decryption error');
   });

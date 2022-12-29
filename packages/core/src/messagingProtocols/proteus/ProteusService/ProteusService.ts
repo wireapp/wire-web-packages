@@ -232,7 +232,7 @@ export class ProteusService {
 
       return decryptedMessage;
     } catch (error) {
-      throw generateDecryptionError({userId, clientId}, error, this.logger);
+      throw generateDecryptionError({userId, clientId}, error);
     }
   }
 
