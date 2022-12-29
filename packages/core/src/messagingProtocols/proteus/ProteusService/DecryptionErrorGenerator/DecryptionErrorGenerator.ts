@@ -27,18 +27,22 @@ const hasErrorCode = (error: any): ErrorWithCode => error && error.code;
 export const ProteusErrors = {
   InvalidMessage: 201,
   RemoteIdentityChanged: 204,
+  InvalidSignature: 207,
   Unknown: 999,
 } as const;
 
-type ProteusErrorCode = typeof ProteusErrors[keyof typeof ProteusErrors];
+type CoreCryptoErrors = keyof typeof ProteusErrors;
+type ProteusErrorCode = typeof ProteusErrors[CoreCryptoErrors];
 
-const CoreCryptoErrorMapping: Record<string, ProteusErrorCode> = {
+const CoreCryptoErrorMapping: Record<CoreCryptoErrors, ProteusErrorCode> = {
   InvalidMessage: ProteusErrors.InvalidMessage,
   RemoteIdentityChanged: ProteusErrors.RemoteIdentityChanged,
+  InvalidSignature: ProteusErrors.InvalidSignature,
+  Unknown: ProteusErrors.Unknown,
 };
 
 const mapCoreCryptoError = (error: any): ProteusErrorCode => {
-  const code = hasErrorCode(error) ? error.code : CoreCryptoErrorMapping[error.message];
+  const code = hasErrorCode(error) ? error.code : CoreCryptoErrorMapping[error.message as CoreCryptoErrors];
   return code ?? ProteusErrors.Unknown;
 };
 
@@ -48,11 +52,14 @@ const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: 
     case ProteusErrors.InvalidMessage:
       return `Invalid message from ${sender}`;
 
+    case ProteusErrors.InvalidSignature:
+      return `Invalid signature from ${sender}`;
+
     case ProteusErrors.RemoteIdentityChanged:
       return `Remote identity of ${sender} has changed`;
 
     case ProteusErrors.Unknown:
-      return `Failed to decrypt message from ${sender} with unkown error`;
+      return `Unknown decryption error from ${sender}`;
 
     default:
       return `Unhandled error code "${code}" from ${sender}`;

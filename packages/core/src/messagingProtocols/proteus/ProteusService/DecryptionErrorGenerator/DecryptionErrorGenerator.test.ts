@@ -27,7 +27,7 @@ describe('generateDecryptionError', () => {
   it('returns a ProteusError.DecryptError', () => {
     const error = generateDecryptionError(basePayload, new Error());
     expect(error).toBeInstanceOf(DecryptionError);
-    expect(error.message).toBe('Failed to decrypt message from user1 (client1) with unkown error');
+    expect(error.message).toBe('Unknown decryption error from user1 (client1)');
     expect(error.code).toBe(ProteusErrors.Unknown);
   });
 
@@ -43,5 +43,12 @@ describe('generateDecryptionError', () => {
     expect(error).toBeInstanceOf(DecryptionError);
     expect(error.message).toBe('Invalid message from user1 (client1)');
     expect(error.code).toBe(ProteusErrors.InvalidMessage);
+  });
+
+  it('handles invalid signature', () => {
+    const error = generateDecryptionError(basePayload, new Error('InvalidSignature'));
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Invalid signature from user1 (client1)');
+    expect(error.code).toBe(ProteusErrors.InvalidSignature);
   });
 });
