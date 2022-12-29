@@ -17,22 +17,38 @@
  *
  */
 
-import logdown from 'logdown';
-
-import {generateDecryptionError} from './DecryptionErrorGenerator';
+import {generateDecryptionError, ProteusErrors} from './DecryptionErrorGenerator';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
-
-const logger = {
-  warn: jest.fn(),
-} as unknown as logdown.Logger;
 
 const basePayload = {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'};
 
 describe('generateDecryptionError', () => {
   it('returns a ProteusError.DecryptError', () => {
-    const error = generateDecryptionError(basePayload, new Error(), logger);
+    const error = generateDecryptionError(basePayload, new Error());
     expect(error).toBeInstanceOf(DecryptionError);
-    expect(error.message).toBe('Unknown decryption error');
+    expect(error.message).toBe('Unknown decryption error from user1 (client1)');
+    expect(error.code).toBe(ProteusErrors.Unknown);
+  });
+
+  it('handles remote identity changed', () => {
+    const error = generateDecryptionError(basePayload, new Error('RemoteIdentityChanged'));
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Remote identity of user1 (client1) has changed');
+    expect(error.code).toBe(ProteusErrors.RemoteIdentityChanged);
+  });
+
+  it('handles invalid message', () => {
+    const error = generateDecryptionError(basePayload, new Error('InvalidMessage'));
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Invalid message from user1 (client1)');
+    expect(error.code).toBe(ProteusErrors.InvalidMessage);
+  });
+
+  it('handles invalid signature', () => {
+    const error = generateDecryptionError(basePayload, new Error('InvalidSignature'));
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Invalid signature from user1 (client1)');
+    expect(error.code).toBe(ProteusErrors.InvalidSignature);
   });
 });

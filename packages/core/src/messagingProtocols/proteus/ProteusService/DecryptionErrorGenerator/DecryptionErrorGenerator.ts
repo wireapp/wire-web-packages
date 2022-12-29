@@ -18,46 +18,56 @@
  */
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import logdown from 'logdown';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
 
-type ErrorWithCode = Error & {code?: number};
-const hasErrorCode = (error: any): ErrorWithCode => error && error.code;
+export const ProteusErrors = {
+  InvalidMessage: 201,
+  RemoteIdentityChanged: 204,
+  InvalidSignature: 207,
+  Unknown: 999,
+} as const;
 
-const generateDecryptionError = (
-  senderInfo: {clientId: string; userId: QualifiedId},
-  error: any,
-  logger: logdown.Logger,
-): DecryptionError => {
-  const errorCode = hasErrorCode(error) ? error.code ?? 999 : 999;
-  let message = 'Unknown decryption error';
+type CoreCryptoErrors = keyof typeof ProteusErrors;
+type ProteusErrorCode = typeof ProteusErrors[CoreCryptoErrors];
 
-  const {clientId: remoteClientId, userId} = senderInfo;
-  const {id: remoteUserId} = userId;
-
-  const isDuplicateMessage = false; // TODO when coreCrypto returns ganular errors
-  const isOutdatedMessage = false; // TODO when coreCrypto returns ganular errors
-  // We don't need to show these message errors to the user
-  if (isDuplicateMessage || isOutdatedMessage) {
-    message = `Message from user ID "${remoteUserId}" will not be handled because it is outdated or a duplicate.`;
-  }
-
-  const isInvalidMessage = false; // TODO when coreCrypto returns ganular errors
-  const isInvalidSignature = false; // TODO when coreCrypto returns ganular errors
-  const isRemoteIdentityChanged = false; // TODO when coreCrypto returns ganular errors
-  // Session is broken, let's see what's really causing it...
-  if (isInvalidMessage || isInvalidSignature) {
-    message = `Session with user '${remoteUserId}' (${remoteClientId}) is broken.\nReset the session for possible fix.`;
-  } else if (isRemoteIdentityChanged) {
-    message = `Remote identity of client '${remoteClientId}' from user '${remoteUserId}' changed`;
-  }
-
-  logger.warn(
-    `Failed to decrypt event from client '${remoteClientId}' of user '${remoteUserId}'.\nError Code: '${errorCode}'\nError Message: ${error.message}`,
-    error,
-  );
-  return new DecryptionError(message, errorCode);
+const CoreCryptoErrorMapping: Record<CoreCryptoErrors, ProteusErrorCode> = {
+  InvalidMessage: ProteusErrors.InvalidMessage,
+  RemoteIdentityChanged: ProteusErrors.RemoteIdentityChanged,
+  InvalidSignature: ProteusErrors.InvalidSignature,
+  Unknown: ProteusErrors.Unknown,
 };
 
-export {generateDecryptionError};
+const mapCoreCryptoError = (error: any): ProteusErrorCode => {
+  return CoreCryptoErrorMapping[error.message as CoreCryptoErrors] ?? ProteusErrors.Unknown;
+};
+
+const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: string): string => {
+  const sender = `${userId.id} (${clientId})`;
+  switch (code) {
+    case ProteusErrors.InvalidMessage:
+      return `Invalid message from ${sender}`;
+
+    case ProteusErrors.InvalidSignature:
+      return `Invalid signature from ${sender}`;
+
+    case ProteusErrors.RemoteIdentityChanged:
+      return `Remote identity of ${sender} has changed`;
+
+    case ProteusErrors.Unknown:
+      return `Unknown decryption error from ${sender}`;
+
+    default:
+      return `Unhandled error code "${code}" from ${sender}`;
+  }
+};
+
+type SenderInfo = {clientId: string; userId: QualifiedId};
+export const generateDecryptionError = (senderInfo: SenderInfo, error: any): DecryptionError => {
+  const {clientId: remoteClientId, userId} = senderInfo;
+
+  const code = mapCoreCryptoError(error);
+  const message = getErrorMessage(code, userId, remoteClientId);
+
+  return new DecryptionError(message, code);
+};
