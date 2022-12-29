@@ -21,9 +21,6 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {DecryptionError} from '../../../../errors/DecryptionError';
 
-type ErrorWithCode = Error & {code?: number};
-const hasErrorCode = (error: any): ErrorWithCode => error && error.code;
-
 export const ProteusErrors = {
   InvalidMessage: 201,
   RemoteIdentityChanged: 204,
@@ -42,8 +39,7 @@ const CoreCryptoErrorMapping: Record<CoreCryptoErrors, ProteusErrorCode> = {
 };
 
 const mapCoreCryptoError = (error: any): ProteusErrorCode => {
-  const code = hasErrorCode(error) ? error.code : CoreCryptoErrorMapping[error.message as CoreCryptoErrors];
-  return code ?? ProteusErrors.Unknown;
+  return CoreCryptoErrorMapping[error.message as CoreCryptoErrors] ?? ProteusErrors.Unknown;
 };
 
 const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: string): string => {
