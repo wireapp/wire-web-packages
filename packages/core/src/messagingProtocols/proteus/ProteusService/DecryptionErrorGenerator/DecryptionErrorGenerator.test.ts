@@ -45,6 +45,13 @@ describe('generateDecryptionError', () => {
     expect(error.code).toBe(ProteusErrors.InvalidMessage);
   });
 
+  it('handles duplicated message', () => {
+    const error = generateDecryptionError(basePayload, new Error('DuplicateMessage'));
+    expect(error).toBeInstanceOf(DecryptionError);
+    expect(error.message).toBe('Invalid message from user1 (client1)');
+    expect(error.code).toBe(ProteusErrors.DuplicateMessage);
+  });
+
   it('handles invalid signature', () => {
     const error = generateDecryptionError(basePayload, new Error('InvalidSignature'));
     expect(error).toBeInstanceOf(DecryptionError);

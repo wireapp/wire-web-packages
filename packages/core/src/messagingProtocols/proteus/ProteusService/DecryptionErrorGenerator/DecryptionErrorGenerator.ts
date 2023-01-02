@@ -25,6 +25,7 @@ export const ProteusErrors = {
   InvalidMessage: 201,
   RemoteIdentityChanged: 204,
   InvalidSignature: 207,
+  DuplicateMessage: 209,
   Unknown: 999,
 } as const;
 
@@ -35,6 +36,7 @@ const CoreCryptoErrorMapping: Record<CoreCryptoErrors, ProteusErrorCode> = {
   InvalidMessage: ProteusErrors.InvalidMessage,
   RemoteIdentityChanged: ProteusErrors.RemoteIdentityChanged,
   InvalidSignature: ProteusErrors.InvalidSignature,
+  DuplicateMessage: ProteusErrors.DuplicateMessage,
   Unknown: ProteusErrors.Unknown,
 };
 
@@ -42,7 +44,7 @@ const mapCoreCryptoError = (error: any): ProteusErrorCode => {
   return CoreCryptoErrorMapping[error.message as CoreCryptoErrors] ?? ProteusErrors.Unknown;
 };
 
-const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: string): string => {
+const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: string, error: Error): string => {
   const sender = `${userId.id} (${clientId})`;
   switch (code) {
     case ProteusErrors.InvalidMessage:
@@ -54,11 +56,14 @@ const getErrorMessage = (code: ProteusErrorCode, userId: QualifiedId, clientId: 
     case ProteusErrors.RemoteIdentityChanged:
       return `Remote identity of ${sender} has changed`;
 
+    case ProteusErrors.DuplicateMessage:
+      return `Message from ${sender} was decrypted twice`;
+
     case ProteusErrors.Unknown:
-      return `Unknown decryption error from ${sender}`;
+      return `Unknown decryption error from ${sender} (${error.message})`;
 
     default:
-      return `Unhandled error code "${code}" from ${sender}`;
+      return `Unhandled error code "${code}" from ${sender} (${error.message})`;
   }
 };
 
@@ -67,7 +72,7 @@ export const generateDecryptionError = (senderInfo: SenderInfo, error: any): Dec
   const {clientId: remoteClientId, userId} = senderInfo;
 
   const code = mapCoreCryptoError(error);
-  const message = getErrorMessage(code, userId, remoteClientId);
+  const message = getErrorMessage(code, userId, remoteClientId, error);
 
   return new DecryptionError(message, code);
 };
