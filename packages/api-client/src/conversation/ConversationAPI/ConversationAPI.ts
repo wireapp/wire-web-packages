@@ -268,6 +268,22 @@ export class ConversationAPI {
     return response.data;
   }
 
+  public async deleteSubconversationSelf(
+    conversationId: QualifiedId,
+    subconversationId: SUBCONVERSATION_ID,
+  ): Promise<void> {
+    const {id, domain} = conversationId;
+
+    const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}/${ConversationAPI.URL.SELF}`;
+
+    const config: AxiosRequestConfig = {
+      method: 'delete',
+      url,
+    };
+
+    await this.client.sendJSON(config);
+  }
+
   public async getSubconversationGroupInfo(conversationId: QualifiedId, subconversationId: SUBCONVERSATION_ID) {
     const {id, domain} = conversationId;
 
@@ -470,7 +486,7 @@ export class ConversationAPI {
   public async getMembershipProperties(conversationId: string): Promise<Member> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/self`,
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.SELF}`,
     };
 
     const response = await this.client.sendJSON<Member>(config);
