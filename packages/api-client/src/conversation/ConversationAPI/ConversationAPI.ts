@@ -35,6 +35,8 @@ import {
   NewOTRMessage,
   QualifiedConversationIds,
   RemoteConversations,
+  Subconversation,
+  SUBCONVERSATION_ID,
 } from '..';
 import {BackendFeatures} from '../../APIClient';
 import {
@@ -84,6 +86,7 @@ export class ConversationAPI {
     CODE: 'code',
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
+    SUBCONVERSATIONS: '/subconversations',
     MLS: '/mls',
     JOIN: '/join',
     LIST: 'list',
@@ -247,6 +250,21 @@ export class ConversationAPI {
       url,
     };
     const response = await this.client.sendJSON<Conversation>(config);
+    return response.data;
+  }
+
+  public async getSubconversation(
+    conversationId: QualifiedId,
+    subconversationId: SUBCONVERSATION_ID,
+  ): Promise<Subconversation> {
+    const {id, domain} = conversationId;
+
+    const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}`;
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url,
+    };
+    const response = await this.client.sendJSON<Subconversation>(config);
     return response.data;
   }
 
