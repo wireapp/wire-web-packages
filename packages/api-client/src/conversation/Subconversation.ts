@@ -21,7 +21,6 @@ import {QualifiedId} from '../user';
 
 export enum SUBCONVERSATION_ID {
   CONFERENCE = 'conference',
-  CALL = 'call',
 }
 
 export interface SubconversationMember {
