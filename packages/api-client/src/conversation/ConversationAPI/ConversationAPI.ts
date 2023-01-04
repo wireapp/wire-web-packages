@@ -85,7 +85,7 @@ export class ConversationAPI {
     CODE: 'code',
     CODE_CHECK: '/code-check',
     CONVERSATIONS: '/conversations',
-    SUBCONVERSATIONS: '/subconversations',
+    SUBCONVERSATIONS: 'subconversations',
     MLS: '/mls',
     JOIN: '/join',
     LIST: 'list',
