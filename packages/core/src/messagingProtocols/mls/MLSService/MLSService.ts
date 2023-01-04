@@ -207,20 +207,20 @@ export class MLSService {
   }
 
   /**
-   * Will join or register an mls subgroup for conference calls.
-   * Will return the secret key derived from the subgroup
+   * Will join or register an mls subconversation for conference calls.
+   * Will return the secret key derived from the subconversation
    *
    * @param conversationId Id of the parent conversation in which the call should happen
    */
-  public async joinConferenceSubgroup(
+  public async joinConferenceSubconversation(
     conversationId: QualifiedId,
   ): Promise<{epoch: number; secretKey: string; keyLength: number}> {
-    const subgroup = await this.apiClient.api.conversation.getSubconversation(
+    const subconversation = await this.apiClient.api.conversation.getSubconversation(
       conversationId,
       SUBCONVERSATION_ID.CONFERENCE,
     );
-    if (subgroup.epoch === 0) {
-      await this.registerConversation(subgroup.group_id, []);
+    if (subconversation.epoch === 0) {
+      await this.registerConversation(subconversation.group_id, []);
     } else {
       await this.joinByExternalCommit(() =>
         this.apiClient.api.conversation.getSubconversationGroupInfo(conversationId, SUBCONVERSATION_ID.CONFERENCE),
@@ -228,11 +228,11 @@ export class MLSService {
     }
 
     const keyLength = 256;
-    const groupIdBytes = Decoder.fromBase64(subgroup.group_id).asBytes;
+    const groupIdBytes = Decoder.fromBase64(subconversation.group_id).asBytes;
     const secretKey = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
 
     return {
-      epoch: subgroup.epoch,
+      epoch: subconversation.epoch,
       secretKey: new TextDecoder().decode(secretKey),
       keyLength,
     };
