@@ -24,10 +24,11 @@ import {DecryptionError} from '../../../../errors/DecryptionError';
 const basePayload = {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'};
 
 describe('generateDecryptionError', () => {
-  it('returns a ProteusError.DecryptError', () => {
-    const error = generateDecryptionError(basePayload, new Error());
+  it('handles unknown decryption error', () => {
+    const message = 'decryption error';
+    const error = generateDecryptionError(basePayload, new Error(message));
     expect(error).toBeInstanceOf(DecryptionError);
-    expect(error.message).toBe('Unknown decryption error from user1 (client1)');
+    expect(error.message).toBe(`Unknown decryption error from user1 (client1) (${message})`);
     expect(error.code).toBe(ProteusErrors.Unknown);
   });
 
@@ -48,7 +49,7 @@ describe('generateDecryptionError', () => {
   it('handles duplicated message', () => {
     const error = generateDecryptionError(basePayload, new Error('DuplicateMessage'));
     expect(error).toBeInstanceOf(DecryptionError);
-    expect(error.message).toBe('Invalid message from user1 (client1)');
+    expect(error.message).toBe('Message from user1 (client1) was decrypted twice');
     expect(error.code).toBe(ProteusErrors.DuplicateMessage);
   });
 
