@@ -36,7 +36,7 @@
     "@types/ws": "8.5.3",
     "@wireapp/store-engine": "workspace:^",
     "@wireapp/store-engine-fs": "workspace:^",
-    "browser-sync": "2.27.10",
+    "browser-sync": "2.27.11",
     "concurrently": "7.6.0",
     "cross-env": "7.0.3",
     "dotenv": "16.0.3",
@@ -63,6 +63,6 @@
     "watch": "webpack serve --config webpack.browser.js",
     "prepare": "yarn dist"
   },
-  "version": "22.10.1",
+  "version": "22.11.0",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }
