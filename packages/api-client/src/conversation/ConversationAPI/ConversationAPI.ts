@@ -35,8 +35,6 @@ import {
   NewOTRMessage,
   QualifiedConversationIds,
   RemoteConversations,
-  Subconversation,
-  SUBCONVERSATION_ID,
 } from '..';
 import {BackendFeatures} from '../../APIClient';
 import {
@@ -69,6 +67,7 @@ import {
   ConversationTypingData,
 } from '../data';
 import {MlsEvent} from '../data/MlsEventData';
+import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
   events: MlsEvent[];
