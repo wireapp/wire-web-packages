@@ -23,7 +23,7 @@ export enum SUBCONVERSATION_ID {
   CONFERENCE = 'conference',
 }
 
-interface SubconversationMember {
+export interface SubconversationMember {
   client_id: string;
   domain: string;
   user_id: string;

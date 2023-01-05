@@ -18,6 +18,8 @@
  */
 
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+import {SubconversationMember} from '@wireapp/api-client/lib/conversation/Subconversation';
+
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -214,7 +216,7 @@ export class MLSService {
    */
   public async joinConferenceSubconversation(
     conversationId: QualifiedId,
-  ): Promise<{epoch: number; secretKey: string; keyLength: number}> {
+  ): Promise<{groupId: string; epoch: number; members: SubconversationMember[]; secretKey: string; keyLength: number}> {
     const subconversation = await this.apiClient.api.conversation.getSubconversation(
       conversationId,
       SUBCONVERSATION_ID.CONFERENCE,
@@ -232,7 +234,9 @@ export class MLSService {
     const secretKey = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
 
     return {
+      groupId: subconversation.group_id,
       epoch: subconversation.epoch,
+      members: subconversation.members,
       secretKey: new TextDecoder().decode(secretKey),
       keyLength,
     };
@@ -551,5 +555,15 @@ export class MLSService {
     } catch (error) {
       this.logger.error('Could not get pending proposals', error);
     }
+  }
+
+  public async getClientIds(conversationId: string): Promise<string[]> {
+    const conversationIdBytes = Decoder.fromBase64(conversationId).asBytes;
+    const decoder = new TextDecoder();
+
+    const rawClientIds = await this.coreCryptoClient.getClientIds(conversationIdBytes);
+
+    const clientIds = rawClientIds.map(id => decoder.decode(id));
+    return clientIds;
   }
 }
