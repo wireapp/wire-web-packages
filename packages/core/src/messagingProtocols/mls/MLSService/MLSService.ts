@@ -18,7 +18,7 @@
  */
 
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
-import {SubconversationMember} from '@wireapp/api-client/lib/conversation/Subconversation';
+import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -215,7 +215,7 @@ export class MLSService {
    */
   public async joinConferenceSubconversation(
     conversationId: QualifiedId,
-  ): Promise<{groupId: string; epoch: number; members: SubconversationMember[]; secretKey: string; keyLength: number}> {
+  ): Promise<{subconversation: Subconversation; secretKey: string; keyLength: number}> {
     const subconversation = await this.apiClient.api.conversation.getSubconversation(
       conversationId,
       SUBCONVERSATION_ID.CONFERENCE,
@@ -233,9 +233,7 @@ export class MLSService {
     const secretKey = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
 
     return {
-      groupId: subconversation.group_id,
-      epoch: subconversation.epoch,
-      members: subconversation.members,
+      subconversation,
       secretKey: new TextDecoder().decode(secretKey),
       keyLength,
     };
