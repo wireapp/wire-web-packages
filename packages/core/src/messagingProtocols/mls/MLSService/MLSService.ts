@@ -19,7 +19,6 @@
 
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {SubconversationMember} from '@wireapp/api-client/lib/conversation/Subconversation';
-
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -557,13 +556,21 @@ export class MLSService {
     }
   }
 
-  public async getClientIds(conversationId: string): Promise<string[]> {
-    const conversationIdBytes = Decoder.fromBase64(conversationId).asBytes;
+  /**
+   * Get all conversation members client ids.
+   *
+   * @param groupId groupId of the conversation
+   */
+  public async getClientIds(groupId: string): Promise<{userId: string; clientId: string; domain: string}[]> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const decoder = new TextDecoder();
 
-    const rawClientIds = await this.coreCryptoClient.getClientIds(conversationIdBytes);
+    const rawClientIds = await this.coreCryptoClient.getClientIds(groupIdBytes);
 
-    const clientIds = rawClientIds.map(id => decoder.decode(id));
+    const clientIds = rawClientIds.map(id => {
+      const {user, client, domain} = parseFullQualifiedClientId(decoder.decode(id));
+      return {userId: user, clientId: client, domain};
+    });
     return clientIds;
   }
 }
