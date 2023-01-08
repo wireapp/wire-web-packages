@@ -39,7 +39,7 @@
     "lint-staged": "13.1.0",
     "prettier": "2.8.1",
     "rimraf": "3.0.2",
-    "tsconfig-paths": "4.1.1",
+    "tsconfig-paths": "4.1.2",
     "typescript": "^4.8.4"
   },
   "engines": {
