@@ -15677,7 +15677,7 @@ __metadata:
     lint-staged: 13.1.0
     prettier: 2.8.1
     rimraf: 3.0.2
-    tsconfig-paths: 4.1.1
+    tsconfig-paths: 4.1.2
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -17190,14 +17190,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-paths@npm:4.1.1":
-  version: 4.1.1
-  resolution: "tsconfig-paths@npm:4.1.1"
+"tsconfig-paths@npm:4.1.2":
+  version: 4.1.2
+  resolution: "tsconfig-paths@npm:4.1.2"
   dependencies:
-    json5: ^2.2.1
+    json5: ^2.2.2
     minimist: ^1.2.6
     strip-bom: ^3.0.0
-  checksum: 3a1c6c8f614370ee648313d71bbde2a3bcdfb7e99ad068b7791d7b04fac78f120021c96ab4ec285ba78469f13fc08317a987fdf0d90ea03f8d47305e25bd29c6
+  checksum: 3d9151ecea139594e25618717de15769ab9f38f8e6d510ac16e592b23e7f7105ea13cec5694c3de7e132c98277b775e18edd1651964164ee6d75737c408494cc
   languageName: node
   linkType: hard
 
