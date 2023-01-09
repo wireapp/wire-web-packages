@@ -3517,12 +3517,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fs-extra@npm:9.0.13":
-  version: 9.0.13
-  resolution: "@types/fs-extra@npm:9.0.13"
+"@types/fs-extra@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@types/fs-extra@npm:11.0.0"
   dependencies:
+    "@types/jsonfile": "*"
     "@types/node": "*"
-  checksum: add79e212acd5ac76b97b9045834e03a7996aef60a814185e0459088fd290519a3c1620865d588fa36c4498bf614210d2a703af5cf80aa1dbc125db78f6edac3
+  checksum: 00e706ad9fdcfd96aa15172e37e136075754256c7d52f5c33d04423f0ec786e5651526c7c90bab26a72cc882475e9c1687e33900a1176b6803b7b3fd6cdd35d8
   languageName: node
   linkType: hard
 
@@ -3621,6 +3622,15 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
+  languageName: node
+  linkType: hard
+
+"@types/jsonfile@npm:*":
+  version: 6.1.1
+  resolution: "@types/jsonfile@npm:6.1.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 0f8fe0a9221a00e8413cffba723dfe16553868724b830237256fb0052ecd5cac96498189d1235a001cfa815f352008261c9ceb373f0aa58227f891e0c7a12c4d
   languageName: node
   linkType: hard
 
@@ -4443,7 +4453,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/cli-client@workspace:packages/cli-client"
   dependencies:
-    "@types/fs-extra": 9.0.13
+    "@types/fs-extra": 11.0.0
     "@types/rimraf": ^3.0.2
     "@wireapp/api-client": "workspace:^"
     "@wireapp/core": "workspace:^"
@@ -4465,7 +4475,7 @@ __metadata:
   dependencies:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
-    "@types/fs-extra": 9.0.13
+    "@types/fs-extra": 11.0.0
     "@types/jest": ^29.2.0
     "@types/platform": 1.3.4
     "@types/rimraf": ^3.0.2
@@ -4487,7 +4497,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/axios": ^0.14.0
     "@types/copy": 0.3.2
-    "@types/fs-extra": 9.0.13
+    "@types/fs-extra": 11.0.0
     "@types/jest": ^29.2.0
     "@types/rimraf": ^3.0.2
     axios: 1.2.2
@@ -4610,7 +4620,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/license-collector@workspace:packages/license-collector"
   dependencies:
-    "@types/fs-extra": 9.0.13
+    "@types/fs-extra": 11.0.0
     "@types/license-checker": ^25
     "@types/npm-registry-package-info": 1.0.1
     "@types/rimraf": ^3.0.2
@@ -4757,7 +4767,7 @@ __metadata:
   dependencies:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
-    "@types/fs-extra": 9.0.13
+    "@types/fs-extra": 11.0.0
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
     "@types/rimraf": ^3.0.2
