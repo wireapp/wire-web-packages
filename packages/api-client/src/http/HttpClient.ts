@@ -231,7 +231,7 @@ export class HttpClient extends EventEmitter {
 
   public async postAccess(expiredAccessToken?: AccessTokenData, clientId?: string): Promise<AccessTokenData> {
     const config: AxiosRequestConfig = {
-      headers: new AxiosHeaders(),
+      headers: {},
       method: 'post',
       url: `${AuthAPI.URL.ACCESS}`,
       withCredentials: true,
