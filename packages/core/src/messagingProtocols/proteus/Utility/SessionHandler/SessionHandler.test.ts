@@ -77,7 +77,10 @@ describe('SessionHandler', () => {
       jest.spyOn(coreCrypto as any, 'proteusSessionExists').mockResolvedValue(true);
 
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
-      await initSession({userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'}, {apiClient, coreCrypto});
+      await initSession(
+        {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
+        {apiClient, cryptoClient: coreCrypto},
+      );
 
       expect(sessionFromPrekeySpy).not.toHaveBeenCalled();
     });
@@ -99,7 +102,10 @@ describe('SessionHandler', () => {
         useQualifiedIds: true,
       });
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
-      await initSession({userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'}, {apiClient, coreCrypto});
+      await initSession(
+        {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
+        {apiClient, cryptoClient: coreCrypto},
+      );
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledWith(sessionId, expect.any(Object));
     });

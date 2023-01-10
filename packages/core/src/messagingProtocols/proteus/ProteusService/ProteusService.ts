@@ -30,7 +30,8 @@ import type {
 import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
-import type {CoreCrypto} from '@wireapp/core-crypto';
+import {CoreCrypto} from '@wireapp/core-crypto';
+import {Cryptobox} from '@wireapp/cryptobox';
 import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
@@ -67,19 +68,77 @@ function getLocalStorage() {
   }
 }
 
+function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
+  const isCoreCrypto = cryptoClient instanceof CoreCrypto;
+  return {
+    encrypt() {},
+    decrypt(sessionId: string, message: Uint8Array) {
+      return isCoreCrypto ? cryptoClient.proteusDecrypt(sessionId, message) : cryptoClient.decrypt(sessionId, message);
+    },
+
+    init() {
+      return isCoreCrypto ? cryptoClient.proteusInit() : cryptoClient.load();
+    },
+
+    getFingerprint() {
+      return isCoreCrypto ? cryptoClient.proteusFingerprint() : cryptoClient.getIdentity().public_key.fingerprint();
+    },
+
+    async getRemoteFingerprint(sessionId: string) {
+      if (isCoreCrypto) {
+        return cryptoClient.proteusFingerprintRemote(sessionId);
+      }
+      const session = await cryptoClient.session_load(sessionId);
+      return session.fingerprint_remote();
+    },
+
+    async sessionFromMessage(sessionId: string, message: Uint8Array) {
+      return isCoreCrypto
+        ? cryptoClient.proteusSessionFromMessage(sessionId, message)
+        : this.decrypt(sessionId, message);
+    },
+
+    sessionFromPrekey(sessionId: string, prekey: Uint8Array) {
+      return isCoreCrypto
+        ? cryptoClient.proteusSessionFromPrekey(sessionId, prekey)
+        : cryptoClient.session_from_prekey(sessionId, prekey);
+    },
+
+    sessionExists(sessionId: string) {
+      return isCoreCrypto ? cryptoClient.proteusSessionExists(sessionId) : cryptoClient.session_load(sessionId);
+    },
+
+    saveSession(sessionId: string) {
+      return isCoreCrypto && cryptoClient.proteusSessionSave(sessionId);
+    },
+    deleteSession(sessionId: string) {
+      return isCoreCrypto ? cryptoClient.proteusSessionDelete(sessionId) : cryptoClient.session_delete(sessionId);
+    },
+
+    newPrekey(id: number) {
+      // cryptobox generates prekeys internally when new session is created
+      return isCoreCrypto && cryptoClient.proteusNewPrekey(id);
+    },
+  };
+}
+
+export type CryptoClient = ReturnType<typeof wrapCryptoClient>;
+
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
   private readonly prekeyGenerator: PrekeyGenerator;
+  private readonly cryptoClient: CryptoClient;
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly coreCryptoClient: CoreCrypto,
+    cryptoClient: CoreCrypto | Cryptobox,
     db: CoreDatabase,
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.prekeyGenerator = new PrekeyGenerator(coreCryptoClient, db, {
+    this.cryptoClient = wrapCryptoClient(cryptoClient);
+    this.prekeyGenerator = new PrekeyGenerator(cryptoClient, db, {
       nbPrekeys: config.nbPrekeys,
       onNewPrekeys: config.onNewPrekeys,
     });
@@ -103,8 +162,8 @@ export class ProteusService {
   }
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {
-    await this.migrateToCoreCrypto(storeEngine, context);
-    return this.coreCryptoClient.proteusInit();
+    //await this.migrateToCoreCrypto(storeEngine, context);
+    return this.cryptoClient.init();
   }
 
   public createClient() {
@@ -115,7 +174,7 @@ export class ProteusService {
    * Get the fingerprint of the local client.
    */
   public getLocalFingerprint() {
-    return this.coreCryptoClient.proteusFingerprint();
+    return this.cryptoClient.getFingerprint();
   }
 
   public constructSessionId(userId: string | QualifiedId, clientId: string, domain?: string): string {
@@ -132,9 +191,9 @@ export class ProteusService {
   public async getRemoteFingerprint(userId: QualifiedId, clientId: string, prekey?: PreKey) {
     const sessionId = await initSession(
       {userId, clientId, initialPrekey: prekey},
-      {coreCrypto: this.coreCryptoClient, apiClient: this.apiClient},
+      {cryptoClient: this.cryptoClient, apiClient: this.apiClient},
     );
-    return this.coreCryptoClient.proteusFingerprintRemote(sessionId);
+    return this.cryptoClient.getRemoteFingerprint(sessionId);
   }
 
   public async createConversation({
@@ -214,15 +273,15 @@ export class ProteusService {
 
   private async decrypt(encryptedText: Uint8Array, userId: QualifiedId, clientId: string) {
     const sessionId = this.constructSessionId(userId, clientId);
-    const sessionExists = await this.coreCryptoClient.proteusSessionExists(sessionId);
+    const sessionExists = await this.cryptoClient.sessionExists(sessionId);
 
     try {
       const decryptedMessage: Uint8Array = !sessionExists
-        ? await this.coreCryptoClient.proteusSessionFromMessage(sessionId, encryptedText)
-        : await this.coreCryptoClient.proteusDecrypt(sessionId, encryptedText);
+        ? await this.cryptoClient.sessionFromMessage(sessionId, encryptedText)
+        : await this.cryptoClient.decrypt(sessionId, encryptedText);
 
       if (!sessionExists) {
-        await this.coreCryptoClient.proteusSessionSave(sessionId);
+        await this.cryptoClient.saveSession(sessionId);
         await this.prekeyGenerator.consumePrekey();
         this.config.onNewClient?.({userId, clientId});
         this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
@@ -245,11 +304,11 @@ export class ProteusService {
       recipients,
       domain,
       apiClient: this.apiClient,
-      coreCrypto: this.coreCryptoClient,
+      cryptoClient: this.cryptoClient,
       logger: this.logger,
     });
 
-    const payload = await this.coreCryptoClient.proteusEncryptBatched(sessions, plainText);
+    const payload = await this.cryptoClient.proteusEncryptBatched(sessions, plainText);
 
     return buildEncryptedPayloads(payload);
   }
@@ -259,7 +318,7 @@ export class ProteusService {
       userId,
       clientId,
       useQualifiedIds: this.config.useQualifiedIds,
-      coreCrypto: this.coreCryptoClient,
+      cryptoClient: this.cryptoClient,
     });
   }
 
@@ -289,7 +348,7 @@ export class ProteusService {
 
     this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
     try {
-      await this.coreCryptoClient.proteusCryptoboxMigrate(dbName);
+      await this.cryptoClient.proteusCryptoboxMigrate(dbName);
 
       // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
       // They will be stored in corecrypto database now.

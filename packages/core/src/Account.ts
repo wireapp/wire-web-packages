@@ -39,6 +39,7 @@ import {EventEmitter} from 'events';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
+import {Cryptobox} from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -352,17 +353,26 @@ export class Account<T = any> extends EventEmitter {
   }
 
   public async initServices(context: Context): Promise<void> {
-    this.coreCryptoClient = await this.initCoreCrypto(context);
+    this.coreCryptoClient =
+      this.cryptoProtocolConfig?.mls || this.cryptoProtocolConfig?.useCoreCrypto
+        ? await this.initCoreCrypto(context)
+        : undefined;
     this.storeEngine = await this.initEngine(context);
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const mlsService = new MLSService(this.apiClient, this.coreCryptoClient, {
-      ...this.cryptoProtocolConfig?.mls,
-      nbKeyPackages: this.nbPrekeys,
-    });
-    const proteusService = new ProteusService(this.apiClient, this.coreCryptoClient, this.db, {
+    const mlsService =
+      this.coreCryptoClient &&
+      new MLSService(this.apiClient, this.coreCryptoClient, {
+        ...this.cryptoProtocolConfig?.mls,
+        nbKeyPackages: this.nbPrekeys,
+      });
+
+    const proteusCryptoClient = this.cryptoProtocolConfig?.useCoreCrypto
+      ? this.coreCryptoClient
+      : new Cryptobox(this.storeEngine, this.nbPrekeys);
+    const proteusService = new ProteusService(this.apiClient, proteusCryptoClient, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),

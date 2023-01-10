@@ -18,15 +18,15 @@
  */
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
-import {CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Encoder} from 'bazinga64';
 
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
 import type {CoreDatabase} from '../../../../storage/CoreDB';
+import {CryptoClient} from '../ProteusService';
 import {NewDevicePrekeys} from '../ProteusService.types';
 
-type CoreCryptoPrekeyGenerator = Pick<CoreCrypto, 'proteusNewPrekey'>;
+type CoreCryptoPrekeyGenerator = Pick<CryptoClient, 'newPrekey'>;
 
 interface PrekeysGeneratorConfig {
   /**
@@ -53,7 +53,7 @@ export class PrekeyGenerator {
   }
 
   private async generatePrekey(id: number) {
-    const key = await this.generator.proteusNewPrekey(id);
+    const key = await this.generator.newPrekey(id);
     return {id, key: Encoder.toBase64(key).asString};
   }
 
