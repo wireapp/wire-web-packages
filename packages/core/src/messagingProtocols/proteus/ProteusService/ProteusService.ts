@@ -113,7 +113,7 @@ export class ProteusService {
       }
     }
 
-    if (!cryptoMigrationStore.coreCrypto.isReady(dbName)) {
+    if (!cryptoMigrationStore.coreCrypto.isReady(dbName)  && this.cryptoClient.isCoreCrypto) {
       this.logger.info(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
       try {
         await this.cryptoClient.migrateToCoreCrypto(dbName);
