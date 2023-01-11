@@ -100,7 +100,7 @@ export class CryptoboxWrapper implements CryptoClient {
   }
 
   async saveSession() {
-    //no need to saveSession with cryptobox
+    // Cryptobox saves sessions automatically
   }
 
   async deleteSession(sessionId: string) {
@@ -108,7 +108,7 @@ export class CryptoboxWrapper implements CryptoClient {
   }
 
   async newPrekey(id: number) {
-    // no need to generate prekey for cryptobox as they are generated internally
+    // CryptoBox is generating prekeys internally
     return {id, key: ''};
   }
 
