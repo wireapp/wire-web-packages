@@ -25,7 +25,15 @@ export type InitialPrekeys = {prekeys: PreKey[]; lastPrekey: PreKey};
 export interface CryptoClient {
   encrypt(sessions: string[], plainText: Uint8Array): Promise<Map<string, Uint8Array>>;
   decrypt(sessionId: string, message: Uint8Array): Promise<Uint8Array>;
+
+  /**
+   * Will init an already existing client. The client should already exist in the database
+   */
   init(): Promise<void>;
+
+  /**
+   * Will create a new client and store it in the database
+   */
   create(nbPrekeys: number, entropy?: Uint8Array): Promise<InitialPrekeys>;
   getFingerprint(): Promise<string>;
   getRemoteFingerprint(sessionId: string): Promise<string>;
