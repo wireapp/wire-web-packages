@@ -257,16 +257,13 @@ export class Account<T = any> extends EventEmitter {
     clientInfo: ClientInfo = coreDefaultClient,
     entropyData?: Uint8Array,
   ): Promise<RegisteredClient> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
+    if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set or context not initialized.');
     }
     const shouldCreateMlsClient = !!this.cryptoProtocolConfig?.mls;
     this.logger.info(`Creating new client {mls: ${shouldCreateMlsClient}}`);
-    if (entropyData) {
-      await this.coreCryptoClient.reseedRng(entropyData);
-    }
+    const initialPreKeys = await this.service.proteus.createClient(entropyData);
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
-    const initialPreKeys = await this.service.proteus.createClient();
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
@@ -289,7 +286,7 @@ export class Account<T = any> extends EventEmitter {
    * @returns The local existing client or undefined if the client does not exist or is not valid (non existing on backend)
    */
   public async initClient(client?: RegisteredClient): Promise<RegisteredClient | undefined> {
-    if (!this.service || !this.apiClient.context || !this.coreCryptoClient || !this.storeEngine) {
+    if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set.');
     }
     const validClient = client ?? (await this.service!.client.loadClient());
@@ -369,9 +366,10 @@ export class Account<T = any> extends EventEmitter {
         nbKeyPackages: this.nbPrekeys,
       });
 
-    const proteusCryptoClient = this.cryptoProtocolConfig?.useCoreCrypto
-      ? this.coreCryptoClient
-      : new Cryptobox(this.storeEngine, this.nbPrekeys);
+    const proteusCryptoClient =
+      this.cryptoProtocolConfig?.useCoreCrypto && this.coreCryptoClient
+        ? this.coreCryptoClient
+        : new Cryptobox(this.storeEngine, this.nbPrekeys);
     const proteusService = new ProteusService(this.apiClient, proteusCryptoClient, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
@@ -389,7 +387,7 @@ export class Account<T = any> extends EventEmitter {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const notificationService = new NotificationService(this.apiClient, mlsService, proteusService, this.storeEngine);
+    const notificationService = new NotificationService(this.apiClient, proteusService, this.storeEngine, mlsService);
     const conversationService = new ConversationService(
       this.apiClient,
       {
