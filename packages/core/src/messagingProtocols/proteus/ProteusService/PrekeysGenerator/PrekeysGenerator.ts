@@ -23,7 +23,7 @@ import {Encoder} from 'bazinga64';
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
 import type {CoreDatabase} from '../../../../storage/CoreDB';
-import {CryptoClient} from '../ProteusService';
+import {CryptoClient} from '../CryptoClient';
 import {NewDevicePrekeys} from '../ProteusService.types';
 
 type CoreCryptoPrekeyGenerator = Pick<CryptoClient, 'newPrekey'>;
@@ -61,7 +61,10 @@ export class PrekeyGenerator {
     const prekeys: PreKey[] = [];
     const ids = await this.prekeyState.createIds(nb);
     for (const id of ids) {
-      prekeys.push(await this.generatePrekey(id));
+      const key = await this.generatePrekey(id);
+      if (key) {
+        prekeys.push(key);
+      }
     }
     return prekeys;
   }

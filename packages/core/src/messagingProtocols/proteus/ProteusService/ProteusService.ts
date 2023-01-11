@@ -35,8 +35,9 @@ import {Cryptobox} from '@wireapp/cryptobox';
 import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
+import {wrapCryptoClient, CryptoClient} from './CryptoClient';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
-import {LAST_PREKEY_ID, PrekeyGenerator} from './PrekeysGenerator';
+import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
@@ -68,106 +69,6 @@ function getLocalStorage() {
   }
 }
 
-function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
-  const isCoreCrypto = cryptoClient instanceof CoreCrypto;
-  return {
-    async encrypt(sessions: string[], plainText: Uint8Array) {
-      if (isCoreCrypto) {
-        return cryptoClient.proteusEncryptBatched(sessions, plainText);
-      }
-      const encryptedPayloads: [string, Uint8Array][] = [];
-      for (const sessionId of sessions) {
-        const encrypted = await cryptoClient.encrypt(sessionId, plainText);
-        encryptedPayloads.push([sessionId, new Uint8Array(encrypted)]);
-      }
-      return new Map(encryptedPayloads);
-    },
-
-    decrypt(sessionId: string, message: Uint8Array) {
-      return isCoreCrypto
-        ? cryptoClient.proteusDecrypt(sessionId, message)
-        : cryptoClient.decrypt(sessionId, message.buffer);
-    },
-
-    init() {
-      return isCoreCrypto ? cryptoClient.proteusInit() : cryptoClient.load();
-    },
-
-    async create(entropy?: Uint8Array) {
-      if (isCoreCrypto) {
-        if (entropy) {
-          await cryptoClient.reseedRng(entropy);
-        }
-        return undefined;
-      }
-      const initialPrekeys = await cryptoClient.create(entropy);
-      const prekeys = initialPrekeys
-        .map(preKey => {
-          const preKeyJson = cryptoClient.serialize_prekey(preKey);
-          if (preKeyJson.id !== LAST_PREKEY_ID) {
-            return preKeyJson;
-          }
-          return {id: -1, key: ''};
-        })
-        .filter(serializedPreKey => serializedPreKey.key);
-
-      return {
-        prekeys,
-        lastPrekey: cryptoClient.serialize_prekey(cryptoClient.lastResortPreKey!),
-      };
-    },
-
-    getFingerprint() {
-      return isCoreCrypto ? cryptoClient.proteusFingerprint() : cryptoClient.getIdentity().public_key.fingerprint();
-    },
-
-    async getRemoteFingerprint(sessionId: string) {
-      if (isCoreCrypto) {
-        return cryptoClient.proteusFingerprintRemote(sessionId);
-      }
-      const session = await cryptoClient.session_load(sessionId);
-      return session.fingerprint_remote();
-    },
-
-    async sessionFromMessage(sessionId: string, message: Uint8Array) {
-      return isCoreCrypto
-        ? cryptoClient.proteusSessionFromMessage(sessionId, message)
-        : this.decrypt(sessionId, message);
-    },
-
-    sessionFromPrekey(sessionId: string, prekey: Uint8Array) {
-      return isCoreCrypto
-        ? cryptoClient.proteusSessionFromPrekey(sessionId, prekey)
-        : cryptoClient.session_from_prekey(sessionId, prekey.buffer);
-    },
-
-    async sessionExists(sessionId: string) {
-      if (isCoreCrypto) {
-        return cryptoClient.proteusSessionExists(sessionId);
-      }
-      try {
-        return !!(await cryptoClient.session_load(sessionId));
-      } catch {
-        return false;
-      }
-    },
-
-    saveSession(sessionId: string) {
-      return isCoreCrypto && cryptoClient.proteusSessionSave(sessionId);
-    },
-    deleteSession(sessionId: string) {
-      return isCoreCrypto ? cryptoClient.proteusSessionDelete(sessionId) : cryptoClient.session_delete(sessionId);
-    },
-
-    newPrekey(id: number) {
-      // cryptobox generates prekeys internally when new session is created
-      return isCoreCrypto && cryptoClient.proteusNewPrekey(id);
-    },
-  };
-}
-
-export type CryptoClient = ReturnType<typeof wrapCryptoClient>;
-
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
@@ -186,6 +87,7 @@ export class ProteusService {
       nbPrekeys: config.nbPrekeys,
       onNewPrekeys: config.onNewPrekeys,
     });
+    this.cryptoClient.addNewPrekeysListener(config.onNewPrekeys);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -385,7 +287,7 @@ export class ProteusService {
     return qualifiedOTRRecipients;
   }
 
-  private async migrateToCoreCrypto(storeEngine: CRUDEngine, context: Context) {
+  private async migrateToCoreCrypto(storeEngine: CRUDEngine) {
     const dbName = storeEngine.storeName;
     const migrationFlag = `${dbName}-corecrypto-ready`;
     const localStorage = getLocalStorage();

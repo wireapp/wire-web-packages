@@ -21,6 +21,7 @@ import type {UserClients} from '@wireapp/api-client/lib/conversation';
 
 import {constructSessionId, initSession, initSessions} from './SessionHandler';
 
+import {wrapCryptoClient} from '../../ProteusService/CryptoClient';
 import {buildProteusService} from '../../ProteusService/ProteusService.mocks';
 
 describe('SessionHandler', () => {
@@ -79,7 +80,7 @@ describe('SessionHandler', () => {
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
       await initSession(
         {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
-        {apiClient, cryptoClient: coreCrypto},
+        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto)},
       );
 
       expect(sessionFromPrekeySpy).not.toHaveBeenCalled();
@@ -104,7 +105,7 @@ describe('SessionHandler', () => {
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
       await initSession(
         {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
-        {apiClient, cryptoClient: coreCrypto},
+        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto)},
       );
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledWith(sessionId, expect.any(Object));
@@ -152,7 +153,7 @@ describe('SessionHandler', () => {
       const sessions = await initSessions({
         recipients: {...existingUserClients, ...missingUserClients},
         apiClient,
-        coreCrypto,
+        cryptoClient: wrapCryptoClient(coreCrypto),
       });
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledTimes(3);

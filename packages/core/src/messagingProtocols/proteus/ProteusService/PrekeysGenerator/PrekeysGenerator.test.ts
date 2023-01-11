@@ -28,7 +28,7 @@ describe('PrekeysGenerator', () => {
     onNewPrekeys: jest.fn(),
   };
   const mockPrekeyGenerator = {
-    proteusNewPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
+    newPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
   };
 
   beforeEach(async () => {
