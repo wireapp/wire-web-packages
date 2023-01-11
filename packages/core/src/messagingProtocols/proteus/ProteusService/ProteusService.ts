@@ -36,6 +36,7 @@ import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {wrapCryptoClient, CryptoClient} from './CryptoClient';
+import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
@@ -60,15 +61,6 @@ import {
   initSession,
   initSessions,
 } from '../Utility/SessionHandler';
-import {cryptoMigrationStore} from './cryptoMigrationStateStore';
-
-function getLocalStorage() {
-  try {
-    return window.localStorage;
-  } catch {
-    return {setItem: () => {}, getItem: () => {}, removeItem: () => {}};
-  }
-}
 
 export class ProteusService {
   private readonly messageService: MessageService;
