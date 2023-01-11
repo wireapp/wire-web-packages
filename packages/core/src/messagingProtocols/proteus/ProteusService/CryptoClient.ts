@@ -75,8 +75,10 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
       };
     },
 
-    getFingerprint() {
-      return isCoreCrypto ? cryptoClient.proteusFingerprint() : cryptoClient.getIdentity().public_key.fingerprint();
+    async getFingerprint() {
+      return isCoreCrypto
+        ? await cryptoClient.proteusFingerprint()
+        : cryptoClient.getIdentity().public_key.fingerprint();
     },
 
     async getRemoteFingerprint(sessionId: string) {
