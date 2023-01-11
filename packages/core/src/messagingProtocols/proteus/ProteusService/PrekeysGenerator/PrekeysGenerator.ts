@@ -18,13 +18,11 @@
  */
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
-import {Encoder} from 'bazinga64';
 
 import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
 
 import type {CoreDatabase} from '../../../../storage/CoreDB';
 import {CryptoClient} from '../CryptoClient';
-import {NewDevicePrekeys} from '../ProteusService.types';
 
 type CoreCryptoPrekeyGenerator = Pick<CryptoClient, 'newPrekey'>;
 
@@ -39,7 +37,6 @@ interface PrekeysGeneratorConfig {
    */
   onNewPrekeys: (prekeys: PreKey[]) => void;
 }
-export const LAST_PREKEY_ID = 65535;
 
 export class PrekeyGenerator {
   private prekeyState: PrekeysGeneratorStore;
@@ -52,16 +49,11 @@ export class PrekeyGenerator {
     this.prekeyState = new PrekeysGeneratorStore(db);
   }
 
-  private async generatePrekey(id: number) {
-    const key = await this.generator.newPrekey(id);
-    return {id, key: Encoder.toBase64(key).asString};
-  }
-
   private async generatePrekeys(nb: number): Promise<PreKey[]> {
     const prekeys: PreKey[] = [];
     const ids = await this.prekeyState.createIds(nb);
     for (const id of ids) {
-      prekeys.push(await this.generatePrekey(id));
+      prekeys.push(await this.generator.newPrekey(id));
     }
     return prekeys;
   }
@@ -76,21 +68,13 @@ export class PrekeyGenerator {
     }
   }
 
+  async setInitialState(nbInitialPrekeys: number) {
+    await this.prekeyState.createIds(nbInitialPrekeys);
+  }
+
   private numberOfMissingPrekeys(currentNumberOfPrekeys: number): number {
     const threshold = Math.ceil(this.config.nbPrekeys / 2);
     const hasHitThreshold = currentNumberOfPrekeys <= threshold;
     return hasHitThreshold ? this.config.nbPrekeys - currentNumberOfPrekeys : 0;
-  }
-
-  /**
-   * Will generate the initial set of prekeys for a new device
-   * @param nbPrekeys the number of prekeys to generate
-   * @param generator the class that will be used to generate a single prekey
-   */
-  async generateInitialPrekeys(): Promise<NewDevicePrekeys> {
-    return {
-      prekeys: await this.generatePrekeys(this.config.nbPrekeys),
-      lastPrekey: await this.generatePrekey(LAST_PREKEY_ID),
-    };
   }
 }

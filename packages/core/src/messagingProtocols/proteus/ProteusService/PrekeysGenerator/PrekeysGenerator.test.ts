@@ -17,7 +17,7 @@
  *
  */
 
-import {PrekeyGenerator, LAST_PREKEY_ID} from './PrekeysGenerator';
+import {PrekeyGenerator} from './PrekeysGenerator';
 
 import {CoreDatabase, openDB} from '../../../../storage/CoreDB';
 
@@ -39,17 +39,10 @@ describe('PrekeysGenerator', () => {
     await db.clear('prekeys');
   });
 
-  it('generates initial device prekeys', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
-    const {prekeys, lastPrekey} = await prekeyGenerator.generateInitialPrekeys();
-    expect(prekeys).toHaveLength(baseConfig.nbPrekeys);
-    expect(lastPrekey.id).toBe(LAST_PREKEY_ID);
-  });
-
   it('triggers the threshold callback when number of prekeys hits the limit', async () => {
     const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
 
-    await prekeyGenerator.generateInitialPrekeys();
+    await prekeyGenerator.setInitialState(baseConfig.nbPrekeys);
 
     expect(baseConfig.onNewPrekeys).not.toHaveBeenCalled();
 

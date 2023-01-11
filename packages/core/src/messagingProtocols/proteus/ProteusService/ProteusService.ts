@@ -127,8 +127,9 @@ export class ProteusService {
   }
 
   public async createClient(entropy?: Uint8Array) {
-    const prekeys = await this.cryptoClient.create(entropy);
-    return prekeys ?? this.prekeyGenerator.generateInitialPrekeys();
+    const prekeys = await this.cryptoClient.create(this.config.nbPrekeys, entropy);
+    await this.prekeyGenerator.setInitialState(prekeys.prekeys.length);
+    return prekeys;
   }
 
   /**
