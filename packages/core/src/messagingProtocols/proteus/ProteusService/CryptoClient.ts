@@ -132,5 +132,13 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
         });
       }
     },
+
+    async migrateToCoreCrypto(dbName: string) {
+      if (!isCoreCrypto) {
+        return;
+      }
+
+      await cryptoClient.proteusCryptoboxMigrate(dbName);
+    },
   };
 }

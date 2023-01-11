@@ -60,6 +60,7 @@ import {
   initSession,
   initSessions,
 } from '../Utility/SessionHandler';
+import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 
 function getLocalStorage() {
   try {
@@ -108,11 +109,12 @@ export class ProteusService {
   }
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {
-    //await this.migrateToCoreCrypto(storeEngine, context);
     if (context.domain && this.config.useQualifiedIds) {
       // We want sessions to be fully qualified from now on
       await migrateToQualifiedSessionIds(storeEngine, context.domain);
     }
+
+    await this.migrateToCoreCrypto(storeEngine);
     return this.cryptoClient.init();
   }
 
@@ -289,15 +291,14 @@ export class ProteusService {
 
   private async migrateToCoreCrypto(storeEngine: CRUDEngine) {
     const dbName = storeEngine.storeName;
-    const migrationFlag = `${dbName}-corecrypto-ready`;
-    const localStorage = getLocalStorage();
-    if (localStorage.getItem(migrationFlag)) {
+
+    if (cryptoMigrationStore.coreCrypto.isReady(dbName)) {
       return;
     }
 
     this.logger.log(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
     try {
-      //await this.cryptoClient.proteusCryptoboxMigrate(dbName);
+      await this.cryptoClient.migrateToCoreCrypto(dbName);
 
       // We can clear 3 stores (keys - local identity, prekeys and sessions) from wire db.
       // They will be stored in corecrypto database now.
@@ -310,7 +311,7 @@ export class ProteusService {
       */
 
       this.logger.info(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
-      localStorage.setItem(migrationFlag, '1');
+      cryptoMigrationStore.coreCrypto.markAsReady(dbName);
     } catch (error) {
       this.logger.error('Client was not able to perform DB migration: ', error);
     }
