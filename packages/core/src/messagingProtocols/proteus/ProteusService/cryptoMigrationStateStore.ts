@@ -17,6 +17,14 @@
  *
  */
 
+function getLocalStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return {setItem: () => {}, getItem: () => {}, removeItem: () => {}};
+  }
+}
+
 const MIGRATION_READY_STATE = '1';
 
 const getQualifiedSessionsReadyKey = (dbName: string) => `${dbName}-qualified-sessions-ready` as const;
@@ -24,12 +32,14 @@ const getCoreCryptoReadyKey = (dbName: string) => `${dbName}-corecrypto-ready` a
 
 const markMigrationReady = (getKey: (dbName: string) => string) => (dbName: string) => {
   const key = getKey(dbName);
-  window.localStorage.setItem(key, MIGRATION_READY_STATE);
+  const localStorage = getLocalStorage();
+  localStorage.setItem(key, MIGRATION_READY_STATE);
 };
 
 const isMigrationReady = (getKey: (dbName: string) => string) => (dbName: string) => {
   const key = getKey(dbName);
-  const value = window.localStorage.getItem(key);
+  const localStorage = getLocalStorage();
+  const value = localStorage.getItem(key);
   return !!value && value === MIGRATION_READY_STATE;
 };
 
