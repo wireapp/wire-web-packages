@@ -99,16 +99,16 @@ export class CryptoboxWrapper implements CryptoClient {
     }
   }
 
-  async saveSession(_sessionId: string) {
+  async saveSession() {
     //no need to saveSession with cryptobox
   }
 
   async deleteSession(sessionId: string) {
-    return void (await this.cryptobox.session_delete(sessionId));
+    await this.cryptobox.session_delete(sessionId);
   }
 
   async newPrekey(id: number) {
-    // no need to generate prekey for cryptobox as they are generate internally
+    // no need to generate prekey for cryptobox as they are generated internally
     return {id, key: ''};
   }
 
@@ -119,7 +119,7 @@ export class CryptoboxWrapper implements CryptoClient {
     this.cryptobox['cachedSessions'].set(sessionId, session);
   }
 
-  async migrateToCoreCrypto(_dbName: string) {
+  async migrateToCoreCrypto() {
     // No migration needed for cryptobox
   }
 
