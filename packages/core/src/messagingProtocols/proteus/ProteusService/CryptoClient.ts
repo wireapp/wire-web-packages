@@ -140,5 +140,9 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
 
       await cryptoClient.proteusCryptoboxMigrate(dbName);
     },
+
+    get isCoreCrypto() {
+      return isCoreCrypto;
+    },
   };
 }
