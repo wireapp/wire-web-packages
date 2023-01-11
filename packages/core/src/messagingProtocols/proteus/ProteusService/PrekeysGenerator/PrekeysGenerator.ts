@@ -61,10 +61,7 @@ export class PrekeyGenerator {
     const prekeys: PreKey[] = [];
     const ids = await this.prekeyState.createIds(nb);
     for (const id of ids) {
-      const key = await this.generatePrekey(id);
-      if (key) {
-        prekeys.push(key);
-      }
+      prekeys.push(await this.generatePrekey(id));
     }
     return prekeys;
   }
