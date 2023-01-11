@@ -147,7 +147,7 @@ describe('ProteusService', () => {
     });
 
     it('create a session from given prekey if session does not exists', async () => {
-      const [proteusService, {apiClient, coreCrypto}] = await await buildProteusService();
+      const [proteusService, {apiClient, coreCrypto}] = await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
       const getPrekeyMock = jest.spyOn(apiClient.api.user, 'getClientPreKey');
