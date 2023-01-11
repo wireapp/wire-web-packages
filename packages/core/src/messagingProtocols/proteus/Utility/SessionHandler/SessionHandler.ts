@@ -250,9 +250,9 @@ interface DeleteSessionParams {
   cryptoClient: CryptoClient;
   useQualifiedIds: boolean;
 }
-function deleteSession(params: DeleteSessionParams) {
+async function deleteSession(params: DeleteSessionParams) {
   const sessionId = constructSessionId(params);
-  return params.cryptoClient.deleteSession(sessionId);
+  await params.cryptoClient.deleteSession(sessionId);
 }
 
 interface CreateSessionsFromPreKeysProps {
