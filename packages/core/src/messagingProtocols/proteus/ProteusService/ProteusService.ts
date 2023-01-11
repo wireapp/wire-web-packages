@@ -105,7 +105,7 @@ export class ProteusService {
     if (context.domain && this.config.useQualifiedIds) {
       // We want sessions to be fully qualified from now on
 
-      if (!cryptoMigrationStore.qualifiedSessions.isReady(dbName) && this.cryptoClient.isCoreCrypto) {
+      if (!cryptoMigrationStore.qualifiedSessions.isReady(dbName)) {
         this.logger.info(`Migrating existing session ids to qualified ids.`);
         await migrateToQualifiedSessionIds(storeEngine, context.domain);
         cryptoMigrationStore.qualifiedSessions.markAsReady(dbName);
