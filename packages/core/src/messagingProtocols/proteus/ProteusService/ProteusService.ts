@@ -109,9 +109,9 @@ export class ProteusService {
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {
     //await this.migrateToCoreCrypto(storeEngine, context);
-    if (context.domain) {
+    if (context.domain && this.config.useQualifiedIds) {
       // We want sessions to be fully qualified from now on
-      await migrateToQualifiedSessionIds(storeEngine, context.domain ?? '');
+      await migrateToQualifiedSessionIds(storeEngine, context.domain);
     }
     return this.cryptoClient.init();
   }
