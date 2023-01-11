@@ -303,7 +303,6 @@ export class ProteusService {
       */
 
       this.logger.info(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
-      cryptoMigrationStore.coreCrypto.markAsReady(dbName);
     } catch (error) {
       this.logger.error('Client was not able to perform DB migration: ', error);
     }
