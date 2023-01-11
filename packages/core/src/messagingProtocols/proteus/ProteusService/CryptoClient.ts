@@ -115,6 +115,7 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
     saveSession(sessionId: string) {
       return isCoreCrypto && cryptoClient.proteusSessionSave(sessionId);
     },
+
     deleteSession(sessionId: string) {
       return isCoreCrypto ? cryptoClient.proteusSessionDelete(sessionId) : cryptoClient.session_delete(sessionId);
     },
@@ -122,6 +123,19 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
     newPrekey(id: number) {
       // no need to generate prekey for cryptobox as they are generate internally
       return isCoreCrypto ? cryptoClient.proteusNewPrekey(id) : new Uint8Array();
+    },
+
+    debug: {
+      async breakSession(sessionId: string) {
+        if (isCoreCrypto) {
+          // TODO
+          return;
+        }
+        const session = await cryptoClient.session_load(sessionId);
+        session.session.session_states = {};
+
+        cryptoClient['cachedSessions'].set(sessionId, session);
+      },
     },
 
     addNewPrekeysListener(onNewPrekeys: (prekeys: PreKey[]) => void) {
