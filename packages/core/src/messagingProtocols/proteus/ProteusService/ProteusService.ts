@@ -38,7 +38,6 @@ import {CRUDEngine} from '@wireapp/store-engine';
 import {wrapCryptoClient, CryptoClient} from './CryptoClient';
 import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
-import {PrekeyGenerator} from './PrekeysGenerator';
 import type {
   AddUsersToProteusConversationParams,
   CreateProteusConversationParams,
@@ -65,7 +64,6 @@ import {
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
-  private readonly prekeyGenerator: PrekeyGenerator;
   private readonly cryptoClient: CryptoClient;
 
   constructor(
@@ -75,12 +73,7 @@ export class ProteusService {
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.cryptoClient = wrapCryptoClient(cryptoClient);
-    this.prekeyGenerator = new PrekeyGenerator(this.cryptoClient, db, {
-      nbPrekeys: config.nbPrekeys,
-      onNewPrekeys: config.onNewPrekeys,
-    });
-    this.cryptoClient.addNewPrekeysListener(config.onNewPrekeys);
+    this.cryptoClient = wrapCryptoClient(cryptoClient, db, config);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
@@ -94,7 +87,7 @@ export class ProteusService {
       if (isSessionReset) {
         this.logger.debug('A session was reset from a remote device');
         // If a session reset message was received, we need to count a consumed prekey (because the sender has created a new session from a new prekey)
-        await this.prekeyGenerator.consumePrekey();
+        await this.cryptoClient.consumePrekey();
       }
     }
     return handledEvent;
@@ -128,7 +121,6 @@ export class ProteusService {
 
   public async createClient(entropy?: Uint8Array) {
     const prekeys = await this.cryptoClient.create(this.config.nbPrekeys, entropy);
-    await this.prekeyGenerator.setInitialState(prekeys.prekeys.length);
     return prekeys;
   }
 
@@ -244,7 +236,6 @@ export class ProteusService {
 
       if (!sessionExists) {
         await this.cryptoClient.saveSession(sessionId);
-        await this.prekeyGenerator.consumePrekey();
         this.config.onNewClient?.({userId, clientId});
         this.logger.info(`Created a new session from message for session ID "${sessionId}" and decrypted the message`);
       } else {

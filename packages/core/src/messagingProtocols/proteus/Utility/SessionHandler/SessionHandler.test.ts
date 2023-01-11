@@ -80,7 +80,7 @@ describe('SessionHandler', () => {
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
       await initSession(
         {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
-        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto)},
+        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto, {} as any, {} as any)},
       );
 
       expect(sessionFromPrekeySpy).not.toHaveBeenCalled();
@@ -105,7 +105,7 @@ describe('SessionHandler', () => {
       const sessionFromPrekeySpy = jest.spyOn(coreCrypto, 'proteusSessionFromPrekey');
       await initSession(
         {userId: {id: 'user1', domain: 'domain'}, clientId: 'client1'},
-        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto)},
+        {apiClient, cryptoClient: wrapCryptoClient(coreCrypto, {} as any, {} as any)},
       );
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledWith(sessionId, expect.any(Object));
@@ -153,7 +153,7 @@ describe('SessionHandler', () => {
       const sessions = await initSessions({
         recipients: {...existingUserClients, ...missingUserClients},
         apiClient,
-        cryptoClient: wrapCryptoClient(coreCrypto),
+        cryptoClient: wrapCryptoClient(coreCrypto, {} as any, {} as any),
       });
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledTimes(3);

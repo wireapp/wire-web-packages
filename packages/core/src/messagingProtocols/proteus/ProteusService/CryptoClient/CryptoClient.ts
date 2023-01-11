@@ -17,6 +17,8 @@
  *
  */
 
+import {PreKey} from '@wireapp/api-client/src/auth';
+
 import {CoreCrypto} from '@wireapp/core-crypto';
 import {Cryptobox} from '@wireapp/cryptobox';
 
@@ -24,7 +26,14 @@ import {CoreCryptoWrapper} from './CoreCryptoWrapper';
 import {CryptoboxWrapper} from './CryptoboxWrapper';
 import {CryptoClient} from './CryptoClient.types';
 
-export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox): CryptoClient {
+import {CoreDatabase} from '../../../../storage/CoreDB';
+
+type Config = {
+  nbPrekeys: number;
+  onNewPrekeys: (prekeys: PreKey[]) => void;
+};
+
+export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox, db: CoreDatabase, config: Config): CryptoClient {
   const isCoreCrypto = cryptoClient instanceof CoreCrypto;
-  return isCoreCrypto ? new CoreCryptoWrapper(cryptoClient) : new CryptoboxWrapper(cryptoClient);
+  return isCoreCrypto ? new CoreCryptoWrapper(cryptoClient, db, config) : new CryptoboxWrapper(cryptoClient, config);
 }

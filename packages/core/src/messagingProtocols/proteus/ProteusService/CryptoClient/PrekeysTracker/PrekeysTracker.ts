@@ -19,10 +19,10 @@
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
 
-import {PrekeysGeneratorStore} from './PrekeysGenerator.store';
+import {PrekeysTrackerStore} from './PrekeysTracker.store';
 
-import type {CoreDatabase} from '../../../../storage/CoreDB';
-import {CryptoClient} from '../CryptoClient';
+import {CryptoClient} from '..';
+import type {CoreDatabase} from '../../../../../storage/CoreDB';
 
 type CoreCryptoPrekeyGenerator = Pick<CryptoClient, 'newPrekey'>;
 
@@ -38,15 +38,15 @@ interface PrekeysGeneratorConfig {
   onNewPrekeys: (prekeys: PreKey[]) => void;
 }
 
-export class PrekeyGenerator {
-  private prekeyState: PrekeysGeneratorStore;
+export class PrekeyTracker {
+  private prekeyState: PrekeysTrackerStore;
 
   constructor(
     private readonly generator: CoreCryptoPrekeyGenerator,
     db: CoreDatabase,
     private config: PrekeysGeneratorConfig,
   ) {
-    this.prekeyState = new PrekeysGeneratorStore(db);
+    this.prekeyState = new PrekeysTrackerStore(db);
   }
 
   private async generatePrekeys(nb: number): Promise<PreKey[]> {

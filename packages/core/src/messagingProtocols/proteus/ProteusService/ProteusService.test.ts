@@ -32,9 +32,9 @@ import {NotificationSource} from '../../../notification';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-jest.mock('./PrekeysGenerator', () => {
+jest.mock('./CryptoClient/PrekeysTracker', () => {
   return {
-    PrekeyGenerator: jest.fn().mockImplementation(() => {
+    PrekeyTracker: jest.fn().mockImplementation(() => {
       return {
         consumePrekey: jest.fn(),
         getNumberOfPrekeys: jest.fn().mockResolvedValue(0),

@@ -17,9 +17,9 @@
  *
  */
 
-import {PrekeyGenerator} from './PrekeysGenerator';
+import {PrekeyTracker} from './PrekeysTracker';
 
-import {CoreDatabase, openDB} from '../../../../storage/CoreDB';
+import {CoreDatabase, openDB} from '../../../../../storage/CoreDB';
 
 describe('PrekeysGenerator', () => {
   let db: CoreDatabase;
@@ -27,7 +27,7 @@ describe('PrekeysGenerator', () => {
     nbPrekeys: 10,
     onNewPrekeys: jest.fn(),
   };
-  const mockPrekeyGenerator = {
+  const mockPrekeyTracker = {
     newPrekey: jest.fn().mockResolvedValue(Uint8Array.from([])),
   };
 
@@ -40,19 +40,19 @@ describe('PrekeysGenerator', () => {
   });
 
   it('triggers the threshold callback when number of prekeys hits the limit', async () => {
-    const prekeyGenerator = new PrekeyGenerator(mockPrekeyGenerator, db, baseConfig);
+    const prekeyTracker = new PrekeyTracker(mockPrekeyTracker, db, baseConfig);
 
-    await prekeyGenerator.setInitialState(baseConfig.nbPrekeys);
+    await prekeyTracker.setInitialState(baseConfig.nbPrekeys);
 
     expect(baseConfig.onNewPrekeys).not.toHaveBeenCalled();
 
-    await prekeyGenerator.consumePrekey();
-    await prekeyGenerator.consumePrekey();
-    await prekeyGenerator.consumePrekey();
-    await prekeyGenerator.consumePrekey();
+    await prekeyTracker.consumePrekey();
+    await prekeyTracker.consumePrekey();
+    await prekeyTracker.consumePrekey();
+    await prekeyTracker.consumePrekey();
     expect(baseConfig.onNewPrekeys).not.toHaveBeenCalled();
 
-    await prekeyGenerator.consumePrekey();
+    await prekeyTracker.consumePrekey();
 
     expect(baseConfig.onNewPrekeys).toHaveBeenCalledTimes(1);
   });

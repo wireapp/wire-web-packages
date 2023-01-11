@@ -33,10 +33,10 @@ export interface CryptoClient {
   sessionFromPrekey(sessionId: string, prekey: Uint8Array): Promise<void>;
   sessionExists(sessionId: string): Promise<boolean>;
   saveSession(sessionId: string): Promise<void>;
+  consumePrekey: () => Promise<void>;
   deleteSession(sessionId: string): Promise<void>;
   newPrekey(id: number): Promise<PreKey>;
   debugBreakSession(sessionId: string): void;
-  addNewPrekeysListener(onNewPrekeys: (prekeys: PreKey[]) => void): void;
   migrateToCoreCrypto(dbName: string): Promise<void>;
   get isCoreCrypto(): boolean;
 }

@@ -23,9 +23,21 @@ import {Encoder} from 'bazinga64';
 import {CoreCrypto} from '@wireapp/core-crypto';
 
 import {CryptoClient, LAST_PREKEY_ID} from './CryptoClient.types';
+import {PrekeyTracker} from './PrekeysTracker';
+
+import {CoreDatabase} from '../../../../storage/CoreDB';
+
+type Config = {
+  nbPrekeys: number;
+  onNewPrekeys: (prekeys: PreKey[]) => void;
+};
 
 export class CoreCryptoWrapper implements CryptoClient {
-  constructor(private readonly coreCrypto: CoreCrypto) {}
+  private readonly prekeyTracker: PrekeyTracker;
+
+  constructor(private readonly coreCrypto: CoreCrypto, db: CoreDatabase, config: Config) {
+    this.prekeyTracker = new PrekeyTracker(this, db, config);
+  }
 
   encrypt(sessions: string[], plainText: Uint8Array) {
     return this.coreCrypto.proteusEncryptBatched(sessions, plainText);
@@ -47,6 +59,8 @@ export class CoreCryptoWrapper implements CryptoClient {
     for (let id = 0; id < nbPrekeys; id++) {
       prekeys.push(await this.newPrekey(id));
     }
+    await this.prekeyTracker.setInitialState(prekeys.length);
+
     return {
       prekeys,
       lastPrekey: await this.newPrekey(LAST_PREKEY_ID),
@@ -61,7 +75,8 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusFingerprintRemote(sessionId);
   }
 
-  sessionFromMessage(sessionId: string, message: Uint8Array) {
+  async sessionFromMessage(sessionId: string, message: Uint8Array) {
+    await this.consumePrekey(); // we need to mark a prekey as consumed since if we create a session from a message, it means the sender has consumed one of our prekeys
     return this.coreCrypto.proteusSessionFromMessage(sessionId, message);
   }
 
@@ -81,6 +96,10 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusSessionDelete(sessionId);
   }
 
+  consumePrekey() {
+    return this.prekeyTracker.consumePrekey();
+  }
+
   async newPrekey(id: number) {
     // no need to generate prekey for cryptobox as they are generate internally
     const key = await this.coreCrypto.proteusNewPrekey(id);
@@ -89,10 +108,6 @@ export class CoreCryptoWrapper implements CryptoClient {
 
   async debugBreakSession(_sessionId: string) {
     // TODO
-  }
-
-  addNewPrekeysListener() {
-    // no need to implement this for core crypto as prekeys are manually generated
   }
 
   async migrateToCoreCrypto(dbName: string) {

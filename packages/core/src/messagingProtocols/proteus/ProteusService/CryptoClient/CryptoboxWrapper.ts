@@ -23,8 +23,17 @@ import {Cryptobox} from '@wireapp/cryptobox';
 
 import {CryptoClient, LAST_PREKEY_ID} from './CryptoClient.types';
 
+type Config = {
+  onNewPrekeys: (prekeys: PreKey[]) => void;
+};
+
 export class CryptoboxWrapper implements CryptoClient {
-  constructor(private readonly cryptobox: Cryptobox) {}
+  constructor(private readonly cryptobox: Cryptobox, config: Config) {
+    this.cryptobox.on(Cryptobox.TOPIC.NEW_PREKEYS, prekeys => {
+      const serializedPreKeys = prekeys.map(prekey => this.cryptobox.serialize_prekey(prekey));
+      config.onNewPrekeys(serializedPreKeys);
+    });
+  }
 
   async encrypt(sessions: string[], plainText: Uint8Array) {
     const encryptedPayloads: [string, Uint8Array][] = [];
@@ -74,6 +83,10 @@ export class CryptoboxWrapper implements CryptoClient {
     return this.decrypt(sessionId, message);
   }
 
+  async consumePrekey() {
+    // Cryptobox is keeping track of consumed prekeys internally
+  }
+
   async sessionFromPrekey(sessionId: string, prekey: Uint8Array) {
     return void (await this.cryptobox.session_from_prekey(sessionId, prekey.buffer));
   }
@@ -104,13 +117,6 @@ export class CryptoboxWrapper implements CryptoClient {
     session.session.session_states = {};
 
     this.cryptobox['cachedSessions'].set(sessionId, session);
-  }
-
-  addNewPrekeysListener(onNewPrekeys: (prekeys: PreKey[]) => void) {
-    this.cryptobox.on(Cryptobox.TOPIC.NEW_PREKEYS, prekeys => {
-      const serializedPreKeys = prekeys.map(prekey => this.cryptobox.serialize_prekey(prekey));
-      onNewPrekeys(serializedPreKeys);
-    });
   }
 
   async migrateToCoreCrypto(_dbName: string) {
