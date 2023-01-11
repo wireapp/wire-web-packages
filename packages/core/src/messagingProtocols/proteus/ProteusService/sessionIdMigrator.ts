@@ -19,8 +19,6 @@
 
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {cryptoMigrationStore} from './cryptoMigrationStateStore';
-
 const sessionTableName = 'sessions';
 
 /**
@@ -31,12 +29,6 @@ const sessionTableName = 'sessions';
  * @param defaultDomain The domain to add to the unqualified session ids
  */
 export async function migrateToQualifiedSessionIds(storeEngine: CRUDEngine, defaultDomain: string) {
-  const dbName = storeEngine.storeName;
-
-  if (cryptoMigrationStore.qualifiedSessions.isReady(dbName)) {
-    return;
-  }
-
   const isFullyQualified = /^[^@]+@[A-F0-9-]+@/i;
   const updatedSessions = (await storeEngine.readAll<{id: string}>(sessionTableName))
     .filter(session => !isFullyQualified.test(session.id))
@@ -57,6 +49,4 @@ export async function migrateToQualifiedSessionIds(storeEngine: CRUDEngine, defa
   for (const newSession of updatedSessions.newSessions) {
     await storeEngine.create(sessionTableName, newSession.id, newSession);
   }
-
-  cryptoMigrationStore.qualifiedSessions.markAsReady(dbName);
 }

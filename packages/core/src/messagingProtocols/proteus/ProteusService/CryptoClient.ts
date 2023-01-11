@@ -22,7 +22,6 @@ import {PreKey} from '@wireapp/api-client/lib/auth';
 import {CoreCrypto} from '@wireapp/core-crypto';
 import {Cryptobox} from '@wireapp/cryptobox';
 
-import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {LAST_PREKEY_ID} from './PrekeysGenerator';
 
 export type CryptoClient = ReturnType<typeof wrapCryptoClient>;
@@ -140,7 +139,6 @@ export function wrapCryptoClient(cryptoClient: CoreCrypto | Cryptobox) {
       }
 
       await cryptoClient.proteusCryptoboxMigrate(dbName);
-      cryptoMigrationStore.coreCrypto.markAsReady(dbName);
     },
   };
 }
