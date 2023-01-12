@@ -33,7 +33,7 @@ import logdown from 'logdown';
 import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {wrapCryptoClient, CryptoClient, CryptoClientDef} from './CryptoClient';
+import {CryptoClient} from './CryptoClient';
 import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 import type {
@@ -46,7 +46,6 @@ import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 
 import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {CoreDatabase} from '../../../storage/CoreDB';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
@@ -62,16 +61,13 @@ import {
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
-  private readonly cryptoClient: CryptoClient;
 
   constructor(
     private readonly apiClient: APIClient,
-    cryptoClient: CryptoClientDef,
-    db: CoreDatabase,
+    private readonly cryptoClient: CryptoClient,
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
-    this.cryptoClient = wrapCryptoClient(cryptoClient, db, config);
   }
 
   public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {

@@ -39,6 +39,10 @@ export class CoreCryptoWrapper implements CryptoClient {
     this.prekeyTracker = new PrekeyTracker(this, db, config);
   }
 
+  getNativeClient() {
+    return this.coreCrypto;
+  }
+
   encrypt(sessions: string[], plainText: Uint8Array) {
     return this.coreCrypto.proteusEncryptBatched(sessions, plainText);
   }

@@ -20,13 +20,10 @@
 import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Encoder} from 'bazinga64';
 
-import type {CoreCrypto} from '@wireapp/core-crypto';
-import type {Cryptobox} from '@wireapp/cryptobox';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {CoreCryptoWrapper} from './CoreCryptoWrapper';
 import {CryptoboxWrapper} from './CryptoboxWrapper';
-import {CryptoClient} from './CryptoClient.types';
 
 import {CoreDatabase} from '../../../../storage/CoreDB';
 
@@ -35,23 +32,25 @@ export enum CryptoClientType {
   CRYPTOBOX,
 }
 
-export type CryptoClientDef = [CryptoClientType.CRYPTOBOX, Cryptobox] | [CryptoClientType.CORE_CRYPTO, CoreCrypto];
+export type CryptoClientDef =
+  | [CryptoClientType.CRYPTOBOX, CryptoboxWrapper]
+  | [CryptoClientType.CORE_CRYPTO, CoreCryptoWrapper];
 
-type Config = {
+type WrapConfig = {
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
 
-type InitConfig = {
+type InitConfig = WrapConfig & {
   storeEngine: CRUDEngine;
-  nbPrekeys: number;
   secretKey: Uint8Array;
   coreCryptoWasmFilePath?: string;
 };
 
 export async function buildCryptoClient(
   clientType: CryptoClientType,
-  {storeEngine, nbPrekeys, secretKey, coreCryptoWasmFilePath}: InitConfig,
+  db: CoreDatabase,
+  {storeEngine, nbPrekeys, secretKey, coreCryptoWasmFilePath, onNewPrekeys}: InitConfig,
 ): Promise<CryptoClientDef> {
   if (clientType === CryptoClientType.CORE_CRYPTO) {
     const {CoreCrypto} = await import('@wireapp/core-crypto');
@@ -61,19 +60,9 @@ export async function buildCryptoClient(
       undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
       coreCryptoWasmFilePath,
     );
-    return [CryptoClientType.CORE_CRYPTO, coreCrypto];
+    return [CryptoClientType.CORE_CRYPTO, new CoreCryptoWrapper(coreCrypto, db, {nbPrekeys, onNewPrekeys})];
   }
 
   const {Cryptobox} = await import('@wireapp/cryptobox');
-  return [CryptoClientType.CRYPTOBOX, new Cryptobox(storeEngine, nbPrekeys)];
-}
-
-export function wrapCryptoClient(
-  [clientType, cryptoClient]: CryptoClientDef,
-  db: CoreDatabase,
-  config: Config,
-): CryptoClient {
-  return clientType === CryptoClientType.CORE_CRYPTO
-    ? new CoreCryptoWrapper(cryptoClient, db, config)
-    : new CryptoboxWrapper(cryptoClient, config);
+  return [CryptoClientType.CRYPTOBOX, new CryptoboxWrapper(new Cryptobox(storeEngine, nbPrekeys), {onNewPrekeys})];
 }

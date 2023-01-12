@@ -35,6 +35,10 @@ export class CryptoboxWrapper implements CryptoClient {
     });
   }
 
+  getNativeClient() {
+    return this.cryptobox;
+  }
+
   async encrypt(sessions: string[], plainText: Uint8Array) {
     const encryptedPayloads: [string, Uint8Array][] = [];
     for (const sessionId of sessions) {

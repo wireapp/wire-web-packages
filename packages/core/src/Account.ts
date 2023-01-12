@@ -342,7 +342,7 @@ export class Account<T = any> extends EventEmitter {
     return key;
   }
 
-  private async buildCryptoClient(storeEngine: CRUDEngine, enableMLS: boolean) {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, db: CoreDatabase, enableMLS: boolean) {
     const clientType =
       enableMLS || !!this.cryptoProtocolConfig?.useCoreCrypto
         ? CryptoClientType.CORE_CRYPTO
@@ -352,11 +352,18 @@ export class Account<T = any> extends EventEmitter {
     if (clientType === CryptoClientType.CORE_CRYPTO) {
       key = await this.generateSecretKey(storeEngine.storeName);
     }
-    return buildCryptoClient(clientType, {
+
+    return buildCryptoClient(clientType, db, {
       storeEngine,
       secretKey: key,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+      onNewPrekeys: async prekeys => {
+        this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
+
+        await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
+        this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
+      },
     });
   }
 
@@ -367,28 +374,22 @@ export class Account<T = any> extends EventEmitter {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(this.storeEngine, enableMLS);
+    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, this.db, enableMLS);
     const [clientType, cryptoClient] = cryptoClientDef;
 
     const mlsService =
       clientType === CryptoClientType.CORE_CRYPTO && enableMLS
-        ? new MLSService(this.apiClient, cryptoClient, {
+        ? new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
             ...this.cryptoProtocolConfig?.mls,
             nbKeyPackages: this.nbPrekeys,
           })
         : undefined;
 
-    const proteusService = new ProteusService(this.apiClient, cryptoClientDef, this.db, {
+    const proteusService = new ProteusService(this.apiClient, cryptoClient, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
-      onNewPrekeys: async prekeys => {
-        this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
-
-        await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
-        this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
-      },
     });
 
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
