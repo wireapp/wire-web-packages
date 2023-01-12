@@ -20,6 +20,7 @@
 import {PreKey} from '@wireapp/api-client/lib/auth';
 
 import {Cryptobox} from '@wireapp/cryptobox';
+import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptoClient, LAST_PREKEY_ID} from './CryptoClient.types';
 
@@ -27,6 +28,10 @@ type Config = {
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
 
+export function buildClient(storeEngine: CRUDEngine, config: Config & {nbPrekeys: number}) {
+  const cryptobox = new Cryptobox(storeEngine, config.nbPrekeys);
+  return new CryptoboxWrapper(cryptobox, {onNewPrekeys: () => {}});
+}
 export class CryptoboxWrapper implements CryptoClient {
   constructor(private readonly cryptobox: Cryptobox, config: Config) {
     this.cryptobox.on(Cryptobox.TOPIC.NEW_PREKEYS, prekeys => {

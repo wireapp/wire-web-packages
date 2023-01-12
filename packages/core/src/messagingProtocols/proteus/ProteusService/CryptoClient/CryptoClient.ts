@@ -18,12 +18,11 @@
  */
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
-import {Encoder} from 'bazinga64';
 
 import type {CRUDEngine} from '@wireapp/store-engine';
 
-import {CoreCryptoWrapper} from './CoreCryptoWrapper';
-import {CryptoboxWrapper} from './CryptoboxWrapper';
+import type {CoreCryptoWrapper} from './CoreCryptoWrapper';
+import type {CryptoboxWrapper} from './CryptoboxWrapper';
 
 import {CoreDatabase} from '../../../../storage/CoreDB';
 
@@ -53,16 +52,15 @@ export async function buildCryptoClient(
   {storeEngine, nbPrekeys, secretKey, coreCryptoWasmFilePath, onNewPrekeys}: InitConfig,
 ): Promise<CryptoClientDef> {
   if (clientType === CryptoClientType.CORE_CRYPTO) {
-    const {CoreCrypto} = await import('@wireapp/core-crypto');
-    const coreCrypto = await CoreCrypto.deferredInit(
-      `corecrypto-${storeEngine.storeName}`,
-      Encoder.toBase64(secretKey).asString,
-      undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
-      coreCryptoWasmFilePath,
-    );
-    return [CryptoClientType.CORE_CRYPTO, new CoreCryptoWrapper(coreCrypto, db, {nbPrekeys, onNewPrekeys})];
+    const {buildClient} = await import('./CoreCryptoWrapper');
+    const client = await buildClient(storeEngine, secretKey, coreCryptoWasmFilePath ?? '', db, {
+      nbPrekeys,
+      onNewPrekeys,
+    });
+    return [CryptoClientType.CORE_CRYPTO, client];
   }
 
-  const {Cryptobox} = await import('@wireapp/cryptobox');
-  return [CryptoClientType.CRYPTOBOX, new CryptoboxWrapper(new Cryptobox(storeEngine, nbPrekeys), {onNewPrekeys})];
+  const {buildClient} = await import('./CryptoboxWrapper');
+  const client = await buildClient(storeEngine, {nbPrekeys, onNewPrekeys});
+  return [CryptoClientType.CRYPTOBOX, client];
 }
