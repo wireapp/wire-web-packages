@@ -101,7 +101,6 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   async newPrekey(id: number) {
-    // no need to generate prekey for cryptobox as they are generate internally
     const key = await this.coreCrypto.proteusNewPrekey(id);
     return {id, key: Encoder.toBase64(key).asString};
   }
