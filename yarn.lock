@@ -4539,7 +4539,7 @@ __metadata:
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 0.6.0-rc.3
-    "@wireapp/cryptobox": ^12.8.0
+    "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.43.0
     "@wireapp/store-engine": "workspace:*"
@@ -4565,7 +4565,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/cryptobox@npm:^12.8.0":
+"@wireapp/cryptobox@npm:12.8.0":
   version: 12.8.0
   resolution: "@wireapp/cryptobox@npm:12.8.0"
   dependencies:
