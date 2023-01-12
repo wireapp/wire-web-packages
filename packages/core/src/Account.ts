@@ -313,17 +313,6 @@ export class Account<T = any> extends EventEmitter {
     return validClient;
   }
 
-  /**
-   * In order to be able to send MLS messages, the core needs a few information from the consumer.
-   * Namely:
-   * - is the current user allowed to administrate a specific conversation
-   * - what is the groupId of a conversation
-   * @param mlsCallbacks
-   */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
-  }
-
   private async generateSecretKey(baseDbName: string) {
     const coreCryptoKeyId = 'corecrypto-key';
     const dbName = `secrets-${baseDbName}`;
@@ -365,6 +354,17 @@ export class Account<T = any> extends EventEmitter {
         this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
       },
     });
+  }
+
+  /**
+   * In order to be able to send MLS messages, the core needs a few information from the consumer.
+   * Namely:
+   * - is the current user allowed to administrate a specific conversation
+   * - what is the groupId of a conversation
+   * @param mlsCallbacks
+   */
+  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
+    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
   }
 
   public async initServices(context: Context): Promise<void> {
