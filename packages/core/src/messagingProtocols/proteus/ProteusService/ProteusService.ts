@@ -30,12 +30,10 @@ import type {
 import type {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
-import {Cryptobox} from '@wireapp/cryptobox';
 import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {wrapCryptoClient, CryptoClient} from './CryptoClient';
+import {wrapCryptoClient, CryptoClient, CryptoClientDef} from './CryptoClient';
 import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 import type {
@@ -68,7 +66,7 @@ export class ProteusService {
 
   constructor(
     private readonly apiClient: APIClient,
-    cryptoClient: CoreCrypto | Cryptobox,
+    cryptoClient: CryptoClientDef,
     db: CoreDatabase,
     private readonly config: ProteusServiceConfig,
   ) {

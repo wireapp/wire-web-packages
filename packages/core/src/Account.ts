@@ -32,14 +32,11 @@ import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
-import {Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {EventEmitter} from 'events';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
-import {CoreCrypto} from '@wireapp/core-crypto';
-import {Cryptobox} from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -54,6 +51,7 @@ import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
+import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
@@ -315,9 +313,20 @@ export class Account<T = any> extends EventEmitter {
     return validClient;
   }
 
-  private async initCoreCrypto(context: Context) {
+  /**
+   * In order to be able to send MLS messages, the core needs a few information from the consumer.
+   * Namely:
+   * - is the current user allowed to administrate a specific conversation
+   * - what is the groupId of a conversation
+   * @param mlsCallbacks
+   */
+  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
+    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
+  }
+
+  private async generateSecretKey(baseDbName: string) {
     const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = this.generateSecretsDbName(context);
+    const dbName = `secrets-${baseDbName}`;
 
     const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
     this.secretsDb = systemCrypto
@@ -330,47 +339,46 @@ export class Account<T = any> extends EventEmitter {
       await this.secretsDb.saveSecretValue(coreCryptoKeyId, key);
     }
     await this.secretsDb?.close();
-
-    return CoreCrypto.deferredInit(
-      `corecrypto-${this.generateDbName(context)}`,
-      Encoder.toBase64(key).asString,
-      undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
-      this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-    );
+    return key;
   }
 
-  /**
-   * In order to be able to send MLS messages, the core needs a few information from the consumer.
-   * Namely:
-   * - is the current user allowed to administrate a specific conversation
-   * - what is the groupId of a conversation
-   * @param mlsCallbacks
-   */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
+  private async buildCryptoClient(storeEngine: CRUDEngine, enableMLS: boolean) {
+    const clientType =
+      enableMLS || !!this.cryptoProtocolConfig?.useCoreCrypto
+        ? CryptoClientType.CORE_CRYPTO
+        : CryptoClientType.CRYPTOBOX;
+
+    let key = Uint8Array.from([]);
+    if (clientType === CryptoClientType.CORE_CRYPTO) {
+      key = await this.generateSecretKey(storeEngine.storeName);
+    }
+    return buildCryptoClient(clientType, {
+      storeEngine,
+      secretKey: key,
+      nbPrekeys: this.nbPrekeys,
+      coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+    });
   }
 
   public async initServices(context: Context): Promise<void> {
-    const enableMLS = this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls;
-    const useCoreCrypto = enableMLS || this.cryptoProtocolConfig?.useCoreCrypto;
+    const enableMLS = this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.storeEngine = await this.initEngine(context);
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClient = useCoreCrypto
-      ? await this.initCoreCrypto(context)
-      : new Cryptobox(this.storeEngine, this.nbPrekeys);
+    const cryptoClientDef = await this.buildCryptoClient(this.storeEngine, enableMLS);
+    const [clientType, cryptoClient] = cryptoClientDef;
 
     const mlsService =
-      cryptoClient instanceof CoreCrypto && enableMLS
+      clientType === CryptoClientType.CORE_CRYPTO && enableMLS
         ? new MLSService(this.apiClient, cryptoClient, {
             ...this.cryptoProtocolConfig?.mls,
             nbKeyPackages: this.nbPrekeys,
           })
         : undefined;
 
-    const proteusService = new ProteusService(this.apiClient, cryptoClient, this.db, {
+    const proteusService = new ProteusService(this.apiClient, cryptoClientDef, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),

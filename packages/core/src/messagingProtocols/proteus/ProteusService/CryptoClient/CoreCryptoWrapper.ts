@@ -20,7 +20,7 @@
 import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Encoder} from 'bazinga64';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
+import type {CoreCrypto} from '@wireapp/core-crypto';
 
 import {CryptoClient, LAST_PREKEY_ID} from './CryptoClient.types';
 import {PrekeyTracker} from './PrekeysTracker';
