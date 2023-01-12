@@ -596,10 +596,6 @@ export class Account<T = any> extends EventEmitter {
     return `wire@${this.apiClient.config.urls.name}@${context.userId}${clientType}`;
   }
 
-  private generateSecretsDbName(context: Context) {
-    return `secrets-${this.generateDbName(context)}`;
-  }
-
   private generateCoreDbName(context: Context) {
     return `core-${this.generateDbName(context)}`;
   }

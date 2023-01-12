@@ -22,6 +22,7 @@ import {ClientType} from '@wireapp/api-client/lib/client';
 import {APIClient} from '@wireapp/api-client';
 import {CoreCrypto} from '@wireapp/core-crypto';
 
+import {CryptoClientType} from './CryptoClient';
 import {ProteusService} from './ProteusService';
 
 import {getUUID} from '../../../test/PayloadHelper';
@@ -39,7 +40,7 @@ export const buildProteusService = async (
 
   const coreCrypto = await CoreCrypto.deferredInit('store-name', 'key');
 
-  const proteusService = new ProteusService(apiClient, coreCrypto, {} as any, {
+  const proteusService = new ProteusService(apiClient, [CryptoClientType.CORE_CRYPTO, coreCrypto], {} as any, {
     nbPrekeys: 0,
     onNewPrekeys: jest.fn(),
     useQualifiedIds: federated,
