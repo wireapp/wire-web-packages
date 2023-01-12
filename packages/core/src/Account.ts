@@ -129,7 +129,6 @@ export class Account<T = any> extends EventEmitter {
   private secretsDb?: EncryptedStore<any>;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
-  private coreCryptoClient?: CoreCrypto;
 
   public service?: {
     mls?: MLSService;
@@ -330,6 +329,7 @@ export class Account<T = any> extends EventEmitter {
       key = crypto.getRandomValues(new Uint8Array(16));
       await this.secretsDb.saveSecretValue(coreCryptoKeyId, key);
     }
+    await this.secretsDb?.close();
 
     return CoreCrypto.deferredInit(
       `corecrypto-${this.generateDbName(context)}`,
@@ -352,26 +352,25 @@ export class Account<T = any> extends EventEmitter {
 
   public async initServices(context: Context): Promise<void> {
     const enableMLS = this.backendFeatures.supportsMLS && this.cryptoProtocolConfig?.mls;
-    this.coreCryptoClient =
-      enableMLS || this.cryptoProtocolConfig?.useCoreCrypto ? await this.initCoreCrypto(context) : undefined;
+    const useCoreCrypto = enableMLS || this.cryptoProtocolConfig?.useCoreCrypto;
     this.storeEngine = await this.initEngine(context);
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
+    const cryptoClient = useCoreCrypto
+      ? await this.initCoreCrypto(context)
+      : new Cryptobox(this.storeEngine, this.nbPrekeys);
+
     const mlsService =
-      this.coreCryptoClient && enableMLS
-        ? new MLSService(this.apiClient, this.coreCryptoClient, {
+      cryptoClient instanceof CoreCrypto && enableMLS
+        ? new MLSService(this.apiClient, cryptoClient, {
             ...this.cryptoProtocolConfig?.mls,
             nbKeyPackages: this.nbPrekeys,
           })
         : undefined;
 
-    const proteusCryptoClient =
-      this.cryptoProtocolConfig?.useCoreCrypto && this.coreCryptoClient
-        ? this.coreCryptoClient
-        : new Cryptobox(this.storeEngine, this.nbPrekeys);
-    const proteusService = new ProteusService(this.apiClient, proteusCryptoClient, this.db, {
+    const proteusService = new ProteusService(this.apiClient, cryptoClient, this.db, {
       // We can use qualified ids to send messages as long as the backend supports federated endpoints
       useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
@@ -434,7 +433,6 @@ export class Account<T = any> extends EventEmitter {
    */
   public async logout(clearData: boolean = false): Promise<void> {
     this.db?.close();
-    await this.secretsDb?.close();
     if (clearData) {
       await this.wipe();
     }
@@ -443,9 +441,7 @@ export class Account<T = any> extends EventEmitter {
   }
 
   private async wipe(): Promise<void> {
-    if (this.coreCryptoClient) {
-      await this.coreCryptoClient.wipe();
-    }
+    await this.service?.proteus.wipe();
     await this.secretsDb?.wipe();
     if (this.db) {
       await deleteDB(this.db);

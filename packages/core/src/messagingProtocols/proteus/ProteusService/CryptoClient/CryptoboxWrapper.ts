@@ -119,11 +119,5 @@ export class CryptoboxWrapper implements CryptoClient {
     this.cryptobox['cachedSessions'].set(sessionId, session);
   }
 
-  async migrateToCoreCrypto() {
-    // No migration needed for cryptobox
-  }
-
-  get isCoreCrypto() {
-    return false;
-  }
+  async wipe() {}
 }

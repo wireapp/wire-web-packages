@@ -106,10 +106,10 @@ export class ProteusService {
       }
     }
 
-    if (!cryptoMigrationStore.coreCrypto.isReady(dbName) && this.cryptoClient.isCoreCrypto) {
+    if (!cryptoMigrationStore.coreCrypto.isReady(dbName) && this.cryptoClient.migrateFromCryptobox) {
       this.logger.info(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
       try {
-        await this.cryptoClient.migrateToCoreCrypto(dbName);
+        await this.cryptoClient.migrateFromCryptobox(dbName);
         cryptoMigrationStore.coreCrypto.markAsReady(dbName);
         this.logger.info(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
       } catch (error) {
@@ -286,5 +286,9 @@ export class ProteusService {
     }
 
     return qualifiedOTRRecipients;
+  }
+
+  wipe() {
+    return this.cryptoClient.wipe();
   }
 }
