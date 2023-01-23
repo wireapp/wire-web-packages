@@ -50,6 +50,7 @@ import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdM
 
 import {QualifiedUsers} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
+import {TypedEventEmitter} from '../../../util/EventEmitter';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
@@ -68,7 +69,11 @@ const defaultConfig: MLSServiceConfig = {
   nbKeyPackages: 100,
 };
 
-export class MLSService {
+type Events = {
+  newEpoch: {epoch: number; groupId: string; secretKey: string};
+};
+
+export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
@@ -81,6 +86,7 @@ export class MLSService {
       nbKeyPackages = defaultConfig.nbKeyPackages,
     }: Partial<MLSServiceConfig>,
   ) {
+    super();
     this.config = {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,

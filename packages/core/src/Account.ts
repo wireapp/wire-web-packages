@@ -34,8 +34,6 @@ import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import logdown from 'logdown';
 
-import {EventEmitter} from 'events';
-
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
@@ -58,6 +56,7 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
+import {TypedEventEmitter} from './util/EventEmitter';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -74,14 +73,6 @@ export enum ConnectionState {
   PROCESSING_NOTIFICATIONS = 'processing_notifications',
   /** The websocket is open and message will go through and notifications stream is fully processed */
   LIVE = 'live',
-}
-
-export interface Account {
-  /**
-   * event triggered when a message from an unknown client is received.
-   * An unknown client is a client we don't yet have a session with
-   */
-  on(event: EVENTS.NEW_SESSION, listener: (client: NewClient) => void): this;
 }
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
@@ -118,7 +109,11 @@ const coreDefaultClient: ClientInfo = {
   model: '@wireapp/core',
 };
 
-export class Account<T = any> extends EventEmitter {
+type Events = {
+  [EVENTS.NEW_SESSION]: NewClient;
+};
+
+export class Account<T = any> extends TypedEventEmitter<Events> {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
