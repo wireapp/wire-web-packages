@@ -53,7 +53,6 @@ import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
-import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
@@ -69,12 +68,7 @@ const defaultConfig: MLSServiceConfig = {
   nbKeyPackages: 100,
 };
 
-type Events = {
-  /** when a new epoch is computed by coreCrypto */
-  newEpoch: {epoch: number; groupId: string; secretKey: string};
-};
-
-export class MLSService extends TypedEventEmitter<Events> {
+export class MLSService {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
@@ -87,7 +81,6 @@ export class MLSService extends TypedEventEmitter<Events> {
       nbKeyPackages = defaultConfig.nbKeyPackages,
     }: Partial<MLSServiceConfig>,
   ) {
-    super();
     this.config = {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,
