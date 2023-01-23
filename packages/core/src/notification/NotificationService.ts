@@ -44,7 +44,7 @@ export type HandledEventPayload = {
   decryptedData?: GenericMessage;
   /** in case decryption went wrong, this will contain information about the decryption error */
   decryptionError?: DecryptionError;
-  mlsUpdates?: {epoch: number};
+  mlsUpdates?: {groupId: string; epoch: number};
 };
 
 enum TOPIC {
