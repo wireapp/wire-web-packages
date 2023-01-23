@@ -234,14 +234,19 @@ export class MLSService {
     storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
     const keyLength = 32;
-    const groupIdBytes = Decoder.fromBase64(subconversation.group_id).asBytes;
-    const secretKey = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
+    const secretKey = await this.exportSecretKey(subconversation.group_id, keyLength);
 
     return {
       subconversation,
-      secretKey: Encoder.toBase64(secretKey).asString,
+      secretKey,
       keyLength,
     };
+  }
+
+  public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    const key = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
+    return Encoder.toBase64(key).asString;
   }
 
   public async newExternalProposal(
