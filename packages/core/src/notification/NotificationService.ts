@@ -34,7 +34,7 @@ import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
 import {MLSService} from '../messagingProtocols/mls';
 import {ProteusService} from '../messagingProtocols/proteus';
-import {TypedEventEmitter} from '../util/EventEmitter';
+import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
 export type HandledEventPayload = {
   event: BackendEvent;

@@ -50,10 +50,10 @@ import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdM
 
 import {QualifiedUsers} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
-import {TypedEventEmitter} from '../../../util/EventEmitter';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
+import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
@@ -70,6 +70,7 @@ const defaultConfig: MLSServiceConfig = {
 };
 
 type Events = {
+  /** when a new epoch is computed by coreCrypto */
   newEpoch: {epoch: number; groupId: string; secretKey: string};
 };
 

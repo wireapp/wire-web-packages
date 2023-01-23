@@ -56,11 +56,15 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
-import {TypedEventEmitter} from './util/EventEmitter';
+import {TypedEventEmitter} from './util/TypedEventEmitter';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
 export enum EVENTS {
+  /**
+   * event triggered when a message from an unknown client is received.
+   * An unknown client is a client we don't yet have a session with
+   */
   NEW_SESSION = 'new_session',
 }
 
