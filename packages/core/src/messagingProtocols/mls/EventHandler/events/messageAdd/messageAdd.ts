@@ -68,8 +68,7 @@ const handleMLSMessageAdd = async ({mlsService, event}: HandleMLSMessageAddParam
   }
 
   if (!message) {
-    const newEpoch = await mlsService.getEpoch(groupIdBytes);
-    return {event, mlsUpdates: {groupId, epoch: newEpoch}};
+    return {event};
   }
   const decryptedData = GenericMessage.decode(message);
   return {
