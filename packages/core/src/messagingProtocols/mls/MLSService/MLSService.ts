@@ -224,7 +224,7 @@ export class MLSService {
     if (subconversation.epoch === 0) {
       await this.registerConversation(subconversation.group_id, []);
     } else {
-      //TODO: check timestamp, if subconf is older than 24h -> delete and create subconversation
+      //TODO: check timestamp, if subconv is older than 24h -> delete and re-create subconversation
       await this.joinByExternalCommit(() =>
         this.apiClient.api.conversation.getSubconversationGroupInfo(conversationId, SUBCONVERSATION_ID.CONFERENCE),
       );
