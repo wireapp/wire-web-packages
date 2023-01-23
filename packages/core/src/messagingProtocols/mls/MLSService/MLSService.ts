@@ -243,7 +243,7 @@ export class MLSService {
     };
   }
 
-  public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
+  private async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const key = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
     return Encoder.toBase64(key).asString;
