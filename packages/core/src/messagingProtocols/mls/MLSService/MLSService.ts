@@ -246,47 +246,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     return subconversation;
   }
 
-  private async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
+  public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const key = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
     return Encoder.toBase64(key).asString;
-  }
-
-  private async generateSubconversationMembers(
-    conversationId: QualifiedId,
-    subconversation: Subconversation,
-  ): Promise<SubconversationEpochInfoMember[]> {
-    const parentGroupId = await this.getGroupIdFromConversationId(conversationId);
-    const memberIds = await this.getClientIds(parentGroupId);
-
-    const members = memberIds.map(parentMember => {
-      const isSubconversationMember = !!subconversation.members.find(
-        ({user_id, client_id}) => user_id === parentMember.userId && client_id === parentMember.clientId,
-      );
-
-      return {userid: parentMember.userId, clientid: parentMember.clientId, in_subconv: isSubconversationMember};
-    });
-
-    return members;
-  }
-
-  public async getSubconversationEpochInfo(
-    conversationId: QualifiedId,
-    subconversation: Subconversation,
-  ): Promise<{
-    members: SubconversationEpochInfoMember[];
-    epoch: number;
-    secretKey: string;
-    keyLength: number;
-  }> {
-    const members = await this.generateSubconversationMembers(conversationId, subconversation);
-
-    const epoch = Number(await this.getEpoch(subconversation.group_id));
-
-    const keyLength = 32;
-    const secretKey = await this.exportSecretKey(subconversation.group_id, keyLength);
-
-    return {members, epoch, keyLength, secretKey};
   }
 
   public async newExternalProposal(
