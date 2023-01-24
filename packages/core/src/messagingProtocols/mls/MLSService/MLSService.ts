@@ -274,11 +274,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     conversationId: QualifiedId,
     subconversation: Subconversation,
   ): Promise<{
-    members: {
-      userid: string;
-      clientid: string;
-      in_subconv: boolean;
-    }[];
+    members: SubconversationEpochInfoMember[];
     epoch: number;
     secretKey: string;
     keyLength: number;
