@@ -69,10 +69,15 @@ const defaultConfig: MLSServiceConfig = {
   nbKeyPackages: 100,
 };
 
+export interface SubconversationEpochInfoMember {
+  userid: string;
+  clientid: string;
+  in_subconv: boolean;
+}
+
 type Events = {
   newEpoch: {epoch: number; groupId: string};
 };
-
 export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
@@ -221,9 +226,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param conversationId Id of the parent conversation in which the call should happen
    */
-  public async joinConferenceSubconversation(
-    conversationId: QualifiedId,
-  ): Promise<{subconversation: Subconversation; secretKey: string; keyLength: number}> {
+  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
     const subconversation = await this.apiClient.api.conversation.getSubconversation(
       conversationId,
       SUBCONVERSATION_ID.CONFERENCE,
@@ -240,20 +243,54 @@ export class MLSService extends TypedEventEmitter<Events> {
     // We store the mapping between the subconversation and the parent conversation
     storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
-    const keyLength = 32;
-    const secretKey = await this.exportSecretKey(subconversation.group_id, keyLength);
-
-    return {
-      subconversation,
-      secretKey,
-      keyLength,
-    };
+    return subconversation;
   }
 
   private async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const key = await this.coreCryptoClient.exportSecretKey(groupIdBytes, keyLength);
     return Encoder.toBase64(key).asString;
+  }
+
+  private async generateSubconversationMembers(
+    conversationId: QualifiedId,
+    subconversation: Subconversation,
+  ): Promise<SubconversationEpochInfoMember[]> {
+    const parentGroupId = await this.getGroupIdFromConversationId(conversationId);
+    const memberIds = await this.getClientIds(parentGroupId);
+
+    const members = memberIds.map(parentMember => {
+      const isSubconversationMember = !!subconversation.members.find(
+        ({user_id, client_id}) => user_id === parentMember.userId && client_id === parentMember.clientId,
+      );
+
+      return {userid: parentMember.userId, clientid: parentMember.clientId, in_subconv: isSubconversationMember};
+    });
+
+    return members;
+  }
+
+  public async getSubconversationEpochInfo(
+    conversationId: QualifiedId,
+    subconversation: Subconversation,
+  ): Promise<{
+    members: {
+      userid: string;
+      clientid: string;
+      in_subconv: boolean;
+    }[];
+    epoch: number;
+    secretKey: string;
+    keyLength: number;
+  }> {
+    const members = await this.generateSubconversationMembers(conversationId, subconversation);
+
+    const epoch = Number(await this.getEpoch(subconversation.group_id));
+
+    const keyLength = 32;
+    const secretKey = await this.exportSecretKey(subconversation.group_id, keyLength);
+
+    return {members, epoch, keyLength, secretKey};
   }
 
   public async newExternalProposal(
