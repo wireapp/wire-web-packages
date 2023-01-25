@@ -160,6 +160,9 @@ export class MLSService extends TypedEventEmitter<Events> {
       clientIsExistingGroupUser: (client, otherClients) => {
         const decoder = new TextDecoder();
         const {user} = parseFullQualifiedClientId(decoder.decode(client));
+        //FIXME: handle the case to return true for subconversations if the client is a member of parent conversation
+        // (not possible with corecrypto for now)
+        return true;
         return otherClients.some(client => {
           const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
           return otherUser.toLowerCase() === user.toLowerCase();
@@ -240,10 +243,16 @@ export class MLSService extends TypedEventEmitter<Events> {
       );
     }
 
-    // We store the mapping between the subconversation and the parent conversation
-    storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
+    //We refech subconversation after joining/registering it to return the fresh state
+    const updatedSubconversation = await this.apiClient.api.conversation.getSubconversation(
+      conversationId,
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
 
-    return subconversation;
+    // We store the mapping between the subconversation and the parent conversation
+    storeSubconversationGroupId(conversationId, updatedSubconversation.subconv_id, updatedSubconversation.group_id);
+
+    return updatedSubconversation;
   }
 
   public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
