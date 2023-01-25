@@ -243,7 +243,8 @@ export class MLSService extends TypedEventEmitter<Events> {
       );
     }
 
-    //We refech subconversation after joining/registering it to return the fresh state
+    // We refetch subconversation after joining/registering
+    // This way we're sure we return the fresh list of subconversation members
     const updatedSubconversation = await this.apiClient.api.conversation.getSubconversation(
       conversationId,
       SUBCONVERSATION_ID.CONFERENCE,
