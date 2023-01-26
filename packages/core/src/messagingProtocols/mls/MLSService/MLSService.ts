@@ -223,6 +223,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
+  public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
+    return this.apiClient.api.conversation.getSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+  }
+
   /**
    * Will join or register an mls subconversation for conference calls.
    * Will return the secret key derived from the subconversation
@@ -230,10 +234,8 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param conversationId Id of the parent conversation in which the call should happen
    */
   public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
-    const subconversation = await this.apiClient.api.conversation.getSubconversation(
-      conversationId,
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
+    const subconversation = await this.getConferenceSubconversation(conversationId);
+
     if (subconversation.epoch === 0) {
       await this.registerConversation(subconversation.group_id, []);
     } else {
