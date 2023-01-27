@@ -228,8 +228,15 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.conversation.getSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
   }
 
-  private async deleteConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
-    return this.apiClient.api.conversation.deleteSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+  private async deleteConferenceSubconversation(
+    conversationId: QualifiedId,
+    data: {groupId: string; epoch: number},
+  ): Promise<void> {
+    return this.apiClient.api.conversation.deleteSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE, data);
+  }
+
+  private async deleteConferenceSubconversationSelf(conversationId: QualifiedId): Promise<void> {
+    return this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
   }
 
   /**
@@ -248,9 +255,12 @@ export class MLSService extends TypedEventEmitter<Events> {
       const epochUpdateTime = new Date(subconversation.epoch_timestamp).getTime();
       const epochAge = new Date().getTime() - epochUpdateTime;
 
-      if (epochAge > TimeInMillis.DAY) {
+      if (epochAge > TimeInMillis.MINUTE) {
         // if subconversation does exist, but it's older than 24h, delete and re-join
-        await this.deleteConferenceSubconversation(conversationId);
+        await this.deleteConferenceSubconversation(conversationId, {
+          groupId: subconversation.group_id,
+          epoch: subconversation.epoch,
+        });
         await this.wipeConversation(subconversation.group_id);
 
         return this.joinConferenceSubconversation(conversationId);

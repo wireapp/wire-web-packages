@@ -271,6 +271,7 @@ export class ConversationAPI {
   public async deleteSubconversation(
     conversationId: QualifiedId,
     subconversationId: SUBCONVERSATION_ID,
+    {groupId, epoch}: {groupId: string; epoch: number},
   ): Promise<void> {
     const {id, domain} = conversationId;
 
@@ -279,6 +280,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url,
+      data: {group_id: groupId, epoch},
     };
 
     await this.client.sendJSON(config);
