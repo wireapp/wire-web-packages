@@ -268,6 +268,22 @@ export class ConversationAPI {
     return response.data;
   }
 
+  public async deleteSubconversation(
+    conversationId: QualifiedId,
+    subconversationId: SUBCONVERSATION_ID,
+  ): Promise<void> {
+    const {id, domain} = conversationId;
+
+    const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}`;
+
+    const config: AxiosRequestConfig = {
+      method: 'delete',
+      url,
+    };
+
+    await this.client.sendJSON(config);
+  }
+
   public async deleteSubconversationSelf(
     conversationId: QualifiedId,
     subconversationId: SUBCONVERSATION_ID,

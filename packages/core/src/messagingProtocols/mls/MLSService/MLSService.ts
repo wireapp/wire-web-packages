@@ -20,6 +20,7 @@
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -227,6 +228,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.conversation.getSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
   }
 
+  private async deleteConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
+    return this.apiClient.api.conversation.deleteSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+  }
+
   /**
    * Will join or register an mls subconversation for conference calls.
    * Will return the secret key derived from the subconversation
@@ -237,9 +242,20 @@ export class MLSService extends TypedEventEmitter<Events> {
     const subconversation = await this.getConferenceSubconversation(conversationId);
 
     if (subconversation.epoch === 0) {
+      // if subconversation is not yet established, create it
       await this.registerConversation(subconversation.group_id, []);
     } else {
-      //TODO: check timestamp, if subconv is older than 24h -> delete and re-create subconversation
+      const epochUpdateTime = new Date(subconversation.epoch_timestamp).getTime();
+      const epochAge = new Date().getTime() - epochUpdateTime;
+
+      if (epochAge > TimeInMillis.DAY) {
+        // if subconversation does exist, but it's older than 24h, delete and re-join
+        await this.deleteConferenceSubconversation(conversationId);
+        await this.wipeConversation(subconversation.group_id);
+
+        return this.joinConferenceSubconversation(conversationId);
+      }
+
       await this.joinByExternalCommit(() =>
         this.apiClient.api.conversation.getSubconversationGroupInfo(conversationId, SUBCONVERSATION_ID.CONFERENCE),
       );
@@ -486,8 +502,9 @@ export class MLSService extends TypedEventEmitter<Events> {
     );
   }
 
-  public async wipeConversation(conversationId: ConversationId): Promise<void> {
-    return this.coreCryptoClient.wipeConversation(conversationId);
+  public async wipeConversation(groupId: string): Promise<void> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    return this.coreCryptoClient.wipeConversation(groupIdBytes);
   }
 
   public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
