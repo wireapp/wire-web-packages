@@ -26,7 +26,7 @@
     "idb": "7.1.1",
     "logdown": "3.3.1",
     "long": "^5.2.0",
-    "uuidjs": "4.2.13"
+    "uuidjs": "5.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
