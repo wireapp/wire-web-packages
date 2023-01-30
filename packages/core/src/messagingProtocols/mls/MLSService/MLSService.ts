@@ -255,7 +255,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const epochUpdateTime = new Date(subconversation.epoch_timestamp).getTime();
       const epochAge = new Date().getTime() - epochUpdateTime;
 
-      if (epochAge > TimeInMillis.MINUTE) {
+      if (epochAge > TimeInMillis.DAY) {
         // if subconversation does exist, but it's older than 24h, delete and re-join
         await this.deleteConferenceSubconversation(conversationId, {
           groupId: subconversation.group_id,
