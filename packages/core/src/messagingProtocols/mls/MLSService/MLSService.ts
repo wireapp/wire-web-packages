@@ -161,9 +161,6 @@ export class MLSService extends TypedEventEmitter<Events> {
       clientIsExistingGroupUser: (client, otherClients) => {
         const decoder = new TextDecoder();
         const {user} = parseFullQualifiedClientId(decoder.decode(client));
-        //FIXME: handle the case to return true for subconversations if the client is a member of parent conversation
-        // (not possible with corecrypto for now)
-        return true;
         return otherClients.some(client => {
           const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
           return otherUser.toLowerCase() === user.toLowerCase();
