@@ -4370,7 +4370,7 @@ __metadata:
     "@wireapp/core": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.2.2
-    commander: 9.5.0
+    commander: 10.0.0
     dotenv: 16.0.3
     fs-extra: 11.1.0
     rimraf: ^3.0.2
@@ -4453,7 +4453,7 @@ __metadata:
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.2.2
     bazinga64: 6.0.3
-    commander: 9.5.0
+    commander: 10.0.0
     cross-env: 7.0.3
     dotenv-defaults: 5.0.2
     fake-indexeddb: ^4.0.0
@@ -6487,10 +6487,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.5.0":
-  version: 9.5.0
-  resolution: "commander@npm:9.5.0"
-  checksum: c7a3e27aa59e913b54a1bafd366b88650bc41d6651f0cbe258d4ff09d43d6a7394232a4dadd0bf518b3e696fdf595db1028a0d82c785b88bd61f8a440cecfade
+"commander@npm:10.0.0":
+  version: 10.0.0
+  resolution: "commander@npm:10.0.0"
+  checksum: 9f6495651f878213005ac744dd87a85fa3d9f2b8b90d1c19d0866d666bda7f735adfd7c2f10dfff345782e2f80ea258f98bb4efcef58e4e502f25f883940acfd
   languageName: node
   linkType: hard
 
