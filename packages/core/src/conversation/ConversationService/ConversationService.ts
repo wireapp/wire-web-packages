@@ -408,7 +408,7 @@ export class ConversationService {
     return this.mlsService.conversationExists(groupIdBytes);
   }
 
-  public async wipeMLSConversation(groupId: Uint8Array): Promise<void> {
+  public async wipeMLSConversation(groupId: string): Promise<void> {
     return this.mlsService.wipeConversation(groupId);
   }
 
