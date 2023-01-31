@@ -234,6 +234,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async leaveConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
     await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+    //TODO: it's possible that deleteSubconversationSelf will return conversation we could derive group id from
     const groupId = await this.getGroupIdFromConversationId(conversationId);
     return this.wipeConversation(groupId);
   }
