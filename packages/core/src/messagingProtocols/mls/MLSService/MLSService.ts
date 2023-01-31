@@ -232,6 +232,12 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.conversation.deleteSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE, data);
   }
 
+  public async leaveConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
+    await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+    const groupId = await this.getGroupIdFromConversationId(conversationId);
+    return this.wipeConversation(groupId);
+  }
+
   /**
    * Will join or register an mls subconversation for conference calls.
    * Will return the secret key derived from the subconversation
