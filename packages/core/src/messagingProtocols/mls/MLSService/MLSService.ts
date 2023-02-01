@@ -371,9 +371,20 @@ export class MLSService extends TypedEventEmitter<Events> {
     return response;
   }
 
-  public removeClientsFromConversation(conversationId: ConversationId, clientIds: Uint8Array[]) {
-    return this.processCommitAction(conversationId, () =>
-      this.coreCryptoClient.removeClientsFromConversation(conversationId, clientIds),
+  /**
+   * Will send a commit with removal proposal for given clients
+   * @param groupId groupId of the conversation
+   * @param clientIds the list of **qualified** ids of the clients we want to remove from the group
+   */
+  public removeClientsFromConversation(groupId: string, clientIds: string[]) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    const encoder = new TextEncoder();
+
+    return this.processCommitAction(groupIdBytes, () =>
+      this.coreCryptoClient.removeClientsFromConversation(
+        groupIdBytes,
+        clientIds.map(id => encoder.encode(id)),
+      ),
     );
   }
 
