@@ -41,8 +41,6 @@ enum MOCKED_CLIENT_IDS {
   CLIENT3 = '4130002c223',
 }
 
-const encoder = new TextEncoder();
-
 describe('constructFullyQualifiedClientId', () => {
   it('construct fullyQualifiedClientId client id', () => {
     expect(
