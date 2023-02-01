@@ -83,8 +83,6 @@ export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
-  textEncoder = new TextEncoder();
-  textDecoder = new TextDecoder();
 
   constructor(
     private readonly apiClient: APIClient,
@@ -93,6 +91,8 @@ export class MLSService extends TypedEventEmitter<Events> {
       keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
       nbKeyPackages = defaultConfig.nbKeyPackages,
     }: Partial<MLSServiceConfig>,
+    private readonly textEncoder = new TextEncoder(),
+    private readonly textDecoder = new TextDecoder(),
   ) {
     super();
     this.config = {
