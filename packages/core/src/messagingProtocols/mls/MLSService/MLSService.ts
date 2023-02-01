@@ -372,7 +372,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Will send a commit with removal proposal for given clients
+   * Will send a removal commit for given clients
    * @param groupId groupId of the conversation
    * @param clientIds the list of **qualified** ids of the clients we want to remove from the group
    */
