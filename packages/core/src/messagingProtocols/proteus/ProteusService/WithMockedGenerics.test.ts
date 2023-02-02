@@ -76,7 +76,7 @@ describe('sendGenericMessage', () => {
         protocol: ConversationProtocol.PROTEUS,
       });
 
-      expect(payloadBundle.state).toBe(MessageSendingState.CANCELLED);
+      expect(payloadBundle.state).toBe(MessageSendingState.CANCELED);
     });
   });
 });
