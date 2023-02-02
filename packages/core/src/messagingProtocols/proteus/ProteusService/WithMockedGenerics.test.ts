@@ -67,7 +67,7 @@ describe('sendGenericMessage', () => {
       } as any);
       jest
         .spyOn(proteusService['messageService'], 'sendMessage')
-        .mockReturnValue(Promise.resolve({time: '', errored: true} as any));
+        .mockReturnValue(Promise.resolve({time: '', canceled: true} as any));
 
       const message = buildTextMessage({text: 'test'});
       const payloadBundle = await proteusService.sendMessage({
