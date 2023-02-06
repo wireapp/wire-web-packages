@@ -47,11 +47,7 @@ import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
-import {
-  getGroupId,
-  storeSubconversationGroupId,
-  storeSubconversationToParentGroupId,
-} from './subconversationGroupIdMapper';
+import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdMapper';
 
 import {QualifiedUsers} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
