@@ -267,9 +267,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     // We store the mapping between the subconversation and the parent conversation
     storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
-    const parentConversationGroupId = await this.getGroupIdFromConversationId(conversationId);
-    storeSubconversationToParentGroupId(subconversation.group_id, parentConversationGroupId);
-
     return subconversation;
   }
 
