@@ -47,7 +47,11 @@ import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
-import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdMapper';
+import {
+  getGroupId,
+  storeSubconversationGroupId,
+  storeSubconversationToParentGroupId,
+} from './subconversationGroupIdMapper';
 
 import {QualifiedUsers} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
@@ -264,17 +268,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       );
     }
 
-    // We refetch subconversation after joining/registering
-    // This way we're sure we return the fresh list of subconversation members
-    const updatedSubconversation = await this.apiClient.api.conversation.getSubconversation(
-      conversationId,
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
-
     // We store the mapping between the subconversation and the parent conversation
-    storeSubconversationGroupId(conversationId, updatedSubconversation.subconv_id, updatedSubconversation.group_id);
+    storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
-    return updatedSubconversation;
+    const parentConversationGroupId = await this.getGroupIdFromConversationId(conversationId);
+    storeSubconversationToParentGroupId(subconversation.group_id, parentConversationGroupId);
+
+    return subconversation;
   }
 
   public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
