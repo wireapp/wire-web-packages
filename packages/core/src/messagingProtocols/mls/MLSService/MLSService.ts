@@ -83,6 +83,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
+  private readonly textEncoder = new TextEncoder();
+  private readonly textDecoder = new TextDecoder();
 
   constructor(
     private readonly apiClient: APIClient,
@@ -100,9 +102,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async initClient(userId: QualifiedId, clientId: string) {
-    const encoder = new TextEncoder();
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(encoder.encode(qualifiedClientId));
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId));
   }
 
   public async createClient(userId: QualifiedId, clientId: string) {
@@ -158,11 +159,10 @@ export class MLSService extends TypedEventEmitter<Events> {
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
     this.coreCryptoClient.registerCallbacks({
       ...coreCryptoCallbacks,
-      clientIsExistingGroupUser: (client, otherClients) => {
-        const decoder = new TextDecoder();
-        const {user} = parseFullQualifiedClientId(decoder.decode(client));
+      clientIsExistingGroupUser: (_groupId, client, otherClients) => {
+        const {user} = parseFullQualifiedClientId(this.textDecoder.decode(client));
         return otherClients.some(client => {
-          const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
+          const {user: otherUser} = parseFullQualifiedClientId(this.textDecoder.decode(client));
           return otherUser.toLowerCase() === user.toLowerCase();
         });
       },
@@ -245,7 +245,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param conversationId Id of the parent conversation in which the call should happen
    */
-  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
+  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<{groupId: string; epoch: number}> {
     const subconversation = await this.getConferenceSubconversation(conversationId);
 
     if (subconversation.epoch === 0) {
@@ -271,17 +271,12 @@ export class MLSService extends TypedEventEmitter<Events> {
       );
     }
 
-    // We refetch subconversation after joining/registering
-    // This way we're sure we return the fresh list of subconversation members
-    const updatedSubconversation = await this.apiClient.api.conversation.getSubconversation(
-      conversationId,
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
+    const epoch = Number(await this.getEpoch(subconversation.group_id));
 
     // We store the mapping between the subconversation and the parent conversation
-    storeSubconversationGroupId(conversationId, updatedSubconversation.subconv_id, updatedSubconversation.group_id);
+    storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
-    return updatedSubconversation;
+    return {groupId: subconversation.group_id, epoch};
   }
 
   public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
@@ -378,9 +373,19 @@ export class MLSService extends TypedEventEmitter<Events> {
     return response;
   }
 
-  public removeClientsFromConversation(conversationId: ConversationId, clientIds: Uint8Array[]) {
-    return this.processCommitAction(conversationId, () =>
-      this.coreCryptoClient.removeClientsFromConversation(conversationId, clientIds),
+  /**
+   * Will send a removal commit for given clients
+   * @param groupId groupId of the conversation
+   * @param clientIds the list of **qualified** ids of the clients we want to remove from the group
+   */
+  public removeClientsFromConversation(groupId: string, clientIds: string[]) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+
+    return this.processCommitAction(groupIdBytes, () =>
+      this.coreCryptoClient.removeClientsFromConversation(
+        groupIdBytes,
+        clientIds.map(id => this.textEncoder.encode(id)),
+      ),
     );
   }
 
@@ -407,7 +412,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param groupId groupId of the conversation
    */
-  private async renewKeyMaterial(groupId: string) {
+  public async renewKeyMaterial(groupId: string) {
     try {
       const groupConversationExists = await this.conversationExists(groupId);
 
@@ -622,12 +627,11 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async getClientIds(groupId: string): Promise<{userId: string; clientId: string; domain: string}[]> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const decoder = new TextDecoder();
 
     const rawClientIds = await this.coreCryptoClient.getClientIds(groupIdBytes);
 
     const clientIds = rawClientIds.map(id => {
-      const {user, client, domain} = parseFullQualifiedClientId(decoder.decode(id));
+      const {user, client, domain} = parseFullQualifiedClientId(this.textDecoder.decode(id));
       return {userId: user, clientId: client, domain};
     });
     return clientIds;

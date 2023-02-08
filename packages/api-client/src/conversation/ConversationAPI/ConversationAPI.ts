@@ -66,11 +66,10 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from '../data';
-import {MlsEvent} from '../data/MlsEventData';
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
-  events: MlsEvent[];
+  events: ConversationEvent[];
   time: string;
 };
 

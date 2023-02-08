@@ -25,7 +25,7 @@ import {
   UserClients,
   Conversation,
 } from '@wireapp/api-client/lib/conversation';
-import {MlsEvent} from '@wireapp/api-client/lib/conversation/data/MlsEventData';
+import {ConversationEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {GenericMessage} from '@wireapp/protocol-messaging';
@@ -123,7 +123,7 @@ export type RemoveUsersParams = {
   groupId: string;
 };
 
-export type MLSReturnType = {events: MlsEvent[]; conversation: Conversation};
+export type MLSReturnType = {events: ConversationEvent[]; conversation: Conversation};
 
 export type SendResult = {
   /** The id of the message sent */
@@ -132,4 +132,6 @@ export type SendResult = {
   sentAt: string;
   /** The sending state of the payload (has the payload been succesfully sent or canceled) */
   state: MessageSendingState;
+  /** In case the message was sent to some federated backend, if the backend was down at the moment of sending the `failedToSend` property will contain all the users/devices that couldn't get the message */
+  failedToSend?: QualifiedUserClients;
 };

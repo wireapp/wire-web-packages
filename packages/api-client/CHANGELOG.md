@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [22.15.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.15.3...@wireapp/api-client@22.15.4) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([96d8c6b](https://github.com/wireapp/wire-web-packages/commit/96d8c6b5cbabe119337f409447301b3f79dbdeab))
+
+## [22.15.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.15.2...@wireapp/api-client@22.15.3) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([#4864](https://github.com/wireapp/wire-web-packages/issues/4864)) ([af02540](https://github.com/wireapp/wire-web-packages/commit/af025403eeae576e25a1a071f76576cf3ac581b3))
+
+## [22.15.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.15.1...@wireapp/api-client@22.15.2) (2023-02-06)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [22.15.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.15.0...@wireapp/api-client@22.15.1) (2023-02-02)
+
+**Note:** Version bump only for package @wireapp/api-client
+
 # [22.15.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@22.14.4...@wireapp/api-client@22.15.0) (2023-01-30)
 
 ### Features

@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [38.11.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.3...@wireapp/core@38.11.0) (2023-02-08)
+
+### Features
+
+* Use latest coreCrypto decryption error handling ([#4865](https://github.com/wireapp/wire-web-packages/issues/4865)) ([9b01c44](https://github.com/wireapp/wire-web-packages/commit/9b01c4473f6d8a7a34a0b6993aaa43f87e6f1f98))
+
+## [38.10.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.2...@wireapp/core@38.10.3) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([96d8c6b](https://github.com/wireapp/wire-web-packages/commit/96d8c6b5cbabe119337f409447301b3f79dbdeab))
+
+## [38.10.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.1...@wireapp/core@38.10.2) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([#4864](https://github.com/wireapp/wire-web-packages/issues/4864)) ([af02540](https://github.com/wireapp/wire-web-packages/commit/af025403eeae576e25a1a071f76576cf3ac581b3))
+
+## [38.10.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.0...@wireapp/core@38.10.1) (2023-02-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [38.10.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.9.1...@wireapp/core@38.10.0) (2023-02-06)
+
+### Features
+
+* expose material key renewal api ([#4854](https://github.com/wireapp/wire-web-packages/issues/4854)) ([feab950](https://github.com/wireapp/wire-web-packages/commit/feab9507f6d7d2956af35c1c52e5411947dec62a))
+
+## [38.9.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.9.0...@wireapp/core@38.9.1) (2023-02-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [38.9.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.3...@wireapp/core@38.9.0) (2023-02-02)
+
+### Features
+
+* **core:** Return federated users that could not receive a message ([#4844](https://github.com/wireapp/wire-web-packages/issues/4844)) ([9022e10](https://github.com/wireapp/wire-web-packages/commit/9022e102afb24ddbf99f07be7cd86178df086a2d))
+
+## [38.8.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.2...@wireapp/core@38.8.3) (2023-02-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.8.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.1...@wireapp/core@38.8.2) (2023-02-01)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [38.8.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.0...@wireapp/core@38.8.1) (2023-01-31)
 
 **Note:** Version bump only for package @wireapp/core
