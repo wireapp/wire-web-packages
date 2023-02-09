@@ -61,7 +61,7 @@ describe('ConversationService', () => {
     jest.setSystemTime(new Date(0));
   });
 
-  function buildConversationService(federated?: boolean) {
+  function buildConversationService() {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     jest.spyOn(client.api.conversation, 'postMlsMessage').mockReturnValue(
       Promise.resolve({
@@ -90,14 +90,7 @@ describe('ConversationService', () => {
       clientId: PayloadHelper.getUUID(),
     };
 
-    const conversationService = new ConversationService(
-      client,
-      {
-        useQualifiedIds: federated,
-      },
-      mockedProteusService,
-      mockedMLSService,
-    );
+    const conversationService = new ConversationService(client, mockedProteusService, mockedMLSService);
 
     jest.spyOn(conversationService, 'joinByExternalCommit');
 
@@ -223,7 +216,7 @@ describe('ConversationService', () => {
 
   describe('fetchAllParticipantsClients', () => {
     it('gives the members and clients of a federated conversation', async () => {
-      const [conversationService, {apiClient}] = buildConversationService(true);
+      const [conversationService, {apiClient}] = buildConversationService();
       jest.spyOn(apiClient.api.conversation, 'getConversation').mockResolvedValue({
         members: {
           others: [

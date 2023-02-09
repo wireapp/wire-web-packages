@@ -18,14 +18,12 @@
  */
 
 import {
-  MessageSendingStatus,
   Conversation,
   DefaultConversationRoleName,
   MutedStatus,
   NewConversation,
   QualifiedUserClients,
   UserClients,
-  ClientMismatch,
   ConversationProtocol,
   RemoteConversations,
 } from '@wireapp/api-client/lib/conversation';
@@ -54,21 +52,17 @@ import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
-import {MessageService} from '../message/MessageService';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
-  private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ConversationService');
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly config: {useQualifiedIds?: boolean},
     private readonly proteusService: ProteusService,
     private readonly _mlsService?: MLSService,
   ) {
     this.messageTimer = new MessageTimer();
-    this.messageService = new MessageService(this.apiClient, this.proteusService);
   }
 
   get mlsService(): MLSService {
