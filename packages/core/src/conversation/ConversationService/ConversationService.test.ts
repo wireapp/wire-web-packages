@@ -249,49 +249,6 @@ describe('ConversationService', () => {
       expect(fetchedMembers).toEqual(members);
     });
   });
-
-  describe('getAllParticipantsClients', () => {
-    it('gives the members and clients of a federated conversation', async () => {
-      const members = {
-        user1: ['client1', 'client2'],
-        user2: ['client1', 'client2'],
-        user3: ['client1', 'client2'],
-      };
-      const [conversationService] = buildConversationService(true);
-      jest
-        .spyOn(conversationService['messageService'], 'sendMessage')
-        .mockImplementation((_client, _recipients, _text, options) => {
-          void options?.onClientMismatch?.({missing: members, deleted: {}, redundant: {}, time: ''});
-          return {} as any;
-        });
-      const fetchedMembers = await conversationService.getAllParticipantsClients({id: 'convid', domain: ''});
-
-      expect(fetchedMembers).toEqual(members);
-    });
-
-    it('gives the members and clients of a federated conversation 2', async () => {
-      const members = {
-        domain1: {user1: ['client1', 'client2']},
-        domain2: {user2: ['client1', 'client2'], user3: ['client1', 'client2']},
-      };
-      const [conversationService] = buildConversationService(true);
-      jest
-        .spyOn(conversationService['messageService'], 'sendFederatedMessage')
-        .mockImplementation((_client, _recipients, _text, options) => {
-          void options?.onClientMismatch?.({
-            missing: members,
-            deleted: {},
-            redundant: {},
-            failed_to_send: {},
-            time: '',
-          });
-          return {} as any;
-        });
-      const fetchedMembers = await conversationService.getAllParticipantsClients({id: 'convid', domain: 'domain1'});
-
-      expect(fetchedMembers).toEqual(members);
-    });
-  });
 });
 
 function generateImage() {
