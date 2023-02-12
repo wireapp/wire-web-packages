@@ -4559,7 +4559,7 @@ __metadata:
     jest-websocket-mock: 2.4.0
     logdown: 3.3.1
     long: ^5.2.0
-    mock-socket: 9.1.5
+    mock-socket: 9.2.0
     nock: 13.3.0
     rimraf: ^3.0.2
     typescript: ^4.8.4
@@ -13079,7 +13079,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mock-socket@npm:9.1.5, mock-socket@npm:^9.1.0":
+"mock-socket@npm:9.2.0":
+  version: 9.2.0
+  resolution: "mock-socket@npm:9.2.0"
+  checksum: 146057ba8ef25ca97d39a64161e197dd5351082f7627216f71050aa1e2bd8f8853978572d8c2ce4254e4d1d4058fdeca863ac95f314df000d348be5bdd3db494
+  languageName: node
+  linkType: hard
+
+"mock-socket@npm:^9.1.0":
   version: 9.1.5
   resolution: "mock-socket@npm:9.1.5"
   checksum: a01586bc2850eb5809eda6de0c7ab19255c1e0eb217a805f86ba662bb4aab00b919032d67e7c826c6c12bcfb2fbe19cecbacf0ab6184936487edc4ba37d3ba53
