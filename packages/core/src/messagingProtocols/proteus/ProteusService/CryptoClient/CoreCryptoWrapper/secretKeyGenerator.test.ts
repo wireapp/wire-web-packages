@@ -19,9 +19,7 @@
 
 import {Decoder, Encoder} from 'bazinga64';
 
-import {generateSecretKey} from './secretKeyGenerator';
-
-import {CorruptedKeyError} from '../../../../../errors/CorruptedKeyError';
+import {generateSecretKey, CorruptedKeyError} from './secretKeyGenerator';
 
 const systemCryptos = {
   v0: {

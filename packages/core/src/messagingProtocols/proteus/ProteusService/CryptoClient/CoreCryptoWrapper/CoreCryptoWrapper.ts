@@ -19,12 +19,13 @@
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Encoder} from 'bazinga64';
+import {deleteDB} from 'idb';
 
 import {CoreCrypto} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
-import {generateSecretKey} from './secretKeyGenerator';
+import {generateSecretKey, CorruptedKeyError} from './secretKeyGenerator';
 
 import {CoreDatabase} from '../../../../../storage/CoreDB';
 import {SecretCrypto} from '../../../../mls/types';
@@ -46,12 +47,29 @@ export async function buildClient(
   db: CoreDatabase,
   {systemCrypto, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
-  const key = await generateSecretKey({
-    dbName: `secrets-${storeEngine.storeName}`,
-    systemCrypto,
-  });
+  let key;
+  const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
+  const secretKeysDbName = `secrets-${storeEngine.storeName}`;
+  try {
+    key = await generateSecretKey({
+      dbName: secretKeysDbName,
+      systemCrypto,
+    });
+  } catch (error) {
+    if (error instanceof CorruptedKeyError) {
+      // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
+      await deleteDB(secretKeysDbName);
+      await deleteDB(coreCryptoDbName);
+      key = await generateSecretKey({
+        dbName: secretKeysDbName,
+        systemCrypto,
+      });
+    } else {
+      throw error;
+    }
+  }
   const coreCrypto = await CoreCrypto.deferredInit({
-    databaseName: `corecrypto-${storeEngine.storeName}`,
+    databaseName: coreCryptoDbName,
     key: Encoder.toBase64(key.key).asString,
     wasmFilePath: coreCryptoWasmFilePath,
   });

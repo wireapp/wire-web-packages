@@ -20,7 +20,6 @@
 export {Account, ConnectionState, ProcessedEventPayload} from './Account';
 export * as auth from './auth/';
 export * as conversation from './conversation/';
-export * from './errors/CorruptedKeyError';
 export {CoreError} from './CoreError';
 export * as cryptography from './cryptography/';
 export * as util from './util';
