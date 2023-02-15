@@ -45,6 +45,7 @@ import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
 import {GiphyService} from './giphy/';
+import {deleteIdentity} from './identity/identityClearer';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
@@ -440,7 +441,13 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     this.resetContext();
   }
 
+  /**
+   * Will delete the identity of the current user
+   */
   private async wipe(): Promise<void> {
+    if (this.storeEngine) {
+      await deleteIdentity(this.storeEngine);
+    }
     await this.service?.proteus.wipe();
     await this.secretsDb?.wipe();
     if (this.db) {

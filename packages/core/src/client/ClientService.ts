@@ -124,7 +124,8 @@ export class ClientService {
           await this.storeEngine.clearTables();
         } else {
           this.logger.log('Last client was permanent - Deleting previous identity');
-          deleteIdentity(this.storeEngine);
+          await deleteIdentity(this.storeEngine);
+          await this.proteusService.wipe();
         }
       }
     }
