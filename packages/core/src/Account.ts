@@ -55,8 +55,6 @@ import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
-import {EncryptedStore} from './util/encryptedStore';
-import {generateSecretKey} from './util/secretKeyGenerator';
 import {TypedEventEmitter} from './util/TypedEventEmitter';
 
 export type ProcessedEventPayload = HandledEventPayload;
@@ -124,7 +122,6 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
-  private secretsDb?: EncryptedStore<any>;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
 
@@ -319,19 +316,11 @@ export class Account extends TypedEventEmitter<Events> {
         ? CryptoClientType.CORE_CRYPTO
         : CryptoClientType.CRYPTOBOX;
 
-    let key = Uint8Array.from([]);
-    if (clientType === CryptoClientType.CORE_CRYPTO) {
-      key = await generateSecretKey({
-        dbName: `secrets-${storeEngine.storeName}`,
-        systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
-      });
-    }
-
     return buildCryptoClient(clientType, db, {
       storeEngine,
-      secretKey: key,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
@@ -431,7 +420,6 @@ export class Account extends TypedEventEmitter<Events> {
    */
   private async wipe(): Promise<void> {
     await this.service?.proteus.wipe(this.storeEngine);
-    await this.secretsDb?.wipe();
     if (this.db) {
       await deleteDB(this.db);
     }

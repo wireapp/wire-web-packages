@@ -21,7 +21,7 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {generateSecretKey} from './secretKeyGenerator';
 
-import {CorruptedKeyError} from '../errors/CorruptedKeyError';
+import {CorruptedKeyError} from '../../../../../errors/CorruptedKeyError';
 
 const systemCryptos = {
   v0: {
@@ -71,29 +71,29 @@ describe('SecretKeyGenerator', () => {
   });
 
   it('generates and store a secret key stored in indexeddb', async () => {
-    const secretKey = await generateSecretKey({dbName: 'test'});
+    const {key: secretKey} = await generateSecretKey({dbName: 'test'});
     expect(secretKey).toBeDefined();
 
-    const secretKey2 = await generateSecretKey({dbName: 'test'});
+    const {key: secretKey2} = await generateSecretKey({dbName: 'test'});
     expect(secretKey).toEqual(secretKey2);
   });
 
   it.each(Object.entries(systemCryptos))(
     'generates and store a secret key encrypted using system crypto (%s)',
     async (_name, systemCrypto) => {
-      const secretKey = await generateSecretKey({
+      const {key} = await generateSecretKey({
         dbName: 'test',
         systemCrypto,
       });
 
-      expect(secretKey).toBeDefined();
+      expect(key).toBeDefined();
       expect(systemCrypto.encrypt).toHaveBeenCalled();
       expect(systemCrypto.decrypt).not.toHaveBeenCalled();
 
       // fetch stored key
-      const secretKey2 = await generateSecretKey({dbName: 'test', systemCrypto: systemCrypto});
+      const {key: key2} = await generateSecretKey({dbName: 'test', systemCrypto: systemCrypto});
 
-      expect(secretKey2).toEqual(secretKey);
+      expect(key2).toEqual(key);
       expect(systemCrypto.encrypt).toHaveBeenCalledTimes(1);
       expect(systemCrypto.decrypt).toHaveBeenCalledTimes(1);
     },
@@ -105,12 +105,12 @@ describe('SecretKeyGenerator', () => {
   ])(
     'throws an error if previous systemCrypto is not compatible with the current one (%s)',
     async (_name, crypto1, crypto2) => {
-      const secretKey = await generateSecretKey({
+      const {key} = await generateSecretKey({
         dbName: 'test',
         systemCrypto: crypto1,
       });
 
-      expect(secretKey).toBeDefined();
+      expect(key).toBeDefined();
 
       try {
         await generateSecretKey({dbName: 'test', systemCrypto: crypto2});
@@ -120,19 +120,28 @@ describe('SecretKeyGenerator', () => {
     },
   );
 
+  it('deletes the key from DB', async () => {
+    const {key, deleteKey} = await generateSecretKey({dbName: 'test'});
+
+    await deleteKey();
+    const {key: secondKey} = await generateSecretKey({dbName: 'test'});
+
+    expect(key).not.toEqual(secondKey);
+  });
+
   it.each([['v01 > v1', systemCryptos.v01, systemCryptos.v1]])(
     'is able to read a key that was generated with a previous system crypto (%s)',
     async (_name, crypto1, crypto2) => {
-      const secretKey = await generateSecretKey({
+      const {key} = await generateSecretKey({
         dbName: 'test',
         systemCrypto: crypto1,
       });
 
-      expect(secretKey).toBeDefined();
+      expect(key).toBeDefined();
 
-      const secretKey2 = await generateSecretKey({dbName: 'test', systemCrypto: crypto2});
+      const {key: key2} = await generateSecretKey({dbName: 'test', systemCrypto: crypto2});
 
-      expect(secretKey2).toEqual(secretKey);
+      expect(key2).toEqual(key);
     },
   );
 });

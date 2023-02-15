@@ -21,11 +21,16 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {createCustomEncryptedStore, createEncryptedStore} from './encryptedStore';
 
-import {CorruptedKeyError} from '../errors/CorruptedKeyError';
-import {SecretCrypto} from '../messagingProtocols/mls/types';
+import {CorruptedKeyError} from '../../../../../errors/CorruptedKeyError';
+import {SecretCrypto} from '../../../../mls/types';
 
 const isBase64 = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
 const KEY_SIZE = 16;
+
+type GeneratedKey = {
+  key: Uint8Array;
+  deleteKey: () => Promise<void>;
+};
 
 export async function generateSecretKey({
   dbName,
@@ -33,7 +38,7 @@ export async function generateSecretKey({
 }: {
   dbName: string;
   systemCrypto?: SecretCrypto;
-}) {
+}): Promise<GeneratedKey> {
   const coreCryptoKeyId = 'corecrypto-key';
 
   const systemCrypto = baseCrypto
@@ -85,7 +90,7 @@ export async function generateSecretKey({
       await secretsDb.saveSecretValue(coreCryptoKeyId, key);
     }
     await secretsDb?.close();
-    return key;
+    return {key, deleteKey: () => secretsDb.wipe()};
   } catch (error) {
     await secretsDb?.close();
     throw error;

@@ -23,35 +23,45 @@ import {Encoder} from 'bazinga64';
 import {CoreCrypto} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
-import {CryptoClient} from './CryptoClient.types';
 import {PrekeyTracker} from './PrekeysTracker';
+import {generateSecretKey} from './secretKeyGenerator';
 
-import {CoreDatabase} from '../../../../storage/CoreDB';
+import {CoreDatabase} from '../../../../../storage/CoreDB';
+import {SecretCrypto} from '../../../../mls/types';
+import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
+  systemCrypto?: SecretCrypto;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
 
+type ClientConfig = Config & {
+  onWipe: () => Promise<void>;
+};
+
 export async function buildClient(
   storeEngine: CRUDEngine,
-  secretKey: Uint8Array,
   coreCryptoWasmFilePath: string,
   db: CoreDatabase,
-  {nbPrekeys, onNewPrekeys}: Config,
+  {systemCrypto, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
+  const key = await generateSecretKey({
+    dbName: `secrets-${storeEngine.storeName}`,
+    systemCrypto,
+  });
   const coreCrypto = await CoreCrypto.deferredInit({
     databaseName: `corecrypto-${storeEngine.storeName}`,
-    key: Encoder.toBase64(secretKey).asString,
+    key: Encoder.toBase64(key.key).asString,
     wasmFilePath: coreCryptoWasmFilePath,
   });
-  return new CoreCryptoWrapper(coreCrypto, db, {nbPrekeys, onNewPrekeys});
+  return new CoreCryptoWrapper(coreCrypto, db, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
 }
 
 export class CoreCryptoWrapper implements CryptoClient {
   private readonly prekeyTracker: PrekeyTracker;
 
-  constructor(private readonly coreCrypto: CoreCrypto, db: CoreDatabase, config: Config) {
+  constructor(private readonly coreCrypto: CoreCrypto, db: CoreDatabase, private readonly config: ClientConfig) {
     this.prekeyTracker = new PrekeyTracker(this, db, config);
   }
 
@@ -150,6 +160,7 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   async wipe() {
+    await this.config.onWipe();
     return this.coreCrypto.wipe();
   }
 }
