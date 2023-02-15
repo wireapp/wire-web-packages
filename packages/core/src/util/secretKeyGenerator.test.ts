@@ -21,6 +21,8 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {generateSecretKey} from './secretKeyGenerator';
 
+import {CorruptedKeyError} from '../errors/CorruptedKeyError';
+
 const systemCryptos = {
   v0: {
     encrypt: async (value: Uint8Array) => {
@@ -65,8 +67,6 @@ describe('SecretKeyGenerator', () => {
       });
       const deleteReq = indexedDB.deleteDatabase('test');
       deleteReq.onsuccess = resolve;
-      deleteReq.onerror = resolve;
-      deleteReq.onblocked = resolve;
     });
   });
 
@@ -99,7 +99,10 @@ describe('SecretKeyGenerator', () => {
     },
   );
 
-  it.each([['v0 > v01', systemCryptos.v0, systemCryptos.v01]])(
+  it.each([
+    ['v0 > v01', systemCryptos.v0, systemCryptos.v01],
+    ['v0 > v1', systemCryptos.v0, systemCryptos.v1],
+  ])(
     'throws an error if previous systemCrypto is not compatible with the current one (%s)',
     async (_name, crypto1, crypto2) => {
       const secretKey = await generateSecretKey({
@@ -109,13 +112,11 @@ describe('SecretKeyGenerator', () => {
 
       expect(secretKey).toBeDefined();
 
-      let error;
       try {
         await generateSecretKey({dbName: 'test', systemCrypto: crypto2});
       } catch (e) {
-        error = e;
+        expect(e).toBeInstanceOf(CorruptedKeyError);
       }
-      expect(error).toBeDefined();
     },
   );
 

@@ -21,6 +21,7 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {createCustomEncryptedStore, createEncryptedStore} from './encryptedStore';
 
+import {CorruptedKeyError} from '../errors/CorruptedKeyError';
 import {SecretCrypto} from '../messagingProtocols/mls/types';
 
 const isBase64 = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
@@ -66,17 +67,27 @@ export async function generateSecretKey({
   const secretsDb = systemCrypto
     ? await createCustomEncryptedStore(dbName, systemCrypto)
     : await createEncryptedStore(dbName);
-  let key: Uint8Array | undefined;
+
   try {
-    await secretsDb.getsecretValue(coreCryptoKeyId);
+    let retrivalErrored = false;
+    let key;
+    try {
+      key = await secretsDb.getsecretValue(coreCryptoKeyId);
+    } catch (error) {
+      retrivalErrored = true;
+    }
+    if (retrivalErrored || (key && key.length !== KEY_SIZE)) {
+      // If the key size is not correct, we have a corrupted key in the DB. This is unrecoverable.
+      throw new CorruptedKeyError('Invalid key');
+    }
     if (!key) {
       key = crypto.getRandomValues(new Uint8Array(KEY_SIZE));
       await secretsDb.saveSecretValue(coreCryptoKeyId, key);
     }
+    await secretsDb?.close();
+    return key;
   } catch (error) {
     await secretsDb?.close();
     throw error;
   }
-  await secretsDb?.close();
-  return key;
 }
