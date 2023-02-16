@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [38.13.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.13.0...@wireapp/core@38.13.1) (2023-02-16)
+
+### Bug Fixes
+
+* Improve secretKey generator to handle multiple system crypto ([#4885](https://github.com/wireapp/wire-web-packages/issues/4885)) ([bccadbf](https://github.com/wireapp/wire-web-packages/commit/bccadbfd9afebc9f3f9a3a1637f929f4d8fa0199))
+
+# [38.13.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.12.1...@wireapp/core@38.13.0) (2023-02-16)
+
+### Features
+
+* **core:** access last resort prekey and its id from corecrypto ([#4889](https://github.com/wireapp/wire-web-packages/issues/4889)) ([d376337](https://github.com/wireapp/wire-web-packages/commit/d376337c7172ba339a0e87dc7e73a58692a15bb5))
+
+## [38.12.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.12.0...@wireapp/core@38.12.1) (2023-02-15)
+
+### Bug Fixes
+
+* Make sure cryptobox and coreCrypto identity are deleted when needed ([#4887](https://github.com/wireapp/wire-web-packages/issues/4887)) ([6f865a9](https://github.com/wireapp/wire-web-packages/commit/6f865a9281bf5b5da29dfcdb84e235152fff463b))
+
 # [38.12.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.11.2...@wireapp/core@38.12.0) (2023-02-14)
 
 ### Features
