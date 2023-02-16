@@ -56,6 +56,8 @@ const systemCryptos = {
   },
 } as const;
 
+const dbName = 'test';
+
 describe('SecretKeyGenerator', () => {
   beforeEach(async () => {
     return new Promise(resolve => {
@@ -63,16 +65,16 @@ describe('SecretKeyGenerator', () => {
         jest.spyOn(version, 'encrypt');
         jest.spyOn(version, 'decrypt');
       });
-      const deleteReq = indexedDB.deleteDatabase('test');
+      const deleteReq = indexedDB.deleteDatabase(dbName);
       deleteReq.onsuccess = resolve;
     });
   });
 
   it('generates and store a secret key stored in indexeddb', async () => {
-    const {key: secretKey} = await generateSecretKey({dbName: 'test'});
+    const {key: secretKey} = await generateSecretKey({dbName});
     expect(secretKey).toBeDefined();
 
-    const {key: secretKey2} = await generateSecretKey({dbName: 'test'});
+    const {key: secretKey2} = await generateSecretKey({dbName});
     expect(secretKey).toEqual(secretKey2);
   });
 
@@ -80,7 +82,7 @@ describe('SecretKeyGenerator', () => {
     'generates and store a secret key encrypted using system crypto (%s)',
     async (_name, systemCrypto) => {
       const {key} = await generateSecretKey({
-        dbName: 'test',
+        dbName,
         systemCrypto,
       });
 
@@ -89,7 +91,7 @@ describe('SecretKeyGenerator', () => {
       expect(systemCrypto.decrypt).not.toHaveBeenCalled();
 
       // fetch stored key
-      const {key: key2} = await generateSecretKey({dbName: 'test', systemCrypto: systemCrypto});
+      const {key: key2} = await generateSecretKey({dbName, systemCrypto: systemCrypto});
 
       expect(key2).toEqual(key);
       expect(systemCrypto.encrypt).toHaveBeenCalledTimes(1);
@@ -104,14 +106,14 @@ describe('SecretKeyGenerator', () => {
     'throws an error if previous systemCrypto is not compatible with the current one (%s)',
     async (_name, crypto1, crypto2) => {
       const {key} = await generateSecretKey({
-        dbName: 'test',
+        dbName,
         systemCrypto: crypto1,
       });
 
       expect(key).toBeDefined();
 
       try {
-        await generateSecretKey({dbName: 'test', systemCrypto: crypto2});
+        await generateSecretKey({dbName, systemCrypto: crypto2});
       } catch (e) {
         expect(e).toBeInstanceOf(CorruptedKeyError);
       }
@@ -119,7 +121,7 @@ describe('SecretKeyGenerator', () => {
   );
 
   it('deletes the key from DB', async () => {
-    const {key, deleteKey} = await generateSecretKey({dbName: 'test'});
+    const {key, deleteKey} = await generateSecretKey({dbName});
 
     await deleteKey();
     const {key: secondKey} = await generateSecretKey({dbName: 'test'});
