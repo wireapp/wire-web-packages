@@ -58,6 +58,7 @@ import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
+import {conferenceSubconversationsStore} from './stores/conferenceSubconversationsStore';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -270,6 +271,9 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     // We store the mapping between the subconversation and the parent conversation
     storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
+
+    // We store the id of a subconversation we've joined (so we know which subconversations to leave in case of app restart after crash)
+    conferenceSubconversationsStore.storeGroupId(subconversation.group_id);
 
     return {groupId: subconversation.group_id, epoch};
   }
