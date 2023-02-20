@@ -235,9 +235,18 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async leaveConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
+    const subconversationGroupId = await this.getGroupIdFromConversationId(
+      conversationId,
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
+
+    const isSubconversationEstablished = await this.conversationExists(subconversationGroupId);
+    if (!isSubconversationEstablished) {
+      return;
+    }
+
     await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-    const groupId = await this.getGroupIdFromConversationId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-    return this.wipeConversation(groupId);
+    return this.wipeConversation(subconversationGroupId);
   }
 
   /**
