@@ -17,7 +17,7 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 import {HttpClient} from '../http';
 
@@ -25,19 +25,10 @@ export class GenericAPI {
   constructor(private readonly client: HttpClient) {}
 
   /**
-   * Get Data from a given URL.
+   * Get response from a given request config.
+   * @param config AxiosRequestConfig
    */
-  public async get<T = unknown>(url: string): Promise<T> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url,
-    };
-
-    try {
-      const response = await this.client.sendJSON<T>(config);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  public async sendRequest<T = unknown>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+    return await this.client.sendRequest<T>(config);
   }
 }
