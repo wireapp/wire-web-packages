@@ -42,7 +42,7 @@ import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
 import {Backend} from './env/';
-import {GenericAPI, GenericApi} from './generic';
+import {GenericAPI} from './generic';
 import {GiphyAPI} from './giphy/';
 import {BackendError, HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
@@ -116,7 +116,7 @@ type Apis = {
     team: TeamAPI;
   };
   user: UserAPI;
-  generic: GenericApi;
+  generic: GenericAPI;
 };
 
 /** map of all the features that the backend supports (depending on the backend api version number) */
