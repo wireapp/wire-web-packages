@@ -56,6 +56,7 @@ import {cancelRecurringTask, registerRecurringTask} from '../../../util/Recurrin
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
+import {E2eIdentityService} from '../E2eIdentityService';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -108,6 +109,10 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async createClient(userId: QualifiedId, clientId: string) {
     await this.initClient(userId, clientId);
+    // ACME Enrollment process here
+    const identityService = new E2eIdentityService(this.apiClient, this.coreCryptoClient);
+    identityService.startNewACMEEnrollment(userId, clientId);
+    // After receiving the ACME certificate, we need to upload the public key and key packages to the backend
     // If the device is new, we need to upload keypackages and public key to the backend
     const publicKey = await this.coreCryptoClient.clientPublicKey();
     const keyPackages = await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages);
