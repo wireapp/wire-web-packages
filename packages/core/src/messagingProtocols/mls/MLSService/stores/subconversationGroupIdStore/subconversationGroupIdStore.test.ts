@@ -31,7 +31,7 @@ describe('subconversationGroupIdMapper', () => {
     const groupId = 'groupID';
     subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
 
-    const result = subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
+    const result = subconversationGroupIdStore.getGroupId(conversationId, subconversation);
     expect(result).toBe(groupId);
   });
 
@@ -41,13 +41,36 @@ describe('subconversationGroupIdMapper', () => {
     const groupId = 'groupID';
     subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
 
-    expect(subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation')).toEqual(
-      groupId,
-    );
+    expect(subconversationGroupIdStore.getGroupId(conversationId, subconversation)).toEqual(groupId);
     subconversationGroupIdStore.removeGroupId(conversationId, subconversation);
 
-    expect(
-      subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation'),
-    ).toBeUndefined();
+    expect(subconversationGroupIdStore.getGroupId(conversationId, subconversation)).toBeUndefined();
+  });
+
+  it('retrieves all entries from the store', () => {
+    const conversationId = {domain: 'example.com', id: '123'};
+    const subconversation = 'subconversation';
+    const groupId = 'groupID';
+
+    const conversationId2 = {domain: 'example2.com', id: '1234'};
+    const subconversation2 = 'subconversation2';
+    const groupId2 = 'groupID2';
+
+    subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
+    subconversationGroupIdStore.storeGroupId(conversationId2, subconversation2, groupId2);
+
+    const result = subconversationGroupIdStore.getAllGroupIds();
+    expect(result).toEqual([
+      {
+        parentConversation: conversationId,
+        subconversation: subconversation,
+        subconversationGroupId: groupId,
+      },
+      {
+        parentConversation: conversationId2,
+        subconversation: subconversation2,
+        subconversationGroupId: groupId2,
+      },
+    ]);
   });
 });
