@@ -34,4 +34,20 @@ describe('subconversationGroupIdMapper', () => {
     const result = subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
     expect(result).toBe(groupId);
   });
+
+  it('removes groupId from the store', () => {
+    const conversationId = {domain: 'example.com', id: '123'};
+    const subconversation = 'subconversation';
+    const groupId = 'groupID';
+    subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
+
+    expect(subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation')).toEqual(
+      groupId,
+    );
+    subconversationGroupIdStore.removeGroupId(conversationId, subconversation);
+
+    expect(
+      subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation'),
+    ).toBeUndefined();
+  });
 });
