@@ -137,19 +137,9 @@ const initSession = async (
   {userId, clientId, initialPrekey}: {userId: QualifiedId; clientId: string; initialPrekey?: PreKey},
   {cryptoClient, apiClient}: {apiClient: APIClient; cryptoClient: CryptoClient},
 ): Promise<string> => {
-  const sessionId = constructSessionId({userId, clientId, useQualifiedIds: !!userId.domain});
-  const sessionExists = await cryptoClient.sessionExists(sessionId);
-  if (sessionExists) {
-    return sessionId;
-  }
-  if (initialPrekey) {
-    const prekeyBuffer = Decoder.fromBase64(initialPrekey.key).asBytes;
-    await cryptoClient.sessionFromPrekey(sessionId, prekeyBuffer);
-    await cryptoClient.saveSession(sessionId);
-    return sessionId;
-  }
+  const recipients = initialPrekey ? {[userId.id]: {[clientId]: initialPrekey}} : {[userId.id]: [clientId]};
   const sessions = await initSessions({
-    recipients: {[userId.id]: [clientId]},
+    recipients,
     domain: userId.domain,
     apiClient,
     cryptoClient,
