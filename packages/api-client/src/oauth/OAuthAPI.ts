@@ -19,12 +19,9 @@
 
 import {AxiosRequestConfig} from 'axios';
 
-import {OAuthAccessTokenRequest} from './OAuthAccessTokenRequest';
 import {OAuthApplication} from './OAuthApplication';
 import {OAuthBody} from './OAuthBody';
 import {OAuthClient} from './OAuthClient';
-import {OAuthRefreshAccessTokenRequest} from './OAuthRefreshAccessTokenRequest';
-import {OAuthRevokeBody} from './OAuthRevokeBody';
 
 import {BackendError, HttpClient} from '../http';
 
@@ -34,10 +31,8 @@ export class OAuthAPI {
   public static readonly URL = {
     APPLICATIONS: 'applications',
     AUTHORIZATION: 'authorization',
-    CODE: 'code',
+    CODES: 'codes',
     CLIENTS: 'clients',
-    REVOKE: 'revoke',
-    TOKEN: 'token',
     OAUTH: '/oauth',
   };
 
@@ -62,8 +57,11 @@ export class OAuthAPI {
       method: 'delete',
       url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.APPLICATIONS}/${applicationId}`,
     };
-    // possibly catch 400 error here
-    await this.client.sendJSON(config);
+    try {
+      await this.client.sendJSON(config);
+    } catch (error) {
+      throw new BackendError(error);
+    }
   }
 
   /**
@@ -73,7 +71,7 @@ export class OAuthAPI {
     const config: AxiosRequestConfig = {
       data: oauthBody,
       method: 'post',
-      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODE}}}`,
+      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODES}}}`,
     };
     try {
       await this.client.sendJSON(config);
@@ -93,32 +91,5 @@ export class OAuthAPI {
 
     const response = await this.client.sendJSON<OAuthClient>(config);
     return response.data;
-  }
-
-  /**
-   * Revoke an OAuth refresh token.
-   */
-  public async revokeCode(revokeBody: OAuthRevokeBody): Promise<[]> {
-    const config: AxiosRequestConfig = {
-      data: revokeBody,
-      method: 'post',
-      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.REVOKE}`,
-    };
-
-    const response = await this.client.sendJSON<[]>(config);
-    return response.data;
-  }
-
-  /**
-   * Obtain a new access token from an authorization code or a refresh token.
-   */
-  public async createToken(OAuthTokenRequest: OAuthAccessTokenRequest | OAuthRefreshAccessTokenRequest): Promise<void> {
-    const config: AxiosRequestConfig = {
-      data: OAuthTokenRequest,
-      method: 'post',
-      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.TOKEN}`,
-    };
-
-    await this.client.sendJSON(config);
   }
 }
