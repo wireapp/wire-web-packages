@@ -17,11 +17,11 @@
  *
  */
 
-import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdMapper';
+import {subconversationGroupIdStore} from './subconversationGroupIdStore';
 
 describe('subconversationGroupIdMapper', () => {
   it('returns empty groupId if conversation is not known', () => {
-    const groupId = getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
+    const groupId = subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
     expect(groupId).toBeUndefined();
   });
 
@@ -29,9 +29,9 @@ describe('subconversationGroupIdMapper', () => {
     const conversationId = {domain: 'example.com', id: '123'};
     const subconversation = 'subconversation';
     const groupId = 'groupID';
-    storeSubconversationGroupId(conversationId, subconversation, groupId);
+    subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
 
-    const result = getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
+    const result = subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
     expect(result).toBe(groupId);
   });
 });
