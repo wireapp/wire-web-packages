@@ -161,6 +161,8 @@ export class MLSService extends TypedEventEmitter<Events> {
     void this.coreCryptoClient.registerCallbacks({
       ...coreCryptoCallbacks,
       clientIsExistingGroupUser: (_groupId, client, otherClients): Promise<boolean> => {
+        // //FIXME:
+        // return Promise.resolve(true);
         const {user} = parseFullQualifiedClientId(this.textDecoder.decode(client));
         return Promise.resolve(
           otherClients.some(client => {
@@ -254,7 +256,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     }
 
     // once we left the subconversation, we can remove it from the store
-    conferenceSubconversationsStore.removeGroupId(subconversationGroupId);
+    conferenceSubconversationsStore.removeConversationId(conversationId);
   }
 
   /**
@@ -295,7 +297,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     storeSubconversationGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
     // We store the id of a subconversation we've joined (so we know which subconversations to leave in case of app restart after crash)
-    conferenceSubconversationsStore.storeGroupId(subconversation.group_id);
+    conferenceSubconversationsStore.storeConversationId(conversationId);
 
     return {groupId: subconversation.group_id, epoch};
   }

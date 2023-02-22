@@ -17,34 +17,55 @@
  *
  */
 
+import {QualifiedId} from '@wireapp/api-client/lib/user';
+
+const serializeQualifiedId = ({id, domain}: QualifiedId): `${string}@${string}` => `${id}@${domain}`;
+
+const parseQualifiedId = (multiplexedId: string): QualifiedId => {
+  const [id, domain] = multiplexedId.split('@');
+  return {domain, id};
+};
+
 const storageKey = 'conferenceSubconversations';
 
-const getAllGroupIds = (): string[] => {
+const getAllConversationIdsRaw = (): string[] => {
   const storedState = localStorage.getItem(storageKey);
   if (!storedState) {
     return [];
   }
-  return JSON.parse(storedState);
+
+  const conversationIds = (storedState ? JSON.parse(storedState) : []) as string[];
+  return conversationIds;
 };
 
-const removeGroupId = (groupId: string) => {
-  const storedState = getAllGroupIds();
-  const newStoredState = storedState.filter(g => g !== groupId);
+const getAllConversationIds = (): QualifiedId[] => {
+  const conversationIds = getAllConversationIdsRaw();
+  return conversationIds.map(parseQualifiedId);
+};
+
+const removeConversationId = (conversationId: QualifiedId) => {
+  const storedState = getAllConversationIdsRaw();
+
+  const serializedQualifiedId = serializeQualifiedId(conversationId);
+  const newStoredState = storedState.filter(c => c !== serializedQualifiedId);
+
   localStorage.setItem(storageKey, JSON.stringify(newStoredState));
 };
 
-const storeGroupId = (groupId: string) => {
-  const storedState = getAllGroupIds();
-  if (storedState.includes(groupId)) {
+const storeConversationId = (conversationId: QualifiedId) => {
+  const storedState = getAllConversationIdsRaw();
+  const serializedQualifiedId = serializeQualifiedId(conversationId);
+
+  if (storedState.includes(serializedQualifiedId)) {
     return;
   }
 
-  storedState.push(groupId);
+  storedState.push(serializedQualifiedId);
   localStorage.setItem(storageKey, JSON.stringify(storedState));
 };
 
 export const conferenceSubconversationsStore = {
-  getAllGroupIds,
-  removeGroupId,
-  storeGroupId,
+  getAllConversationIds,
+  removeConversationId,
+  storeConversationId,
 };

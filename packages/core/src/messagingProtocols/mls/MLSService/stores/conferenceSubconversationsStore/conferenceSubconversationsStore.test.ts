@@ -25,23 +25,23 @@ describe('keyMaterialUpdatesStore', () => {
   });
 
   it('adds and retrieves subconversation groupIds to/from the store', () => {
-    const groupId = 'groupId';
-    conferenceSubconversationsStore.storeGroupId(groupId);
-    expect(conferenceSubconversationsStore.getAllGroupIds()).toEqual([groupId]);
+    const conversationId = {id: 'conversatioin1', domain: 'domain'};
+    conferenceSubconversationsStore.storeConversationId(conversationId);
+    expect(conferenceSubconversationsStore.getAllConversationIds()).toEqual([conversationId]);
   });
 
   it('does not add groupId if it already exists in the store', () => {
-    const groupId = 'groupId2';
-    conferenceSubconversationsStore.storeGroupId(groupId);
-    conferenceSubconversationsStore.storeGroupId(groupId);
-    expect(conferenceSubconversationsStore.getAllGroupIds()).toEqual([groupId]);
+    const conversationId = {id: 'conversatioin2', domain: 'domain'};
+    conferenceSubconversationsStore.storeConversationId(conversationId);
+    conferenceSubconversationsStore.storeConversationId(conversationId);
+    expect(conferenceSubconversationsStore.getAllConversationIds()).toEqual([conversationId]);
   });
 
   it('removes groupId from the store', () => {
-    const groupId = 'groupId3';
-    conferenceSubconversationsStore.storeGroupId(groupId);
-    expect(conferenceSubconversationsStore.getAllGroupIds()).toEqual([groupId]);
-    conferenceSubconversationsStore.removeGroupId(groupId);
-    expect(conferenceSubconversationsStore.getAllGroupIds()).toEqual([]);
+    const conversationId = {id: 'conversatioin3', domain: 'domain'};
+    conferenceSubconversationsStore.storeConversationId(conversationId);
+    expect(conferenceSubconversationsStore.getAllConversationIds()).toEqual([conversationId]);
+    conferenceSubconversationsStore.removeConversationId(conversationId);
+    expect(conferenceSubconversationsStore.getAllConversationIds()).toEqual([]);
   });
 });
