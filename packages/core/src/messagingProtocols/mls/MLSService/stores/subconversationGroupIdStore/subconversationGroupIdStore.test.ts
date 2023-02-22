@@ -17,17 +17,22 @@
  *
  */
 
+import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+
 import {subconversationGroupIdStore} from './subconversationGroupIdStore';
 
 describe('subconversationGroupIdMapper', () => {
   it('returns empty groupId if conversation is not known', () => {
-    const groupId = subconversationGroupIdStore.getGroupId({domain: 'example.com', id: '123'}, 'subconversation');
+    const groupId = subconversationGroupIdStore.getGroupId(
+      {domain: 'example.com', id: '123'},
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
     expect(groupId).toBeUndefined();
   });
 
   it('returns the stored groupId', () => {
     const conversationId = {domain: 'example.com', id: '123'};
-    const subconversation = 'subconversation';
+    const subconversation = SUBCONVERSATION_ID.CONFERENCE;
     const groupId = 'groupID';
     subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
 
@@ -37,7 +42,7 @@ describe('subconversationGroupIdMapper', () => {
 
   it('removes groupId from the store', () => {
     const conversationId = {domain: 'example.com', id: '123'};
-    const subconversation = 'subconversation';
+    const subconversation = SUBCONVERSATION_ID.CONFERENCE;
     const groupId = 'groupID';
     subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
 
@@ -47,19 +52,24 @@ describe('subconversationGroupIdMapper', () => {
     expect(subconversationGroupIdStore.getGroupId(conversationId, subconversation)).toBeUndefined();
   });
 
-  it('retrieves all entries from the store', () => {
+  it('retrieves all entries from the store by subconversation id', () => {
     const conversationId = {domain: 'example.com', id: '123'};
-    const subconversation = 'subconversation';
+    const subconversation = SUBCONVERSATION_ID.CONFERENCE;
     const groupId = 'groupID';
 
     const conversationId2 = {domain: 'example2.com', id: '1234'};
-    const subconversation2 = 'subconversation2';
+    const subconversation2 = SUBCONVERSATION_ID.CONFERENCE;
     const groupId2 = 'groupID2';
+
+    const conversationId3 = {domain: 'example3.com', id: '12345'};
+    const subconversation3 = 'none' as SUBCONVERSATION_ID;
+    const groupId3 = 'groupID3';
 
     subconversationGroupIdStore.storeGroupId(conversationId, subconversation, groupId);
     subconversationGroupIdStore.storeGroupId(conversationId2, subconversation2, groupId2);
+    subconversationGroupIdStore.storeGroupId(conversationId3, subconversation3, groupId3);
 
-    const result = subconversationGroupIdStore.getAllGroupIds();
+    const result = subconversationGroupIdStore.getAllGroupIdsBySubconversationId(SUBCONVERSATION_ID.CONFERENCE);
     expect(result).toEqual([
       {
         parentConversation: conversationId,

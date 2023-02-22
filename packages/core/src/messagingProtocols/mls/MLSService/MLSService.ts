@@ -257,7 +257,9 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async leaveStaleConferenceSubconversations(): Promise<void> {
-    const conversationIds = subconversationGroupIdStore.getAllGroupIds();
+    const conversationIds = subconversationGroupIdStore.getAllGroupIdsBySubconversationId(
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
 
     for (const {parentConversation} of conversationIds) {
       await this.leaveConferenceSubconversation(parentConversation);
@@ -563,7 +565,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async getGroupIdFromConversationId(
     conversationQualifiedId: QualifiedId,
-    subconversationId?: string,
+    subconversationId?: SUBCONVERSATION_ID,
   ): Promise<string> {
     const {id: conversationId, domain: conversationDomain} = conversationQualifiedId;
     const groupId = subconversationId
