@@ -45,6 +45,7 @@ import {
 
 import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
+import {conferenceSubconversationsStore} from './stores/conferenceSubconversationsStore';
 import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdMapper';
@@ -58,7 +59,6 @@ import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
-import {conferenceSubconversationsStore} from './stores/conferenceSubconversationsStore';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -246,8 +246,15 @@ export class MLSService extends TypedEventEmitter<Events> {
       return;
     }
 
-    await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-    return this.wipeConversation(subconversationGroupId);
+    try {
+      await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+      await this.wipeConversation(subconversationGroupId);
+    } catch (error) {
+      this.logger.error(`Failed to leave conference subconversation:`, error);
+    }
+
+    // once we left the subconversation, we can remove it from the store
+    conferenceSubconversationsStore.removeGroupId(subconversationGroupId);
   }
 
   /**
