@@ -253,14 +253,14 @@ describe('ProteusService', () => {
       jest.spyOn(services.cryptoClient, 'sessionExists').mockResolvedValue(true);
       jest.spyOn(services.cryptoClient, 'encrypt').mockImplementationOnce(() => Promise.resolve(encryptedPayload));
 
-      const encrypted = await services.proteusService.encrypt(messageBuffer, userClients);
+      const {payloads} = await services.proteusService.encrypt(messageBuffer, userClients);
 
       expect(services.cryptoClient.encrypt).toHaveBeenCalledWith(
         [firstUser.sessions.first, firstUser.sessions.second],
         messageBuffer,
       );
 
-      expect(encrypted).toEqual({
+      expect(payloads).toEqual({
         [firstUser.id]: {
           [firstUser.clients.first]: encryptedMessageBuffer,
           [firstUser.clients.second]: encryptedMessageBuffer,
@@ -288,14 +288,14 @@ describe('ProteusService', () => {
       jest.spyOn(services.cryptoClient, 'sessionExists').mockResolvedValue(true);
       jest.spyOn(services.cryptoClient, 'encrypt').mockResolvedValueOnce(encryptedPayload);
 
-      const encrypted = await services.proteusService.encrypt(messageBuffer, userClients);
+      const {payloads} = await services.proteusService.encrypt(messageBuffer, userClients);
 
       expect(services.cryptoClient.encrypt).toHaveBeenCalledWith(
         [firstUser.sessions.first, firstUser.sessions.second, secondUser.sessions.first],
         messageBuffer,
       );
 
-      expect(encrypted).toEqual({
+      expect(payloads).toEqual({
         [firstUser.id]: {
           [firstUser.clients.first]: encryptedMessageBuffer,
           [firstUser.clients.second]: encryptedMessageBuffer,
@@ -328,7 +328,7 @@ describe('ProteusService', () => {
       jest.spyOn(services.cryptoClient, 'sessionExists').mockResolvedValue(true);
       jest.spyOn(services.cryptoClient, 'encrypt').mockResolvedValueOnce(encryptedPayload);
 
-      const encrypted = await services.proteusService.encryptQualified(messageBuffer, userClients);
+      const {payloads} = await services.proteusService.encryptQualified(messageBuffer, userClients);
 
       // console.log({encrypted, missing});
 
@@ -337,7 +337,7 @@ describe('ProteusService', () => {
         messageBuffer,
       );
 
-      expect(encrypted).toEqual({
+      expect(payloads).toEqual({
         [domain]: {
           [firstUser.id]: {
             [firstUser.clients.first]: encryptedMessageBuffer,
@@ -369,14 +369,14 @@ describe('ProteusService', () => {
       jest.spyOn(services.cryptoClient, 'sessionExists').mockResolvedValue(true);
       jest.spyOn(services.cryptoClient, 'encrypt').mockResolvedValueOnce(encryptedPayload);
 
-      const encrypted = await services.proteusService.encryptQualified(messageBuffer, userClients);
+      const {payloads} = await services.proteusService.encryptQualified(messageBuffer, userClients);
 
       expect(services.cryptoClient.encrypt).toHaveBeenCalledWith(
         [firstUser.sessions.first, firstUser.sessions.second, secondUser.sessions.first],
         messageBuffer,
       );
 
-      expect(encrypted).toEqual({
+      expect(payloads).toEqual({
         [domain]: {
           [firstUser.id]: {
             [firstUser.clients.first]: encryptedMessageBuffer,

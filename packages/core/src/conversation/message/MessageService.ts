@@ -84,7 +84,7 @@ export class MessageService {
     }
 
     const {payloads: encryptedPayload, unknowns} = await this.proteusService.encrypt(plainTextPayload, recipients);
-    if (Object.keys(unknowns)) {
+    if (unknowns) {
       // Warn the consumer that some clients do not have prekeys and are deleted from backend
       await options.onClientMismatch?.({
         missing: {},
@@ -142,13 +142,13 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const {payloads: encryptedPayload, missing} = await this.proteusService.encryptQualified(plainText, recipients);
+    const {payloads: encryptedPayload, unknows} = await this.proteusService.encryptQualified(plainText, recipients);
 
-    if (Object.keys(missing).length) {
+    if (unknows) {
       await options.onClientMismatch?.({
-        redundant: missing,
+        redundant: {},
         missing: {},
-        deleted: {},
+        deleted: unknows,
         time: '',
         failed_to_send: {},
       });

@@ -63,7 +63,7 @@ type EncryptionResult = {
   /** the encrypted payloads for the clients that have a valid sessions */
   payloads: OTRRecipients<Uint8Array>;
   /** user-client that do not have prekeys on backend (deleted clients) */
-  unknowns: UserClients;
+  unknowns?: UserClients;
 };
 export class ProteusService {
   private readonly messageService: MessageService;
@@ -286,19 +286,22 @@ export class ProteusService {
   public async encryptQualified(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<{payloads: QualifiedOTRRecipients; missing: QualifiedUserClients}> {
+  ): Promise<{payloads: QualifiedOTRRecipients; unknows?: QualifiedUserClients}> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
     const missingRecipients: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const {unknown: missing, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
+      const {unknowns, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
       qualifiedOTRRecipients[domain] = payloads;
-      if (Object.keys(missing).length > 0) {
-        missingRecipients[domain] = missing;
+      if (unknowns) {
+        missingRecipients[domain] = unknowns;
       }
     }
 
-    return {payloads: qualifiedOTRRecipients, missing: missingRecipients};
+    return {
+      payloads: qualifiedOTRRecipients,
+      unknows: Object.keys(missingRecipients).length > 0 ? missingRecipients : {},
+    };
   }
 
   async wipe(storeEngine?: CRUDEngine) {

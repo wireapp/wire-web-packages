@@ -183,14 +183,14 @@ describe('SessionHandler', () => {
       allKeys['existing-user1']['deleteclient'] = null;
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue(allKeys);
 
-      const {sessions, missing} = await initSessions({
+      const {sessions, unknowns} = await initSessions({
         recipients: userClients,
         apiClient,
         cryptoClient,
       });
 
       expect(sessions).toEqual(['existing-user1@client1']);
-      expect(missing).toEqual({'existing-user1': ['deleteclient']});
+      expect(unknowns).toEqual({'existing-user1': ['deleteclient']});
     });
   });
 });

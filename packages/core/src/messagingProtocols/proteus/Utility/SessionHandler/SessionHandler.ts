@@ -41,7 +41,7 @@ type InitSessionsResult = {
   /** valid sessions that either already existed or have been freshly created */
   sessions: string[];
   /** client that do we do not have sessions with and that do not have existence on backend (deleted clients) */
-  unknowns: UserClients;
+  unknowns?: UserClients;
 };
 
 const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
@@ -230,7 +230,11 @@ const initSessions = async ({
         })
       : {sessions: [], unknowns: {}};
 
-  return {sessions: [...existingSessions, ...prekeyCreated, ...created], unknowns: {...prekeyUnknows, ...unknowns}};
+  const allUnknowns = {...prekeyUnknows, ...unknowns};
+  return {
+    sessions: [...existingSessions, ...prekeyCreated, ...created],
+    unknowns: Object.keys(allUnknowns).length > 0 ? allUnknowns : undefined,
+  };
 };
 
 interface DeleteSessionParams {
