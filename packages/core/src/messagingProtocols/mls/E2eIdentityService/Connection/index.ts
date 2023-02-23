@@ -17,18 +17,4 @@
  *
  */
 
-import {AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
-import {CommonStepProps} from './common.types';
-
-/**
- * Retreives the directoryJson from the backend and utilizes CoreCrypto to decrypt it.
- *
- * @param CommonStepProps
- * @returns AcmeDirectory
- */
-export const getAcmeDirectory = async ({coreCryptoClient}: CommonStepProps): Promise<AcmeDirectory> => {
-  const;
-
-  return {} as AcmeDirectory;
-};
+export * from './AcmeConnectionService';

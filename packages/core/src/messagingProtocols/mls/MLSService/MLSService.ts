@@ -108,10 +108,14 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async createClient(userId: QualifiedId, clientId: string) {
+    const identityService = new E2eIdentityService(this.coreCryptoClient);
+    await identityService.getNewCertificate();
+
+    return;
+
     await this.initClient(userId, clientId);
     // ACME Enrollment process here
-    const identityService = new E2eIdentityService(this.apiClient, this.coreCryptoClient);
-    identityService.startNewACMEEnrollment(userId, clientId);
+
     // After receiving the ACME certificate, we need to upload the public key and key packages to the backend
     // If the device is new, we need to upload keypackages and public key to the backend
     const publicKey = await this.coreCryptoClient.clientPublicKey();
