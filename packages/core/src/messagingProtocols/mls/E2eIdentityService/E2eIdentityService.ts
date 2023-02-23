@@ -20,9 +20,7 @@
 import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import logdown from 'logdown';
 
-import {APIClient} from '@wireapp/api-client';
-
-import {AcmeConnectionService} from './Connection';
+import {AcmeConnectionService, AcmeConnectionService} from './Connection';
 import {
   CreateNewAccountReturnValue,
   CreateNewOrderParams,
