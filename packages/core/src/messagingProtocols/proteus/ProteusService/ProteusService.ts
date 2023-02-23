@@ -300,7 +300,7 @@ export class ProteusService {
 
     return {
       payloads: qualifiedOTRRecipients,
-      unknowns: Object.keys(missingRecipients).length > 0 ? missingRecipients : {},
+      unknowns: Object.keys(missingRecipients).length > 0 ? missingRecipients : undefined,
     };
   }
 
