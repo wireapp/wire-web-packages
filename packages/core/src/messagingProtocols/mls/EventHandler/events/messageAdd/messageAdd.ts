@@ -42,7 +42,7 @@ const handleMLSMessageAdd = async (
 
   const groupId = await mlsService.getGroupIdFromConversationId(qualifiedConversationId, event.subconv);
 
-  // We should not receive a message for a conversation that we don't have a group_id for
+  // We should not receive a message for a group the client is not aware of
   if (!groupId) {
     throw new Error(
       `Could not find a group_id for conversation ${qualifiedConversationId.id}@${qualifiedConversationId.domain}`,
