@@ -113,7 +113,7 @@ const buildMessageService = async () => {
   jest.spyOn(proteusService, 'encryptQualified').mockImplementation(fakeEncryptQualified as any);
   jest.spyOn(proteusService, 'encrypt').mockImplementation(fakeEncrypt as any);
 
-  return [messageService, {apiClient}] as const;
+  return [messageService, {apiClient, proteusService}] as const;
 };
 
 describe('MessageService', () => {
@@ -193,6 +193,29 @@ describe('MessageService', () => {
         });
         expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalledTimes(2);
         expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
+      });
+
+      it('warns the consumer if they try to send a message to a deleted client', async () => {
+        const [messageService, {apiClient, proteusService}] = await buildMessageService();
+
+        const onClientMismatch = jest.fn().mockReturnValue(true);
+        const recipients = generateQualifiedRecipients([user1, user2]);
+        jest.spyOn(proteusService, 'encryptQualified').mockResolvedValue({
+          payloads: {},
+          unknowns: {
+            [user1.domain]: {
+              [user1.id]: [user1.clients[0]],
+            },
+          },
+        });
+        jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
+
+        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
+        expect(onClientMismatch).toHaveBeenCalledWith(expect.objectContaining({deleted: expect.any(Object)}));
       });
 
       it('stops message sending if onClientMismatch returns false', async () => {

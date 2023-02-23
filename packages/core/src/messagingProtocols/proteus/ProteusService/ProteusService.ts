@@ -286,7 +286,7 @@ export class ProteusService {
   public async encryptQualified(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<{payloads: QualifiedOTRRecipients; unknows?: QualifiedUserClients}> {
+  ): Promise<{payloads: QualifiedOTRRecipients; unknowns?: QualifiedUserClients}> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
     const missingRecipients: QualifiedUserClients = {};
 
@@ -300,7 +300,7 @@ export class ProteusService {
 
     return {
       payloads: qualifiedOTRRecipients,
-      unknows: Object.keys(missingRecipients).length > 0 ? missingRecipients : {},
+      unknowns: Object.keys(missingRecipients).length > 0 ? missingRecipients : {},
     };
   }
 

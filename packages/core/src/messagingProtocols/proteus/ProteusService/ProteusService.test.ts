@@ -388,6 +388,72 @@ describe('ProteusService', () => {
         },
       });
     });
+
+    it('returns the unknown clients that are deleted on backend', async () => {
+      const {
+        services,
+        data: {firstUser, secondUser, encryptedMessageBuffer, messageBuffer, domain},
+      } = await prepareDataForEncryption();
+
+      const userClients: QualifiedUserClients = {
+        [domain]: {
+          [firstUser.id]: [firstUser.clients.first, firstUser.clients.second],
+          [secondUser.id]: [secondUser.clients.first],
+        },
+      };
+
+      const encryptedPayload = new Map([
+        [firstUser.sessions.first, encryptedMessageBuffer],
+        [firstUser.sessions.second, encryptedMessageBuffer],
+        [secondUser.sessions.first, encryptedMessageBuffer],
+      ]);
+
+      jest.spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockResolvedValue({
+        [domain]: {
+          [firstUser.id]: {
+            [firstUser.clients.first]: null,
+            [firstUser.clients.second]: {
+              id: 123,
+              key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+            },
+          },
+          [secondUser.id]: {
+            [secondUser.clients.first]: {
+              id: 123,
+              key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+            },
+          },
+        },
+      });
+      jest.spyOn(services.cryptoClient, 'sessionExists').mockResolvedValue(false);
+      jest.spyOn(services.cryptoClient, 'encrypt').mockResolvedValueOnce(encryptedPayload);
+      jest.spyOn(services.cryptoClient, 'sessionFromPrekey').mockResolvedValue();
+      jest.spyOn(services.cryptoClient, 'saveSession').mockResolvedValue();
+
+      const {payloads, unknowns} = await services.proteusService.encryptQualified(messageBuffer, userClients);
+
+      expect(services.cryptoClient.encrypt).toHaveBeenCalledWith(
+        [firstUser.sessions.second, secondUser.sessions.first],
+        messageBuffer,
+      );
+
+      expect(unknowns).toEqual({
+        [domain]: {
+          [firstUser.id]: [firstUser.clients.first],
+        },
+      });
+      expect(payloads).toEqual({
+        [domain]: {
+          [firstUser.id]: {
+            [firstUser.clients.first]: encryptedMessageBuffer,
+            [firstUser.clients.second]: encryptedMessageBuffer,
+          },
+          [secondUser.id]: {
+            [secondUser.clients.first]: encryptedMessageBuffer,
+          },
+        },
+      });
+    });
   });
 
   describe('sendGenericMessage', () => {

@@ -142,7 +142,10 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const {payloads: encryptedPayload, unknows} = await this.proteusService.encryptQualified(plainText, recipients);
+    const {payloads: encryptedPayload, unknowns: unknows} = await this.proteusService.encryptQualified(
+      plainText,
+      recipients,
+    );
 
     if (unknows) {
       await options.onClientMismatch?.({
