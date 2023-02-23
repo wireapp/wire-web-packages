@@ -188,9 +188,10 @@ const initSessions = async ({
   cryptoClient,
   logger,
 }: GetSessionsAndClientsFromRecipientsProps): Promise<string[]> => {
-  const missingUserClients: UserClients = {};
+  const missingClients: UserClients = {};
+  const missingClientsWithPrekeys: UserPreKeyBundleMap = {};
   const existingSessions: string[] = [];
-  const users = flattenUserClients<string[] | Record<string, unknown>>(recipients, domain);
+  const users = flattenUserClients<string[] | Record<string, PreKey | null>>(recipients, domain);
 
   for (const user of users) {
     const {userId, data} = user;
@@ -201,24 +202,38 @@ const initSessions = async ({
         existingSessions.push(sessionId);
         continue;
       }
-      missingUserClients[userId.id] = missingUserClients[userId.id] || [];
-      missingUserClients[userId.id].push(clientId);
+      if (!Array.isArray(data)) {
+        missingClientsWithPrekeys[userId.id] = missingClientsWithPrekeys[userId.id] || {};
+        missingClientsWithPrekeys[userId.id][clientId] = data[clientId];
+        continue;
+      }
+      missingClients[userId.id] = missingClients[userId.id] || [];
+      missingClients[userId.id].push(clientId);
     }
   }
 
-  if (Object.keys(missingUserClients).length === 0) {
-    return existingSessions;
-  }
+  const newPrekeySessions =
+    Object.keys(missingClientsWithPrekeys).length > 0
+      ? await createSessionsFromPreKeys({
+          preKeyBundleMap: missingClientsWithPrekeys,
+          domain,
+          useQualifiedIds: !!domain,
+          cryptoClient,
+        })
+      : [];
 
-  const newSessions = await createSessions({
-    userClientMap: missingUserClients,
-    domain,
-    apiClient,
-    cryptoClient,
-    logger,
-  });
+  const newSessions =
+    Object.keys(missingClients).length > 0
+      ? await createSessions({
+          userClientMap: missingClients,
+          domain,
+          apiClient,
+          cryptoClient,
+          logger,
+        })
+      : [];
 
-  return [...existingSessions, ...newSessions];
+  return [...existingSessions, ...newPrekeySessions, ...newSessions];
 };
 
 interface DeleteSessionParams {
