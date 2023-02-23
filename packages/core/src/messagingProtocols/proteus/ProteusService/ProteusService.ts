@@ -254,8 +254,8 @@ export class ProteusService {
     plainText: Uint8Array,
     recipients: UserPreKeyBundleMap | UserClients,
     domain: string = '',
-  ): Promise<OTRRecipients<Uint8Array>> {
-    const sessions = await initSessions({
+  ): Promise<{payloads: OTRRecipients<Uint8Array>; missing: UserClients}> {
+    const {sessions, missing} = await initSessions({
       recipients,
       domain,
       apiClient: this.apiClient,
@@ -265,7 +265,7 @@ export class ProteusService {
 
     const payload = await this.cryptoClient.encrypt(sessions, plainText);
 
-    return buildEncryptedPayloads(payload);
+    return {payloads: buildEncryptedPayloads(payload), missing};
   }
 
   public deleteSession(userId: QualifiedId, clientId: string) {
@@ -280,15 +280,19 @@ export class ProteusService {
   public async encryptQualified(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
-  ): Promise<QualifiedOTRRecipients> {
+  ): Promise<{payloads: QualifiedOTRRecipients; missing: QualifiedUserClients}> {
     const qualifiedOTRRecipients: QualifiedOTRRecipients = {};
+    const missingRecipients: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const result = await this.encrypt(plainText, preKeyBundleMap, domain);
-      qualifiedOTRRecipients[domain] = result;
+      const {missing, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
+      qualifiedOTRRecipients[domain] = payloads;
+      if (Object.keys(missing).length > 0) {
+        missingRecipients[domain] = missing;
+      }
     }
 
-    return qualifiedOTRRecipients;
+    return {payloads: qualifiedOTRRecipients, missing: missingRecipients};
   }
 
   async wipe(storeEngine?: CRUDEngine) {

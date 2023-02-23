@@ -83,7 +83,16 @@ export class MessageService {
       cipherText = externalPayload.cipherText;
     }
 
-    const encryptedPayload = await this.proteusService.encrypt(plainTextPayload, recipients);
+    const {payloads: encryptedPayload, missing} = await this.proteusService.encrypt(plainTextPayload, recipients);
+    if (Object.keys(missing)) {
+      // Warn the consumer that some clients do not have prekeys and are deleted from backend
+      await options.onClientMismatch?.({
+        missing: {},
+        deleted: {},
+        redundant: missing,
+        time: '',
+      });
+    }
 
     const send = (payload: OTRRecipients<Uint8Array>) => {
       return options.sendAsProtobuf
@@ -133,7 +142,17 @@ export class MessageService {
     const send = (payload: QualifiedOTRRecipients) => {
       return this.sendFederatedOtrMessage(sendingClientId, payload, options);
     };
-    const encryptedPayload = await this.proteusService.encryptQualified(plainText, recipients);
+    const {payloads: encryptedPayload, missing} = await this.proteusService.encryptQualified(plainText, recipients);
+
+    if (Object.keys(missing).length) {
+      await options.onClientMismatch?.({
+        redundant: missing,
+        missing: {},
+        deleted: {},
+        time: '',
+        failed_to_send: {},
+      });
+    }
 
     try {
       return await send(encryptedPayload);
@@ -295,8 +314,8 @@ export class MessageService {
     // remove deleted clients to the recipients
     deleted.forEach(({userId, data}) => data.forEach(clientId => delete recipients[userId.id][clientId]));
     if (Object.keys(mismatch.missing).length) {
-      const encrypted = await this.proteusService.encrypt(plainText, mismatch.missing);
-      const reEncryptedPayloads = flattenUserClients<{[client: string]: Uint8Array}>(encrypted);
+      const {payloads} = await this.proteusService.encrypt(plainText, mismatch.missing);
+      const reEncryptedPayloads = flattenUserClients<{[client: string]: Uint8Array}>(payloads);
       // add missing clients to the recipients
       reEncryptedPayloads.forEach(({data, userId}) => (recipients[userId.id] = {...recipients[userId.id], ...data}));
     }
@@ -323,8 +342,8 @@ export class MessageService {
     );
 
     if (Object.keys(mismatch.missing).length) {
-      const encrypted = await this.proteusService.encryptQualified(plainText, mismatch.missing);
-      const reEncryptedPayloads = flattenQualifiedUserClients<{[client: string]: Uint8Array}>(encrypted);
+      const {payloads} = await this.proteusService.encryptQualified(plainText, mismatch.missing);
+      const reEncryptedPayloads = flattenQualifiedUserClients<{[client: string]: Uint8Array}>(payloads);
       reEncryptedPayloads.forEach(
         ({data, userId}) => (recipients[userId.domain][userId.id] = {...recipients[userId.domain][userId.id], ...data}),
       );
