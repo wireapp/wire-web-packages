@@ -59,6 +59,12 @@ import {
   initSessions,
 } from '../Utility/SessionHandler';
 
+type EncryptionResult = {
+  /** the encrypted payloads for the clients that have a valid sessions */
+  payloads: OTRRecipients<Uint8Array>;
+  /** user-client that do not have prekeys on backend (deleted clients) */
+  unknowns: UserClients;
+};
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
@@ -254,8 +260,8 @@ export class ProteusService {
     plainText: Uint8Array,
     recipients: UserPreKeyBundleMap | UserClients,
     domain: string = '',
-  ): Promise<{payloads: OTRRecipients<Uint8Array>; missing: UserClients}> {
-    const {sessions, missing} = await initSessions({
+  ): Promise<EncryptionResult> {
+    const {sessions, unknowns} = await initSessions({
       recipients,
       domain,
       apiClient: this.apiClient,
@@ -265,7 +271,7 @@ export class ProteusService {
 
     const payload = await this.cryptoClient.encrypt(sessions, plainText);
 
-    return {payloads: buildEncryptedPayloads(payload), missing};
+    return {payloads: buildEncryptedPayloads(payload), unknowns};
   }
 
   public deleteSession(userId: QualifiedId, clientId: string) {
@@ -285,7 +291,7 @@ export class ProteusService {
     const missingRecipients: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const {missing, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
+      const {unknown: missing, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
       qualifiedOTRRecipients[domain] = payloads;
       if (Object.keys(missing).length > 0) {
         missingRecipients[domain] = missing;

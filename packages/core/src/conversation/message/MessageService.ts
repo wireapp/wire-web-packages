@@ -83,13 +83,13 @@ export class MessageService {
       cipherText = externalPayload.cipherText;
     }
 
-    const {payloads: encryptedPayload, missing} = await this.proteusService.encrypt(plainTextPayload, recipients);
-    if (Object.keys(missing)) {
+    const {payloads: encryptedPayload, unknowns} = await this.proteusService.encrypt(plainTextPayload, recipients);
+    if (Object.keys(unknowns)) {
       // Warn the consumer that some clients do not have prekeys and are deleted from backend
       await options.onClientMismatch?.({
         missing: {},
-        deleted: {},
-        redundant: missing,
+        deleted: unknowns,
+        redundant: {},
         time: '',
       });
     }

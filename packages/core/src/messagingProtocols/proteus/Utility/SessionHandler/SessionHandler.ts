@@ -37,6 +37,13 @@ interface ConstructSessionIdParams {
   domain?: string;
 }
 
+type InitSessionsResult = {
+  /** valid sessions that either already existed or have been freshly created */
+  sessions: string[];
+  /** client that do we do not have sessions with and that do not have existence on backend (deleted clients) */
+  unknowns: UserClients;
+};
+
 const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
   const id = typeof userId === 'string' ? userId : userId.id;
   const baseDomain = typeof userId === 'string' ? domain : userId.domain;
@@ -75,7 +82,7 @@ const createLegacySessions = async ({
   userClients,
   apiClient,
   cryptoClient,
-}: CreateLegacySessionsProps): Promise<{created: string[]; missing: UserClients}> => {
+}: CreateLegacySessionsProps): Promise<InitSessionsResult> => {
   const preKeyBundleMap = await apiClient.api.user.postMultiPreKeyBundles(userClients);
   const sessions = await createSessionsFromPreKeys({
     preKeyBundleMap,
@@ -100,26 +107,26 @@ const createQualifiedSessions = async ({
   domain,
   apiClient,
   cryptoClient,
-}: CreateQualifiedSessionsProps): Promise<{created: string[]; missing: UserClients}> => {
+}: CreateQualifiedSessionsProps): Promise<InitSessionsResult> => {
   const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: userClientMap});
 
   const sessions: string[] = [];
-  let missing: UserClients = {};
+  let unknowns: UserClients = {};
 
   for (const domain in prekeyBundleMap) {
     const domainUsers = prekeyBundleMap[domain];
 
-    const {created, missing: domainMissing} = await createSessionsFromPreKeys({
+    const {sessions: createdSessions, unknowns: domainUnknowns} = await createSessionsFromPreKeys({
       preKeyBundleMap: domainUsers,
       domain,
       useQualifiedIds: true,
       cryptoClient,
     });
-    sessions.push(...created);
-    missing = {...missing, ...domainMissing};
+    sessions.push(...createdSessions);
+    unknowns = {...unknowns, ...domainUnknowns};
   }
 
-  return {created: sessions, missing};
+  return {sessions, unknowns};
 };
 
 interface CreateSessionsProps extends CreateSessionsBase {
@@ -150,13 +157,7 @@ const initSession = async (
  * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
  * @param {userClientMap} map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
  */
-const createSessions = async ({
-  userClientMap,
-  domain,
-  apiClient,
-  cryptoClient,
-  logger,
-}: CreateSessionsProps): Promise<{created: string[]; missing: UserClients}> => {
+const createSessions = async ({userClientMap, domain, apiClient, cryptoClient, logger}: CreateSessionsProps) => {
   return domain
     ? createQualifiedSessions({userClientMap, domain, apiClient, cryptoClient, logger})
     : createLegacySessions({
@@ -183,7 +184,7 @@ const initSessions = async ({
   apiClient,
   cryptoClient,
   logger,
-}: GetSessionsAndClientsFromRecipientsProps): Promise<{sessions: string[]; missing: UserClients}> => {
+}: GetSessionsAndClientsFromRecipientsProps): Promise<InitSessionsResult> => {
   const missingClients: UserClients = {};
   const missingClientsWithPrekeys: UserPreKeyBundleMap = {};
   const existingSessions: string[] = [];
@@ -208,7 +209,7 @@ const initSessions = async ({
     }
   }
 
-  const {created: prekeyCreated, missing: prekeyMissing} =
+  const {sessions: prekeyCreated, unknowns: prekeyUnknows} =
     Object.keys(missingClientsWithPrekeys).length > 0
       ? await createSessionsFromPreKeys({
           preKeyBundleMap: missingClientsWithPrekeys,
@@ -216,9 +217,9 @@ const initSessions = async ({
           useQualifiedIds: !!domain,
           cryptoClient,
         })
-      : {created: [], missing: {}};
+      : {sessions: [], unknowns: {}};
 
-  const {created, missing} =
+  const {sessions: created, unknowns} =
     Object.keys(missingClients).length > 0
       ? await createSessions({
           userClientMap: missingClients,
@@ -227,9 +228,9 @@ const initSessions = async ({
           cryptoClient,
           logger,
         })
-      : {created: [], missing: {}};
+      : {sessions: [], unknowns: {}};
 
-  return {sessions: [...existingSessions, ...prekeyCreated, ...created], missing: {...prekeyMissing, ...missing}};
+  return {sessions: [...existingSessions, ...prekeyCreated, ...created], unknowns: {...prekeyUnknows, ...unknowns}};
 };
 
 interface DeleteSessionParams {
@@ -256,9 +257,9 @@ const createSessionsFromPreKeys = async ({
   domain = '',
   useQualifiedIds,
   cryptoClient,
-}: CreateSessionsFromPreKeysProps): Promise<{created: string[]; missing: UserClients}> => {
+}: CreateSessionsFromPreKeysProps): Promise<InitSessionsResult> => {
   const sessions: string[] = [];
-  const missing: UserClients = {};
+  const unknowns: UserClients = {};
 
   for (const userId in preKeyBundleMap) {
     const userClients = preKeyBundleMap[userId];
@@ -268,8 +269,8 @@ const createSessionsFromPreKeys = async ({
       const prekey = userClients[clientId];
 
       if (!prekey) {
-        missing[userId] = missing[userId] || [];
-        missing[userId].push(clientId);
+        unknowns[userId] = unknowns[userId] || [];
+        unknowns[userId].push(clientId);
         continue;
       }
 
@@ -282,7 +283,7 @@ const createSessionsFromPreKeys = async ({
     }
   }
 
-  return {created: sessions, missing};
+  return {sessions, unknowns};
 };
 
 type EncryptedPayloads<T> = Record<string, Record<string, T>>;
