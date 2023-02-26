@@ -4430,7 +4430,7 @@ __metadata:
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.3.3
     axios-retry: 3.4.0
-    browser-sync: 2.27.11
+    browser-sync: 2.27.12
     concurrently: 7.6.0
     cross-env: 7.0.3
     dotenv: 16.0.3
@@ -5900,22 +5900,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-sync-client@npm:^2.27.11":
-  version: 2.27.11
-  resolution: "browser-sync-client@npm:2.27.11"
+"browser-sync-client@npm:^2.27.12":
+  version: 2.27.12
+  resolution: "browser-sync-client@npm:2.27.12"
   dependencies:
     etag: 1.8.1
     fresh: 0.5.2
     mitt: ^1.1.3
     rxjs: ^5.5.6
     typescript: ^4.6.2
-  checksum: ff2b7bba6e75b7a73bd8f072d085ab94731b936143cbfa6f6607c83244072c8f488c4f5768fbb237768d092f6d97820c63aefd95175a7118db972ad3d41a817b
+  checksum: 661501ae8e679043527b7f5cbb6883e8a409bb2adaea2960075f28f1e7141c8128a43ff8bb10142ae1180fa78dc566b6b5f6fed79b2359f6f246c435b08ec0cc
   languageName: node
   linkType: hard
 
-"browser-sync-ui@npm:^2.27.11":
-  version: 2.27.11
-  resolution: "browser-sync-ui@npm:2.27.11"
+"browser-sync-ui@npm:^2.27.12":
+  version: 2.27.12
+  resolution: "browser-sync-ui@npm:2.27.12"
   dependencies:
     async-each-series: 0.1.1
     connect-history-api-fallback: ^1
@@ -5923,16 +5923,16 @@ __metadata:
     server-destroy: 1.0.1
     socket.io-client: ^4.4.1
     stream-throttle: ^0.1.3
-  checksum: f74c3cdc95e38147c1be73f011d2e3bcb897156ecff78da857b4a73416c62b9bfb138c9aaaa6bde6637f8998ab0b827ce73b20d9a0f9f88d88ba0c06bc1e54c0
+  checksum: 72875a18eb59129bfa0eb336f914516c083de23888c4b6721134d3b02e4abbbbb346acf4ae32dda7892094da32e6ed516f4119ee0bcbaec5633535b8f3f7ece7
   languageName: node
   linkType: hard
 
-"browser-sync@npm:2.27.11":
-  version: 2.27.11
-  resolution: "browser-sync@npm:2.27.11"
+"browser-sync@npm:2.27.12":
+  version: 2.27.12
+  resolution: "browser-sync@npm:2.27.12"
   dependencies:
-    browser-sync-client: ^2.27.11
-    browser-sync-ui: ^2.27.11
+    browser-sync-client: ^2.27.12
+    browser-sync-ui: ^2.27.12
     bs-recipes: 1.3.4
     bs-snippet-injector: ^2.0.1
     chokidar: ^3.5.1
@@ -5959,11 +5959,11 @@ __metadata:
     serve-static: 1.13.2
     server-destroy: 1.0.1
     socket.io: ^4.4.1
-    ua-parser-js: 1.0.2
+    ua-parser-js: 1.0.33
     yargs: ^17.3.1
   bin:
     browser-sync: dist/bin.js
-  checksum: fe88631e8259288f71c09eea0a7c55de6742f61e850bb2513434a0af108b82781c94916209530a5a41f0d80feb022afb4f83fafdadf36727c153d72097d4cdd7
+  checksum: 065dfcbbb4c62ee5cf87b44e2e4f8d6ef265fa3ed3e239eff0a3f3a91334c828275b88f0247b217d0c61714303efba08c0e7fb58c8031745e840f19cef080c99
   languageName: node
   linkType: hard
 
@@ -17563,10 +17563,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ua-parser-js@npm:1.0.2":
-  version: 1.0.2
-  resolution: "ua-parser-js@npm:1.0.2"
-  checksum: ff7f6d79a9c1a38aa85a0e751040fc7e17a0b621bda876838d14ebe55aca4e50e68da0350f181e58801c2d8a35e7db4e12473776e558910c4b7cabcec96aa3bf
+"ua-parser-js@npm:1.0.33":
+  version: 1.0.33
+  resolution: "ua-parser-js@npm:1.0.33"
+  checksum: 460adef51235267345b221842979b6b167543725d03f7c9c4f9ca6af4da835a71d016390da139d2b32828063c4730dcfae6e53b9dce815f4000be4e1fe1c7737
   languageName: node
   linkType: hard
 
