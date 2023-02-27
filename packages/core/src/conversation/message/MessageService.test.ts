@@ -200,22 +200,24 @@ describe('MessageService', () => {
 
         const onClientMismatch = jest.fn().mockReturnValue(true);
         const recipients = generateQualifiedRecipients([user1, user2]);
+        const unknowns = {
+          [user1.domain]: {
+            [user1.id]: [user1.clients[0]],
+          },
+        };
         jest.spyOn(proteusService, 'encryptQualified').mockResolvedValue({
           payloads: {},
-          unknowns: {
-            [user1.domain]: {
-              [user1.id]: [user1.clients[0]],
-            },
-          },
+          unknowns,
         });
         jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
 
-        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        const result = await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,
           onClientMismatch,
           conversationId: {id: 'convid', domain: ''},
         });
-        expect(onClientMismatch).toHaveBeenCalledWith(expect.objectContaining({deleted: expect.any(Object)}));
+
+        expect(result.deleted).toEqual(unknowns);
       });
 
       it('stops message sending if onClientMismatch returns false', async () => {

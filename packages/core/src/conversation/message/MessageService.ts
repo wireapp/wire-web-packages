@@ -84,21 +84,14 @@ export class MessageService {
     }
 
     const {payloads: encryptedPayload, unknowns} = await this.proteusService.encrypt(plainTextPayload, recipients);
-    if (unknowns) {
-      // Warn the consumer that some clients do not have prekeys and are deleted from backend
-      await options.onClientMismatch?.({
-        missing: {},
-        deleted: unknowns,
-        redundant: {},
-        time: '',
-      });
-    }
 
-    const send = (payload: OTRRecipients<Uint8Array>) => {
-      return options.sendAsProtobuf
-        ? this.sendOTRProtobufMessage(sendingClientId, payload, {...options, assetData: cipherText})
-        : this.sendOTRMessage(sendingClientId, payload, {...options, assetData: cipherText});
+    const send = async (payload: OTRRecipients<Uint8Array>) => {
+      const result = options.sendAsProtobuf
+        ? await this.sendOTRProtobufMessage(sendingClientId, payload, {...options, assetData: cipherText})
+        : await this.sendOTRMessage(sendingClientId, payload, {...options, assetData: cipherText});
+      return unknowns ? {...result, deleted: {...result.deleted, ...unknowns}} : result;
     };
+
     try {
       return await send(encryptedPayload);
     } catch (error) {
@@ -139,23 +132,15 @@ export class MessageService {
       onClientMismatch?: (mismatch: MessageSendingStatus) => void | boolean | Promise<boolean>;
     },
   ): Promise<MessageSendingStatus & {canceled?: boolean}> {
-    const send = (payload: QualifiedOTRRecipients) => {
-      return this.sendFederatedOtrMessage(sendingClientId, payload, options);
-    };
     const {payloads: encryptedPayload, unknowns: unknows} = await this.proteusService.encryptQualified(
       plainText,
       recipients,
     );
 
-    if (unknows) {
-      await options.onClientMismatch?.({
-        redundant: {},
-        missing: {},
-        deleted: unknows,
-        time: '',
-        failed_to_send: {},
-      });
-    }
+    const send = async (payload: QualifiedOTRRecipients) => {
+      const result = await this.sendFederatedOtrMessage(sendingClientId, payload, options);
+      return unknows ? {...result, deleted: {...result.deleted, ...unknows}} : result;
+    };
 
     try {
       return await send(encryptedPayload);
