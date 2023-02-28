@@ -140,7 +140,7 @@ const initSessions = async ({
       }
       if (!Array.isArray(data)) {
         const domainMissingWithPrekey = missingClientsWithPrekeys[userId.domain] ?? {};
-        domainMissingWithPrekey[userId.id] = domainMissingWithPrekey[userId.id] || {};
+        domainMissingWithPrekey[userId.id] = domainMissingWithPrekey[userId.id] ?? {};
         domainMissingWithPrekey[userId.id][clientId] = data[clientId];
         missingClientsWithPrekeys[userId.domain] = domainMissingWithPrekey;
         continue;
@@ -230,15 +230,20 @@ const createSessionsFromPreKeys = async ({
   return {sessions, unknowns};
 };
 
-type EncryptedPayloads<T> = Record<string, Record<string, T>>;
+type EncryptedPayloads<T> = Record<string, Record<string, Record<string, T>>>;
 /**
  * creates an encrypted payload that can be sent to backend from a bunch of sessionIds/encrypted payload
  */
 const buildEncryptedPayloads = <T>(payloads: Map<string, T>): EncryptedPayloads<T> => {
   return [...payloads].reduce((acc, [sessionId, payload]) => {
-    const {userId, clientId} = parseSessionId(sessionId);
-    acc[userId] = acc[userId] ?? {};
-    acc[userId][clientId] = payload;
+    const {userId, domain, clientId} = parseSessionId(sessionId);
+    if (!domain) {
+      throw new Error('Invalid session ID');
+    }
+    const domainPayloads = acc[domain] ?? {};
+    domainPayloads[userId] = domainPayloads[userId] ?? {};
+    domainPayloads[userId][clientId] = payload;
+    acc[domain] = domainPayloads;
     return acc;
   }, {} as EncryptedPayloads<T>);
 };

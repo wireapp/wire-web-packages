@@ -88,7 +88,7 @@ function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<{pay
 
 const buildMessageService = async () => {
   const apiClient = new APIClient();
-  const [proteusService] = await buildProteusService(true);
+  const [proteusService] = await buildProteusService();
   const messageService = new MessageService(apiClient, proteusService);
   jest.spyOn(proteusService, 'encrypt').mockImplementation(fakeEncrypt as any);
 

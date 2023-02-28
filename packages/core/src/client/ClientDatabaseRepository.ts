@@ -18,6 +18,7 @@
  */
 
 import {RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {CRUDEngine} from '@wireapp/store-engine';
 
@@ -36,7 +37,7 @@ export class ClientDatabaseRepository {
     LOCAL_IDENTITY: 'local_identity',
   };
 
-  constructor(private readonly storeEngine: CRUDEngine, private readonly useQualifiedIds: boolean) {}
+  constructor(private readonly storeEngine: CRUDEngine) {}
 
   public getLocalClient(): Promise<MetaClient> {
     return this.getClient(ClientDatabaseRepository.KEYS.LOCAL_IDENTITY);
@@ -54,10 +55,10 @@ export class ClientDatabaseRepository {
     return this.storeEngine.delete(ClientDatabaseRepository.STORES.CLIENTS, sessionId);
   }
 
-  public createClientList(userId: string, clientList: RegisteredClient[], domain?: string): Promise<MetaClient[]> {
+  public createClientList(userId: QualifiedId, clientList: RegisteredClient[]): Promise<MetaClient[]> {
     const createClientTasks: Promise<MetaClient>[] = [];
     for (const client of clientList) {
-      createClientTasks.push(this.createClient(userId, client, domain));
+      createClientTasks.push(this.createClient(userId, client));
     }
     return Promise.all(createClientTasks);
   }
@@ -82,37 +83,38 @@ export class ClientDatabaseRepository {
     return transformedClient;
   }
 
-  public async updateClient(userId: string, client: RegisteredClient, domain?: string): Promise<MetaClient> {
-    const transformedClient = this.transformClient(userId, client, false, domain);
+  public async updateClient(userId: QualifiedId, client: RegisteredClient): Promise<MetaClient> {
+    const transformedClient = this.transformClient(userId, client, false);
     await this.storeEngine.update(
       ClientDatabaseRepository.STORES.CLIENTS,
       constructSessionId({
         userId,
         clientId: client.id,
-        domain,
-        useQualifiedIds: this.useQualifiedIds,
       }),
       transformedClient,
     );
     return transformedClient;
   }
 
-  public async createClient(userId: string, client: RegisteredClient, domain?: string): Promise<MetaClient> {
-    const transformedClient = this.transformClient(userId, client, false, domain);
+  public async createClient(userId: QualifiedId, client: RegisteredClient): Promise<MetaClient> {
+    const transformedClient = this.transformClient(userId, client, false);
     await this.storeEngine.create(
       ClientDatabaseRepository.STORES.CLIENTS,
       constructSessionId({
         userId,
         clientId: client.id,
-        domain,
-        useQualifiedIds: this.useQualifiedIds,
       }),
       transformedClient,
     );
     return transformedClient;
   }
 
-  private transformClient(userId: string, client: RegisteredClient, verified: boolean, domain?: string): MetaClient {
+  private transformClient(
+    userId: QualifiedId,
+    client: RegisteredClient,
+    verified: boolean,
+    domain?: string,
+  ): MetaClient {
     return {
       ...client,
       domain,
@@ -121,8 +123,6 @@ export class ClientDatabaseRepository {
         primary_key: constructSessionId({
           userId,
           clientId: client.id,
-          domain,
-          useQualifiedIds: this.useQualifiedIds,
         }),
       },
     };
