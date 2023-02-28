@@ -21,13 +21,12 @@ import {AxiosRequestConfig} from 'axios';
 
 import {ConnectionLegalholdMissingConsentError} from './ConnectionError';
 
-import {BackendFeatures} from '../APIClient';
 import {Connection, ConnectionUpdate, UserConnectionList} from '../connection/';
 import {BackendError, BackendErrorLabel, HttpClient} from '../http/';
 import {QualifiedId} from '../user';
 
 export class ConnectionAPI {
-  constructor(private readonly client: HttpClient, private readonly backendFeatures: BackendFeatures) {}
+  constructor(private readonly client: HttpClient) {}
 
   public static readonly URL = {
     CONNECTIONS: '/connections',
@@ -142,7 +141,7 @@ export class ConnectionAPI {
    * @param updatedConnection: The updated connection
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/updateConnection
    */
-  public async putConnection(userId: string | QualifiedId, updatedConnection: ConnectionUpdate): Promise<Connection> {
+  public async putConnection(userId: QualifiedId, updatedConnection: ConnectionUpdate): Promise<Connection> {
     const url = `${ConnectionAPI.URL.CONNECTIONS}/${userId.domain}/${userId.id}`;
 
     const config: AxiosRequestConfig = {
