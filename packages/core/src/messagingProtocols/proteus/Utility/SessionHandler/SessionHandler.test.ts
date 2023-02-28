@@ -18,7 +18,7 @@
  */
 
 import type {UserClients} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
 import {APIClient} from '@wireapp/api-client';
 
@@ -26,7 +26,7 @@ import {constructSessionId, initSession, initSessions} from './SessionHandler';
 
 import {CryptoClient} from '../../ProteusService/CryptoClient';
 
-function generatePrekeys(userId: QualifiedId, clientIds: string[]) {
+function generatePrekeys(userId: QualifiedId, clientIds: string[]): UserPreKeyBundleMap {
   const clients = clientIds.reduce((prekeys, clientId, index) => {
     return {
       ...prekeys,
@@ -53,26 +53,14 @@ describe('SessionHandler', () => {
   describe('constructSessionId', () => {
     describe('constructs a session ID', () => {
       it('without a domain', () => {
-        const sessionId = constructSessionId({userId: 'user-id', clientId: 'client-id', useQualifiedIds: true});
+        const sessionId = constructSessionId({userId: {id: 'user-id', domain: ''}, clientId: 'client-id'});
         expect(sessionId).toBe('user-id@client-id');
       });
 
       it('with a domain', () => {
         const sessionId = constructSessionId({
-          userId: 'user-id',
+          userId: {id: 'user-id', domain: 'domain'},
           clientId: 'client-id',
-          domain: 'domain',
-          useQualifiedIds: true,
-        });
-        expect(sessionId).toBe('domain@user-id@client-id');
-      });
-
-      it('with a domain and useQualifiedIds', () => {
-        const sessionId = constructSessionId({
-          userId: 'user-id',
-          clientId: 'client-id',
-          domain: 'domain',
-          useQualifiedIds: true,
         });
         expect(sessionId).toBe('domain@user-id@client-id');
       });
@@ -81,16 +69,6 @@ describe('SessionHandler', () => {
         const sessionId = constructSessionId({
           userId: {id: 'user-id', domain: 'domain'},
           clientId: 'client-id',
-          useQualifiedIds: true,
-        });
-        expect(sessionId).toBe('domain@user-id@client-id');
-      });
-
-      it('with a qualified ID and useQualifiedIds', () => {
-        const sessionId = constructSessionId({
-          userId: {id: 'user-id', domain: 'domain'},
-          clientId: 'client-id',
-          useQualifiedIds: true,
         });
         expect(sessionId).toBe('domain@user-id@client-id');
       });
@@ -117,7 +95,6 @@ describe('SessionHandler', () => {
       const sessionId = constructSessionId({
         userId,
         clientId,
-        useQualifiedIds: true,
       });
       await initSession({userId, clientId}, {apiClient, cryptoClient});
 
@@ -134,7 +111,6 @@ describe('SessionHandler', () => {
       const sessionId = constructSessionId({
         userId,
         clientId,
-        useQualifiedIds: true,
       });
       await initSession({userId, clientId}, {apiClient, cryptoClient});
 
@@ -166,7 +142,7 @@ describe('SessionHandler', () => {
 
       const sessionFromPrekeySpy = jest.spyOn(cryptoClient, 'sessionFromPrekey');
       const {sessions} = await initSessions({
-        recipients: {...existingUserClients, ...missingUserClients},
+        recipients: {domain: {...existingUserClients, ...missingUserClients}},
         apiClient,
         cryptoClient,
       });
@@ -180,18 +156,18 @@ describe('SessionHandler', () => {
         'existing-user1': ['client1', 'deleteclient'],
       };
 
-      const allKeys = {domain: generatePrekeys({id: 'existing-user1', domain: ''}, ['client1'])} as any;
+      const allKeys = {domain: generatePrekeys({id: 'existing-user1', domain: 'domain'}, ['client1'])} as any;
       allKeys['domain']['existing-user1']['deleteclient'] = null;
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue(allKeys);
 
       const {sessions, unknowns} = await initSessions({
-        recipients: userClients,
+        recipients: {domain: userClients},
         apiClient,
         cryptoClient,
       });
 
       expect(sessions).toEqual(['domain@existing-user1@client1']);
-      expect(unknowns).toEqual({'existing-user1': ['deleteclient']});
+      expect(unknowns).toEqual({domain: {'existing-user1': ['deleteclient']}});
     });
   });
 });
