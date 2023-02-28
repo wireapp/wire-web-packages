@@ -97,137 +97,6 @@ const buildMessageService = async () => {
 };
 
 describe('MessageService', () => {
-  describe('sendFederatedMessage', () => {
-    it('sends a message and forwards backend response', async () => {
-      const [messageService, {apiClient}] = await buildMessageService();
-
-      jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
-      const recipients = generateQualifiedRecipients([user1, user2]);
-
-      const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
-        conversationId: {id: 'convid', domain: ''},
-      });
-      expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalled();
-      expect(result).toEqual(baseMessageSendingStatus);
-    });
-
-    describe('client mismatch', () => {
-      it('handles client mismatch internally if no onClientMismatch is given', async () => {
-        const [messageService, {apiClient}] = await buildMessageService();
-
-        let spyCounter = 0;
-        const clientMismatch = {
-          ...baseMessageSendingStatus,
-          deleted: {[user1.domain]: {[user1.id]: [user1.clients[0]]}},
-          missing: {'2.wire.test': {[user2.id]: ['client22']}},
-        };
-        jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockImplementation(() => {
-          spyCounter++;
-          if (spyCounter === 1) {
-            const error = new Error();
-            (error as any).response = {
-              status: StatusCodes.PRECONDITION_FAILED,
-              data: clientMismatch,
-            };
-            return Promise.reject(error);
-          }
-          return Promise.resolve(baseMessageSendingStatus);
-        });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
-
-        const recipients = generateQualifiedRecipients([user1, user2]);
-
-        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
-          reportMissing: true,
-          conversationId: {id: 'convid', domain: ''},
-        });
-        expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalledTimes(2);
-      });
-
-      it('continues message sending if onClientMismatch returns true', async () => {
-        const [messageService, {apiClient}] = await buildMessageService();
-
-        const onClientMismatch = jest.fn().mockReturnValue(true);
-        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
-        let spyCounter = 0;
-        jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockImplementation(() => {
-          spyCounter++;
-          if (spyCounter === 1) {
-            const error = new Error();
-            (error as any).response = {
-              status: StatusCodes.PRECONDITION_FAILED,
-              data: clientMismatch,
-            };
-            return Promise.reject(error);
-          }
-          return Promise.resolve(baseMessageSendingStatus);
-        });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
-
-        const recipients = generateQualifiedRecipients([user1, user2]);
-
-        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
-          reportMissing: true,
-          onClientMismatch,
-          conversationId: {id: 'convid', domain: ''},
-        });
-        expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalledTimes(2);
-        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
-      });
-
-      it('warns the consumer if they try to send a message to a deleted client', async () => {
-        const [messageService, {apiClient, proteusService}] = await buildMessageService();
-
-        const onClientMismatch = jest.fn().mockReturnValue(true);
-        const recipients = generateQualifiedRecipients([user1, user2]);
-        const unknowns = {
-          [user1.domain]: {
-            [user1.id]: [user1.clients[0]],
-          },
-        };
-        jest.spyOn(proteusService, 'encrypt').mockResolvedValue({
-          payloads: {},
-          unknowns,
-        });
-        jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
-
-        const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
-          reportMissing: true,
-          onClientMismatch,
-          conversationId: {id: 'convid', domain: ''},
-        });
-
-        expect(result.deleted).toEqual(unknowns);
-      });
-
-      it('stops message sending if onClientMismatch returns false', async () => {
-        const [messageService, {apiClient}] = await buildMessageService();
-
-        const onClientMismatch = jest.fn().mockReturnValue(false);
-        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
-        jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockImplementation(() => {
-          const error = new Error();
-          (error as any).response = {
-            status: StatusCodes.PRECONDITION_FAILED,
-            data: clientMismatch,
-          };
-          return Promise.reject(error);
-        });
-        jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
-
-        const recipients = generateQualifiedRecipients([user1, user2]);
-
-        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
-          reportMissing: true,
-          onClientMismatch,
-          conversationId: {id: 'convid', domain: ''},
-        });
-        expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalledTimes(1);
-        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
-      });
-    });
-  });
-
   describe('sendMessage', () => {
     const generateUsers = (userCount: number, clientsPerUser: number): TestUser[] => {
       return Array.from(Array(userCount)).map<TestUser>((_, i) => ({
@@ -248,6 +117,19 @@ describe('MessageService', () => {
       return GenericMessage.encode(customTextMessage).finish();
     };
 
+    it('sends a message and forwards backend response', async () => {
+      const [messageService, {apiClient}] = await buildMessageService();
+
+      jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockResolvedValue(baseMessageSendingStatus);
+      const recipients = generateQualifiedRecipients([user1, user2]);
+
+      const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
+        conversationId: {id: 'convid', domain: 'domain'},
+      });
+      expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalled();
+      expect(result).toEqual(baseMessageSendingStatus);
+    });
+
     it('should send regular to conversation', async () => {
       const [messageService, {apiClient}] = await buildMessageService();
 
@@ -258,10 +140,9 @@ describe('MessageService', () => {
         conversationId,
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
         conversationId.id,
+        conversationId.domain,
         expect.any(Object),
-        false,
       );
     });
 
@@ -274,41 +155,7 @@ describe('MessageService', () => {
         .mockReturnValue(Promise.resolve({} as ClientMismatch));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
-      expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, expect.any(Object), false);
-    });
-
-    it('should broadcast protobuf message if no conversationId is given', async () => {
-      const [messageService, {apiClient}] = await buildMessageService();
-
-      const message = 'Lorem ipsum dolor sit amet';
-      jest
-        .spyOn(apiClient.api.broadcast, 'postBroadcastProtobufMessage')
-        .mockReturnValue(Promise.resolve({} as ClientMismatch));
-
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
-
-      expect(apiClient.api.broadcast.postBroadcastProtobufMessage).toHaveBeenCalledWith(
-        clientId,
-        expect.any(Object),
-        false,
-      );
-    });
-
-    it('should not send as external if payload small', async () => {
-      const [messageService, {apiClient}] = await buildMessageService();
-
-      const message = 'Lorem ipsum dolor sit amet';
-      jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockReturnValue(Promise.resolve({} as ClientMismatch));
-
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
-        conversationId,
-      });
-      expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
-        conversationId.id,
-        expect.objectContaining({data: undefined}),
-        false,
-      );
+      expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, expect.any(Object));
     });
 
     describe('client mismatch', () => {
@@ -325,8 +172,8 @@ describe('MessageService', () => {
         let spyCounter = 0;
         const clientMismatch = {
           ...baseClientMismatch,
-          deleted: {[user1.id]: [user1.clients[0]]},
-          missing: {[user2.id]: ['client22']},
+          deleted: {[user1.domain]: {[user1.id]: [user1.clients[0]]}},
+          missing: {[user2.domain]: {[user2.id]: ['client22']}},
         };
         jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockImplementation(() => {
           spyCounter++;
@@ -355,7 +202,7 @@ describe('MessageService', () => {
         const [messageService, {apiClient}] = await buildMessageService();
 
         const onClientMismatch = jest.fn().mockReturnValue(Promise.resolve(true));
-        const clientMismatch = {...baseClientMismatch, missing: {[user2.id]: ['client22']}};
+        const clientMismatch = {...baseClientMismatch, missing: {[user2.domain]: {[user2.id]: ['client22']}}};
         let spyCounter = 0;
         jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockImplementation(() => {
           spyCounter++;
@@ -398,6 +245,122 @@ describe('MessageService', () => {
         jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
 
         const recipients = generateRecipients([user1, user2]);
+
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
+        expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledTimes(1);
+        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
+      });
+    });
+
+    describe('client mismatch', () => {
+      it('handles client mismatch internally if no onClientMismatch is given', async () => {
+        const [messageService, {apiClient}] = await buildMessageService();
+
+        let spyCounter = 0;
+        const clientMismatch = {
+          ...baseMessageSendingStatus,
+          deleted: {[user1.domain]: {[user1.id]: [user1.clients[0]]}},
+          missing: {'2.wire.test': {[user2.id]: ['client22']}},
+        };
+        jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockImplementation(() => {
+          spyCounter++;
+          if (spyCounter === 1) {
+            const error = new Error();
+            (error as any).response = {
+              status: StatusCodes.PRECONDITION_FAILED,
+              data: clientMismatch,
+            };
+            return Promise.reject(error);
+          }
+          return Promise.resolve(baseMessageSendingStatus);
+        });
+        jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
+
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          conversationId: {id: 'convid', domain: ''},
+        });
+        expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledTimes(2);
+      });
+
+      it('continues message sending if onClientMismatch returns true', async () => {
+        const [messageService, {apiClient}] = await buildMessageService();
+
+        const onClientMismatch = jest.fn().mockReturnValue(true);
+        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
+        let spyCounter = 0;
+        jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockImplementation(() => {
+          spyCounter++;
+          if (spyCounter === 1) {
+            const error = new Error();
+            (error as any).response = {
+              status: StatusCodes.PRECONDITION_FAILED,
+              data: clientMismatch,
+            };
+            return Promise.reject(error);
+          }
+          return Promise.resolve(baseMessageSendingStatus);
+        });
+        jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
+
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
+        expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledTimes(2);
+        expect(onClientMismatch).toHaveBeenCalledWith(clientMismatch);
+      });
+
+      it('warns the consumer if they try to send a message to a deleted client', async () => {
+        const [messageService, {apiClient, proteusService}] = await buildMessageService();
+
+        const onClientMismatch = jest.fn().mockReturnValue(true);
+        const recipients = generateQualifiedRecipients([user1, user2]);
+        const unknowns = {
+          [user1.domain]: {
+            [user1.id]: [user1.clients[0]],
+          },
+        };
+        jest.spyOn(proteusService, 'encrypt').mockResolvedValue({
+          payloads: {},
+          unknowns,
+        });
+        jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockResolvedValue(baseMessageSendingStatus);
+
+        const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
+          reportMissing: true,
+          onClientMismatch,
+          conversationId: {id: 'convid', domain: ''},
+        });
+
+        expect(result.deleted).toEqual(unknowns);
+      });
+
+      it('stops message sending if onClientMismatch returns false', async () => {
+        const [messageService, {apiClient}] = await buildMessageService();
+
+        const onClientMismatch = jest.fn().mockReturnValue(false);
+        const clientMismatch = {...baseMessageSendingStatus, missing: {'2.wire.test': {[user2.id]: ['client22']}}};
+        jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockImplementation(() => {
+          const error = new Error();
+          (error as any).response = {
+            status: StatusCodes.PRECONDITION_FAILED,
+            data: clientMismatch,
+          };
+          return Promise.reject(error);
+        });
+        jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockReturnValue(Promise.resolve({}));
+
+        const recipients = generateQualifiedRecipients([user1, user2]);
 
         await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,

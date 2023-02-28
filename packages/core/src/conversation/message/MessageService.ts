@@ -146,12 +146,12 @@ export class MessageService {
     }
 
     if (!options.conversationId) {
-      return this.apiClient.api.broadcast.postBroadcastFederatedMessage(sendingClientId, protoMessage);
+      return this.apiClient.api.broadcast.postBroadcastMessage(sendingClientId, protoMessage);
     }
 
     const {id, domain} = options.conversationId;
 
-    return this.apiClient.api.conversation.postOTRMessageV2(id, domain, protoMessage);
+    return this.apiClient.api.conversation.postOTRMessage(id, domain, protoMessage);
   }
 
   private isClientMismatchError(error: any): error is ClientMismatchError {

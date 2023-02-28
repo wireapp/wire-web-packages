@@ -102,7 +102,7 @@ const initSession = async (
  * @param {userClientMap} map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
  */
 const createSessions = async ({userClientMap, domain, apiClient, cryptoClient}: CreateSessionsProps) => {
-  const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: userClientMap});
+  const prekeyBundleMap = await apiClient.api.user.postMultiPreKeyBundles({[domain]: userClientMap});
 
   const sessions: string[] = [];
   let unknowns: UserClients = {};

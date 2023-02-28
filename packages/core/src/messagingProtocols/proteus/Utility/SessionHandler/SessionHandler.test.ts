@@ -111,7 +111,7 @@ describe('SessionHandler', () => {
       const clientId = 'client1';
       jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(false);
       jest
-        .spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles')
+        .spyOn(apiClient.api.user, 'postMultiPreKeyBundles')
         .mockResolvedValue({domain: generatePrekeys(userId, [clientId])});
 
       const sessionId = constructSessionId({
@@ -128,7 +128,7 @@ describe('SessionHandler', () => {
       const userId = {id: 'user1', domain: 'domain'};
       const clientId = 'client1';
       jest
-        .spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles')
+        .spyOn(apiClient.api.user, 'postMultiPreKeyBundles')
         .mockResolvedValue({domain: generatePrekeys(userId, [clientId])});
 
       const sessionId = constructSessionId({
@@ -154,10 +154,11 @@ describe('SessionHandler', () => {
         'missing-user2': ['client1', 'client2'],
       };
 
-      jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockResolvedValue({});
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
-        ...generatePrekeys({id: 'missing-user1', domain: ''}, ['client1']),
-        ...generatePrekeys({id: 'missing-user2', domain: ''}, ['client1', 'client2']),
+        domain: {
+          ...generatePrekeys({id: 'missing-user1', domain: ''}, ['client1']),
+          ...generatePrekeys({id: 'missing-user2', domain: ''}, ['client1', 'client2']),
+        },
       });
       jest
         .spyOn(cryptoClient, 'sessionExists')
@@ -179,8 +180,8 @@ describe('SessionHandler', () => {
         'existing-user1': ['client1', 'deleteclient'],
       };
 
-      const allKeys = generatePrekeys({id: 'existing-user1', domain: ''}, ['client1']) as any;
-      allKeys['existing-user1']['deleteclient'] = null;
+      const allKeys = {domain: generatePrekeys({id: 'existing-user1', domain: ''}, ['client1'])} as any;
+      allKeys['domain']['existing-user1']['deleteclient'] = null;
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue(allKeys);
 
       const {sessions, unknowns} = await initSessions({
@@ -189,7 +190,7 @@ describe('SessionHandler', () => {
         cryptoClient,
       });
 
-      expect(sessions).toEqual(['existing-user1@client1']);
+      expect(sessions).toEqual(['domain@existing-user1@client1']);
       expect(unknowns).toEqual({'existing-user1': ['deleteclient']});
     });
   });

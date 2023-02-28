@@ -32,7 +32,6 @@ import {
   Member,
   MessageSendingStatus,
   NewConversation,
-  NewOTRMessage,
   QualifiedConversationIds,
   RemoteConversations,
 } from '..';
@@ -719,55 +718,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Post an encrypted message to a conversation.
-   * @param sendingClientId The sender's client ID
-   * @param conversationId The conversation ID
-   * @param messageData The message content
-   * @param ignoreMissing Whether to report missing clients or not:
-   * `false`: Report about all missing clients
-   * `true`: Ignore all missing clients and force sending.
-   * Array: User IDs specifying which user IDs are allowed to have
-   * missing clients
-   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
-   */
-  public async postOTRMessage(
-    sendingClientId: string,
-    conversationId: string,
-    messageData?: NewOTRMessage<string>,
-    ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
-
-    messageData ||= {
-      recipients: {},
-      sender: sendingClientId,
-    };
-
-    const config: AxiosRequestConfig = {
-      data: messageData,
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
-    };
-
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      delete messageData.report_missing;
-    } else if (typeof messageData.report_missing === 'undefined' || !messageData.report_missing.length) {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.data};
-    }
-
-    const response = await this.client.sendJSON<ClientMismatch>(config, true);
-    return response.data;
-  }
-
-  /**
    * This endpoint ensures that the list of clients is correct and only sends the message if the list is correct.
    * To override this, the endpoint accepts `client_mismatch_strategy` in the body. It can have these values:
    *
@@ -789,7 +739,7 @@ export class ConversationAPI {
    *
    * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_conversations__cnv_domain___cnv__proteus_messages
    */
-  public async postOTRMessageV2(
+  public async postOTRMessage(
     conversationId: string,
     domain: string,
     messageData: ProtobufOTR.QualifiedNewOtrMessage,

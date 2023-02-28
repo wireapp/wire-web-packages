@@ -129,7 +129,7 @@ describe('ProteusService', () => {
       const userId = {id: 'user1', domain: 'domain.com'};
       const clientId = 'client1';
 
-      jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockResolvedValue({
+      jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
         [userId.domain]: {
           [userId.id]: {
             [clientId]: {
@@ -153,7 +153,7 @@ describe('ProteusService', () => {
       const [proteusService, {apiClient, cryptoClient}] = await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
-      const getPrekeysSpy = jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles');
+      const getPrekeysSpy = jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles');
       jest.spyOn(cryptoClient, 'getRemoteFingerprint').mockResolvedValue(expectedFingerprint);
       const saveSessionSpy = jest.spyOn(cryptoClient, 'sessionFromPrekey').mockResolvedValue(undefined);
       jest.spyOn(cryptoClient, 'saveSession').mockResolvedValue(undefined);
@@ -335,7 +335,7 @@ describe('ProteusService', () => {
         [secondUser.sessions.first, encryptedMessageBuffer],
       ]);
 
-      jest.spyOn(services.apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockResolvedValue({
+      jest.spyOn(services.apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
         [domain]: {
           [firstUser.id]: {
             [firstUser.clients.first]: null,
