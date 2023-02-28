@@ -19,7 +19,7 @@
 
 import {chunk} from '@wireapp/commons/lib/util/ArrayUtil';
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
-import axios, {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
 import {
   ClientMismatch,
@@ -838,18 +838,6 @@ export class ConversationAPI {
 
     const response = await this.client.sendProtocolBuffer<PostMlsMessageResponse>(config, true);
     return response.data;
-  }
-
-  public async postForClients(clientId: string, conversationId: string): Promise<void> {
-    try {
-      await this.postOTRMessage(clientId, conversationId);
-      throw new Error(`Expected backend to throw error.`);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        return error.response.data;
-      }
-      throw error;
-    }
   }
 
   /**
