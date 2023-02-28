@@ -48,6 +48,10 @@ import {
   VerifyDelete,
 } from '../user/';
 
+type UserPrekeysResponse = {
+  qualified_user_client_prekeys: QualifiedUserPreKeyBundleMap;
+  failed_to_list?: QualifiedId[];
+};
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
   public static readonly DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE = 128;
@@ -537,14 +541,14 @@ export class UserAPI {
 
   private async postMultiQualifiedPreKeyBundlesChunk(
     userClientMap: QualifiedUserClients,
-  ): Promise<QualifiedUserPreKeyBundleMap> {
+  ): Promise<UserPrekeysResponse> {
     const config: AxiosRequestConfig = {
       data: userClientMap,
       method: 'post',
       url: `${UserAPI.URL.USERS}/${UserAPI.URL.LIST_PREKEYS}`,
     };
 
-    const response = await this.client.sendJSON<QualifiedUserPreKeyBundleMap>(config, true);
+    const response = await this.client.sendJSON<UserPrekeysResponse>(config, true);
     return response.data;
   }
 
@@ -619,7 +623,7 @@ export class UserAPI {
   public async postQualifiedMultiPreKeyBundles(
     userClientMap: QualifiedUserClients,
     limit: number = UserAPI.DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE,
-  ): Promise<QualifiedUserPreKeyBundleMap> {
+  ): Promise<UserPrekeysResponse> {
     const flattenUsers = Object.entries(userClientMap).reduce((users, [domain, domainUsersClients]) => {
       const domainUsers = Object.entries(domainUsersClients).map(([userId, clients]) => ({
         userId: {id: userId, domain},
@@ -644,12 +648,21 @@ export class UserAPI {
 
     const userPreKeyBundleMapChunks = await Promise.all(chunksPromises);
 
-    return userPreKeyBundleMapChunks.reduce((userPreKeyBundleMap, userPreKeyBundleMapChunk) => {
-      Object.entries(userPreKeyBundleMapChunk).forEach(([domain, userClientMap]) => {
-        userPreKeyBundleMap[domain] = {...userPreKeyBundleMap[domain], ...userClientMap};
-      });
-      return userPreKeyBundleMap;
-    }, {});
+    return userPreKeyBundleMapChunks.reduce(
+      (userPreKeyBundleMap, {failed_to_list, qualified_user_client_prekeys}) => {
+        Object.entries(qualified_user_client_prekeys).forEach(([domain, userClientMap]) => {
+          userPreKeyBundleMap.qualified_user_client_prekeys[domain] = {
+            ...userPreKeyBundleMap.qualified_user_client_prekeys[domain],
+            ...userClientMap,
+          };
+          if (failed_to_list) {
+            userPreKeyBundleMap.failed_to_list = (userPreKeyBundleMap.failed_to_list || []).concat(failed_to_list);
+          }
+        });
+        return userPreKeyBundleMap;
+      },
+      {qualified_user_client_prekeys: {}},
+    );
   }
 
   /**

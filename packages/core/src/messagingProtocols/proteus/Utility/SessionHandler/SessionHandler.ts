@@ -74,64 +74,9 @@ interface CreateSessionsBase {
   logger?: Logger;
 }
 
-interface CreateLegacySessionsProps extends CreateSessionsBase {
-  userClients: UserClients;
-}
-
-const createLegacySessions = async ({
-  userClients,
-  apiClient,
-  cryptoClient,
-}: CreateLegacySessionsProps): Promise<InitSessionsResult> => {
-  const preKeyBundleMap = await apiClient.api.user.postMultiPreKeyBundles(userClients);
-  const sessions = await createSessionsFromPreKeys({
-    preKeyBundleMap,
-    useQualifiedIds: false,
-    cryptoClient,
-  });
-
-  return sessions;
-};
-
-interface CreateQualifiedSessionsProps extends CreateSessionsBase {
-  userClientMap: UserClients;
-  domain: string;
-}
-
-/**
- * Create sessions for the qualified clients.
- * @param {userClientMap} map of domain to (map of user IDs to client IDs)
- */
-const createQualifiedSessions = async ({
-  userClientMap,
-  domain,
-  apiClient,
-  cryptoClient,
-}: CreateQualifiedSessionsProps): Promise<InitSessionsResult> => {
-  const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: userClientMap});
-
-  const sessions: string[] = [];
-  let unknowns: UserClients = {};
-
-  for (const domain in prekeyBundleMap) {
-    const domainUsers = prekeyBundleMap[domain];
-
-    const {sessions: createdSessions, unknowns: domainUnknowns} = await createSessionsFromPreKeys({
-      preKeyBundleMap: domainUsers,
-      domain,
-      useQualifiedIds: true,
-      cryptoClient,
-    });
-    sessions.push(...createdSessions);
-    unknowns = {...unknowns, ...domainUnknowns};
-  }
-
-  return {sessions, unknowns};
-};
-
 interface CreateSessionsProps extends CreateSessionsBase {
   userClientMap: UserClients;
-  domain?: string;
+  domain: string;
 }
 
 /**
@@ -154,17 +99,28 @@ const initSession = async (
 
 /**
  * Create sessions for legacy/qualified clients (umberella function).
- * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
  * @param {userClientMap} map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
  */
-const createSessions = async ({userClientMap, domain, apiClient, cryptoClient, logger}: CreateSessionsProps) => {
-  return domain
-    ? createQualifiedSessions({userClientMap, domain, apiClient, cryptoClient, logger})
-    : createLegacySessions({
-        userClients: userClientMap,
-        apiClient,
-        cryptoClient,
-      });
+const createSessions = async ({userClientMap, domain, apiClient, cryptoClient}: CreateSessionsProps) => {
+  const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: userClientMap});
+
+  const sessions: string[] = [];
+  let unknowns: UserClients = {};
+
+  for (const domain in prekeyBundleMap) {
+    const domainUsers = prekeyBundleMap[domain];
+
+    const {sessions: createdSessions, unknowns: domainUnknowns} = await createSessionsFromPreKeys({
+      preKeyBundleMap: domainUsers,
+      domain,
+      useQualifiedIds: true,
+      cryptoClient,
+    });
+    sessions.push(...createdSessions);
+    unknowns = {...unknowns, ...domainUnknowns};
+  }
+
+  return {sessions, unknowns};
 };
 
 interface GetSessionsAndClientsFromRecipientsProps {

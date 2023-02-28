@@ -382,7 +382,7 @@ export class Account extends TypedEventEmitter<Events> {
     const teamService = new TeamService(this.apiClient);
 
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
-    const userService = new UserService(this.apiClient, broadcastService, connectionService);
+    const userService = new UserService(this.apiClient);
 
     this.service = {
       mls: mlsService,

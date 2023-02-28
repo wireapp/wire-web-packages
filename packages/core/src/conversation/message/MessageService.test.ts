@@ -20,11 +20,9 @@
 import {
   ClientMismatch,
   MessageSendingStatus,
-  OTRClientMap,
   OTRRecipients,
   QualifiedOTRRecipients,
   QualifiedUserClients,
-  UserClients,
 } from '@wireapp/api-client/lib/conversation';
 import {StatusCodes} from 'http-status-codes';
 import {genV4} from 'uuidjs';
@@ -66,17 +64,16 @@ function generateQualifiedRecipients(users: TestUser[]): QualifiedUserClients {
   return payload;
 }
 
-function generateRecipients(users: TestUser[]): UserClients {
-  return users.reduce((acc, {id, clients}) => {
-    acc[id] = clients;
+function generateRecipients(users: TestUser[]): QualifiedUserClients {
+  return users.reduce<QualifiedUserClients>((acc, {id, domain, clients}) => {
+    const domainUsers = acc[domain] || {};
+    domainUsers[id] = clients;
+    acc[domain] = domainUsers;
     return acc;
-  }, {} as UserClients);
+  }, {});
 }
 
-function fakeEncryptQualified(
-  _: unknown,
-  recipients: QualifiedUserClients,
-): Promise<{payloads: QualifiedOTRRecipients}> {
+function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<{payloads: QualifiedOTRRecipients}> {
   const encryptedPayload = Object.entries(recipients).reduce((acc, [domain, users]) => {
     acc[domain] = Object.entries(users).reduce((userClients, [userId, clients]) => {
       userClients[userId] = clients.reduce((payloads, client) => {
@@ -90,27 +87,10 @@ function fakeEncryptQualified(
   return Promise.resolve({payloads: encryptedPayload});
 }
 
-function fakeEncrypt(_: unknown, recipients: UserClients): Promise<{payloads: OTRRecipients<Uint8Array>}> {
-  const encryptedPayload = Object.entries(recipients).reduce<OTRRecipients<Uint8Array>>(
-    (userClients, [userId, clients]) => {
-      userClients[userId] ||= clients.reduce<OTRClientMap<Uint8Array>>((acc, clientId) => {
-        acc[clientId] = new Uint8Array();
-        return acc;
-      }, {});
-
-      return userClients;
-    },
-    {},
-  );
-
-  return Promise.resolve({payloads: encryptedPayload});
-}
-
 const buildMessageService = async () => {
   const apiClient = new APIClient();
   const [proteusService] = await buildProteusService(true);
   const messageService = new MessageService(apiClient, proteusService);
-  jest.spyOn(proteusService, 'encryptQualified').mockImplementation(fakeEncryptQualified as any);
   jest.spyOn(proteusService, 'encrypt').mockImplementation(fakeEncrypt as any);
 
   return [messageService, {apiClient, proteusService}] as const;
@@ -124,7 +104,7 @@ describe('MessageService', () => {
       jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
       const recipients = generateQualifiedRecipients([user1, user2]);
 
-      const result = await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+      const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
         conversationId: {id: 'convid', domain: ''},
       });
       expect(apiClient.api.conversation.postOTRMessageV2).toHaveBeenCalled();
@@ -157,7 +137,7 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,
           conversationId: {id: 'convid', domain: ''},
         });
@@ -186,7 +166,7 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,
           onClientMismatch,
           conversationId: {id: 'convid', domain: ''},
@@ -205,13 +185,13 @@ describe('MessageService', () => {
             [user1.id]: [user1.clients[0]],
           },
         };
-        jest.spyOn(proteusService, 'encryptQualified').mockResolvedValue({
+        jest.spyOn(proteusService, 'encrypt').mockResolvedValue({
           payloads: {},
           unknowns,
         });
         jest.spyOn(apiClient.api.conversation, 'postOTRMessageV2').mockResolvedValue(baseMessageSendingStatus);
 
-        const result = await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        const result = await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,
           onClientMismatch,
           conversationId: {id: 'convid', domain: ''},
@@ -237,7 +217,7 @@ describe('MessageService', () => {
 
         const recipients = generateQualifiedRecipients([user1, user2]);
 
-        await messageService.sendFederatedMessage('senderclientid', recipients, new Uint8Array(), {
+        await messageService.sendMessage('senderclientid', recipients, new Uint8Array(), {
           reportMissing: true,
           onClientMismatch,
           conversationId: {id: 'convid', domain: ''},
@@ -285,26 +265,6 @@ describe('MessageService', () => {
       );
     });
 
-    it('should send protobuf message to conversation', async () => {
-      const [messageService, {apiClient}] = await buildMessageService();
-
-      const message = 'Lorem ipsum dolor sit amet';
-      jest
-        .spyOn(apiClient.api.conversation, 'postOTRProtobufMessage')
-        .mockReturnValue(Promise.resolve({} as ClientMismatch));
-
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
-        conversationId,
-        sendAsProtobuf: true,
-      });
-      expect(apiClient.api.conversation.postOTRProtobufMessage).toHaveBeenCalledWith(
-        clientId,
-        conversationId.id,
-        expect.any(Object),
-        false,
-      );
-    });
-
     it('should broadcast regular message if no conversationId is given', async () => {
       const [messageService, {apiClient}] = await buildMessageService();
 
@@ -325,9 +285,7 @@ describe('MessageService', () => {
         .spyOn(apiClient.api.broadcast, 'postBroadcastProtobufMessage')
         .mockReturnValue(Promise.resolve({} as ClientMismatch));
 
-      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
-        sendAsProtobuf: true,
-      });
+      await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
 
       expect(apiClient.api.broadcast.postBroadcastProtobufMessage).toHaveBeenCalledWith(
         clientId,
@@ -349,29 +307,6 @@ describe('MessageService', () => {
         clientId,
         conversationId.id,
         expect.objectContaining({data: undefined}),
-        false,
-      );
-    });
-
-    it('should send as external if payload is big', async () => {
-      const [messageService, {apiClient}] = await buildMessageService();
-
-      const longMessage =
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem';
-      jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockReturnValue(Promise.resolve({} as ClientMismatch));
-
-      await messageService.sendMessage(
-        clientId,
-        generateRecipients(generateUsers(30, 10)),
-        createMessage(longMessage),
-        {
-          conversationId,
-        },
-      );
-      expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalledWith(
-        clientId,
-        conversationId.id,
-        expect.objectContaining({data: expect.any(String)}),
         false,
       );
     });

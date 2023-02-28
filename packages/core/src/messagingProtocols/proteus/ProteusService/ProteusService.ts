@@ -176,7 +176,6 @@ export class ProteusService {
 
   public async sendMessage({
     userIds,
-    sendAsProtobuf,
     conversationId,
     nativePush,
     targetMode,
@@ -188,27 +187,19 @@ export class ProteusService {
       sendingClientId: this.apiClient.validatedClientId,
       conversationId,
       genericMessage: payload,
-      useQualifiedIds: this.config.useQualifiedIds,
       options: {
         userIds,
-        sendAsProtobuf,
         nativePush,
         targetMode,
         onClientMismatch,
       },
     });
 
-    const {federated, sendingClientId, recipients, plainText, options} = messageParams;
-    const response = federated
-      ? await this.messageService.sendFederatedMessage(sendingClientId, recipients, plainText, {
-          ...options,
-          onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
-        })
-      : await this.messageService.sendMessage(sendingClientId, recipients, plainText, {
-          ...options,
-          sendAsProtobuf,
-          onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
-        });
+    const {sendingClientId, recipients, plainText, options} = messageParams;
+    const response = await this.messageService.sendMessage(sendingClientId, recipients, plainText, {
+      ...options,
+      onClientMismatch: mismatch => onClientMismatch?.(mismatch, false),
+    });
 
     if (!response.canceled) {
       if (!isClearFromMismatch(response)) {
@@ -256,10 +247,10 @@ export class ProteusService {
     }
   }
 
-  public async encrypt(
+  private async encryptForDomain(
     plainText: Uint8Array,
     recipients: UserPreKeyBundleMap | UserClients,
-    domain: string = '',
+    domain: string,
   ): Promise<EncryptionResult> {
     const {sessions, unknowns} = await initSessions({
       recipients,
@@ -283,7 +274,7 @@ export class ProteusService {
     });
   }
 
-  public async encryptQualified(
+  public async encrypt(
     plainText: Uint8Array,
     preKeyBundles: QualifiedUserPreKeyBundleMap | QualifiedUserClients,
   ): Promise<{payloads: QualifiedOTRRecipients; unknowns?: QualifiedUserClients}> {
@@ -291,7 +282,7 @@ export class ProteusService {
     const missingRecipients: QualifiedUserClients = {};
 
     for (const [domain, preKeyBundleMap] of Object.entries(preKeyBundles)) {
-      const {unknowns, payloads} = await this.encrypt(plainText, preKeyBundleMap, domain);
+      const {unknowns, payloads} = await this.encryptForDomain(plainText, preKeyBundleMap, domain);
       qualifiedOTRRecipients[domain] = payloads;
       if (unknowns) {
         missingRecipients[domain] = unknowns;
