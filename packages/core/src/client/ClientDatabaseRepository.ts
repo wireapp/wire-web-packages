@@ -109,15 +109,10 @@ export class ClientDatabaseRepository {
     return transformedClient;
   }
 
-  private transformClient(
-    userId: QualifiedId,
-    client: RegisteredClient,
-    verified: boolean,
-    domain?: string,
-  ): MetaClient {
+  private transformClient(userId: QualifiedId, client: RegisteredClient, verified: boolean): MetaClient {
     return {
       ...client,
-      domain,
+      domain: userId.domain,
       meta: {
         is_verified: verified,
         primary_key: constructSessionId({
