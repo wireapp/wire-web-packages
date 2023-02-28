@@ -143,12 +143,8 @@ export class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClient
    */
-  public async getClient(userId: string | QualifiedId, clientId: string): Promise<PublicClient> {
-    const strUserId = typeof userId === 'string' ? userId : userId.id;
-    const url =
-      this.backendFeatures.federationEndpoints && typeof userId !== 'string'
-        ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`
-        : `${UserAPI.URL.USERS}/${strUserId}/${UserAPI.URL.CLIENTS}/${clientId}`;
+  public async getClient(userId: QualifiedId, clientId: string): Promise<PublicClient> {
+    const url = `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -165,26 +161,7 @@ export class UserAPI {
    * @param clientId The client ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getPrekey
    */
-  public async getClientPreKey(userId: string | QualifiedId, clientId: string): Promise<ClientPreKey> {
-    if (this.backendFeatures.federationEndpoints && typeof userId !== 'string') {
-      return this.getClientPreKey_v2(userId, clientId);
-    }
-    const strUserId = typeof userId === 'string' ? userId : userId.id;
-    return this.getClientPreKey_v1(strUserId, clientId);
-  }
-
-  private async getClientPreKey_v1(userId: string, clientId: string): Promise<ClientPreKey> {
-    const url = `${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url,
-    };
-
-    const response = await this.client.sendJSON<ClientPreKey>(config);
-    return response.data;
-  }
-
-  private async getClientPreKey_v2(userId: QualifiedId, clientId: string): Promise<ClientPreKey> {
+  public async getClientPreKey(userId: QualifiedId, clientId: string): Promise<ClientPreKey> {
     const {id, domain} = userId;
     const url = `${UserAPI.URL.USERS}/${domain}/${id}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
     const config: AxiosRequestConfig = {
@@ -201,12 +178,8 @@ export class UserAPI {
    * @param userId The user ID
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClients
    */
-  public async getClients(userId: string | QualifiedId): Promise<PublicClient[]> {
-    const strUserId = typeof userId === 'string' ? userId : userId.id;
-    const url =
-      this.backendFeatures.federationEndpoints && typeof userId !== 'string'
-        ? `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`
-        : `${UserAPI.URL.USERS}/${strUserId}/${UserAPI.URL.CLIENTS}`;
+  public async getClients(userId: QualifiedId): Promise<PublicClient[]> {
+    const url = `${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',

@@ -94,9 +94,8 @@ export class ProteusService {
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {
     const dbName = storeEngine.storeName;
-    if (context.domain && this.config.useQualifiedIds) {
+    if (context.domain) {
       // We want sessions to be fully qualified from now on
-
       if (!cryptoMigrationStore.qualifiedSessions.isReady(dbName)) {
         this.logger.info(`Migrating existing session ids to qualified ids.`);
         await migrateToQualifiedSessionIds(storeEngine, context.domain);
@@ -249,7 +248,6 @@ export class ProteusService {
     return deleteSession({
       userId,
       clientId,
-      useQualifiedIds: this.config.useQualifiedIds,
       cryptoClient: this.cryptoClient,
     });
   }

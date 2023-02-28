@@ -105,7 +105,7 @@ export class ConversationAPI {
   constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
   private generateBaseConversationUrl(conversationId: QualifiedId, supportsQualifiedEndpoint: boolean = true): string {
-    return this.backendFeatures.federationEndpoints && supportsQualifiedEndpoint && conversationId.domain
+    return supportsQualifiedEndpoint && conversationId.domain
       ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}`
       : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}`;
   }
@@ -163,33 +163,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Get all conversations.
-   * @deprecated - use getConversationList instead
-   */
-  public getAllConversations(): Promise<Conversation[]> {
-    let allConversations: Conversation[] = [];
-
-    const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
-      const {conversations, has_more} = await this.getConversations(conversationId, ConversationAPI.MAX_CHUNK_SIZE);
-
-      if (conversations.length) {
-        allConversations = allConversations.concat(conversations);
-      }
-
-      if (has_more) {
-        const lastConversation = conversations.pop();
-        if (lastConversation) {
-          return getConversationChunks(lastConversation.id);
-        }
-      }
-
-      return allConversations;
-    };
-
-    return getConversationChunks();
-  }
-
-  /**
    * Get a conversation code.
    * @param conversationId ID of conversation to get the code for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getConversationCode
@@ -218,29 +191,7 @@ export class ConversationAPI {
     return response.data;
   }
 
-  public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
-    return this.backendFeatures.federationEndpoints && typeof conversationId !== 'string'
-      ? this.getConversation_v2(conversationId)
-      : this.getConversation_v1(typeof conversationId === 'string' ? conversationId : conversationId.id);
-  }
-
-  /**
-   * Get a conversation by ID.
-   * @param conversationId The conversation ID
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
-   */
-  private async getConversation_v1(conversationId: string): Promise<Conversation> {
-    const url = `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`;
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url,
-    };
-
-    const response = await this.client.sendJSON<Conversation>(config);
-    return response.data;
-  }
-
-  private async getConversation_v2(conversationId: QualifiedId): Promise<Conversation> {
+  public async getConversation(conversationId: QualifiedId): Promise<Conversation> {
     const {id, domain} = conversationId;
     const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`;
     const config: AxiosRequestConfig = {
@@ -397,9 +348,6 @@ export class ConversationAPI {
    * Get all local & remote conversations from a federated backend.
    */
   public async getConversationList(): Promise<RemoteConversations> {
-    if (!this.backendFeatures.federationEndpoints) {
-      return {found: await this.getAllConversations()};
-    }
     const allConversationIds = await this.getQualifiedConversationIds();
     const conversations = await this.getConversationsByQualifiedIds(allConversationIds);
     return conversations;
@@ -952,47 +900,11 @@ export class ConversationAPI {
   }
 
   /**
-   * Add users to an existing conversation.
-   * @param conversationId The conversation ID to add the users to
-   * @param users List of users to add to a conversation
-   */
-  private async postMembersV0(conversationId: string, userIds: string[]) {
-    const config: AxiosRequestConfig = {
-      data: {
-        conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
-        users: userIds,
-      },
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
-    };
-
-    try {
-      const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
-      return response.data;
-    } catch (error) {
-      const backendError = error as BackendError;
-      switch (backendError.label) {
-        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(backendError.message);
-        }
-      }
-      throw error;
-    }
-  }
-
-  /**
    * Add qualified members to an existing Proteus conversation.
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
   public async postMembers(conversationId: QualifiedId, users: QualifiedId[]) {
-    if (!this.backendFeatures.federationEndpoints) {
-      return this.postMembersV0(
-        conversationId.id,
-        users.map(user => user.id),
-      );
-    }
-
     const config: AxiosRequestConfig = {
       data: {
         conversation_role: DefaultConversationRoleName.WIRE_MEMBER,

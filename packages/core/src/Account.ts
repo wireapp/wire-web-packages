@@ -365,8 +365,6 @@ export class Account extends TypedEventEmitter<Events> {
         : undefined;
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
     });

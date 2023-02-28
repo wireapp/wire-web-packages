@@ -181,7 +181,6 @@ interface DeleteSessionParams {
   userId: QualifiedId;
   clientId: string;
   cryptoClient: CryptoClient;
-  useQualifiedIds: boolean;
 }
 async function deleteSession(params: DeleteSessionParams) {
   const sessionId = constructSessionId(params);

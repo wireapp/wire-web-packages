@@ -33,7 +33,6 @@ export interface NewClient {
   userId: QualifiedId;
 }
 export type ProteusServiceConfig = {
-  useQualifiedIds: boolean;
   onNewClient?: (client: NewClient) => void;
   nbPrekeys: number;
 };
