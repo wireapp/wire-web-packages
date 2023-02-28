@@ -18,7 +18,6 @@
  */
 
 import {
-  ClientMismatch,
   MessageSendingStatus,
   OTRRecipients,
   QualifiedOTRRecipients,
@@ -134,7 +133,9 @@ describe('MessageService', () => {
       const [messageService, {apiClient}] = await buildMessageService();
 
       const message = 'Lorem ipsum dolor sit amet';
-      jest.spyOn(apiClient.api.conversation, 'postOTRMessage').mockReturnValue(Promise.resolve({} as ClientMismatch));
+      jest
+        .spyOn(apiClient.api.conversation, 'postOTRMessage')
+        .mockReturnValue(Promise.resolve({} as MessageSendingStatus));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message), {
         conversationId,
@@ -152,17 +153,18 @@ describe('MessageService', () => {
       const message = 'Lorem ipsum dolor sit amet';
       jest
         .spyOn(apiClient.api.broadcast, 'postBroadcastMessage')
-        .mockReturnValue(Promise.resolve({} as ClientMismatch));
+        .mockReturnValue(Promise.resolve({} as MessageSendingStatus));
 
       await messageService.sendMessage(clientId, generateRecipients(generateUsers(3, 3)), createMessage(message));
       expect(apiClient.api.broadcast.postBroadcastMessage).toHaveBeenCalledWith(clientId, expect.any(Object));
     });
 
     describe('client mismatch', () => {
-      const baseClientMismatch: ClientMismatch = {
+      const baseClientMismatch: MessageSendingStatus = {
         deleted: {},
         missing: {},
         redundant: {},
+        failed_to_send: {},
         time: new Date().toISOString(),
       };
 
