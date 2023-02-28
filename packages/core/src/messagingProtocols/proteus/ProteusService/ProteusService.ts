@@ -188,7 +188,6 @@ export class ProteusService {
         userIds,
         nativePush,
         targetMode,
-        onClientMismatch,
       },
     });
 

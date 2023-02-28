@@ -42,7 +42,6 @@ export const buildProteusService = async (): Promise<
 
   const proteusService = new ProteusService(apiClient, cryptoClient, {
     nbPrekeys: 0,
-    useQualifiedIds: true,
   });
   return [proteusService, {apiClient, cryptoClient}];
 };
