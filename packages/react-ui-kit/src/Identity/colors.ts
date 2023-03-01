@@ -83,7 +83,7 @@ const COMPONENT_COLOR = {
   TEXT: DARK_COLOR.GRAY_DARKEN_72,
 };
 
-export const COLOR = {
+export const COLOR: any = {
   ...BASE_COLOR,
   ...DARK_COLOR,
   ...LIGHT_COLOR,
