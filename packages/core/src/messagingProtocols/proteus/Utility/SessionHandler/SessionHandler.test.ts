@@ -17,7 +17,7 @@
  *
  */
 
-import type {UserClients} from '@wireapp/api-client/lib/conversation';
+import type {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
 import {APIClient} from '@wireapp/api-client';
@@ -168,6 +168,24 @@ describe('SessionHandler', () => {
 
       expect(sessions).toEqual(['domain@existing-user1@client1']);
       expect(unknowns).toEqual({domain: {'existing-user1': ['deleteclient']}});
+    });
+
+    it('initializes sessions across multiple domains', async () => {
+      const userClients: QualifiedUserClients = {
+        domain1: {'existing-user1': ['client11']},
+        domain2: {'existing-user2': ['client21']},
+      };
+
+      jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(true);
+
+      const {sessions, unknowns} = await initSessions({
+        recipients: userClients,
+        apiClient,
+        cryptoClient,
+      });
+
+      expect(sessions).toEqual(['domain1@existing-user1@client11', 'domain2@existing-user2@client21']);
+      expect(unknowns).toBeUndefined();
     });
   });
 });
