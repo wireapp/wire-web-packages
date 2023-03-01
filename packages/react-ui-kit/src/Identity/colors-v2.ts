@@ -17,7 +17,7 @@
  *
  */
 
-export const BASE_LIGHT_COLOR: Record<string, string> = {
+export const BASE_LIGHT_COLOR = {
   AMBER: '#a25915',
   BLUE: '#0667c8',
   GREEN: '#1d7833',
@@ -26,7 +26,7 @@ export const BASE_LIGHT_COLOR: Record<string, string> = {
   TURQUOISE: '#01718e',
 };
 
-export const BASE_DARK_COLOR: Record<string, string> = {
+export const BASE_DARK_COLOR = {
   AMBER: '#ffd426',
   BLUE: '#54a6ff',
   GREEN: '#30db5b',
@@ -35,7 +35,7 @@ export const BASE_DARK_COLOR: Record<string, string> = {
   RED: '#ff7770',
 };
 
-const LIGHT_BLUE: Record<string, string> = {
+const LIGHT_BLUE = {
   BLUE_LIGHT_50: '#e7f0fa',
   BLUE_LIGHT_100: '#cde1f4',
   BLUE_LIGHT_200: '#9bc2e9',
@@ -48,7 +48,7 @@ const LIGHT_BLUE: Record<string, string> = {
   BLUE_LIGHT_900: '#19324d',
 };
 
-const DARK_BLUE: Record<string, string> = {
+const DARK_BLUE = {
   BLUE_DARK_50: '#eef7ff',
   BLUE_DARK_100: '#ddedff',
   BLUE_DARK_200: '#bbdbff',
@@ -61,7 +61,7 @@ const DARK_BLUE: Record<string, string> = {
   BLUE_DARK_900: '#19324d',
 };
 
-const LIGHT_GREEN: Record<string, string> = {
+const LIGHT_GREEN = {
   GREEN_LIGHT_50: '#e8f1ea',
   GREEN_LIGHT_100: '#d2e4d6',
   GREEN_LIGHT_200: '#a5c9ad',
@@ -74,7 +74,7 @@ const LIGHT_GREEN: Record<string, string> = {
   GREEN_LIGHT_900: '#0e421b',
 };
 
-const DARK_GREEN: Record<string, string> = {
+const DARK_GREEN = {
   GREEN_DARK_50: '#ebfcef',
   GREEN_DARK_100: '#d6f8de',
   GREEN_DARK_200: '#acf1bd',
@@ -87,7 +87,7 @@ const DARK_GREEN: Record<string, string> = {
   GREEN_DARK_900: '#0e421b',
 };
 
-const LIGHT_TURQUOISE: Record<string, string> = {
+const LIGHT_TURQUOISE = {
   TURQUOISE_LIGHT_50: '#e5f1f3',
   TURQUOISE_LIGHT_100: '#cce2e7',
   TURQUOISE_LIGHT_200: '#99c6d0',
@@ -100,7 +100,7 @@ const LIGHT_TURQUOISE: Record<string, string> = {
   TURQUOISE_LIGHT_900: '#1c454d',
 };
 
-const DARK_TURQUOISE: Record<string, string> = {
+const DARK_TURQUOISE = {
   TURQUOISE_DARK_50: '#effdff',
   TURQUOISE_DARK_100: '#dffaff',
   TURQUOISE_DARK_200: '#bef5ff',
@@ -113,7 +113,7 @@ const DARK_TURQUOISE: Record<string, string> = {
   TURQUOISE_DARK_900: '#1c454d',
 };
 
-const LIGHT_PURPLE: Record<string, string> = {
+const LIGHT_PURPLE = {
   PURPLE_LIGHT_50: '#f4edf7',
   PURPLE_LIGHT_100: '#e7daee',
   PURPLE_LIGHT_200: '#d0b4dd',
@@ -126,7 +126,7 @@ const LIGHT_PURPLE: Record<string, string> = {
   PURPLE_LIGHT_900: '#412b4d',
 };
 
-const DARK_PURPLE: Record<string, string> = {
+const DARK_PURPLE = {
   PURPLE_DARK_50: '#fcf4ff',
   PURPLE_DARK_100: '#f8e9ff',
   PURPLE_DARK_200: '#f0d2ff',
@@ -139,7 +139,7 @@ const DARK_PURPLE: Record<string, string> = {
   PURPLE_DARK_900: '#412b4d',
 };
 
-const LIGHT_RED: Record<string, string> = {
+const LIGHT_RED = {
   RED_LIGHT_50: '#f9e6e8',
   RED_LIGHT_100: '#f3ccd0',
   RED_LIGHT_200: '#e799a1',
@@ -152,7 +152,7 @@ const LIGHT_RED: Record<string, string> = {
   RED_LIGHT_900: '#4d2422',
 };
 
-const DARK_RED: Record<string, string> = {
+const DARK_RED = {
   RED_DARK_50: '#fff2f1',
   RED_DARK_100: '#ffe4e2',
   RED_DARK_200: '#ffc9c6',
@@ -165,7 +165,7 @@ const DARK_RED: Record<string, string> = {
   RED_DARK_900: '#4d2422',
 };
 
-const LIGHT_AMBER: Record<string, string> = {
+const LIGHT_AMBER = {
   AMBER_LIGHT_50: '#f6eee8',
   AMBER_LIGHT_100: '#ecded0',
   AMBER_LIGHT_200: '#dabda1',
@@ -178,7 +178,7 @@ const LIGHT_AMBER: Record<string, string> = {
   AMBER_LIGHT_900: '#201204',
 };
 
-const DARK_AMBER: Record<string, string> = {
+const DARK_AMBER = {
   AMBER_DARK_50: '#fffbea',
   AMBER_DARK_100: '#fff6d4',
   AMBER_DARK_200: '#ffeea8',
@@ -191,7 +191,7 @@ const DARK_AMBER: Record<string, string> = {
   AMBER_DARK_900: '#4d400b',
 };
 
-const DARK: Record<string, string> = {
+const DARK = {
   ...DARK_BLUE,
   ...DARK_GREEN,
   ...DARK_TURQUOISE,
@@ -200,7 +200,7 @@ const DARK: Record<string, string> = {
   ...DARK_AMBER,
 };
 
-const LIGHT: Record<string, string> = {
+const LIGHT = {
   ...LIGHT_BLUE,
   ...LIGHT_GREEN,
   ...LIGHT_TURQUOISE,
@@ -209,7 +209,7 @@ const LIGHT: Record<string, string> = {
   ...LIGHT_AMBER,
 };
 
-const GRAYS: Record<string, string> = {
+const GRAYS = {
   GRAY_10: '#fafafa',
   GRAY_20: '#edeff0',
   GRAY_30: '#e5e8ea',
@@ -223,7 +223,7 @@ const GRAYS: Record<string, string> = {
   GRAY_100: '#17181a',
 };
 
-export const COLOR_V2: any = {
+export const COLOR_V2 = {
   ...BASE_DARK_COLOR,
   ...BASE_LIGHT_COLOR,
   ...DARK,
