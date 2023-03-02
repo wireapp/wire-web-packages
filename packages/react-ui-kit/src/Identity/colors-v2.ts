@@ -24,7 +24,7 @@ export const BASE_LIGHT_COLOR = {
   PURPLE: '#8944ab',
   RED: '#c20013',
   TURQUOISE: '#01718e',
-};
+} as const;
 
 export const BASE_DARK_COLOR = {
   AMBER: '#ffd426',
@@ -33,7 +33,7 @@ export const BASE_DARK_COLOR = {
   TURQUOISE: '#5de6ff',
   PURPLE: '#da8fff',
   RED: '#ff7770',
-};
+} as const;
 
 const LIGHT_BLUE = {
   BLUE_LIGHT_50: '#e7f0fa',
@@ -46,7 +46,7 @@ const LIGHT_BLUE = {
   BLUE_LIGHT_700: '#043e78',
   BLUE_LIGHT_800: '#022950',
   BLUE_LIGHT_900: '#19324d',
-};
+} as const;
 
 const DARK_BLUE = {
   BLUE_DARK_50: '#eef7ff',
@@ -59,7 +59,7 @@ const DARK_BLUE = {
   BLUE_DARK_700: '#326499',
   BLUE_DARK_800: '#224266',
   BLUE_DARK_900: '#19324d',
-};
+} as const;
 
 const LIGHT_GREEN = {
   GREEN_LIGHT_50: '#e8f1ea',
@@ -72,7 +72,7 @@ const LIGHT_GREEN = {
   GREEN_LIGHT_700: '#11481f',
   GREEN_LIGHT_800: '#0c3014',
   GREEN_LIGHT_900: '#0e421b',
-};
+} as const;
 
 const DARK_GREEN = {
   GREEN_DARK_50: '#ebfcef',
@@ -85,7 +85,7 @@ const DARK_GREEN = {
   GREEN_DARK_700: '#1d8337',
   GREEN_DARK_800: '#135824',
   GREEN_DARK_900: '#0e421b',
-};
+} as const;
 
 const LIGHT_TURQUOISE = {
   TURQUOISE_LIGHT_50: '#e5f1f3',
@@ -98,7 +98,7 @@ const LIGHT_TURQUOISE = {
   TURQUOISE_LIGHT_700: '#014352',
   TURQUOISE_LIGHT_800: '#002d37',
   TURQUOISE_LIGHT_900: '#1c454d',
-};
+} as const;
 
 const DARK_TURQUOISE = {
   TURQUOISE_DARK_50: '#effdff',
@@ -111,7 +111,7 @@ const DARK_TURQUOISE = {
   TURQUOISE_DARK_700: '#388a99',
   TURQUOISE_DARK_800: '#255c66',
   TURQUOISE_DARK_900: '#1c454d',
-};
+} as const;
 
 const LIGHT_PURPLE = {
   PURPLE_LIGHT_50: '#f4edf7',
@@ -124,7 +124,7 @@ const LIGHT_PURPLE = {
   PURPLE_LIGHT_700: '#522967',
   PURPLE_LIGHT_800: '#371b44',
   PURPLE_LIGHT_900: '#412b4d',
-};
+} as const;
 
 const DARK_PURPLE = {
   PURPLE_DARK_50: '#fcf4ff',
@@ -137,7 +137,7 @@ const DARK_PURPLE = {
   PURPLE_DARK_700: '#835699',
   PURPLE_DARK_800: '#573966',
   PURPLE_DARK_900: '#412b4d',
-};
+} as const;
 
 const LIGHT_RED = {
   RED_LIGHT_50: '#f9e6e8',
@@ -150,7 +150,7 @@ const LIGHT_RED = {
   RED_LIGHT_700: '#74000b',
   RED_LIGHT_800: '#4e0008',
   RED_LIGHT_900: '#4d2422',
-};
+} as const;
 
 const DARK_RED = {
   RED_DARK_50: '#fff2f1',
@@ -163,7 +163,7 @@ const DARK_RED = {
   RED_DARK_700: '#994743',
   RED_DARK_800: '#66302d',
   RED_DARK_900: '#4d2422',
-};
+} as const;
 
 const LIGHT_AMBER = {
   AMBER_LIGHT_50: '#f6eee8',
@@ -176,7 +176,7 @@ const LIGHT_AMBER = {
   AMBER_LIGHT_700: '#61350d',
   AMBER_LIGHT_800: '#412408',
   AMBER_LIGHT_900: '#201204',
-};
+} as const;
 
 const DARK_AMBER = {
   AMBER_DARK_50: '#fffbea',
@@ -189,7 +189,7 @@ const DARK_AMBER = {
   AMBER_DARK_700: '#997f17',
   AMBER_DARK_800: '#66550f',
   AMBER_DARK_900: '#4d400b',
-};
+} as const;
 
 const DARK = {
   ...DARK_BLUE,
@@ -221,7 +221,7 @@ const GRAYS = {
   GRAY_90: '#34373d',
   GRAY_95: '#26272c',
   GRAY_100: '#17181a',
-};
+} as const;
 
 export const COLOR_V2 = {
   ...BASE_DARK_COLOR,
@@ -231,4 +231,4 @@ export const COLOR_V2 = {
   ...GRAYS,
   BLACK: '#000',
   WHITE: '#fff',
-};
+} as const;
