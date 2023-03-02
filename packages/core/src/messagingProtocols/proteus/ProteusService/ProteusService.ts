@@ -62,8 +62,8 @@ type EncryptionResult = {
   payloads: QualifiedOTRRecipients;
   /** user-client that do not have prekeys on backend (deleted clients) */
   unknowns?: QualifiedUserClients;
-  /** user-client for which we could retrieve a prekey and, thus, for which we could not create a session */
-  failed?: QualifiedUserClients;
+  /** users for whom we could retrieve a prekey and, thus, for which we could not encrypt the message */
+  failed?: QualifiedId[];
 };
 export class ProteusService {
   private readonly messageService: MessageService;

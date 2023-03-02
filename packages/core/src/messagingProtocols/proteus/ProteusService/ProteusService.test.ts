@@ -124,11 +124,13 @@ describe('ProteusService', () => {
       const clientId = 'client1';
 
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
-        [userId.domain]: {
-          [userId.id]: {
-            [clientId]: {
-              id: 123,
-              key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+        qualified_user_client_prekeys: {
+          [userId.domain]: {
+            [userId.id]: {
+              [clientId]: {
+                id: 123,
+                key: 'pQABARhIAqEAWCCaJpFa9c626ORmjj1aV6OnOYgmTjfoiE3ynOfNfGAOmgOhAKEAWCD60VMzRrLfO+1GSjgyhnVp2N7L58DM+eeJhZJi1tBLfQT2',
+              },
             },
           },
         },
