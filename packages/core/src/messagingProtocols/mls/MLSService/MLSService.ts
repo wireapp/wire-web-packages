@@ -272,8 +272,8 @@ export class MLSService extends TypedEventEmitter<Events> {
       SUBCONVERSATION_ID.CONFERENCE,
     );
 
-    for (const {parentConversation} of conversationIds) {
-      await this.leaveConferenceSubconversation(parentConversation);
+    for (const {parentConversationId} of conversationIds) {
+      await this.leaveConferenceSubconversation(parentConversationId);
     }
   }
 
