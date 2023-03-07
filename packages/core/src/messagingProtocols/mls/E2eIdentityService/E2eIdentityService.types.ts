@@ -16,3 +16,28 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
+import {NewAcmeAuthz, NewAcmeOrder} from '@wireapp/core-crypto/platforms/web/corecrypto';
+
+export type User = {
+  displayName: string;
+  handle: string;
+  domain: string;
+};
+type Account = Uint8Array;
+type Nonce = string;
+
+export type CreateNewAccountReturnValue = Promise<{account: Uint8Array; nonce: string} | undefined>;
+
+export interface CreateNewOrderParams {
+  account: Account;
+  nonce: Nonce;
+}
+export type CreateNewOrderReturnValue = Promise<{order: NewAcmeOrder; nonce: string; authzUrl: string} | undefined>;
+
+export interface GetAuthorizationParams {
+  account: Account;
+  nonce: Nonce;
+  authzUrl: string;
+}
+export type GetAuthorizationReturnValue = Promise<{authorization: NewAcmeAuthz; nonce: string} | undefined>;

@@ -21,54 +21,116 @@ import {AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import axios, {AxiosInstance} from 'axios';
 import logdown from 'logdown';
 
+import {
+  GetAuthorizationReturnValue,
+  GetDirectoryReturnValue,
+  GetInitialNonceReturnValue,
+  GetNewAccountReturnValue,
+  GetNewOrderReturnValue,
+} from './AcmeConnectionService.types';
+import {
+  AuthorizationResponseDataSchema,
+  DirectoryResponseDataSchema,
+  NewAccountResponseDataSchema,
+  NewOrderResponseDataSchema,
+  ResponseHeaderNonce,
+  ResponseHeaderNonceSchema,
+} from './schema';
+
 export class AcmeConnectionService {
   private logger = logdown('@wireapp/core/AcmeConnectionService');
   private readonly axiosInstance: AxiosInstance = axios.create();
 
-  private readonly IDENTIFIER = 'acme';
   private readonly CA = 'acme';
-  private readonly ACME_BACKEND = `https://localhost:9000/${this.CA}/${this.IDENTIFIER}`;
+  private readonly IDENTIFIER = 'acme';
+  private readonly ACME_BACKEND = `https://balderdash.hogwash.work:9000/${this.CA}/${this.IDENTIFIER}`;
   private readonly URL = {
-    CHALLENGE: '/challenge',
     DIRECTORY: '/directory',
   };
 
   constructor() {}
 
-  public async getDirectory(): Promise<Uint8Array> {
+  private extractNonce(headers: any): ResponseHeaderNonce['replay-nonce'] {
+    return ResponseHeaderNonceSchema.parse(headers)['replay-nonce'];
+  }
+
+  public async getDirectory(): GetDirectoryReturnValue {
     try {
       const {data} = await this.axiosInstance.get(`${this.ACME_BACKEND}${this.URL.DIRECTORY}`);
-      return new TextEncoder().encode(JSON.stringify(data));
+      const directory = DirectoryResponseDataSchema.parse(data);
+      return new TextEncoder().encode(JSON.stringify(directory));
     } catch (e) {
-      this.logger.error('Error getting E2E/ACME Directory', e);
-      return new Uint8Array();
+      this.logger.error('Error while receiving Directory', e);
+      return undefined;
     }
   }
 
-  public async getInitialNonce(url: AcmeDirectory['newNonce']): Promise<string> {
+  public async getInitialNonce(url: AcmeDirectory['newNonce']): GetInitialNonceReturnValue {
     try {
       const {headers} = await this.axiosInstance.head(url);
-      if (!headers['replay-nonce'].length) {
-        throw new Error('No nonce found in headers');
-      }
-      return headers['replay-nonce'];
+      const nonce = this.extractNonce(headers);
+      return nonce;
     } catch (e) {
-      this.logger.error('Error getting E2E/ACME Nonce', e);
-      return '';
+      this.logger.error('Error while receiving intial Nonce', e);
+      return undefined;
     }
   }
 
-  public async createNewAccount(url: AcmeDirectory['newAccount'], payload: Uint8Array): Promise<Uint8Array> {
+  public async createNewAccount(url: AcmeDirectory['newAccount'], payload: Uint8Array): GetNewAccountReturnValue {
     try {
-      const {data} = await this.axiosInstance.post(url, payload, {
+      const {data, headers} = await this.axiosInstance.post(url, payload, {
         headers: {
           'Content-Type': 'application/jose+json',
         },
       });
-      return new TextEncoder().encode(JSON.stringify(data));
+      const nonce = this.extractNonce(headers);
+      const accountData = NewAccountResponseDataSchema.parse(data);
+      return {
+        account: accountData,
+        nonce,
+      };
     } catch (e) {
-      this.logger.error('Error creating E2E/ACME Account', e);
-      return new Uint8Array();
+      this.logger.error('Error while creating new Account', e);
+      return undefined;
+    }
+  }
+
+  public async createNewOrder(url: AcmeDirectory['newOrder'], payload: Uint8Array): GetNewOrderReturnValue {
+    try {
+      const {data, headers} = await this.axiosInstance.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/jose+json',
+        },
+      });
+      const nonce = this.extractNonce(headers);
+      const orderData = NewOrderResponseDataSchema.parse(data);
+      return {
+        order: orderData,
+        nonce,
+      };
+    } catch (e) {
+      this.logger.error('Error while creating new Order', e);
+      return undefined;
+    }
+  }
+
+  public async getAuthorization(authUrl: string, payload: Uint8Array): GetAuthorizationReturnValue {
+    try {
+      const {data, headers} = await this.axiosInstance.post(authUrl, payload, {
+        headers: {
+          'Content-Type': 'application/jose+json',
+        },
+      });
+      const nonce = this.extractNonce(headers);
+      const authorizationData = AuthorizationResponseDataSchema.parse(data);
+
+      return {
+        authorization: authorizationData,
+        nonce,
+      };
+    } catch (e) {
+      this.logger.error('Error while receiving Authorization', e);
+      return undefined;
     }
   }
 }

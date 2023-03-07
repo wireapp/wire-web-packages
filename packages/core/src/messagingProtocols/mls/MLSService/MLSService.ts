@@ -108,10 +108,18 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async createClient(userId: QualifiedId, clientId: string) {
-    const identityService = new E2eIdentityService(this.coreCryptoClient);
+    const identityService = new E2eIdentityService(
+      this.coreCryptoClient,
+      {
+        displayName: 'Max Mustermann',
+        handle: '@max_mustermann',
+        domain: userId.domain,
+      },
+      clientId,
+    );
     await identityService.getNewCertificate();
 
-    return;
+    throw new Error('Adrian throw');
 
     await this.initClient(userId, clientId);
     // ACME Enrollment process here
