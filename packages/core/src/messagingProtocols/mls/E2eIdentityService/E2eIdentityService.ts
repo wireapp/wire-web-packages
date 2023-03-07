@@ -20,6 +20,8 @@
 import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import logdown from 'logdown';
 
+import {APIClient} from '@wireapp/api-client';
+
 import {AcmeConnectionService} from './Connection';
 import {
   CreateNewAccountReturnValue,
@@ -27,6 +29,7 @@ import {
   CreateNewOrderReturnValue,
   GetAuthorizationParams,
   GetAuthorizationReturnValue,
+  GetClientAccessTokenParams,
   User,
 } from './E2eIdentityService.types';
 import {jsonToByteArray} from './Helper';
@@ -34,10 +37,12 @@ import {jsonToByteArray} from './Helper';
 export class E2eIdentityService {
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
   private readonly ConnectionService: AcmeConnectionService = new AcmeConnectionService();
+  private readonly expiryDays = 90;
   private Identity: WireE2eIdentity | undefined;
   private directory: AcmeDirectory | undefined;
 
   constructor(
+    private readonly apiClient: APIClient,
     private readonly coreCryptoClient: CoreCrypto,
     private readonly user: User,
     private readonly clientId: string,
@@ -84,15 +89,14 @@ export class E2eIdentityService {
   }
 
   private async createNewOrder({account, nonce}: CreateNewOrderParams): CreateNewOrderReturnValue {
-    const expiryDays = 90;
-    const {displayName, handle, domain} = this.user;
     if (this.Identity && this.directory?.newOrder) {
+      const {displayName, handle, domain} = this.user;
       const reqBody = this.Identity.newOrderRequest(
         displayName,
         domain,
         this.getClientIdentifier(),
         handle,
-        expiryDays,
+        this.expiryDays,
         this.directory,
         account,
         nonce,
@@ -124,6 +128,36 @@ export class E2eIdentityService {
     return undefined;
   }
 
+  private async getClientNonce(): Promise<string | undefined> {
+    try {
+      return await this.apiClient.api.client.getNonce(this.clientId);
+    } catch (e) {
+      this.logger.error('Could not get client nonce', e);
+      return undefined;
+    }
+  }
+
+  private async getClientAccessToken({clientNonce, wireHttpChallenge}: GetClientAccessTokenParams) {
+    if (this.Identity) {
+      try {
+        const dpopToken = this.Identity.createDpopToken(
+          this.apiClient.api.client.getAccessTokenUrl(this.clientId),
+          this.user.id,
+          BigInt(this.clientId),
+          this.user.domain,
+          wireHttpChallenge,
+          clientNonce,
+          this.expiryDays,
+        );
+        return await this.apiClient.api.client.getAccessToken(this.clientId, dpopToken);
+      } catch (e) {
+        this.logger.error('Could not get client access token', e);
+        return undefined;
+      }
+    }
+    return undefined;
+  }
+
   // ############ Public Functions ############
 
   public async getNewCertificate(): Promise<void> {
@@ -141,7 +175,7 @@ export class E2eIdentityService {
       }
     }
 
-    // Step 1: Get a new nonce
+    // Step 1: Get a new nonce from ACME server
     const nonce = await this.getInitialNonce();
     if (!nonce) {
       throw new Error('No nonce received');
@@ -172,8 +206,25 @@ export class E2eIdentityService {
       throw new Error('No authorization-data received');
     }
 
-    const {wireHttpChallenge, wireOidcChallenge, identifier} = authData.authorization;
+    // Step 5: Get a client nonce
+    const clientNonce = await this.getClientNonce();
+    if (!clientNonce) {
+      throw new Error('No client-nonce received');
+    }
 
-    console.info('adrian', wireHttpChallenge, wireOidcChallenge, identifier);
+    // Step 6: Get a client access token
+    const {wireHttpChallenge} = authData.authorization;
+    if (!wireHttpChallenge) {
+      throw new Error('No wireHttpChallenge received');
+    }
+    const clientAccessToken = await this.getClientAccessToken({
+      clientNonce,
+      wireHttpChallenge,
+    });
+    if (!clientAccessToken) {
+      throw new Error('No client-access-token received');
+    }
+
+    console.info('adrian', clientNonce, clientAccessToken);
   }
 }

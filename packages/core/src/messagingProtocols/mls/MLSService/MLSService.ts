@@ -109,11 +109,13 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async createClient(userId: QualifiedId, clientId: string) {
     const identityService = new E2eIdentityService(
+      this.apiClient,
       this.coreCryptoClient,
       {
-        displayName: 'Max Mustermann',
-        handle: '@max_mustermann',
+        displayName: 'adrian+mls2',
+        handle: '@adrianweissmls2',
         domain: userId.domain,
+        id: 'a3461283-fda6-4d36-a817-8e6c5c15c405',
       },
       clientId,
     );

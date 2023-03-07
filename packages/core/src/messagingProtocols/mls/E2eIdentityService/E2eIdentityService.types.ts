@@ -17,12 +17,13 @@
  *
  */
 
-import {NewAcmeAuthz, NewAcmeOrder} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeChallenge, NewAcmeAuthz, NewAcmeOrder} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 export type User = {
+  id: string;
+  domain: string;
   displayName: string;
   handle: string;
-  domain: string;
 };
 type Account = Uint8Array;
 type Nonce = string;
@@ -41,3 +42,8 @@ export interface GetAuthorizationParams {
   authzUrl: string;
 }
 export type GetAuthorizationReturnValue = Promise<{authorization: NewAcmeAuthz; nonce: string} | undefined>;
+
+export interface GetClientAccessTokenParams {
+  clientNonce: string;
+  wireHttpChallenge: AcmeChallenge;
+}
