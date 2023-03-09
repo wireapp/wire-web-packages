@@ -57,7 +57,7 @@ import {
   initSessions,
 } from '../Utility/SessionHandler';
 
-type EncryptionResult = {
+export type EncryptionResult = {
   /** the encrypted payloads for the clients that have a valid sessions */
   payloads: QualifiedOTRRecipients;
   /** user-client that do not have prekeys on backend (deleted clients) */
