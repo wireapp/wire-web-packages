@@ -128,6 +128,6 @@ export type SendResult = {
     /** the message was encrypted for those recipients but will reach them later (a session existed but their backend is offline) */
     queued?: QualifiedUserClients;
     /** the message could not be encrypted for those recipients and thus will never reach them (a session did not exist and their backend if offline) */
-    failed?: QualifiedUserClients;
+    failed?: QualifiedId[];
   };
 };

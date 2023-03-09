@@ -210,16 +210,14 @@ export class ProteusService {
 
     const sendingState = response.canceled ? MessageSendingState.CANCELED : MessageSendingState.OUTGOING_SENT;
 
-    const failedToSend =
-      'failed_to_send' in response && Object.keys(response.failed_to_send).length > 0
-        ? response.failed_to_send
-        : undefined;
-
     return {
       id: payload.messageId,
       sentAt: response.time,
       state: sendingState,
-      failedToSend,
+      failedToSend: {
+        queued: response.failed_to_send,
+        failed: response.failed,
+      },
     };
   }
 
