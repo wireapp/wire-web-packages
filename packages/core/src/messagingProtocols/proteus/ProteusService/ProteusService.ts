@@ -65,6 +65,7 @@ export type EncryptionResult = {
   /** users for whom we could retrieve a prekey and, thus, for which we could not encrypt the message */
   failed?: QualifiedId[];
 };
+
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');

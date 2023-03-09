@@ -61,12 +61,13 @@ export class MessageService {
       nativePush?: boolean;
       onClientMismatch?: (mismatch: MessageSendingStatus) => void | boolean | Promise<boolean>;
     } = {},
-  ): Promise<MessageSendingStatus & {canceled?: boolean}> {
+  ): Promise<MessageSendingStatus & {canceled?: boolean; failed?: QualifiedId[]}> {
     const encryptionResults = await this.proteusService.encrypt(plainText, recipients);
 
-    const send = async ({payloads, unknowns}: EncryptionResult): Promise<MessageSendingStatus> => {
+    const send = async ({payloads, unknowns, failed}: EncryptionResult): Promise<MessageSendingStatus> => {
       const result = await this.sendOtrMessage(sendingClientId, payloads, options);
-      return unknowns ? {...result, deleted: {...result.deleted, ...unknowns}} : result;
+      const extras = {failed, deleted: unknowns};
+      return deepmerge(result, extras) as MessageSendingStatus & {failed?: QualifiedId[]};
     };
 
     try {
