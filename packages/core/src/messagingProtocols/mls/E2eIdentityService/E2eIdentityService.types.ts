@@ -41,9 +41,10 @@ export interface GetAuthorizationParams {
   nonce: Nonce;
   authzUrl: string;
 }
-export type GetAuthorizationReturnValue = Promise<{authorization: NewAcmeAuthz; nonce: string} | undefined>;
+export type TempNewAcmeAuthzFix = Omit<NewAcmeAuthz, 'wireHttpChallenge'> & {wireDpopChallenge: AcmeChallenge};
+export type GetAuthorizationReturnValue = Promise<{authorization: TempNewAcmeAuthzFix; nonce: string} | undefined>;
 
 export interface GetClientAccessTokenParams {
   clientNonce: string;
-  wireHttpChallenge: AcmeChallenge;
+  wireDpopChallenge: AcmeChallenge;
 }

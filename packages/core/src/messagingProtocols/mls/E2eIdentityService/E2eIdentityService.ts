@@ -18,6 +18,7 @@
  */
 
 import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
@@ -30,6 +31,7 @@ import {
   GetAuthorizationParams,
   GetAuthorizationReturnValue,
   GetClientAccessTokenParams,
+  TempNewAcmeAuthzFix,
   User,
 } from './E2eIdentityService.types';
 import {jsonToByteArray} from './Helper';
@@ -51,7 +53,7 @@ export class E2eIdentityService {
   // ############ Helper Functions ############
 
   private getClientIdentifier(): string {
-    return `impp:wireapp=${this.clientId}`;
+    return `impp:wireapp=${Encoder.toBase64(this.user.id).asString}/${this.clientId}@${this.user.domain}`;
   }
 
   // ############ Main Functions ############
@@ -120,7 +122,9 @@ export class E2eIdentityService {
       const response = await this.ConnectionService.getAuthorization(authzUrl, reqBody);
       if (response?.authorization && !!response.authorization.status.length && !!response.nonce.length) {
         return {
-          authorization: this.Identity.newAuthzResponse(jsonToByteArray(JSON.stringify(response.authorization))),
+          authorization: this.Identity.newAuthzResponse(
+            jsonToByteArray(JSON.stringify(response.authorization)),
+          ) as unknown as TempNewAcmeAuthzFix,
           nonce: response.nonce,
         };
       }
@@ -137,15 +141,17 @@ export class E2eIdentityService {
     }
   }
 
-  private async getClientAccessToken({clientNonce, wireHttpChallenge}: GetClientAccessTokenParams) {
+  private async getClientAccessToken({clientNonce, wireDpopChallenge}: GetClientAccessTokenParams) {
     if (this.Identity) {
       try {
+        const accessTokenUrl = `${this.apiClient.api.client.getAccessTokenUrl(this.clientId)}`;
+
         const dpopToken = this.Identity.createDpopToken(
-          this.apiClient.api.client.getAccessTokenUrl(this.clientId),
+          accessTokenUrl,
           this.user.id,
-          BigInt(this.clientId),
+          BigInt(parseInt(this.clientId, 16)),
           this.user.domain,
-          wireHttpChallenge,
+          wireDpopChallenge,
           clientNonce,
           this.expiryDays,
         );
@@ -212,19 +218,19 @@ export class E2eIdentityService {
       throw new Error('No client-nonce received');
     }
 
+    console.info('adrian', clientNonce, authData.authorization);
+
     // Step 6: Get a client access token
-    const {wireHttpChallenge} = authData.authorization;
-    if (!wireHttpChallenge) {
-      throw new Error('No wireHttpChallenge received');
+    const {wireDpopChallenge} = authData.authorization;
+    if (!wireDpopChallenge) {
+      throw new Error('No wireDpopChallenge received');
     }
     const clientAccessToken = await this.getClientAccessToken({
       clientNonce,
-      wireHttpChallenge,
+      wireDpopChallenge,
     });
     if (!clientAccessToken) {
       throw new Error('No client-access-token received');
     }
-
-    console.info('adrian', clientNonce, clientAccessToken);
   }
 }

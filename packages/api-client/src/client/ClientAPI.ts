@@ -209,7 +209,7 @@ export class ClientAPI {
   }
 
   public async getNonce(clientId: string): Promise<string> {
-    const NonceKey = 'Replay-Nonce';
+    const NonceKey = 'replay-nonce';
     const NonceSchema = z.object({
       [NonceKey]: z.string().min(1),
     });
@@ -225,7 +225,7 @@ export class ClientAPI {
   }
 
   public getAccessTokenUrl = (clientId: string): string =>
-    `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
+    `${this.client.getBaseUrl()}${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
 
   public async getAccessToken(clientId: string, dpopToken: string) {
     const ResponseSchema = z.object({
@@ -236,7 +236,7 @@ export class ClientAPI {
 
     const config: AxiosRequestConfig = {
       method: 'post',
-      url: this.getAccessTokenUrl(clientId),
+      url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
       headers: {
         DPoP: dpopToken,
       },

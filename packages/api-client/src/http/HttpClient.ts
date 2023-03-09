@@ -100,6 +100,10 @@ export class HttpClient extends EventEmitter {
     });
   }
 
+  public getBaseUrl() {
+    return `${this.config.urls.rest}${this.versionPrefix}`;
+  }
+
   public useVersion(version: number): void {
     this.versionPrefix = version > 0 ? `/v${version}` : '';
   }
