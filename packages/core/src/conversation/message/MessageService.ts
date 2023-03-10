@@ -66,7 +66,7 @@ export class MessageService {
 
     const send = async ({payloads, unknowns, failed}: EncryptionResult): Promise<MessageSendingStatus> => {
       const result = await this.sendOtrMessage(sendingClientId, payloads, options);
-      const extras = {failed, deleted: unknowns};
+      const extras = {failed, deleted: unknowns ?? {}};
       return deepmerge(result, extras) as MessageSendingStatus & {failed?: QualifiedId[]};
     };
 
