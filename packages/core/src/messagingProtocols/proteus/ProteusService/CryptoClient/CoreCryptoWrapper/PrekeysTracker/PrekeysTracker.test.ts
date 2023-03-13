@@ -40,7 +40,7 @@ describe('PrekeysGenerator', () => {
   });
 
   it('triggers the threshold callback when number of prekeys hits the limit', async () => {
-    const prekeyTracker = new PrekeyTracker(mockPrekeyTracker, db, baseConfig);
+    const prekeyTracker = new PrekeyTracker(mockPrekeyTracker, baseConfig);
 
     await prekeyTracker.setInitialState(baseConfig.nbPrekeys);
 

@@ -117,7 +117,8 @@ export class ProteusService {
         this.logger.error('Client was not able to perform DB migration: ', error);
       }
     }
-    return this.cryptoClient.init();
+    const backendPrekeys = await this.apiClient.api.client.getClientPreKeys(context.clientId ?? '');
+    return this.cryptoClient.init(backendPrekeys.length);
   }
 
   public createClient(entropy?: Uint8Array) {

@@ -317,7 +317,7 @@ export class Account extends TypedEventEmitter<Events> {
     return validClient;
   }
 
-  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, db: CoreDatabase, enableMLS: boolean) {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, enableMLS: boolean) {
     /* There are 3 cases where we want to instantiate CoreCrypto:
      * 1. MLS is enabled
      * 2. The user has enabled CoreCrypto in the config
@@ -330,7 +330,7 @@ export class Account extends TypedEventEmitter<Events> {
         ? CryptoClientType.CORE_CRYPTO
         : CryptoClientType.CRYPTOBOX;
 
-    return buildCryptoClient(clientType, db, {
+    return buildCryptoClient(clientType, {
       storeEngine,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
@@ -362,7 +362,7 @@ export class Account extends TypedEventEmitter<Events> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, this.db, enableMLS);
+    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, enableMLS);
     const [clientType, cryptoClient] = cryptoClientDef;
 
     const mlsService =
