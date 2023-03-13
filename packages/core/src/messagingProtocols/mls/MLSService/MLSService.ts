@@ -49,7 +49,7 @@ import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
-import {QualifiedUser} from '../../../conversation';
+import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
@@ -172,7 +172,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
-  public async getKeyPackagesPayload(qualifiedUsers: QualifiedUser[]) {
+  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
     /**
      * @note We need to fetch key packages for all the users
      * we want to add to the new MLS conversations,
