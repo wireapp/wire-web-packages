@@ -100,11 +100,11 @@ export type SendMlsMessageParams = SendCommonParams & {
   protocol: ConversationProtocol.MLS;
 };
 
-export type QualifiedUsers = QualifiedId & {skipOwn?: string};
+export type QualifiedUser = QualifiedId & {skipOwnClientId?: string};
 
 export type AddUsersParams = {
   conversationId: QualifiedId;
-  qualifiedUserIds: QualifiedId[];
+  qualifiedUsers: QualifiedUser[];
   groupId?: string;
 };
 

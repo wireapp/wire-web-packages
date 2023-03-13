@@ -49,7 +49,7 @@ import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
-import {QualifiedUsers} from '../../../conversation';
+import {QualifiedUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
@@ -172,15 +172,15 @@ export class MLSService extends TypedEventEmitter<Events> {
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
-  public async getKeyPackagesPayload(qualifiedUsers: QualifiedUsers[]) {
+  public async getKeyPackagesPayload(qualifiedUsers: QualifiedUser[]) {
     /**
      * @note We need to fetch key packages for all the users
      * we want to add to the new MLS conversations,
      * includes self user too.
      */
     const keyPackages = await Promise.all([
-      ...qualifiedUsers.map(({id, domain, skipOwn}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwn),
+      ...qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
+        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId),
       ),
     ]);
 
@@ -393,7 +393,7 @@ export class MLSService extends TypedEventEmitter<Events> {
            * we should skip fetching key packages for current self client,
            * it's already added by the backend on the group creation time
            */
-          return {...creator.user, skipOwn: creator.client};
+          return {...creator.user, skipOwnClientId: creator.client};
         }
         return user;
       }),

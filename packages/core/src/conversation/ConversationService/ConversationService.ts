@@ -287,12 +287,12 @@ export class ConversationService {
   }
 
   public async addUsersToMLSConversation({
-    qualifiedUserIds,
+    qualifiedUsers,
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSReturnType> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([...qualifiedUserIds]);
+    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
     const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
 
