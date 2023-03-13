@@ -286,6 +286,13 @@ export class ConversationService {
     };
   }
 
+  /**
+   * Will add users to existing MLS group by claiming their key packages and passing them to CoreCrypto.addClientsToConversation
+   *
+   * @param qualifiedUsers List of qualified user ids (with optional skipOwnClientId field - if provided we will not claim key package for this self client)
+   * @param groupId Id of the group to which we want to add users
+   * @param conversationId Id of the conversation to which we want to add users
+   */
   public async addUsersToMLSConversation({
     qualifiedUsers,
     groupId,
