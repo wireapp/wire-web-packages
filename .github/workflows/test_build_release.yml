@@ -70,25 +70,18 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Set release environment variables
-        if: env.BRANCH_NAME == 'main'
+      - name: Release
+        if: |
+          env.BRANCH_NAME == 'main' &&
+          !startsWith(env.TITLE, 'chore') &&
+          !startsWith(env.TITLE, 'test')
+        env:
+          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         run: |
-          HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
-          echo "HAS_UPDATES=${HAS_UPDATES}" >> $GITHUB_ENV
-          echo -e "HAS_UPDATES = ${HAS_UPDATES}"
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
-
-      - name: Release
-        env:
-          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
-        if: |
-          env.BRANCH_NAME == 'main' &&
-          env.HAS_UPDATES == '0' &&
-          !startsWith(env.TITLE, 'chore') &&
-          !startsWith(env.TITLE, 'test')
-        run: yarn release
+          yarn release
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
