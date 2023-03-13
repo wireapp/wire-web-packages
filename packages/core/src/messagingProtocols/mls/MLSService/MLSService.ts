@@ -178,11 +178,11 @@ export class MLSService extends TypedEventEmitter<Events> {
      * we want to add to the new MLS conversations,
      * includes self user too.
      */
-    const keyPackages = await Promise.all([
-      ...qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
+    const keyPackages = await Promise.all(
+      qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
         this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId),
       ),
-    ]);
+    );
 
     const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
       // skip users that have not uploaded their MLS key packages
