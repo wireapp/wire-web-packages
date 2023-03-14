@@ -58,10 +58,10 @@ export const createNewOrder = async ({
   );
 
   const response = await connection.createNewOrder(directory.newOrder, reqBody);
-  if (response?.order && !!response.order.status.length && !!response.nonce.length) {
+  if (response?.data && !!response.data.status.length && !!response.nonce.length) {
     return {
-      order: identity.newOrderResponse(jsonToByteArray(JSON.stringify(response.order))),
-      authzUrl: response.order.authorizations[0],
+      order: identity.newOrderResponse(jsonToByteArray(JSON.stringify(response.data))),
+      authzUrl: response.data.authorizations[0],
       nonce: response.nonce,
     };
   }

@@ -17,55 +17,24 @@
  *
  */
 
-import {
-  AuthorizationResponseData,
-  NewAccountResponseData,
-  NewOrderResponseData,
-  ResponseHeaderNonce,
-  ValidateDpopChallengeResponseData,
-  ValidateOidcChallengeResponseData,
-} from './schema';
+import {ZodSchema} from 'zod';
+
+import {Nonce} from '../E2eIdentityService.types';
 
 export type GetDirectoryReturnValue = Promise<Uint8Array | undefined>;
 
 export type GetInitialNonceReturnValue = Promise<string | undefined>;
 
-export type GetNewAccountReturnValue = Promise<
+export interface PostJoseRequestParams<T> {
+  url: string;
+  payload: Uint8Array;
+  schema: ZodSchema<T>;
+  errorMessage: string;
+}
+export type PostJoseRequestReturnValue<T> = Promise<
   | {
-      account: NewAccountResponseData;
-      nonce: ResponseHeaderNonce['replay-nonce'];
-    }
-  | undefined
->;
-
-export type GetNewOrderReturnValue = Promise<
-  | {
-      order: NewOrderResponseData;
-      nonce: ResponseHeaderNonce['replay-nonce'];
-    }
-  | undefined
->;
-
-export type GetAuthorizationReturnValue = Promise<
-  | {
-      authorization: AuthorizationResponseData;
-      nonce: ResponseHeaderNonce['replay-nonce'];
-    }
-  | undefined
->;
-
-export type ValidateDpopChallengeReturnType = Promise<
-  | {
-      challengeResult: ValidateDpopChallengeResponseData;
-      nonce: ResponseHeaderNonce['replay-nonce'];
-    }
-  | undefined
->;
-
-export type ValidateOidcChallengeReturnType = Promise<
-  | {
-      challengeResult: ValidateOidcChallengeResponseData;
-      nonce: ResponseHeaderNonce['replay-nonce'];
+      data: T;
+      nonce: Nonce;
     }
   | undefined
 >;

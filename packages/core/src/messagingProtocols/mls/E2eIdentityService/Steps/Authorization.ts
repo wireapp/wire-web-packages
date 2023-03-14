@@ -43,10 +43,10 @@ export const getAuthorization = async ({
   const reqBody = identity.newAuthzRequest(authzUrl, account, nonce);
   const response = await connection.getAuthorization(authzUrl, reqBody);
 
-  if (response?.authorization && !!response.authorization.status.length && !!response.nonce.length) {
+  if (response?.data && !!response.data.status.length && !!response.nonce.length) {
     return {
       authorization: identity.newAuthzResponse(
-        jsonToByteArray(JSON.stringify(response.authorization)),
+        jsonToByteArray(JSON.stringify(response.data)),
       ) as unknown as TempNewAcmeAuthzFix,
       nonce: response.nonce,
     };
