@@ -60,7 +60,7 @@ export class OAuthAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      throw new BackendError(error);
+      throw new BackendError(error as unknown as string);
     }
   }
 
@@ -76,7 +76,7 @@ export class OAuthAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      throw new BackendError(error);
+      throw new BackendError(error as unknown as string);
     }
   }
 
