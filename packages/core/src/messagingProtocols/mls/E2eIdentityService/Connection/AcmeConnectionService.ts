@@ -17,7 +17,7 @@
  *
  */
 
-import {AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeChallenge, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import axios, {AxiosInstance} from 'axios';
 import logdown from 'logdown';
 
@@ -27,6 +27,8 @@ import {
   GetInitialNonceReturnValue,
   GetNewAccountReturnValue,
   GetNewOrderReturnValue,
+  ValidateDpopChallengeReturnType,
+  ValidateOidcChallengeReturnType,
 } from './AcmeConnectionService.types';
 import {
   AuthorizationResponseDataSchema,
@@ -35,6 +37,8 @@ import {
   NewOrderResponseDataSchema,
   ResponseHeaderNonce,
   ResponseHeaderNonceSchema,
+  ValidateDpopChallengeResponseDataSchema,
+  ValidateOidcChallengeResponseDataSchema,
 } from './schema';
 
 export class AcmeConnectionService {
@@ -42,10 +46,11 @@ export class AcmeConnectionService {
   private readonly axiosInstance: AxiosInstance = axios.create();
 
   private readonly CA = 'acme';
-  private readonly IDENTIFIER = 'acme';
-  private readonly ACME_BACKEND = `https://balderdash.hogwash.work:9000/${this.CA}/${this.IDENTIFIER}`;
+  private readonly ACME_PROVISIONER = 'acme';
+  private readonly ACME_BACKEND = `https://balderdash.hogwash.work:9000/${this.CA}/${this.ACME_PROVISIONER}`;
   private readonly URL = {
     DIRECTORY: '/directory',
+    CHALLENGE: '/challenge',
   };
 
   constructor() {}
@@ -130,6 +135,45 @@ export class AcmeConnectionService {
       };
     } catch (e) {
       this.logger.error('Error while receiving Authorization', e);
+      return undefined;
+    }
+  }
+
+  public async validateDpopChallenge(url: AcmeChallenge['url'], payload: Uint8Array): ValidateDpopChallengeReturnType {
+    try {
+      const {data, headers} = await this.axiosInstance.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/jose+json',
+        },
+      });
+
+      const nonce = this.extractNonce(headers);
+      const validateDpopChallengeData = ValidateDpopChallengeResponseDataSchema.parse(data);
+      return {
+        challengeResult: validateDpopChallengeData,
+        nonce,
+      };
+    } catch (e) {
+      this.logger.error('Error while validating DPOP challenge', e);
+      return undefined;
+    }
+  }
+
+  public async validateOidcChallenge(url: AcmeChallenge['url'], payload: Uint8Array): ValidateOidcChallengeReturnType {
+    try {
+      const {data, headers} = await this.axiosInstance.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/jose+json',
+        },
+      });
+      const nonce = this.extractNonce(headers);
+      const validateOidcChallengeData = ValidateOidcChallengeResponseDataSchema.parse(data);
+      return {
+        challengeResult: validateOidcChallengeData,
+        nonce,
+      };
+    } catch (e) {
+      this.logger.error('Error while validating OIDC challenge', e);
       return undefined;
     }
   }

@@ -24,17 +24,12 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeConnectionService} from './Connection';
-import {
-  CreateNewAccountReturnValue,
-  CreateNewOrderParams,
-  CreateNewOrderReturnValue,
-  GetAuthorizationParams,
-  GetAuthorizationReturnValue,
-  GetClientAccessTokenParams,
-  TempNewAcmeAuthzFix,
-  User,
-} from './E2eIdentityService.types';
-import {jsonToByteArray} from './Helper';
+import {User} from './E2eIdentityService.types';
+import {createNewAccount} from './Steps/Account';
+import {getAuthorization} from './Steps/Authorization';
+import {doWireDpopChallenge} from './Steps/DpopChallenge';
+import {doWireOidcChallenge} from './Steps/OidcChallenge';
+import {createNewOrder} from './Steps/Order';
 
 export class E2eIdentityService {
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
@@ -59,109 +54,33 @@ export class E2eIdentityService {
   // ############ Main Functions ############
 
   private async getDirectory(): Promise<void> {
-    if (this.Identity) {
-      const directory = await this.ConnectionService.getDirectory();
-
-      if (directory) {
-        const parsedDirectory = this.Identity.directoryResponse(directory);
-        this.directory = parsedDirectory;
-      }
-    }
-  }
-
-  private async getInitialNonce(): Promise<string | undefined> {
-    if (this.directory?.newNonce) {
-      return await this.ConnectionService.getInitialNonce(this.directory.newNonce);
-    }
-    return undefined;
-  }
-
-  private async createNewAccount(initialNonce: string): CreateNewAccountReturnValue {
-    if (this.Identity && this.directory?.newAccount) {
-      const reqBody = this.Identity.newAccountRequest(this.directory, initialNonce);
-      const response = await this.ConnectionService.createNewAccount(this.directory.newAccount, reqBody);
-      if (response?.account && !!response.account.status.length && !!response.nonce.length) {
-        return {
-          account: this.Identity.newAccountResponse(jsonToByteArray(JSON.stringify(response.account))),
-          nonce: response.nonce,
-        };
-      }
-    }
-    return undefined;
-  }
-
-  private async createNewOrder({account, nonce}: CreateNewOrderParams): CreateNewOrderReturnValue {
-    if (this.Identity && this.directory?.newOrder) {
-      const {displayName, handle, domain} = this.user;
-      const reqBody = this.Identity.newOrderRequest(
-        displayName,
-        domain,
-        this.getClientIdentifier(),
-        handle,
-        this.expiryDays,
-        this.directory,
-        account,
-        nonce,
-      );
-
-      const response = await this.ConnectionService.createNewOrder(this.directory.newOrder, reqBody);
-      if (response?.order && !!response.order.status.length && !!response.nonce.length) {
-        return {
-          order: this.Identity.newOrderResponse(jsonToByteArray(JSON.stringify(response.order))),
-          authzUrl: response.order.authorizations[0],
-          nonce: response.nonce,
-        };
-      }
-    }
-    return undefined;
-  }
-
-  private async getAuthorization({account, authzUrl, nonce}: GetAuthorizationParams): GetAuthorizationReturnValue {
-    if (this.Identity) {
-      const reqBody = this.Identity.newAuthzRequest(authzUrl, account, nonce);
-      const response = await this.ConnectionService.getAuthorization(authzUrl, reqBody);
-      if (response?.authorization && !!response.authorization.status.length && !!response.nonce.length) {
-        return {
-          authorization: this.Identity.newAuthzResponse(
-            jsonToByteArray(JSON.stringify(response.authorization)),
-          ) as unknown as TempNewAcmeAuthzFix,
-          nonce: response.nonce,
-        };
-      }
-    }
-    return undefined;
-  }
-
-  private async getClientNonce(): Promise<string | undefined> {
     try {
-      return await this.apiClient.api.client.getNonce(this.clientId);
+      if (this.Identity) {
+        const directory = await this.ConnectionService.getDirectory();
+
+        if (directory) {
+          const parsedDirectory = this.Identity.directoryResponse(directory);
+          this.directory = parsedDirectory;
+        }
+      }
     } catch (e) {
-      this.logger.error('Could not get client nonce', e);
-      return undefined;
+      throw new Error('Error while trying to receive a directory', {cause: e});
     }
   }
 
-  private async getClientAccessToken({clientNonce, wireDpopChallenge}: GetClientAccessTokenParams) {
-    if (this.Identity) {
-      try {
-        const accessTokenUrl = `${this.apiClient.api.client.getAccessTokenUrl(this.clientId)}`;
-
-        const dpopToken = this.Identity.createDpopToken(
-          accessTokenUrl,
-          this.user.id,
-          BigInt(parseInt(this.clientId, 16)),
-          this.user.domain,
-          wireDpopChallenge,
-          clientNonce,
-          this.expiryDays,
-        );
-        return await this.apiClient.api.client.getAccessToken(this.clientId, dpopToken);
-      } catch (e) {
-        this.logger.error('Could not get client access token', e);
-        return undefined;
+  private async getInitialNonce(): Promise<string> {
+    try {
+      if (!this.directory) {
+        throw new Error('No directory');
       }
+      const nonce = await this.ConnectionService.getInitialNonce(this.directory.newNonce);
+      if (nonce) {
+        return nonce;
+      }
+      throw new Error('No initial-nonce received');
+    } catch (e) {
+      throw new Error('Error while trying to receive a nonce', {cause: e});
     }
-    return undefined;
   }
 
   // ############ Public Functions ############
@@ -188,49 +107,57 @@ export class E2eIdentityService {
     }
 
     // Step 2: Create a new account
-    const accountData = await this.createNewAccount(nonce);
-    if (!accountData) {
-      throw new Error('No account-data received');
-    }
+    const accountData = await createNewAccount({
+      connection: this.ConnectionService,
+      directory: this.directory,
+      identity: this.Identity,
+      nonce,
+    });
 
     // Step 3: Create a new order
-    const orderData = await this.createNewOrder({
+    const orderData = await createNewOrder({
+      clientIdentifier: this.getClientIdentifier(),
+      connection: this.ConnectionService,
+      directory: this.directory,
+      expiryDays: this.expiryDays,
+      identity: this.Identity,
+      user: this.user,
       account: accountData.account,
       nonce: accountData.nonce,
     });
-    if (!orderData) {
-      throw new Error('No order-data received');
-    }
 
     // Step 4: Get authorization challenges
-    const authData = await this.getAuthorization({
+    const authData = await getAuthorization({
+      connection: this.ConnectionService,
+      identity: this.Identity,
       account: accountData.account,
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
-    if (!authData) {
-      throw new Error('No authorization-data received');
-    }
 
-    // Step 5: Get a client nonce
-    const clientNonce = await this.getClientNonce();
-    if (!clientNonce) {
-      throw new Error('No client-nonce received');
-    }
-
-    console.info('adrian', clientNonce, authData.authorization);
-
-    // Step 6: Get a client access token
-    const {wireDpopChallenge} = authData.authorization;
-    if (!wireDpopChallenge) {
-      throw new Error('No wireDpopChallenge received');
-    }
-    const clientAccessToken = await this.getClientAccessToken({
-      clientNonce,
-      wireDpopChallenge,
+    // Step 5: Do DPOP Challenge
+    const dpopData = await doWireDpopChallenge({
+      connection: this.ConnectionService,
+      identity: this.Identity,
+      apiClient: this.apiClient,
+      clientId: this.clientId,
+      user: this.user,
+      expiryDays: this.expiryDays,
+      account: accountData.account,
+      nonce: authData.nonce,
+      authData,
     });
-    if (!clientAccessToken) {
-      throw new Error('No client-access-token received');
-    }
+
+    // Step 6: Do OIDC client challenge
+    const oidcData = await doWireOidcChallenge({
+      connection: this.ConnectionService,
+      identity: this.Identity,
+      user: this.user,
+      account: accountData.account,
+      nonce: authData.nonce,
+      authData,
+    });
+
+    console.log(dpopData, oidcData);
   }
 }

@@ -21,6 +21,46 @@ import z from 'zod';
 
 const nonOptionalString = z.string().min(1);
 
+export const ResponseHeaderNonceSchema = z.object({
+  'replay-nonce': nonOptionalString,
+});
+export type ResponseHeaderNonce = z.infer<typeof ResponseHeaderNonceSchema>;
+
+export const ResponseHeaderLocationSchema = z.object({
+  location: z.string().url(),
+});
+export type ResponseHeaderLocation = z.infer<typeof ResponseHeaderLocationSchema>;
+
+export const DirectoryResponseDataSchema = z.object({
+  newAccount: z.string().url(),
+  newNonce: z.string().url(),
+  newOrder: z.string().url(),
+});
+export type DirectoryResponseData = z.infer<typeof DirectoryResponseDataSchema>;
+
+export const NewAccountResponseDataSchema = z.object({
+  status: nonOptionalString,
+  orders: z.string().url(),
+  contact: z.array(z.string().email()),
+});
+export type NewAccountResponseData = z.infer<typeof NewAccountResponseDataSchema>;
+
+export const NewOrderResponseDataSchema = z.object({
+  status: nonOptionalString,
+  expires: nonOptionalString,
+  notBefore: nonOptionalString,
+  notAfter: nonOptionalString,
+  identifiers: z.array(
+    z.object({
+      type: nonOptionalString,
+      value: nonOptionalString,
+    }),
+  ),
+  authorizations: z.array(z.string().url()),
+  finalize: z.string().url(),
+});
+export type NewOrderResponseData = z.infer<typeof NewOrderResponseDataSchema>;
+
 export const AuthorizationResponseDataSchema = z.object({
   status: nonOptionalString,
   expires: nonOptionalString,
@@ -39,42 +79,13 @@ export const AuthorizationResponseDataSchema = z.object({
 });
 export type AuthorizationResponseData = z.infer<typeof AuthorizationResponseDataSchema>;
 
-export const NewOrderResponseDataSchema = z.object({
+export const ValidateDpopChallengeResponseDataSchema = z.object({
+  type: nonOptionalString,
+  url: z.string().url(),
   status: nonOptionalString,
-  expires: nonOptionalString,
-  notBefore: nonOptionalString,
-  notAfter: nonOptionalString,
-  identifiers: z.array(
-    z.object({
-      type: nonOptionalString,
-      value: nonOptionalString,
-    }),
-  ),
-  authorizations: z.array(z.string().url()),
-  finalize: z.string().url(),
+  token: nonOptionalString,
 });
-export type NewOrderResponseData = z.infer<typeof NewOrderResponseDataSchema>;
+export type ValidateDpopChallengeResponseData = z.infer<typeof ValidateDpopChallengeResponseDataSchema>;
 
-export const NewAccountResponseDataSchema = z.object({
-  status: nonOptionalString,
-  orders: z.string().url(),
-  contact: z.array(z.string().email()),
-});
-export type NewAccountResponseData = z.infer<typeof NewAccountResponseDataSchema>;
-
-export const DirectoryResponseDataSchema = z.object({
-  newAccount: z.string().url(),
-  newNonce: z.string().url(),
-  newOrder: z.string().url(),
-});
-export type DirectoryResponseData = z.infer<typeof DirectoryResponseDataSchema>;
-
-export const ResponseHeaderNonceSchema = z.object({
-  'replay-nonce': nonOptionalString,
-});
-export type ResponseHeaderNonce = z.infer<typeof ResponseHeaderNonceSchema>;
-
-export const ResponseHeaderLocationSchema = z.object({
-  location: z.string().url(),
-});
-export type ResponseHeaderLocation = z.infer<typeof ResponseHeaderLocationSchema>;
+export const ValidateOidcChallengeResponseDataSchema = z.object({});
+export type ValidateOidcChallengeResponseData = z.infer<typeof ValidateOidcChallengeResponseDataSchema>;

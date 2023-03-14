@@ -17,34 +17,20 @@
  *
  */
 
-import {AcmeChallenge, NewAcmeAuthz, NewAcmeOrder} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeChallenge} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 export type User = {
   id: string;
   domain: string;
   displayName: string;
   handle: string;
+  OAuthIdToken: string;
 };
-type Account = Uint8Array;
-type Nonce = string;
+export type Account = Uint8Array;
+export type Nonce = string;
 
-export type CreateNewAccountReturnValue = Promise<{account: Uint8Array; nonce: string} | undefined>;
-
-export interface CreateNewOrderParams {
-  account: Account;
+export interface FinishOidcChallengeParams {
+  oidcChallenge: AcmeChallenge;
   nonce: Nonce;
-}
-export type CreateNewOrderReturnValue = Promise<{order: NewAcmeOrder; nonce: string; authzUrl: string} | undefined>;
-
-export interface GetAuthorizationParams {
   account: Account;
-  nonce: Nonce;
-  authzUrl: string;
-}
-export type TempNewAcmeAuthzFix = Omit<NewAcmeAuthz, 'wireHttpChallenge'> & {wireDpopChallenge: AcmeChallenge};
-export type GetAuthorizationReturnValue = Promise<{authorization: TempNewAcmeAuthzFix; nonce: string} | undefined>;
-
-export interface GetClientAccessTokenParams {
-  clientNonce: string;
-  wireDpopChallenge: AcmeChallenge;
 }

@@ -17,7 +17,14 @@
  *
  */
 
-import {AuthorizationResponseData, NewAccountResponseData, NewOrderResponseData, ResponseHeaderNonce} from './schema';
+import {
+  AuthorizationResponseData,
+  NewAccountResponseData,
+  NewOrderResponseData,
+  ResponseHeaderNonce,
+  ValidateDpopChallengeResponseData,
+  ValidateOidcChallengeResponseData,
+} from './schema';
 
 export type GetDirectoryReturnValue = Promise<Uint8Array | undefined>;
 
@@ -42,6 +49,22 @@ export type GetNewOrderReturnValue = Promise<
 export type GetAuthorizationReturnValue = Promise<
   | {
       authorization: AuthorizationResponseData;
+      nonce: ResponseHeaderNonce['replay-nonce'];
+    }
+  | undefined
+>;
+
+export type ValidateDpopChallengeReturnType = Promise<
+  | {
+      challengeResult: ValidateDpopChallengeResponseData;
+      nonce: ResponseHeaderNonce['replay-nonce'];
+    }
+  | undefined
+>;
+
+export type ValidateOidcChallengeReturnType = Promise<
+  | {
+      challengeResult: ValidateOidcChallengeResponseData;
       nonce: ResponseHeaderNonce['replay-nonce'];
     }
   | undefined
