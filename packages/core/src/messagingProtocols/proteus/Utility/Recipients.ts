@@ -18,13 +18,21 @@
  */
 
 import {APIClient} from '@wireapp/api-client/lib/APIClient';
-import {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId, QualifiedUserPreKeyBundleMap, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
-
-import {getQualifiedPreKeyBundle, getPreKeyBundleMap} from './PreKeyBundle/PreKeyBundle';
+import {QualifiedUserClientMap} from '@wireapp/api-client/lib/client';
+import {QualifiedUserClients} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {getConversationQualifiedMembers} from '../../../conversation/ConversationService/Utility/getConversationQualifiedMembers';
-import {isQualifiedUserClients, isUserClients} from '../../../util';
+import {flattenUserMap, nestUsersList} from '../../../conversation/message/UserClientsUtil';
+import {isQualifiedUserClients} from '../../../util';
+
+function toQualifiedUserClients(publicClients: QualifiedUserClientMap): QualifiedUserClients {
+  const userList = flattenUserMap(publicClients).map(({userId, data: clientInfo}) => ({
+    userId,
+    data: clientInfo.map(client => client.id),
+  }));
+  return nestUsersList(userList);
+}
 
 interface GetRecipientsForConversationQualifiedParams {
   apiClient: APIClient;
@@ -32,37 +40,18 @@ interface GetRecipientsForConversationQualifiedParams {
   userIds?: QualifiedId[] | QualifiedUserClients;
 }
 
-const getQualifiedRecipientsForConversation = async ({
+const getRecipientsForConversation = async ({
   apiClient,
   conversationId,
   userIds,
-}: GetRecipientsForConversationQualifiedParams): Promise<QualifiedUserClients | QualifiedUserPreKeyBundleMap> => {
+}: GetRecipientsForConversationQualifiedParams): Promise<QualifiedUserClients> => {
   if (isQualifiedUserClients(userIds)) {
     return userIds;
   }
 
   const recipientIds = userIds || (await getConversationQualifiedMembers({apiClient: apiClient, conversationId}));
-  return getQualifiedPreKeyBundle({apiClient, userIds: recipientIds});
+  const allClients = await apiClient.api.user.postListClients({qualified_users: recipientIds});
+  return toQualifiedUserClients(allClients.qualified_user_map);
 };
 
-interface GetRecipientsForConversationParams {
-  apiClient: APIClient;
-  conversationId: QualifiedId;
-  userIds?: string[] | UserClients;
-}
-const getRecipientsForConversation = async ({
-  apiClient,
-  conversationId,
-  userIds,
-}: GetRecipientsForConversationParams): Promise<UserClients | UserPreKeyBundleMap> => {
-  if (isUserClients(userIds)) {
-    return userIds;
-  }
-  return getPreKeyBundleMap({
-    apiClient: apiClient,
-    conversationId,
-    userIds,
-  });
-};
-
-export {getQualifiedRecipientsForConversation, getRecipientsForConversation};
+export {getRecipientsForConversation};

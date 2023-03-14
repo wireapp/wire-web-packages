@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2022 Wire Swiss GmbH
+ * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,4 +17,18 @@
  *
  */
 
-export * from './PreKeyBundle';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+
+import {HttpClient} from '../http';
+
+export class GenericAPI {
+  constructor(private readonly client: HttpClient) {}
+
+  /**
+   * Get response from a given request config.
+   * @param config AxiosRequestConfig
+   */
+  public async sendRequest<T = unknown>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+    return await this.client.sendRequest<T>(config);
+  }
+}

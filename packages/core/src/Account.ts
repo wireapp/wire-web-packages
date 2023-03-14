@@ -50,6 +50,7 @@ import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
@@ -177,16 +178,17 @@ export class Account extends TypedEventEmitter<Events> {
   /**
    * Will set the APIClient to use a specific version of the API (by default uses version 0)
    * It will fetch the API Config and use the highest possible version
-   * @param acceptedVersions Which version the consumer supports
-   * @param useDevVersion allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
+   * @param min mininum version to use
+   * @param max maximum version to use
+   * @param allowDev allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
    *   If we have version 2 that is a dev version, this is going to be the output of those calls
-   *   - useVersion([0, 1, 2], true) > version 2 is used
-   *   - useVersion([0, 1, 2], false) > version 1 is used
-   *   - useVersion([0, 1], true) > version 1 is used
+   *   - useVersion(0, 2, true) > version 2 is used
+   *   - useVersion(0, 2) > version 1 is used
+   *   - useVersion(0, 1, true) > version 1 is used
    * @return The highest version that is both supported by client and backend
    */
-  public async useAPIVersion(supportedVersions: number[], useDevVersion?: boolean) {
-    const features = await this.apiClient.useVersion(supportedVersions, useDevVersion);
+  public async useAPIVersion(min: number, max: number, allowDev?: boolean) {
+    const features = await this.apiClient.useVersion(min, max, allowDev);
     this.backendFeatures = features;
     return features;
   }
@@ -254,6 +256,8 @@ export class Account extends TypedEventEmitter<Events> {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set or context not initialized.');
     }
+    // we reset the services to re-instantiate a new CryptoClient instance
+    await this.initServices(this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient(entropyData);
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
 
@@ -305,14 +309,24 @@ export class Account extends TypedEventEmitter<Events> {
 
       // initialize scheduler for syncing key packages with backend
       this.service.mls.checkForKeyPackagesBackendSync();
+
+      // leave stale conference subconversations (e.g after a crash)
+      await this.service.mls.leaveStaleConferenceSubconversations();
     }
 
     return validClient;
   }
 
   private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, db: CoreDatabase, enableMLS: boolean) {
+    /* There are 3 cases where we want to instantiate CoreCrypto:
+     * 1. MLS is enabled
+     * 2. The user has enabled CoreCrypto in the config
+     * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
+     */
     const clientType =
-      enableMLS || !!this.cryptoProtocolConfig?.useCoreCrypto
+      enableMLS ||
+      !!this.cryptoProtocolConfig?.useCoreCrypto ||
+      cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
         ? CryptoClientType.CORE_CRYPTO
         : CryptoClientType.CRYPTOBOX;
 
@@ -360,8 +374,6 @@ export class Account extends TypedEventEmitter<Events> {
         : undefined;
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
     });
@@ -377,7 +389,7 @@ export class Account extends TypedEventEmitter<Events> {
     const teamService = new TeamService(this.apiClient);
 
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
-    const userService = new UserService(this.apiClient, broadcastService, connectionService);
+    const userService = new UserService(this.apiClient);
 
     this.service = {
       mls: mlsService,

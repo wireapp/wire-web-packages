@@ -18,8 +18,8 @@
  */
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
-import {UserClients} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId, UserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
+import {QualifiedUserClients} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 import {Logger} from 'logdown';
 
@@ -27,21 +27,28 @@ import {APIClient} from '@wireapp/api-client';
 
 import {SessionId} from './SessionHandler.types';
 
-import {flattenUserClients} from '../../../../conversation/message/UserClientsUtil';
+import {flattenUserMap} from '../../../../conversation/message/UserClientsUtil';
 import {CryptoClient} from '../../ProteusService/CryptoClient';
 
 interface ConstructSessionIdParams {
-  userId: string | QualifiedId;
+  userId: QualifiedId;
   clientId: string;
-  useQualifiedIds: boolean;
   domain?: string;
 }
 
-const constructSessionId = ({userId, clientId, useQualifiedIds, domain}: ConstructSessionIdParams): string => {
-  const id = typeof userId === 'string' ? userId : userId.id;
-  const baseDomain = typeof userId === 'string' ? domain : userId.domain;
+type InitSessionsResult = {
+  /** valid sessions that either already existed or have been freshly created */
+  sessions: string[];
+  /** client that do we do not have sessions with and that do not have existence on backend (deleted clients) */
+  unknowns?: QualifiedUserClients;
+  /** clients for which we had problem fetch prekeys (federated server down) */
+  failed?: QualifiedId[];
+};
+
+const constructSessionId = ({userId, clientId}: ConstructSessionIdParams): string => {
+  const {id, domain} = userId;
   const baseId = `${id}@${clientId}`;
-  return baseDomain && useQualifiedIds ? `${baseDomain}@${baseId}` : baseId;
+  return domain ? `${domain}@${baseId}` : baseId;
 };
 
 const isSessionId = (object: any): object is SessionId => {
@@ -67,66 +74,8 @@ interface CreateSessionsBase {
   logger?: Logger;
 }
 
-interface CreateLegacySessionsProps extends CreateSessionsBase {
-  userClients: UserClients;
-}
-
-const createLegacySessions = async ({
-  userClients,
-  apiClient,
-  cryptoClient,
-  logger,
-}: CreateLegacySessionsProps): Promise<string[]> => {
-  const preKeyBundleMap = await apiClient.api.user.postMultiPreKeyBundles(userClients);
-  const sessions = await createSessionsFromPreKeys({
-    preKeyBundleMap,
-    useQualifiedIds: false,
-    cryptoClient,
-    logger,
-  });
-
-  return sessions;
-};
-
-interface CreateQualifiedSessionsProps extends CreateSessionsBase {
-  userClientMap: UserClients;
-  domain: string;
-}
-
-/**
- * Create sessions for the qualified clients.
- * @param {userClientMap} map of domain to (map of user IDs to client IDs)
- */
-const createQualifiedSessions = async ({
-  userClientMap,
-  domain,
-  apiClient,
-  cryptoClient,
-  logger,
-}: CreateQualifiedSessionsProps): Promise<string[]> => {
-  const prekeyBundleMap = await apiClient.api.user.postQualifiedMultiPreKeyBundles({[domain]: userClientMap});
-
-  const sessions: string[] = [];
-
-  for (const domain in prekeyBundleMap) {
-    const domainUsers = prekeyBundleMap[domain];
-
-    const domainSessions = await createSessionsFromPreKeys({
-      preKeyBundleMap: domainUsers,
-      domain,
-      useQualifiedIds: true,
-      cryptoClient,
-      logger,
-    });
-    sessions.push(...domainSessions);
-  }
-
-  return sessions;
-};
-
 interface CreateSessionsProps extends CreateSessionsBase {
-  userClientMap: UserClients;
-  domain?: string;
+  recipients: QualifiedUserClients;
 }
 
 /**
@@ -137,20 +86,11 @@ const initSession = async (
   {userId, clientId, initialPrekey}: {userId: QualifiedId; clientId: string; initialPrekey?: PreKey},
   {cryptoClient, apiClient}: {apiClient: APIClient; cryptoClient: CryptoClient},
 ): Promise<string> => {
-  const sessionId = constructSessionId({userId, clientId, useQualifiedIds: !!userId.domain});
-  const sessionExists = await cryptoClient.sessionExists(sessionId);
-  if (sessionExists) {
-    return sessionId;
-  }
-  if (initialPrekey) {
-    const prekeyBuffer = Decoder.fromBase64(initialPrekey.key).asBytes;
-    await cryptoClient.sessionFromPrekey(sessionId, prekeyBuffer);
-    await cryptoClient.saveSession(sessionId);
-    return sessionId;
-  }
-  const sessions = await initSessions({
-    recipients: {[userId.id]: [clientId]},
-    domain: userId.domain,
+  const recipients = initialPrekey
+    ? {[userId.domain]: {[userId.id]: {[clientId]: initialPrekey}}}
+    : {[userId.domain]: {[userId.id]: [clientId]}};
+  const {sessions} = await initSessions({
+    recipients,
     apiClient,
     cryptoClient,
   });
@@ -159,30 +99,25 @@ const initSession = async (
 
 /**
  * Create sessions for legacy/qualified clients (umberella function).
- * Will call createQualifiedSessions or createLegacySessions based on passed userClientMap.
  * @param {userClientMap} map of domain to (map of user IDs to client IDs) or map of user IDs containg the lists of clients
  */
-const createSessions = async ({
-  userClientMap,
-  domain,
-  apiClient,
-  cryptoClient,
-  logger,
-}: CreateSessionsProps): Promise<string[]> => {
-  if (domain) {
-    return await createQualifiedSessions({userClientMap, domain, apiClient, cryptoClient, logger});
-  }
-  return await createLegacySessions({
-    userClients: userClientMap,
-    apiClient,
+const createSessions = async ({recipients, apiClient, cryptoClient}: CreateSessionsProps) => {
+  const {qualified_user_client_prekeys: prekeysBundle, failed_to_list: failed} =
+    await apiClient.api.user.postMultiPreKeyBundles(recipients);
+
+  const result = await createSessionsFromPreKeys({
+    recipients: prekeysBundle,
     cryptoClient,
-    logger,
   });
+
+  return {
+    ...result,
+    failed,
+  };
 };
 
 interface GetSessionsAndClientsFromRecipientsProps {
-  recipients: UserClients | UserPreKeyBundleMap;
-  domain?: string;
+  recipients: QualifiedUserClients | QualifiedUserPreKeyBundleMap;
   apiClient: APIClient;
   cryptoClient: CryptoClient;
   logger?: Logger;
@@ -193,49 +128,71 @@ interface GetSessionsAndClientsFromRecipientsProps {
  */
 const initSessions = async ({
   recipients,
-  domain = '',
   apiClient,
   cryptoClient,
   logger,
-}: GetSessionsAndClientsFromRecipientsProps): Promise<string[]> => {
-  const missingUserClients: UserClients = {};
+}: GetSessionsAndClientsFromRecipientsProps): Promise<InitSessionsResult> => {
+  const missingClients: QualifiedUserClients = {};
+  const missingClientsWithPrekeys: QualifiedUserPreKeyBundleMap = {};
   const existingSessions: string[] = [];
-  const users = flattenUserClients<string[] | Record<string, unknown>>(recipients, domain);
+  const users = flattenUserMap<string[] | Record<string, PreKey | null>>(recipients);
 
   for (const user of users) {
     const {userId, data} = user;
     const clients = Array.isArray(data) ? data : Object.keys(data);
     for (const clientId of clients) {
-      const sessionId = constructSessionId({userId, clientId, useQualifiedIds: !!domain});
+      const sessionId = constructSessionId({userId, clientId});
       if (await cryptoClient.sessionExists(sessionId)) {
         existingSessions.push(sessionId);
         continue;
       }
-      missingUserClients[userId.id] = missingUserClients[userId.id] || [];
-      missingUserClients[userId.id].push(clientId);
+      if (!Array.isArray(data)) {
+        const domainMissingWithPrekey = missingClientsWithPrekeys[userId.domain] ?? {};
+        domainMissingWithPrekey[userId.id] = domainMissingWithPrekey[userId.id] ?? {};
+        domainMissingWithPrekey[userId.id][clientId] = data[clientId];
+        missingClientsWithPrekeys[userId.domain] = domainMissingWithPrekey;
+        continue;
+      }
+      const domainMissing = missingClients[userId.domain] ?? {};
+      domainMissing[userId.id] = domainMissing[userId.id] || [];
+      domainMissing[userId.id].push(clientId);
+      missingClients[userId.domain] = domainMissing;
     }
   }
 
-  if (Object.keys(missingUserClients).length === 0) {
-    return existingSessions;
-  }
+  const {sessions: prekeyCreated, unknowns: prekeyUnknows} =
+    Object.keys(missingClientsWithPrekeys).length > 0
+      ? await createSessionsFromPreKeys({
+          recipients: missingClientsWithPrekeys,
+          cryptoClient,
+        })
+      : {sessions: [], unknowns: {}};
 
-  const newSessions = await createSessions({
-    userClientMap: missingUserClients,
-    domain,
-    apiClient,
-    cryptoClient,
-    logger,
-  });
+  const {
+    sessions: created,
+    failed,
+    unknowns,
+  } = Object.keys(missingClients).length > 0
+    ? await createSessions({
+        recipients: missingClients,
+        apiClient,
+        cryptoClient,
+        logger,
+      })
+    : {sessions: [], failed: undefined, unknowns: undefined};
 
-  return [...existingSessions, ...newSessions];
+  const allUnknowns = {...prekeyUnknows, ...unknowns};
+  return {
+    sessions: [...existingSessions, ...prekeyCreated, ...created],
+    failed,
+    unknowns: Object.keys(allUnknowns).length > 0 ? allUnknowns : undefined,
+  };
 };
 
 interface DeleteSessionParams {
   userId: QualifiedId;
   clientId: string;
   cryptoClient: CryptoClient;
-  useQualifiedIds: boolean;
 }
 async function deleteSession(params: DeleteSessionParams) {
   const sessionId = constructSessionId(params);
@@ -243,59 +200,61 @@ async function deleteSession(params: DeleteSessionParams) {
 }
 
 interface CreateSessionsFromPreKeysProps {
-  preKeyBundleMap: UserPreKeyBundleMap;
+  recipients: QualifiedUserPreKeyBundleMap;
   cryptoClient: CryptoClient;
-  useQualifiedIds: boolean;
-  domain?: string;
   logger?: Logger;
 }
 
 const createSessionsFromPreKeys = async ({
-  preKeyBundleMap,
-  domain = '',
-  useQualifiedIds,
+  recipients,
   cryptoClient,
-  logger,
-}: CreateSessionsFromPreKeysProps): Promise<string[]> => {
+}: CreateSessionsFromPreKeysProps): Promise<InitSessionsResult> => {
   const sessions: string[] = [];
+  const unknowns: QualifiedUserClients = {};
 
-  for (const userId in preKeyBundleMap) {
-    const userClients = preKeyBundleMap[userId];
+  for (const domain in recipients) {
+    for (const userId in recipients[domain]) {
+      const userClients = recipients[domain][userId];
 
-    for (const clientId in userClients) {
-      const sessionId = constructSessionId({userId, clientId, domain, useQualifiedIds});
-      const prekey = userClients[clientId];
+      for (const clientId in userClients) {
+        const sessionId = constructSessionId({userId: {id: userId, domain}, clientId});
+        const prekey = userClients[clientId];
 
-      if (!prekey) {
-        logger?.warn(
-          `A prekey for client ${clientId} of user ${userId}${
-            domain ? ` on domain ${domain}` : ''
-          } was not found, session won't be created.`,
-        );
-        continue;
+        if (!prekey) {
+          const domainUnknowns = unknowns[domain] ?? {};
+          domainUnknowns[userId] = domainUnknowns[userId] ?? [];
+          domainUnknowns[userId].push(clientId);
+          unknowns[domain] = domainUnknowns;
+          continue;
+        }
+
+        const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
+
+        await cryptoClient.sessionFromPrekey(sessionId, prekeyBuffer);
+        await cryptoClient.saveSession(sessionId);
+
+        sessions.push(sessionId);
       }
-
-      const prekeyBuffer = Decoder.fromBase64(prekey.key).asBytes;
-
-      await cryptoClient.sessionFromPrekey(sessionId, prekeyBuffer);
-      await cryptoClient.saveSession(sessionId);
-
-      sessions.push(sessionId);
     }
   }
 
-  return sessions;
+  return {sessions, unknowns};
 };
 
-type EncryptedPayloads<T> = Record<string, Record<string, T>>;
+type EncryptedPayloads<T> = Record<string, Record<string, Record<string, T>>>;
 /**
  * creates an encrypted payload that can be sent to backend from a bunch of sessionIds/encrypted payload
  */
 const buildEncryptedPayloads = <T>(payloads: Map<string, T>): EncryptedPayloads<T> => {
   return [...payloads].reduce((acc, [sessionId, payload]) => {
-    const {userId, clientId} = parseSessionId(sessionId);
-    acc[userId] = acc[userId] ?? {};
-    acc[userId][clientId] = payload;
+    const {userId, domain, clientId} = parseSessionId(sessionId);
+    if (!domain) {
+      throw new Error('Invalid session ID');
+    }
+    const domainPayloads = acc[domain] ?? {};
+    domainPayloads[userId] = domainPayloads[userId] ?? {};
+    domainPayloads[userId][clientId] = payload;
+    acc[domain] = domainPayloads;
     return acc;
   }, {} as EncryptedPayloads<T>);
 };

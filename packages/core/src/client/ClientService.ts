@@ -53,7 +53,7 @@ export class ClientService {
     private readonly proteusService: ProteusService,
     private readonly storeEngine: CRUDEngine,
   ) {
-    this.database = new ClientDatabaseRepository(this.storeEngine, this.apiClient.backendFeatures.federationEndpoints);
+    this.database = new ClientDatabaseRepository(this.storeEngine);
     this.backend = new ClientBackendRepository(this.apiClient);
   }
 
@@ -118,12 +118,11 @@ export class ClientService {
       if (notFoundOnBackend && this.storeEngine) {
         this.logger.log('Could not find valid client on backend');
         const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
+        this.logger.log('Deleting previous identity');
+        await this.proteusService.wipe(this.storeEngine);
         if (shouldDeleteWholeDatabase) {
-          this.logger.log('Last client was temporary - Deleting database');
+          this.logger.log('Last client was temporary - Deleting content database');
           await this.storeEngine.clearTables();
-        } else {
-          this.logger.log('Last client was permanent - Deleting previous identity');
-          await this.proteusService.wipe(this.storeEngine);
         }
       }
     }
@@ -138,9 +137,8 @@ export class ClientService {
     const registeredClients = await this.backend.getClients();
     const filteredClients = registeredClients.filter(client => client.id !== this.apiClient.context!.clientId);
     return this.database.createClientList(
-      this.apiClient.context!.userId,
+      {id: this.apiClient.context!.userId, domain: this.apiClient.context!.domain ?? ''},
       filteredClients,
-      this.apiClient.context?.domain,
     );
   }
 

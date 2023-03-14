@@ -71,7 +71,7 @@ export class OAuthAPI {
     const config: AxiosRequestConfig = {
       data: oauthBody,
       method: 'post',
-      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODES}}}`,
+      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODES}`,
     };
     try {
       await this.client.sendJSON(config);
@@ -86,7 +86,7 @@ export class OAuthAPI {
   public async getClient(applicationId: string): Promise<OAuthClient> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.CLIENTS}/${applicationId}}`,
+      url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.CLIENTS}/${applicationId}`,
     };
 
     const response = await this.client.sendJSON<OAuthClient>(config);

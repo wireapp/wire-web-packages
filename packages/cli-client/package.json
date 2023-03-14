@@ -11,7 +11,7 @@
     "@wireapp/api-client": "workspace:^",
     "@wireapp/core": "workspace:^",
     "@wireapp/store-engine-fs": "workspace:^",
-    "axios": "1.3.3",
+    "axios": "1.3.4",
     "commander": "10.0.0",
     "dotenv": "16.0.3",
     "fs-extra": "11.1.0"
@@ -32,6 +32,6 @@
   "bin": {
     "wire-cli": "dist/index.js"
   },
-  "version": "12.0.73",
+  "version": "12.0.88",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }

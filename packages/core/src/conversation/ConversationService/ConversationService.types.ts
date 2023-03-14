@@ -19,10 +19,8 @@
 
 import {
   QualifiedUserClients,
-  ClientMismatch,
   ConversationProtocol,
   MessageSendingStatus,
-  UserClients,
   Conversation,
 } from '@wireapp/api-client/lib/conversation';
 import {ConversationEvent} from '@wireapp/api-client/lib/event';
@@ -45,12 +43,8 @@ export interface MessageSendingOptions {
    *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
    *    When given a QualifiedUserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
    */
-  userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+  userIds?: QualifiedId[] | QualifiedUserClients;
 
-  /**
-   * Will send the message as a protobuf payload
-   */
-  sendAsProtobuf?: boolean;
   nativePush?: boolean;
 
   /**
@@ -75,10 +69,7 @@ export interface MessageSendingCallbacks {
    * @param wasSent Indicate whether the message was already sent or if it can still be canceled
    * @return
    */
-  onClientMismatch?: (
-    status: ClientMismatch | MessageSendingStatus,
-    wasSent: boolean,
-  ) => void | boolean | Promise<boolean>;
+  onClientMismatch?: (status: MessageSendingStatus, wasSent: boolean) => void | boolean | Promise<boolean>;
 }
 
 /**

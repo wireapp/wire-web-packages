@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [39.1.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.4...@wireapp/core@39.1.5) (2023-03-07)
+
+### Bug Fixes
+
+* More flexible useVersion api ([#4944](https://github.com/wireapp/wire-web-packages/issues/4944)) ([a328bfe](https://github.com/wireapp/wire-web-packages/commit/a328bfe85359fd371256e79b2545b50f89636ec2))
+
+## [39.1.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.3...@wireapp/core@39.1.4) (2023-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.1.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.2...@wireapp/core@39.1.3) (2023-03-02)
+
+### Bug Fixes
+
+* Improve fetchAllParticipantsClient types ([bc660e8](https://github.com/wireapp/wire-web-packages/commit/bc660e8e3e105aabaaba42115fb3ad7be36393aa))
+
+## [39.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.1...@wireapp/core@39.1.2) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.0...@wireapp/core@39.1.1) (2023-03-02)
+
+### Bug Fixes
+
+* Do not consume prekeys when listing members-clients of a conversation ([#4932](https://github.com/wireapp/wire-web-packages/issues/4932)) ([c6ffa42](https://github.com/wireapp/wire-web-packages/commit/c6ffa4217df8a3fc28aef04786392df575f4b097))
+
+# [39.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.2...@wireapp/core@39.1.0) (2023-03-02)
+
+### Features
+
+* Warn consumer that some prekeys could not be fetch when encrypting a message ([#4931](https://github.com/wireapp/wire-web-packages/issues/4931)) ([3c7e0eb](https://github.com/wireapp/wire-web-packages/commit/3c7e0eb59cbd34f25e11469a9b645cb8f2c306d2))
+
+## [39.0.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.1...@wireapp/core@39.0.2) (2023-03-01)
+
+### Bug Fixes
+
+* Avoid crashing when a mismatch happens on a domain we are not aware of ([#4929](https://github.com/wireapp/wire-web-packages/issues/4929)) ([958ee22](https://github.com/wireapp/wire-web-packages/commit/958ee22629283942e6ea87f5e15521f421bb2930))
+
+## [39.0.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.0...@wireapp/core@39.0.1) (2023-03-01)
+
+### Bug Fixes
+
+* Enable CoreCrypto if user has already started using it ([#4928](https://github.com/wireapp/wire-web-packages/issues/4928)) ([203d1b4](https://github.com/wireapp/wire-web-packages/commit/203d1b44d21164527b0d237fff6db62f6e9356bf))
+
+# [39.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.2...@wireapp/core@39.0.0) (2023-03-01)
+
+### Code Refactoring
+
+* Sunset non-domain-aware message sending ([#4927](https://github.com/wireapp/wire-web-packages/issues/4927)) ([6828876](https://github.com/wireapp/wire-web-packages/commit/6828876ce3a37b95804c55ecc040a9dd8dfe8d65))
+
+### BREAKING CHANGES
+
+* Will not be compatible with a backend that only supports api v0 (backends that are >1 year old). You will now be forced to pass fully qualified ID when calling method that need conversation or user identification
+
+## [38.15.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.1...@wireapp/core@38.15.2) (2023-02-27)
+
+### Bug Fixes
+
+* Reset CoreCrypto instance when client is registered ([#4926](https://github.com/wireapp/wire-web-packages/issues/4926)) ([a72fa5e](https://github.com/wireapp/wire-web-packages/commit/a72fa5e13ae38dfbbe071eee6359f5c9e9a0f8b2))
+
+## [38.15.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.0...@wireapp/core@38.15.1) (2023-02-27)
+
+### Bug Fixes
+
+* Warn consumer that some clients have been deleted ([#4914](https://github.com/wireapp/wire-web-packages/issues/4914)) ([e3376d2](https://github.com/wireapp/wire-web-packages/commit/e3376d27f5a26f0eb8656f24ea49389835ba6000))
+
+# [38.15.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.3...@wireapp/core@38.15.0) (2023-02-23)
+
+### Features
+
+* **core, api-client:** leave stale subconversations after crash [FS-1564] ([#4912](https://github.com/wireapp/wire-web-packages/issues/4912)) ([b42de93](https://github.com/wireapp/wire-web-packages/commit/b42de937a8a6189e77b4934aca4c251442672a02))
+
+## [38.14.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.2...@wireapp/core@38.14.3) (2023-02-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.14.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.1...@wireapp/core@38.14.2) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.14.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.0...@wireapp/core@38.14.1) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/core
+
 # [38.14.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.13.2...@wireapp/core@38.14.0) (2023-02-20)
 
 ### Features

@@ -17,8 +17,8 @@
  *
  */
 
-import type {UserClients} from '@wireapp/api-client/lib/conversation';
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import type {QualifiedUserClients, UserClients} from '@wireapp/api-client/lib/conversation';
+import {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 
 import {APIClient} from '@wireapp/api-client';
 
@@ -26,22 +26,34 @@ import {constructSessionId, initSession, initSessions} from './SessionHandler';
 
 import {CryptoClient} from '../../ProteusService/CryptoClient';
 
-function generatePrekeys(userId: QualifiedId, clientIds: string[]) {
-  const clients = clientIds.reduce((prekeys, clientId, index) => {
-    return {
-      ...prekeys,
-      [clientId]: {
-        id: index,
-        key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
-      },
-    };
-  }, {});
+function generatePrekeys(recipients: QualifiedUserClients) {
+  const prekeys: QualifiedUserPreKeyBundleMap = {};
+  const failed: QualifiedId[] = [];
 
-  return {
-    [userId.id]: {
-      ...clients,
-    },
-  };
+  Object.entries(recipients).forEach(([domain, userClients]) => {
+    Object.entries(userClients).forEach(([userId, clientIds]) => {
+      if (domain.startsWith('offline:')) {
+        failed.push({id: userId, domain});
+        return;
+      }
+      const domainUsers = prekeys[domain] || {};
+      domainUsers[userId] = clientIds.reduce((acc, clientId, index) => {
+        const payload = clientId.startsWith('deleted:')
+          ? null
+          : {
+              id: index,
+              key: 'pQABARn//wKhAFggJ1Fbpg5l6wnzKOJE+vXpRnkqUYhIvVnR5lNXEbO2o/0DoQChAFggHxZvgvtDktY/vqBcpjjo6rQnXvcNQhfwmy8AJQJKlD0E9g==',
+            };
+        return {
+          ...acc,
+          [clientId]: payload,
+        };
+      }, {});
+      prekeys[domain] = domainUsers;
+    });
+  });
+
+  return Promise.resolve({qualified_user_client_prekeys: prekeys, failed_to_list: failed});
 }
 
 describe('SessionHandler', () => {
@@ -54,29 +66,21 @@ describe('SessionHandler', () => {
   } as unknown as CryptoClient;
   const apiClient = new APIClient({urls: APIClient.BACKEND.STAGING});
 
+  beforeAll(() => {
+    jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockImplementation(generatePrekeys);
+  });
+
   describe('constructSessionId', () => {
     describe('constructs a session ID', () => {
       it('without a domain', () => {
-        const sessionId = constructSessionId({userId: 'user-id', clientId: 'client-id', useQualifiedIds: true});
+        const sessionId = constructSessionId({userId: {id: 'user-id', domain: ''}, clientId: 'client-id'});
         expect(sessionId).toBe('user-id@client-id');
       });
 
       it('with a domain', () => {
         const sessionId = constructSessionId({
-          userId: 'user-id',
+          userId: {id: 'user-id', domain: 'domain'},
           clientId: 'client-id',
-          domain: 'domain',
-          useQualifiedIds: true,
-        });
-        expect(sessionId).toBe('domain@user-id@client-id');
-      });
-
-      it('with a domain and useQualifiedIds', () => {
-        const sessionId = constructSessionId({
-          userId: 'user-id',
-          clientId: 'client-id',
-          domain: 'domain',
-          useQualifiedIds: true,
         });
         expect(sessionId).toBe('domain@user-id@client-id');
       });
@@ -85,16 +89,6 @@ describe('SessionHandler', () => {
         const sessionId = constructSessionId({
           userId: {id: 'user-id', domain: 'domain'},
           clientId: 'client-id',
-          useQualifiedIds: true,
-        });
-        expect(sessionId).toBe('domain@user-id@client-id');
-      });
-
-      it('with a qualified ID and useQualifiedIds', () => {
-        const sessionId = constructSessionId({
-          userId: {id: 'user-id', domain: 'domain'},
-          clientId: 'client-id',
-          useQualifiedIds: true,
         });
         expect(sessionId).toBe('domain@user-id@client-id');
       });
@@ -114,31 +108,10 @@ describe('SessionHandler', () => {
       const userId = {id: 'user1', domain: 'domain'};
       const clientId = 'client1';
       jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(false);
-      jest
-        .spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles')
-        .mockResolvedValue({domain: generatePrekeys(userId, [clientId])});
 
       const sessionId = constructSessionId({
         userId,
         clientId,
-        useQualifiedIds: true,
-      });
-      await initSession({userId, clientId}, {apiClient, cryptoClient});
-
-      expect(cryptoClient.sessionFromPrekey).toHaveBeenCalledWith(sessionId, expect.any(Object));
-    });
-
-    it('indicates the consumer if a session could not be created', async () => {
-      const userId = {id: 'user1', domain: 'domain'};
-      const clientId = 'client1';
-      jest
-        .spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles')
-        .mockResolvedValue({domain: generatePrekeys(userId, [clientId])});
-
-      const sessionId = constructSessionId({
-        userId,
-        clientId,
-        useQualifiedIds: true,
       });
       await initSession({userId, clientId}, {apiClient, cryptoClient});
 
@@ -158,24 +131,69 @@ describe('SessionHandler', () => {
         'missing-user2': ['client1', 'client2'],
       };
 
-      jest.spyOn(apiClient.api.user, 'postQualifiedMultiPreKeyBundles').mockResolvedValue({});
-      jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
-        ...generatePrekeys({id: 'missing-user1', domain: ''}, ['client1']),
-        ...generatePrekeys({id: 'missing-user2', domain: ''}, ['client1', 'client2']),
-      });
       jest
         .spyOn(cryptoClient, 'sessionExists')
         .mockImplementation(sessionId => Promise.resolve(sessionId.includes('missing') as any));
 
       const sessionFromPrekeySpy = jest.spyOn(cryptoClient, 'sessionFromPrekey');
-      const sessions = await initSessions({
-        recipients: {...existingUserClients, ...missingUserClients},
+      const {sessions} = await initSessions({
+        recipients: {domain: {...existingUserClients, ...missingUserClients}},
         apiClient,
         cryptoClient,
       });
 
       expect(sessionFromPrekeySpy).toHaveBeenCalledTimes(3);
       expect(sessions).toHaveLength(6);
+    });
+
+    it('returns the list of deleted clients (clients with null prekeys)', async () => {
+      const userClients: UserClients = {
+        'existing-user1': ['client1', 'deleted:client2'],
+      };
+
+      const {sessions, unknowns} = await initSessions({
+        recipients: {domain: userClients},
+        apiClient,
+        cryptoClient,
+      });
+
+      expect(sessions).toEqual(['domain@existing-user1@client1']);
+      expect(unknowns).toEqual({domain: {'existing-user1': ['deleted:client2']}});
+    });
+
+    it('initializes sessions across multiple domains', async () => {
+      const userClients: QualifiedUserClients = {
+        domain1: {'existing-user1': ['client11']},
+        domain2: {'existing-user2': ['client21']},
+      };
+
+      jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(true);
+
+      const {sessions, unknowns} = await initSessions({
+        recipients: userClients,
+        apiClient,
+        cryptoClient,
+      });
+
+      expect(sessions).toEqual(['domain1@existing-user1@client11', 'domain2@existing-user2@client21']);
+      expect(unknowns).toBeUndefined();
+    });
+
+    it('returns failed session creation', async () => {
+      const recipients: QualifiedUserClients = {
+        domain1: {'existing-user1': ['client1']},
+        'offline:domain': {user2: ['client12']},
+      };
+      jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(false);
+
+      const {sessions, failed} = await initSessions({
+        recipients,
+        apiClient,
+        cryptoClient,
+      });
+
+      expect(sessions).toEqual(['domain1@existing-user1@client1']);
+      expect(failed).toEqual([{id: 'user2', domain: 'offline:domain'}]);
     });
   });
 });
