@@ -23,52 +23,31 @@ import {
   MutedStatus,
   NewConversation,
   QualifiedUserClients,
-  ConversationProtocol,
   RemoteConversations,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
-import {Decoder} from 'bazinga64';
-import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
-import {ExternalProposalType} from '@wireapp/core-crypto';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
+import {SendResult} from './ConversationService.types';
 
-import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
+import {MessageTimer} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
-import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
-import {isMLSConversation} from '../../util';
-import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
-  private readonly logger = logdown('@wireapp/core/ConversationService');
 
-  constructor(
-    private readonly apiClient: APIClient,
-    private readonly proteusService: ProteusService,
-    private readonly _mlsService?: MLSService,
-  ) {
+  constructor(private readonly apiClient: APIClient, private readonly proteusService: ProteusService) {
     this.messageTimer = new MessageTimer();
-  }
-
-  get mlsService(): MLSService {
-    if (!this._mlsService) {
-      throw new Error('Cannot do MLS operations on a non-mls environment');
-    }
-    return this._mlsService;
   }
 
   /**
@@ -154,11 +133,8 @@ export class ConversationService {
    * Sends a message to a conversation
    * @return resolves with the sending status
    */
-  public async send(params: XOR<SendMlsMessageParams, SendProteusMessageParams>): Promise<SendResult> {
-    function isMLS(params: SendProteusMessageParams | SendMlsMessageParams): params is SendMlsMessageParams {
-      return params.protocol === ConversationProtocol.MLS;
-    }
-    return sendMessage(() => (isMLS(params) ? this.sendMLSMessage(params) : this.proteusService.sendMessage(params)));
+  public async send(params: SendProteusMessageParams): Promise<SendResult> {
+    return sendMessage(() => this.proteusService.sendMessage(params));
   }
 
   public sendTypingStart(conversationId: QualifiedId): Promise<void> {
@@ -218,195 +194,5 @@ export class ConversationService {
     return this.apiClient.api.conversation.putOtherMember(userId, conversationId, {
       conversation_role: conversationRole,
     });
-  }
-
-  /**
-   *   ###############################################
-   *   ################ MLS Functions ################
-   *   ###############################################
-   */
-
-  /**
-   * Will create a conversation on backend and register it to CoreCrypto once created
-   * @param conversationData
-   */
-  public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
-    const {selfUserId, qualified_users: qualifiedUsers = []} = conversationData;
-    if (!selfUserId) {
-      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
-    }
-
-    /**
-     * @note For creating MLS conversations the users & qualified_users
-     * field must be empty as backend is not aware which users
-     * are in a MLS conversation because of the MLS architecture.
-     */
-    const newConversation = await this.apiClient.api.conversation.postConversation({
-      ...conversationData,
-      users: undefined,
-      qualified_users: undefined,
-    });
-    const {group_id: groupId, qualified_id: qualifiedId} = newConversation;
-    if (!groupId) {
-      throw new Error('No group_id found in response which is required for creating MLS conversations.');
-    }
-
-    const response = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
-      user: selfUserId,
-      client: conversationData.creator_client,
-    });
-
-    // We fetch the fresh version of the conversation created on backend with the newly added users
-    const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
-
-    return {
-      events: response?.events ?? [],
-      conversation,
-    };
-  }
-
-  private async sendMLSMessage({payload, groupId}: SendMlsMessageParams): Promise<SendResult> {
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-
-    // immediately execute pending commits before sending the message
-    await this.mlsService.commitPendingProposals({groupId});
-
-    const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
-
-    let sentAt: string = '';
-    try {
-      const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
-      sentAt = time?.length > 0 ? time : new Date().toISOString();
-    } catch {}
-
-    return {
-      id: payload.messageId,
-      sentAt,
-      state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELED,
-    };
-  }
-
-  /**
-   * Will add users to existing MLS group by claiming their key packages and passing them to CoreCrypto.addClientsToConversation
-   *
-   * @param qualifiedUsers List of qualified user ids (with optional skipOwnClientId field - if provided we will not claim key package for this self client)
-   * @param groupId Id of the group to which we want to add users
-   * @param conversationId Id of the conversation to which we want to add users
-   */
-  public async addUsersToMLSConversation({
-    qualifiedUsers,
-    groupId,
-    conversationId,
-  }: Required<AddUsersParams>): Promise<MLSReturnType> {
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
-    const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
-    const conversation = await this.getConversation(conversationId);
-
-    //We store the info when user was added (and key material was created), so we will know when to renew it
-    this.mlsService.resetKeyMaterialRenewal(groupId);
-    return {
-      events: response?.events || [],
-      conversation,
-    };
-  }
-
-  public async removeUsersFromMLSConversation({
-    groupId,
-    conversationId,
-    qualifiedUserIds,
-  }: RemoveUsersParams): Promise<MLSReturnType> {
-    const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
-
-    const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
-      clientsToRemove.qualified_user_map,
-    );
-
-    const messageResponse = await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
-
-    //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
-    this.mlsService.resetKeyMaterialRenewal(groupId);
-
-    const conversation = await this.getConversation(conversationId);
-
-    return {
-      events: messageResponse?.events || [],
-      conversation,
-    };
-  }
-
-  public async joinByExternalCommit(conversationId: QualifiedId) {
-    return this.mlsService.joinByExternalCommit(() => this.apiClient.api.conversation.getGroupInfo(conversationId));
-  }
-
-  /**
-   * Will send an external proposal for the current device to join a specific conversation.
-   * In order for the external proposal to be sent correctly, the underlying mls conversation needs to be in a non-established state
-   * @param groupId The conversation to join
-   * @param epoch The current epoch of the local conversation
-   */
-  public async sendExternalJoinProposal(groupId: string, epoch: number) {
-    return sendMessage(async () => {
-      const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-      const externalProposal = await this.mlsService.newExternalProposal(ExternalProposalType.Add, {
-        epoch,
-        conversationId: groupIdBytes,
-      });
-      await this.apiClient.api.conversation.postMlsMessage(
-        //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
-        optionalToUint8Array(externalProposal),
-      );
-
-      //We store the info when user was added (and key material was created), so we will know when to renew it
-      this.mlsService.resetKeyMaterialRenewal(groupId);
-    });
-  }
-
-  public async isMLSConversationEstablished(groupId: string) {
-    return this.mlsService.conversationExists(groupId);
-  }
-
-  public async wipeMLSConversation(groupId: string): Promise<void> {
-    return this.mlsService.wipeConversation(groupId);
-  }
-
-  private async matchesEpoch(groupId: string, backendEpoch: number): Promise<boolean> {
-    const localEpoch = await this.mlsService.getEpoch(groupId);
-
-    this.logger.log(
-      `Comparing conversation's (group_id: ${groupId}) local and backend epoch number: {local: ${String(
-        localEpoch,
-      )}, backend: ${backendEpoch}}`,
-    );
-    //corecrypto stores epoch number as BigInt, we're mapping both values to be sure comparison is valid
-    return BigInt(localEpoch) === BigInt(backendEpoch);
-  }
-
-  public async handleEpochMismatch() {
-    this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
-
-    //fetch all the mls conversations from backend
-    const conversations = await this.apiClient.api.conversation.getConversationList();
-    const foundConversations = conversations.found || [];
-
-    const mlsConversations = foundConversations.filter(isMLSConversation);
-
-    //check all the established conversations' epoch with the core-crypto epoch
-    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
-      try {
-        //if conversation is not established or epoch does not match -> try to rejoin
-        if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
-          this.logger.log(
-            `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
-          );
-          await this.joinByExternalCommit(qualifiedId);
-        }
-      } catch (error) {
-        this.logger.error(
-          `There was an error while handling epoch mismatch in MLS conversation (id: ${qualifiedId.id}):`,
-          error,
-        );
-      }
-    }
   }
 }

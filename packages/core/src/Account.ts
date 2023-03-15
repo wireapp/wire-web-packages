@@ -46,11 +46,8 @@ import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
-import {MLSService} from './messagingProtocols/mls';
-import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
-import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
-import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
+import {buildCryptoClient} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
@@ -95,11 +92,6 @@ interface AccountOptions {
    *    - make it likely that all prekeys get consumed while the device is offline and the last resort prekey will be used to create new session
    */
   nbPrekeys?: number;
-
-  /**
-   * Config for MLS and proteus devices. Will fallback to the old proteus logic if not provided
-   */
-  cryptoProtocolConfig?: CryptoProtocolConfig;
 }
 
 type InitOptions = {
@@ -124,10 +116,8 @@ export class Account extends TypedEventEmitter<Events> {
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
   private readonly nbPrekeys: number;
-  private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
 
   public service?: {
-    mls?: MLSService;
     proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
@@ -150,12 +140,11 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions = {},
+    {createStore = () => undefined, nbPrekeys = 2}: AccountOptions = {},
   ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
-    this.cryptoProtocolConfig = cryptoProtocolConfig;
     this.nbPrekeys = nbPrekeys;
     this.createStore = createStore;
 
@@ -263,12 +252,6 @@ export class Account extends TypedEventEmitter<Events> {
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
-    if (this.service.mls) {
-      const {userId, domain = ''} = this.apiClient.context;
-      await this.service.mls.createClient({id: userId, domain}, client.id);
-    }
-    this.logger.info(`Created new client {mls: ${!!this.service.mls}, id: ${client.id}}`);
-
     await this.service.notification.initializeNotificationStream();
     await this.service.client.synchronizeClients();
 
@@ -295,46 +278,14 @@ export class Account extends TypedEventEmitter<Events> {
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
-    if (this.service.mls) {
-      const {userId, domain = ''} = this.apiClient.context;
-      if (!client) {
-        // If the client has been passed to the method, it means it also has been initialized
-        await this.service.mls.initClient({id: userId, domain}, validClient.id);
-      }
-      // initialize schedulers for pending mls proposals once client is initialized
-      await this.service.mls.checkExistingPendingProposals();
-
-      // initialize schedulers for renewing key materials
-      this.service.mls.checkForKeyMaterialsUpdate();
-
-      // initialize scheduler for syncing key packages with backend
-      this.service.mls.checkForKeyPackagesBackendSync();
-
-      // leave stale conference subconversations (e.g after a crash)
-      await this.service.mls.leaveStaleConferenceSubconversations();
-    }
 
     return validClient;
   }
 
-  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, db: CoreDatabase, enableMLS: boolean) {
-    /* There are 3 cases where we want to instantiate CoreCrypto:
-     * 1. MLS is enabled
-     * 2. The user has enabled CoreCrypto in the config
-     * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
-     */
-    const clientType =
-      enableMLS ||
-      !!this.cryptoProtocolConfig?.useCoreCrypto ||
-      cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
-        ? CryptoClientType.CORE_CRYPTO
-        : CryptoClientType.CRYPTOBOX;
-
-    return buildCryptoClient(clientType, db, {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine) {
+    return buildCryptoClient({
       storeEngine,
       nbPrekeys: this.nbPrekeys,
-      coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
@@ -344,36 +295,16 @@ export class Account extends TypedEventEmitter<Events> {
     });
   }
 
-  /**
-   * In order to be able to send MLS messages, the core needs a few information from the consumer.
-   * Namely:
-   * - is the current user allowed to administrate a specific conversation
-   * - what is the groupId of a conversation
-   * @param mlsCallbacks
-   */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
-  }
-
   public async initServices(context: Context): Promise<void> {
-    const enableMLS = this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.storeEngine = await this.initEngine(context);
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, this.db, enableMLS);
-    const [clientType, cryptoClient] = cryptoClientDef;
+    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
+    const [cryptoClient] = cryptoClientDef;
 
-    const mlsService =
-      clientType === CryptoClientType.CORE_CRYPTO && enableMLS
-        ? new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
-            ...this.cryptoProtocolConfig?.mls,
-            nbKeyPackages: this.nbPrekeys,
-          })
-        : undefined;
-
-    const proteusService = new ProteusService(this.apiClient, cryptoClient, {
+    const proteusService = new ProteusService(this.apiClient, cryptoClient as any, {
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
     });
@@ -382,8 +313,8 @@ export class Account extends TypedEventEmitter<Events> {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const notificationService = new NotificationService(this.apiClient, proteusService, this.storeEngine, mlsService);
-    const conversationService = new ConversationService(this.apiClient, proteusService, mlsService);
+    const notificationService = new NotificationService(this.apiClient, proteusService, this.storeEngine);
+    const conversationService = new ConversationService(this.apiClient, proteusService);
 
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
@@ -392,7 +323,6 @@ export class Account extends TypedEventEmitter<Events> {
     const userService = new UserService(this.apiClient);
 
     this.service = {
-      mls: mlsService,
       proteus: proteusService,
       account: accountService,
       asset: assetService,
@@ -529,9 +459,6 @@ export class Account extends TypedEventEmitter<Events> {
     });
 
     const handleMissedNotifications = async (notificationId: string) => {
-      if (this.cryptoProtocolConfig?.mls && this.backendFeatures.supportsMLS) {
-        await this.service?.conversation.handleEpochMismatch();
-      }
       return onMissedNotifications(notificationId);
     };
 

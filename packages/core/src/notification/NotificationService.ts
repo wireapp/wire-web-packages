@@ -32,7 +32,6 @@ import {NotificationSource} from './Notifications.types';
 
 import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
-import {MLSService} from '../messagingProtocols/mls';
 import {ProteusService} from '../messagingProtocols/proteus';
 import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
@@ -69,12 +68,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
   });
   public static readonly TOPIC = TOPIC;
 
-  constructor(
-    apiClient: APIClient,
-    private readonly proteusService: ProteusService,
-    storeEngine: CRUDEngine,
-    private readonly mlsService?: MLSService,
-  ) {
+  constructor(apiClient: APIClient, private readonly proteusService: ProteusService, storeEngine: CRUDEngine) {
     super();
     this.apiClient = apiClient;
     this.backend = new NotificationBackendRepository(this.apiClient);
@@ -240,12 +234,6 @@ export class NotificationService extends TypedEventEmitter<Events> {
     source: NotificationSource,
     dryRun: boolean = false,
   ): Promise<HandledEventPayload | undefined> {
-    // Handle MLS Events
-    const mlsResult = await this.mlsService?.handleEvent({event, source, dryRun});
-    if (mlsResult) {
-      return mlsResult;
-    }
-
     const proteusResult = await this.proteusService.handleEvent({
       event,
       source,

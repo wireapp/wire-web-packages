@@ -19,8 +19,6 @@
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
-import {CoreCryptoError} from '@wireapp/core-crypto';
-
 import {DecryptionError} from '../../../../errors/DecryptionError';
 
 export const ProteusErrors = {
@@ -33,9 +31,6 @@ export const ProteusErrors = {
 
 type CryptoboxError = Error & {code: number};
 
-const isCoreCryptoError = (error: any): error is CoreCryptoError => {
-  return 'proteusErrorCode' in error;
-};
 const isCryptoboxError = (error: any): error is CryptoboxError => {
   return 'code' in error;
 };
@@ -45,9 +40,8 @@ export const generateDecryptionError = (senderInfo: SenderInfo, error: any): Dec
   const {clientId, userId} = senderInfo;
   const sender = `${userId.id} (${clientId})`;
 
-  const coreCryptoCode = isCoreCryptoError(error) && error.proteusErrorCode;
   const cryptoboxCode = isCryptoboxError(error) && error.code;
-  const code = coreCryptoCode || cryptoboxCode || ProteusErrors.Unknown;
+  const code = cryptoboxCode || ProteusErrors.Unknown;
 
   const message = `Decryption error from ${sender} (${error.message})`;
 
