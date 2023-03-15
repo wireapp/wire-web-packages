@@ -30,10 +30,12 @@ import {program as commander} from 'commander';
 import logdown from 'logdown';
 import * as path from 'path';
 import {TimeUtil} from '@wireapp/commons';
-import {Account} from '@wireapp/core';
+import {Account, MessageBuilder} from '@wireapp/core';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/lib/client/';
-import {FileEngine} from '@wireapp/store-engine-fs';
+import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
+import 'fake-indexeddb/auto';
+import {MemoryEngine} from '@wireapp/store-engine';
 
 commander.option('-c, --conversationId <conversationId>').parse(process.argv);
 
@@ -44,58 +46,44 @@ const logger = logdown('@wireapp/core/src/demo/send-counter.ts', {
   markdown: false,
 });
 logger.state.isEnabled = true;
-
-const {
-  WIRE_EMAIL,
-  WIRE_PASSWORD,
-  WIRE_CONVERSATION_ID = commander.opts().conversationId,
-  WIRE_BACKEND = 'staging',
-} = process.env;
+const {EMAIL, PASS} = process.env;
 
 (async () => {
-  const useProtobuf = false;
-
-  ['WIRE_EMAIL', 'WIRE_PASSWORD', 'WIRE_CONVERSATION_ID', 'WIRE_BACKEND'].forEach((envVar, _, array) => {
-    if (!process.env[envVar]) {
-      logger.error(`Error: Environment variable "${envVar}" is not set. Required variables: ${array.join(', ')}.`);
-      process.exit(1);
-    }
-  });
-
   const login = {
     clientType: ClientType.TEMPORARY,
-    email: WIRE_EMAIL,
-    password: WIRE_PASSWORD,
+    email: EMAIL,
+    password: PASS,
   };
+  console.log(login);
 
-  const backend = WIRE_BACKEND === 'staging' ? APIClient.BACKEND.STAGING : APIClient.BACKEND.PRODUCTION;
-  const engine = new FileEngine(path.join(__dirname, '.tmp/sender'));
-  await engine.init('sender', {fileExtension: '.json'});
+  const backend = APIClient.BACKEND.PRODUCTION;
+  const engine = new MemoryEngine();
 
   const apiClient = new APIClient({urls: backend});
   const account = new Account(apiClient, {createStore: () => Promise.resolve(engine)});
-  await account.login(login);
-  await account.listen();
+  await account.useAPIVersion(1, 4, true);
+  const context = await account.login(login);
+  await account.registerClient(login);
 
-  account.on(Account.TOPIC.ERROR, error => logger.error(error));
-
-  const name = await account.service!.self.getName();
-
-  logger.log('Name', name);
-  logger.log('User ID', account['apiClient'].context!.userId);
-  logger.log('Client ID', account['apiClient'].context!.clientId);
-  logger.log('Domain', account['apiClient'].context!.domain);
+  logger.log('User ID', context.userId);
+  logger.log('Client ID', context.clientId);
+  logger.log('Domain', context.domain);
 
   async function sendText(message: string): Promise<void> {
-    const payload = account
-      .service!.conversation.messageBuilder.createText({conversationId: WIRE_CONVERSATION_ID, text: message})
-      .build();
-    await account.service!.conversation.send({payloadBundle: payload, sendAsProtobuf: useProtobuf});
+    const payload = MessageBuilder.buildTextMessage({text: message});
+    try {
+      const res = await account.service!.conversation.send({
+        payload,
+        protocol: ConversationProtocol.PROTEUS,
+        conversationId: {id: '10fdf9ff-c581-463a-931a-388c8f03a9c4', domain: 'wire.com'},
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const twoSeconds = TimeUtil.TimeInMillis.SECOND * 2;
   let counter = 1;
-  setInterval(async () => {
-    await sendText(`${counter++}`);
-  }, twoSeconds);
+  setInterval(() => sendText(`${counter++}`), twoSeconds);
 })().catch(error => console.error(error));

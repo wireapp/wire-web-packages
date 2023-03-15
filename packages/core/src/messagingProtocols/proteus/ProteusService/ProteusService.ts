@@ -18,7 +18,7 @@
  */
 
 import type {APIClient} from '@wireapp/api-client/lib/APIClient';
-import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
+import type {PreKey} from '@wireapp/api-client/lib/auth';
 import type {
   Conversation,
   NewConversation,
@@ -32,7 +32,6 @@ import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptoClient} from './CryptoClient';
-import {cryptoMigrationStore} from './cryptoMigrationStateStore';
 import {generateDecryptionError} from './DecryptionErrorGenerator';
 import {deleteIdentity} from './identityClearer';
 import type {
@@ -41,7 +40,6 @@ import type {
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
-import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 
 import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
@@ -95,28 +93,7 @@ export class ProteusService {
     return handledEvent;
   }
 
-  public async initClient(storeEngine: CRUDEngine, context: Context) {
-    const dbName = storeEngine.storeName;
-    if (context.domain) {
-      // We want sessions to be fully qualified from now on
-      if (!cryptoMigrationStore.qualifiedSessions.isReady(dbName)) {
-        this.logger.info(`Migrating existing session ids to qualified ids.`);
-        await migrateToQualifiedSessionIds(storeEngine, context.domain);
-        cryptoMigrationStore.qualifiedSessions.markAsReady(dbName);
-        this.logger.info(`Successfully migrated session ids to qualified ids.`);
-      }
-    }
-
-    if (!cryptoMigrationStore.coreCrypto.isReady(dbName) && this.cryptoClient.migrateFromCryptobox) {
-      this.logger.info(`Migrating data from cryptobox store (${dbName}) to corecrypto.`);
-      try {
-        await this.cryptoClient.migrateFromCryptobox(dbName);
-        cryptoMigrationStore.coreCrypto.markAsReady(dbName);
-        this.logger.info(`Successfully migrated from cryptobox store (${dbName}) to corecrypto.`);
-      } catch (error) {
-        this.logger.error('Client was not able to perform DB migration: ', error);
-      }
-    }
+  public async initClient() {
     return this.cryptoClient.init();
   }
 

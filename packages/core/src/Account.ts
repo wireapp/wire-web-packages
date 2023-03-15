@@ -248,7 +248,7 @@ export class Account extends TypedEventEmitter<Events> {
     // we reset the services to re-instantiate a new CryptoClient instance
     await this.initServices(this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient(entropyData);
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient();
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
@@ -277,7 +277,7 @@ export class Account extends TypedEventEmitter<Events> {
     // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient();
 
     return validClient;
   }
@@ -302,9 +302,9 @@ export class Account extends TypedEventEmitter<Events> {
     const assetService = new AssetService(this.apiClient);
 
     const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
-    const [cryptoClient] = cryptoClientDef;
+    const [, cryptoClient] = cryptoClientDef;
 
-    const proteusService = new ProteusService(this.apiClient, cryptoClient as any, {
+    const proteusService = new ProteusService(this.apiClient, cryptoClient, {
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
     });

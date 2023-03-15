@@ -41,7 +41,7 @@ import {
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
 import {RemoteData} from '../content';
-import {isSendingMessage, sendMessage} from '../message/messageSender';
+import {isSendingMessage} from '../message/messageSender';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -134,7 +134,7 @@ export class ConversationService {
    * @return resolves with the sending status
    */
   public async send(params: SendProteusMessageParams): Promise<SendResult> {
-    return sendMessage(() => this.proteusService.sendMessage(params));
+    return this.proteusService.sendMessage(params);
   }
 
   public sendTypingStart(conversationId: QualifiedId): Promise<void> {
