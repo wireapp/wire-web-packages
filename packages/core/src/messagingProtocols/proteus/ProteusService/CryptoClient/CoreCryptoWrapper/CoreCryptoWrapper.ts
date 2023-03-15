@@ -153,8 +153,8 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   async newPrekey() {
-    const [id, key] = await this.coreCrypto.proteusNewPrekeyAuto();
-    return {id, key: Encoder.toBase64(key).asString};
+    const {id, pkb} = await this.coreCrypto.proteusNewPrekeyAuto();
+    return {id, key: Encoder.toBase64(pkb).asString};
   }
 
   async debugBreakSession(sessionId: string) {
