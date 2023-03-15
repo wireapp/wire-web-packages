@@ -36,7 +36,8 @@ import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import 'fake-indexeddb/auto';
 import {MemoryEngine} from '@wireapp/store-engine';
 
-commander.option('-c, --conversationId <conversationId>').parse(process.argv);
+commander.requiredOption('-name, <webbyName>').parse(process.argv);
+commander.requiredOption('-id, <webbyId>').parse(process.argv);
 
 require('dotenv').config({path: path.join(__dirname, 'sender.env')});
 
@@ -54,6 +55,9 @@ const {EMAIL, PASS} = process.env;
     password: PASS,
   };
 
+  const webbyName = commander.opts().webbyName;
+  const webbyId = commander.opts().webbyId;
+
   const backend = APIClient.BACKEND.PRODUCTION;
   const engine = new MemoryEngine();
 
@@ -68,18 +72,18 @@ const {EMAIL, PASS} = process.env;
   logger.log('Domain', context.domain);
 
   const payload = MessageBuilder.buildTextMessage({
-    text: `@webby, you are Dev on Duty this week. Don't forget to:
+    text: `@${webbyName}, you are Dev on Duty this week. Don't forget to:
   - regularly check the nightly run
   - keep an eye for upcoming releases
   `,
     mentions: [
       {
-        length: 6,
+        length: webbyName.length + 1,
         start: 0,
-        userId: 'b4e3f905-7325-4b0a-8973-e71f144bef9d',
+        userId: webbyId,
         qualifiedUserId: {
-          domain: 'wire.com',
-          id: 'b4e3f905-7325-4b0a-8973-e71f144bef9d',
+          domain: 'staging.zinfra.io',
+          id: webbyId,
         },
       },
     ],
