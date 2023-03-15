@@ -46,18 +46,16 @@ import {
 export class AcmeConnectionService {
   private logger = logdown('@wireapp/core/AcmeConnectionService');
   private readonly axiosInstance: AxiosInstance = axios.create();
-
-  private readonly CA = 'acme';
-  private readonly ACME_PROVISIONER = 'acme';
-  private readonly ACME_BACKEND = `https://balderdash.hogwash.work:9000/${this.CA}/${this.ACME_PROVISIONER}`;
-  private readonly URL = {
+  private readonly certificateAuthority = 'acme';
+  private readonly acmeProvisioner = 'acme';
+  private readonly acmeBackendUri = 'https://balderdash.hogwash.work:9000';
+  private readonly url = {
     DIRECTORY: '/directory',
-    CHALLENGE: '/challenge',
   };
 
   constructor() {}
 
-  // ############ Helper Functions ############
+  // ############ Internal Functions ############
 
   private extractNonce(headers: any): ResponseHeaderNonce['replay-nonce'] {
     return ResponseHeaderNonceSchema.parse(headers)['replay-nonce'];
@@ -87,11 +85,13 @@ export class AcmeConnectionService {
     }
   }
 
-  // ############ Main Functions ############
+  // ############ Public Functions ############
 
   public async getDirectory(): GetDirectoryReturnValue {
     try {
-      const {data} = await this.axiosInstance.get(`${this.ACME_BACKEND}${this.URL.DIRECTORY}`);
+      const {data} = await this.axiosInstance.get(
+        `${this.acmeBackendUri}/${this.certificateAuthority}/${this.acmeProvisioner}${this.url.DIRECTORY}`,
+      );
       const directory = DirectoryResponseDataSchema.parse(data);
       return new TextEncoder().encode(JSON.stringify(directory));
     } catch (e) {

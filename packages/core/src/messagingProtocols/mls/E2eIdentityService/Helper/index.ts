@@ -17,6 +17,14 @@
  *
  */
 
+import {Encoder} from 'bazinga64';
+
+import {User} from '../E2eIdentityService.types';
+
 export const jsonToByteArray = (json: string): Uint8Array => {
   return new TextEncoder().encode(json);
+};
+
+export const getClientIdentifier = (user: User, clientId: string): string => {
+  return `impp:wireapp=${Encoder.toBase64(user.id).asString}/${clientId}@${user.domain}`;
 };

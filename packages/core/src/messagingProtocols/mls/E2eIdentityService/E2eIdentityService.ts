@@ -18,13 +18,13 @@
  */
 
 import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
-import {Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeConnectionService} from './Connection';
 import {User} from './E2eIdentityService.types';
+import {getClientIdentifier} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
 import {doWireDpopChallenge} from './Steps/DpopChallenge';
@@ -33,9 +33,9 @@ import {createNewOrder} from './Steps/Order';
 
 export class E2eIdentityService {
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
-  private readonly ConnectionService: AcmeConnectionService = new AcmeConnectionService();
+  private readonly connectionService: AcmeConnectionService = new AcmeConnectionService();
   private readonly expiryDays = 90;
-  private Identity: WireE2eIdentity | undefined;
+  private identity: WireE2eIdentity | undefined;
   private directory: AcmeDirectory | undefined;
 
   constructor(
@@ -45,21 +45,15 @@ export class E2eIdentityService {
     private readonly clientId: string,
   ) {}
 
-  // ############ Helper Functions ############
-
-  private getClientIdentifier(): string {
-    return `impp:wireapp=${Encoder.toBase64(this.user.id).asString}/${this.clientId}@${this.user.domain}`;
-  }
-
-  // ############ Main Functions ############
+  // ############ Internal Functions ############
 
   private async getDirectory(): Promise<void> {
     try {
-      if (this.Identity) {
-        const directory = await this.ConnectionService.getDirectory();
+      if (this.identity) {
+        const directory = await this.connectionService.getDirectory();
 
         if (directory) {
-          const parsedDirectory = this.Identity.directoryResponse(directory);
+          const parsedDirectory = this.identity.directoryResponse(directory);
           this.directory = parsedDirectory;
         }
       }
@@ -73,7 +67,7 @@ export class E2eIdentityService {
       if (!this.directory) {
         throw new Error('No directory');
       }
-      const nonce = await this.ConnectionService.getInitialNonce(this.directory.newNonce);
+      const nonce = await this.connectionService.getInitialNonce(this.directory.newNonce);
       if (nonce) {
         return nonce;
       }
@@ -87,9 +81,9 @@ export class E2eIdentityService {
 
   public async getNewCertificate(): Promise<void> {
     // If no Identity is found, create a new one
-    if (!this.Identity) {
+    if (!this.identity) {
       this.logger.info('No Identity found, creating new E2E Identity');
-      this.Identity = await this.coreCryptoClient.newAcmeEnrollment();
+      this.identity = await this.coreCryptoClient.newAcmeEnrollment();
     }
     // If no directory is found, get the directory
     if (!this.directory) {
@@ -108,28 +102,28 @@ export class E2eIdentityService {
 
     // Step 2: Create a new account
     const accountData = await createNewAccount({
-      connection: this.ConnectionService,
+      connection: this.connectionService,
       directory: this.directory,
-      identity: this.Identity,
+      identity: this.identity,
       nonce,
     });
 
     // Step 3: Create a new order
     const orderData = await createNewOrder({
-      clientIdentifier: this.getClientIdentifier(),
-      connection: this.ConnectionService,
+      connection: this.connectionService,
       directory: this.directory,
       expiryDays: this.expiryDays,
-      identity: this.Identity,
+      identity: this.identity,
       user: this.user,
+      clientIdentifier: getClientIdentifier(this.user, this.clientId),
       account: accountData.account,
       nonce: accountData.nonce,
     });
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
-      connection: this.ConnectionService,
-      identity: this.Identity,
+      connection: this.connectionService,
+      identity: this.identity,
       account: accountData.account,
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
@@ -137,8 +131,8 @@ export class E2eIdentityService {
 
     // Step 5: Do DPOP Challenge
     const dpopData = await doWireDpopChallenge({
-      connection: this.ConnectionService,
-      identity: this.Identity,
+      connection: this.connectionService,
+      identity: this.identity,
       apiClient: this.apiClient,
       clientId: this.clientId,
       user: this.user,
@@ -150,11 +144,11 @@ export class E2eIdentityService {
 
     // Step 6: Do OIDC client challenge
     const oidcData = await doWireOidcChallenge({
-      connection: this.ConnectionService,
-      identity: this.Identity,
+      connection: this.connectionService,
+      identity: this.identity,
       user: this.user,
       account: accountData.account,
-      nonce: authData.nonce,
+      nonce: dpopData.nonce,
       authData,
     });
 
