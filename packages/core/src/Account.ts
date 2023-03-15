@@ -259,7 +259,6 @@ export class Account extends TypedEventEmitter<Events> {
     // we reset the services to re-instantiate a new CryptoClient instance
     await this.initServices(this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient(entropyData);
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
