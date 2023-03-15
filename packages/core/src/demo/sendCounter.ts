@@ -29,7 +29,6 @@ process.on('unhandledRejection', (reason, promise) =>
 import {program as commander} from 'commander';
 import logdown from 'logdown';
 import * as path from 'path';
-import {TimeUtil} from '@wireapp/commons';
 import {Account, MessageBuilder} from '@wireapp/core';
 import {APIClient} from '@wireapp/api-client';
 import {ClientType} from '@wireapp/api-client/lib/client/';
@@ -54,7 +53,6 @@ const {EMAIL, PASS} = process.env;
     email: EMAIL,
     password: PASS,
   };
-  console.log(login);
 
   const backend = APIClient.BACKEND.PRODUCTION;
   const engine = new MemoryEngine();
@@ -69,21 +67,33 @@ const {EMAIL, PASS} = process.env;
   logger.log('Client ID', context.clientId);
   logger.log('Domain', context.domain);
 
-  async function sendText(message: string): Promise<void> {
-    const payload = MessageBuilder.buildTextMessage({text: message});
-    try {
-      const res = await account.service!.conversation.send({
-        payload,
-        protocol: ConversationProtocol.PROTEUS,
-        conversationId: {id: '10fdf9ff-c581-463a-931a-388c8f03a9c4', domain: 'wire.com'},
-      });
-      console.log(res);
-    } catch (e) {
-      console.error(e);
-    }
+  const payload = MessageBuilder.buildTextMessage({
+    text: `@webby, you are Dev on Duty this week. Don't forget to:
+  - regularly check the nightly run
+  - keep an eye for upcoming releases
+  `,
+    mentions: [
+      {
+        length: 6,
+        start: 0,
+        userId: 'b4e3f905-7325-4b0a-8973-e71f144bef9d',
+        qualifiedUserId: {
+          domain: 'wire.com',
+          id: 'b4e3f905-7325-4b0a-8973-e71f144bef9d',
+        },
+      },
+    ],
+  });
+  try {
+    const res = await account.service!.conversation.send({
+      payload,
+      protocol: ConversationProtocol.PROTEUS,
+      conversationId: {id: '12021b8c-bb07-42ef-a514-d163687a6127', domain: 'staging.zinfra.io'},
+    });
+    console.log(res);
+  } catch (e) {
+    console.error(e);
   }
 
-  const twoSeconds = TimeUtil.TimeInMillis.SECOND * 2;
-  let counter = 1;
-  setInterval(() => sendText(`${counter++}`), twoSeconds);
+  await account.logout();
 })().catch(error => console.error(error));
