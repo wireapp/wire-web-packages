@@ -18,9 +18,9 @@
  */
 
 export interface OAuthBody {
-  clientId: string;
-  redirectUri: string;
-  responseType: string;
+  client_id: string;
+  redirect_uri: string;
+  response_type: string;
   scope: string;
   state: string;
 }

@@ -18,7 +18,7 @@
  */
 
 export interface OAuthClient {
-  applicationName: string;
-  clientId: string;
-  redirectUrl: string;
+  application_name: string;
+  client_id: string;
+  redirect_url: string;
 }
