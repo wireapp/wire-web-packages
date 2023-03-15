@@ -23,7 +23,7 @@ import {OAuthApplication} from './OAuthApplication';
 import {OAuthBody} from './OAuthBody';
 import {OAuthClient} from './OAuthClient';
 
-import {BackendError, HttpClient} from '../http';
+import {HttpClient} from '../http';
 
 export class OAuthAPI {
   constructor(private readonly client: HttpClient) {}
@@ -60,7 +60,7 @@ export class OAuthAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      throw new BackendError(error as unknown as string);
+      throw error;
     }
   }
 
@@ -76,7 +76,7 @@ export class OAuthAPI {
     try {
       await this.client.sendJSON(config);
     } catch (error) {
-      throw new BackendError(error as unknown as string);
+      throw error;
     }
   }
 
