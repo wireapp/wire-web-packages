@@ -118,7 +118,8 @@ export class ProteusService {
       }
     }
     const backendPrekeys = await this.apiClient.api.client.getClientPreKeys(context.clientId ?? '');
-    return this.cryptoClient.init(backendPrekeys.length);
+    const totalUsableBackedPrekeys = backendPrekeys.length - 1; // we remove the last resort prekey from the total number of available prekeys
+    return this.cryptoClient.init(totalUsableBackedPrekeys);
   }
 
   public createClient(entropy?: Uint8Array) {
