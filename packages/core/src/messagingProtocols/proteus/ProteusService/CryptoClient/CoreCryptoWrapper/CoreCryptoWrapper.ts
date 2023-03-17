@@ -177,8 +177,29 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusCryptoboxMigrate(dbName);
   }
 
+  async handleSafeWipe() {
+    const wipeWhenReady = async (onReady: () => void) => {
+      const strongRefCount = this.coreCrypto.strongRefCount();
+      if (strongRefCount <= 1) {
+        await this.coreCrypto.wipe();
+        return onReady();
+      }
+    };
+
+    return new Promise<void>(async resolve => {
+      await wipeWhenReady(resolve);
+
+      const intervalId = setInterval(async () => {
+        await wipeWhenReady(() => {
+          clearInterval(intervalId);
+          return resolve();
+        });
+      }, 500);
+    });
+  }
+
   async wipe() {
     await this.config.onWipe();
-    return this.coreCrypto.wipe();
+    return this.handleSafeWipe();
   }
 }
