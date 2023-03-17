@@ -178,9 +178,11 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   async handleSafeWipe() {
+    //See https://github.com/wireapp/wire-web-packages/pull/4972 for more details
     const wipeWhenReady = async (onReady: () => void) => {
       const strongRefCount = this.coreCrypto.strongRefCount();
-      if (strongRefCount <= 1) {
+      const isCoreCryptoReady = strongRefCount <= 1;
+      if (isCoreCryptoReady) {
         await this.coreCrypto.wipe();
         return onReady();
       }
