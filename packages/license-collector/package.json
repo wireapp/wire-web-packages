@@ -17,7 +17,7 @@
     "npm-registry-package-info": "1.0.5"
   },
   "devDependencies": {
-    "@types/fs-extra": "9.0.13",
+    "@types/fs-extra": "11.0.1",
     "@types/license-checker": "^25",
     "@types/npm-registry-package-info": "1.0.1",
     "@types/rimraf": "^3.0.2",
