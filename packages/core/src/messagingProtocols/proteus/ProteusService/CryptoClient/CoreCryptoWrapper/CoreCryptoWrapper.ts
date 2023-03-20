@@ -177,31 +177,35 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusCryptoboxMigrate(dbName);
   }
 
-  async handleSafeWipe() {
-    //See https://github.com/wireapp/wire-web-packages/pull/4972 for more details
-    const wipeWhenReady = async (onReady: () => void) => {
+  /**
+   * Will call the callback once corecrypto is ready.
+   * @param callback - Function to be called once corecrypto is ready.
+   * @see https://github.com/wireapp/wire-web-packages/pull/4972
+   */
+  private async onReady(callback: () => Promise<void>) {
+    const isCoreCryptoReady = async () => {
       const strongRefCount = this.coreCrypto.strongRefCount();
       const isCoreCryptoReady = strongRefCount <= 1;
-      if (isCoreCryptoReady) {
-        await this.coreCrypto.wipe();
-        return onReady();
-      }
+      return isCoreCryptoReady;
     };
 
-    return new Promise<void>(async resolve => {
-      await wipeWhenReady(resolve);
+    if (await isCoreCryptoReady()) {
+      return callback();
+    }
 
+    return new Promise<void>(async resolve => {
       const intervalId = setInterval(async () => {
-        await wipeWhenReady(() => {
+        if (await isCoreCryptoReady()) {
           clearInterval(intervalId);
+          await callback();
           return resolve();
-        });
-      }, 500);
+        }
+      }, 100);
     });
   }
 
   async wipe() {
     await this.config.onWipe();
-    return this.handleSafeWipe();
+    await this.onReady(() => this.coreCrypto.wipe());
   }
 }
