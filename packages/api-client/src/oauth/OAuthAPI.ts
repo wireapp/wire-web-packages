@@ -71,6 +71,7 @@ export class OAuthAPI {
     const config: AxiosRequestConfig = {
       data: oauthBody,
       method: 'post',
+      maxRedirects: 0,
       url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODES}`,
     };
     try {
