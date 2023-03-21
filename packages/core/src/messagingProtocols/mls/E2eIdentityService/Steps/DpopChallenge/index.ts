@@ -17,15 +17,4 @@
  *
  */
 
-import {Encoder} from 'bazinga64';
-
-import {User} from '../E2eIdentityService.types';
-
-export const jsonToByteArray = (json: string): Uint8Array => {
-  return new TextEncoder().encode(json);
-};
-
-export type E2eClientId = `im:wireapp=${string}:${string}@${string}`;
-export const getE2eClientId = (user: User, clientId: string): E2eClientId => {
-  return `im:wireapp=${Encoder.toBase64(user.id).asString}:${clientId}@${user.domain}`;
-};
+export * from './DpopChallenge';

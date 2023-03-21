@@ -17,20 +17,13 @@
  *
  */
 
-import {AcmeChallenge, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder} from 'bazinga64';
 
-import {APIClient} from '@wireapp/api-client';
+import {DoWireDpopChallengeParams, GetClientAccessTokenParams, GetClientNonceParams} from './DpopChallenge.types';
 
-import {GetAuthorizationReturnValue} from './Authorization';
-
-import {AcmeConnectionService} from '../Connection';
-import {Account, Nonce, User} from '../E2eIdentityService.types';
-
-type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient'>;
-const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
+const getClientNonce = async ({apiClient, e2eClientId}: GetClientNonceParams) => {
   try {
-    const nonce = await apiClient.api.client.getNonce(clientId);
+    const nonce = await apiClient.api.client.getNonce(e2eClientId);
     if (nonce) {
       return nonce;
     }
@@ -40,59 +33,35 @@ const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
   }
 };
 
-type GetClientAccessTokenParams = Pick<
-  DoWireDpopChallengeParams,
-  'clientId' | 'apiClient' | 'user' | 'expiryDays' | 'identity'
-> & {
-  clientNonce: Nonce;
-  wireDpopChallenge: AcmeChallenge;
-};
 const getClientAccessToken = async ({
   apiClient,
-  clientId,
+  e2eClientId,
   clientNonce,
   identity,
-  user,
   expiryDays,
   wireDpopChallenge,
 }: GetClientAccessTokenParams) => {
   // The access token URL needs to be the same URL we call to get the Access Token
-  const accessTokenUrl = `${apiClient.api.client.getAccessTokenUrl(clientId)}`;
+  const accessTokenUrl = `${apiClient.api.client.getAccessTokenUrl(e2eClientId)}`;
   // We need to decode the client nonce because the DPoP token expects a string
   const decodedClientNonce = Decoder.fromBase64(clientNonce).asString;
-  // We need to format the client ID because the coreCrypto function expects a BigInt
-  const formattedClientId = BigInt(parseInt(clientId, 16));
 
   const dpopToken = identity.createDpopToken(
     accessTokenUrl,
-    user.id,
-    formattedClientId,
-    user.domain,
+    e2eClientId,
     wireDpopChallenge,
     decodedClientNonce,
     expiryDays,
   );
-  return await apiClient.api.client.getAccessToken(clientId, dpopToken);
+  return await apiClient.api.client.getAccessToken(e2eClientId, dpopToken);
 };
 
-interface DoWireDpopChallengeParams {
-  apiClient: APIClient;
-  clientId: string;
-  authData: GetAuthorizationReturnValue;
-  identity: WireE2eIdentity;
-  user: User;
-  expiryDays: number;
-  connection: AcmeConnectionService;
-  account: Account;
-  nonce: Nonce;
-}
 export const doWireDpopChallenge = async ({
   apiClient,
-  clientId,
+  e2eClientId,
   authData,
   expiryDays,
   identity,
-  user,
   account,
   nonce,
   connection,
@@ -102,14 +71,13 @@ export const doWireDpopChallenge = async ({
     throw new Error('No wireDpopChallenge defined');
   }
 
-  const clientNonce = await getClientNonce({clientId, apiClient});
+  const clientNonce = await getClientNonce({e2eClientId, apiClient});
   const clientAccessTokenData = await getClientAccessToken({
     apiClient,
-    clientId,
+    e2eClientId,
     clientNonce,
     expiryDays,
     identity,
-    user,
     wireDpopChallenge,
   });
 
