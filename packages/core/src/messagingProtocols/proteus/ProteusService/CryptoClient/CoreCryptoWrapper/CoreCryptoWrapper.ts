@@ -182,20 +182,20 @@ export class CoreCryptoWrapper implements CryptoClient {
    * @param callback - Function to be called once corecrypto is ready.
    * @see https://github.com/wireapp/wire-web-packages/pull/4972
    */
-  private async onReady(callback: () => Promise<void>) {
-    const isCoreCryptoReady = async () => {
+  private onReady(callback: () => Promise<void>) {
+    const isCoreCryptoReady = () => {
       const strongRefCount = this.coreCrypto.strongRefCount();
       const isCoreCryptoReady = strongRefCount <= 1;
       return isCoreCryptoReady;
     };
 
-    if (await isCoreCryptoReady()) {
+    if (isCoreCryptoReady()) {
       return callback();
     }
 
-    return new Promise<void>(async resolve => {
+    return new Promise<void>(resolve => {
       const intervalId = setInterval(async () => {
-        if (await isCoreCryptoReady()) {
+        if (isCoreCryptoReady()) {
           clearInterval(intervalId);
           await callback();
           return resolve();
