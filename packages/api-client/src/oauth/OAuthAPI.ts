@@ -71,12 +71,11 @@ export class OAuthAPI {
     const config: AxiosRequestConfig = {
       data: oauthBody,
       method: 'post',
-      maxRedirects: 0,
       url: `${OAuthAPI.URL.OAUTH}/${OAuthAPI.URL.AUTHORIZATION}/${OAuthAPI.URL.CODES}`,
     };
     try {
       const response = await this.client.sendJSON(config);
-      return response.request?.responseURL;
+      return response.headers.location;
     } catch (error) {
       throw error;
     }
