@@ -46,6 +46,7 @@ export const createNewOrder = async ({
   connection,
 }: CreateNewOrderParams): CreateNewOrderReturnValue => {
   const {displayName, handle} = user;
+  console.log(e2eClientId);
   const reqBody = identity.newOrderRequest(displayName, e2eClientId, handle, expiryDays, directory, account, nonce);
 
   const response = await connection.createNewOrder(directory.newOrder, reqBody);

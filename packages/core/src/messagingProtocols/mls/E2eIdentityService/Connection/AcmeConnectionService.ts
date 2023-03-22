@@ -103,6 +103,7 @@ export class AcmeConnectionService {
   public async getInitialNonce(url: AcmeDirectory['newNonce']): GetInitialNonceReturnValue {
     try {
       const {headers} = await this.axiosInstance.head(url);
+      console.log(headers);
       const nonce = this.extractNonce(headers);
       return nonce;
     } catch (e) {
