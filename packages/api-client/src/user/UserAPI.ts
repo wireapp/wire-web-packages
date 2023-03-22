@@ -534,11 +534,11 @@ export class UserAPI {
       url: UserAPI.URL.LIST_USERS,
     };
 
-    const {data} = await this.client.sendJSON<User[] | UsersReponse>(config);
-    if (isUsersResponse(data)) {
-      return data;
+    const {data: userData} = await this.client.sendJSON<User[] | UsersReponse>(config);
+    if (isUsersResponse(userData)) {
+      return userData;
     }
-    return {found: data};
+    return {found: userData};
   }
 
   /**
