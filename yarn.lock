@@ -65,7 +65,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.21.3, @babel/core@npm:^7.21.3":
+"@babel/core@npm:7.21.3":
   version: 7.21.3
   resolution: "@babel/core@npm:7.21.3"
   dependencies:
@@ -1304,7 +1304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.20.2, @babel/preset-env@npm:^7.20.2":
+"@babel/preset-env@npm:7.20.2":
   version: 7.20.2
   resolution: "@babel/preset-env@npm:7.20.2"
   dependencies:
@@ -4272,7 +4272,7 @@ __metadata:
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.3.4
     axios-retry: 3.4.0
-    browser-sync: 2.29.0
+    browser-sync: 2.29.1
     concurrently: 7.6.0
     cross-env: 7.0.3
     dotenv: 16.0.3
@@ -5419,7 +5419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:9.1.2, babel-loader@npm:^9.1.2":
+"babel-loader@npm:9.1.2":
   version: 9.1.2
   resolution: "babel-loader@npm:9.1.2"
   dependencies:
@@ -5731,25 +5731,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-sync-client@npm:^2.29.0":
-  version: 2.29.0
-  resolution: "browser-sync-client@npm:2.29.0"
+"browser-sync-client@npm:^2.29.1":
+  version: 2.29.1
+  resolution: "browser-sync-client@npm:2.29.1"
   dependencies:
-    "@babel/core": ^7.21.3
-    "@babel/preset-env": ^7.20.2
-    babel-loader: ^9.1.2
     etag: 1.8.1
     fresh: 0.5.2
     mitt: ^1.1.3
-    rxjs: ^5.5.6
-    typescript: ^4.6.2
-  checksum: 29e8084737db569ee8666b657c5bdbb0bf85abc4609b91930c52d20db58f5a8e486a4324fd6c0fd7bd2efaeec689a7266d74ab1b89caabd946b953e0ea6b1ba8
+  checksum: 9ed2828e1d7edab4cbb07b5e029d5a58a187e67e55220543aa8fa0cac5c6c6c64c7f701abb091345542353e342ac50e75df00a32f39eb8bec0d34db68c9730ba
   languageName: node
   linkType: hard
 
-"browser-sync-ui@npm:^2.29.0":
-  version: 2.29.0
-  resolution: "browser-sync-ui@npm:2.29.0"
+"browser-sync-ui@npm:^2.29.1":
+  version: 2.29.1
+  resolution: "browser-sync-ui@npm:2.29.1"
   dependencies:
     async-each-series: 0.1.1
     chalk: 4.1.2
@@ -5758,16 +5753,16 @@ __metadata:
     server-destroy: 1.0.1
     socket.io-client: ^4.4.1
     stream-throttle: ^0.1.3
-  checksum: a50f7e1e19dc50c656924f41859c5b9f11e2defbceffc167a4498364fe87841de70c86f1a994ccae56f06661d0d167d48f6e5bea42743444da4053a460fe5d79
+  checksum: db70373cc3eed83d2d76d906c0e23749950734c00a8cf426ec9a2adfa32e40ed30a8ae432d1a7873402907a5ae8d5b5286851a55d1130763659b8783c3d1f76d
   languageName: node
   linkType: hard
 
-"browser-sync@npm:2.29.0":
-  version: 2.29.0
-  resolution: "browser-sync@npm:2.29.0"
+"browser-sync@npm:2.29.1":
+  version: 2.29.1
+  resolution: "browser-sync@npm:2.29.1"
   dependencies:
-    browser-sync-client: ^2.29.0
-    browser-sync-ui: ^2.29.0
+    browser-sync-client: ^2.29.1
+    browser-sync-ui: ^2.29.1
     bs-recipes: 1.3.4
     bs-snippet-injector: ^2.0.1
     chalk: 4.1.2
@@ -5799,7 +5794,7 @@ __metadata:
     yargs: ^17.3.1
   bin:
     browser-sync: dist/bin.js
-  checksum: 9a7f56deff5a99607dad91727e7cc56a534014d344d5d96bdd377b720a1d7dfda7ca91cacb6c2856faac618f22b93c074a0732517a48f0096b8c58e2a8b6fd90
+  checksum: 5f04e6bdd76d194c5bf7687e09d070ec7511eefd722ef9b9ae676e56f2007a8e048eab9730c4ca8e948a2a69b704c38b5bc39343eada942529b980b7aa0fbaad
   languageName: node
   linkType: hard
 
@@ -15337,15 +15332,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^5.5.6":
-  version: 5.5.12
-  resolution: "rxjs@npm:5.5.12"
-  dependencies:
-    symbol-observable: 1.0.1
-  checksum: 3c2522402b913c3aa04514cd34e1b290b2a781a2fd6b0e92ac2746eee411aacc1c335716b51b83869075b077df4a6b973831cb54d40d528b42f8f8ad26ffb77c
-  languageName: node
-  linkType: hard
-
 "rxjs@npm:^7.0.0, rxjs@npm:^7.5.5, rxjs@npm:^7.8.0":
   version: 7.8.0
   resolution: "rxjs@npm:7.8.0"
@@ -16436,13 +16422,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"symbol-observable@npm:1.0.1":
-  version: 1.0.1
-  resolution: "symbol-observable@npm:1.0.1"
-  checksum: 8e8a4591f4ba4ec82e7c1ba6b0e695331e43572337b87fda06d183f445539f05d1ab9fe177e162c13dd74dbe1374bb96451698157d97ad417c26f7e46e7053be
-  languageName: node
-  linkType: hard
-
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -16999,7 +16978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.2, typescript@npm:^4.8.4":
+"typescript@npm:^4.8.4":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
@@ -17019,7 +16998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=701156"
   bin:
