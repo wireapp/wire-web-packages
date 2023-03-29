@@ -79,7 +79,22 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     bottom: 0,
     margin: 'auto 0',
   },
-  "&[data-position='bottom'] .tooltip-content": {top: '100%'},
+  "&[data-position='bottom'] .tooltip-content": {
+    top: '100%',
+    marginTop: 10,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    boxShadow: '1px 2px 6px rgba(0, 0, 0, 0.3)',
+    '& .tooltip-arrow': {
+      filter: 'drop-shadow(0px -2px 1px rgba(0, 0, 0, 0.1))',
+      borderLeft: '12px solid transparent',
+      borderRight: '12px solid transparent',
+      borderBottom: `12px solid ${theme.Tooltip.backgroundColor}`,
+      bottom: '90%',
+      left: '50%',
+      transform: 'translateX(-50%)',
+    },
+  },
   "&[data-position='left'] .tooltip-content": {
     right: '100%',
     top: 0,
