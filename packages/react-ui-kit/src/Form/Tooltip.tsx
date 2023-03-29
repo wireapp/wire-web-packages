@@ -68,7 +68,7 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
       borderLeft: '12px solid transparent',
       borderRight: '12px solid transparent',
       borderTop: `12px solid ${theme.Tooltip.backgroundColor}`,
-      top: '100%',
+      top: '90%',
       left: '50%',
       transform: 'translateX(-50%)',
     },
