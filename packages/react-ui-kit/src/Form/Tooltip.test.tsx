@@ -68,7 +68,7 @@ describe('<Tooltip />', () => {
         </Tooltip>
       </StyledApp>,
     );
-    expect(screen.getByTestId('tooltip-content')).toHaveStyle({left: '110%'});
+    expect(screen.getByTestId('tooltip-content')).toHaveStyle({left: '100%'});
   });
 
   it('should render tooltip on the bottom', () => {
@@ -90,6 +90,6 @@ describe('<Tooltip />', () => {
         </Tooltip>
       </StyledApp>,
     );
-    expect(screen.getByTestId('tooltip-content')).toHaveStyle({right: '110%'});
+    expect(screen.getByTestId('tooltip-content')).toHaveStyle({right: '100%'});
   });
 });

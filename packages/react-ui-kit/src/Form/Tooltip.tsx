@@ -74,7 +74,8 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     },
   },
   "&[data-position='right'] .tooltip-content": {
-    left: '110%',
+    left: '100%',
+    marginLeft: '8px !important',
     top: 0,
     bottom: 0,
     margin: 'auto 0',
@@ -104,7 +105,8 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     },
   },
   "&[data-position='left'] .tooltip-content": {
-    right: '110%',
+    right: '100%',
+    marginRight: '8px !important',
     top: 0,
     bottom: 0,
     margin: 'auto 0',
