@@ -47,7 +47,7 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     backgroundColor: theme.Tooltip.backgroundColor,
     color: theme.Tooltip.color,
     borderRadius: 4,
-    fontSize: '0.8em',
+    fontSize: theme.fontSizes.small,
     fontWeight: 500,
     whiteSpace: 'nowrap',
     transition: 'opacity ease-out 150ms, bottom ease-out 150ms',
