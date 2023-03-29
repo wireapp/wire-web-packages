@@ -69,7 +69,7 @@ exports[`<Tooltip /> renders correctly 1`] = `
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-top: 12px solid #fff;
-  top: 100%;
+  top: 90%;
   left: 50%;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
@@ -187,7 +187,7 @@ exports[`<Tooltip /> renders correctly 1`] = `
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-top: 12px solid #fff;
-  top: 100%;
+  top: 90%;
   left: 50%;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
