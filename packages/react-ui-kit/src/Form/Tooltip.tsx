@@ -51,6 +51,7 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     fontWeight: 500,
     whiteSpace: 'nowrap',
     transition: 'opacity ease-out 150ms, bottom ease-out 150ms',
+    boxShadow: '1px 2px 6px rgba(0, 0, 0, 0.3)',
   },
   '& .tooltip-content .tooltip-arrow': {
     position: 'absolute',
@@ -62,7 +63,6 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     marginBottom: 10,
     left: '50%',
     transform: 'translateX(-50%)',
-    boxShadow: '1px 2px 6px rgba(0, 0, 0, 0.3)',
     '& .tooltip-arrow': {
       filter: 'drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.1))',
       borderLeft: '12px solid transparent',
@@ -74,17 +74,25 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     },
   },
   "&[data-position='right'] .tooltip-content": {
-    left: '100%',
+    left: '110%',
     top: 0,
     bottom: 0,
     margin: 'auto 0',
+    '& .tooltip-arrow': {
+      filter: 'drop-shadow(-2px 0px 1px rgba(0, 0, 0, 0.1))',
+      borderTop: '8px solid transparent',
+      borderBottom: '8px solid transparent',
+      borderRight: `8px solid ${theme.Tooltip.backgroundColor}`,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      left: -7,
+    },
   },
   "&[data-position='bottom'] .tooltip-content": {
     top: '100%',
     marginTop: 10,
     left: '50%',
     transform: 'translateX(-50%)',
-    boxShadow: '1px 2px 6px rgba(0, 0, 0, 0.3)',
     '& .tooltip-arrow': {
       filter: 'drop-shadow(0px -2px 1px rgba(0, 0, 0, 0.1))',
       borderLeft: '12px solid transparent',
@@ -96,10 +104,19 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
     },
   },
   "&[data-position='left'] .tooltip-content": {
-    right: '100%',
+    right: '110%',
     top: 0,
     bottom: 0,
     margin: 'auto 0',
+    '& .tooltip-arrow': {
+      filter: 'drop-shadow(2px 0px 1px rgba(0, 0, 0, 0.1))',
+      borderTop: '8px solid transparent',
+      borderBottom: '8px solid transparent',
+      borderLeft: `8px solid ${theme.Tooltip.backgroundColor}`,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      right: -7,
+    },
   },
 });
 
