@@ -17,12 +17,12 @@
  *
  */
 
-import {AcmeChallenge, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeConnectionService} from '../../Connection';
-import {Account, Nonce} from '../../E2eIdentityService.types';
+import {Nonce} from '../../E2eIdentityService.types';
 import {E2eClientId} from '../../Helper';
 import {GetAuthorizationReturnValue} from '../Authorization';
 
@@ -31,18 +31,12 @@ export interface DoWireDpopChallengeParams {
   e2eClientId: E2eClientId;
   authData: GetAuthorizationReturnValue;
   identity: WireE2eIdentity;
-  expiryDays: number;
   connection: AcmeConnectionService;
-  account: Account;
   nonce: Nonce;
 }
 
 export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'e2eClientId' | 'apiClient'>;
 
-export type GetClientAccessTokenParams = Pick<
-  DoWireDpopChallengeParams,
-  'e2eClientId' | 'apiClient' | 'expiryDays' | 'identity'
-> & {
+export type GetClientAccessTokenParams = Pick<DoWireDpopChallengeParams, 'e2eClientId' | 'apiClient' | 'identity'> & {
   clientNonce: Nonce;
-  wireDpopChallenge: AcmeChallenge;
 };

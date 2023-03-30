@@ -74,13 +74,18 @@ export class E2eIdentityService {
 
   public async getNewCertificate(): Promise<void> {
     // Create a new identity
-    const identity = await this.coreCryptoClient.newAcmeEnrollment();
+    const e2eClientId = getE2eClientId(this.user, this.clientId);
+    const identity = await this.coreCryptoClient.newAcmeEnrollment(
+      e2eClientId,
+      this.user.displayName,
+      this.user.handle,
+      this.expiryDays,
+    );
     // Get the directory
     const directory = await this.getDirectory(identity);
     if (!directory) {
       throw new Error('No directory received');
     }
-    const e2eClientId = getE2eClientId(this.user, this.clientId);
 
     // Step 1: Get a new nonce from ACME server
     const nonce = await this.getInitialNonce(directory);
@@ -89,7 +94,7 @@ export class E2eIdentityService {
     }
 
     // Step 2: Create a new account
-    const accountData = await createNewAccount({
+    const newAccountNonce = await createNewAccount({
       connection: this.connectionService,
       directory,
       identity,
@@ -100,19 +105,14 @@ export class E2eIdentityService {
     const orderData = await createNewOrder({
       identity,
       directory,
-      e2eClientId,
       connection: this.connectionService,
-      expiryDays: this.expiryDays,
-      user: this.user,
-      account: accountData.account,
-      nonce: accountData.nonce,
+      nonce: newAccountNonce,
     });
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
       identity,
       connection: this.connectionService,
-      account: accountData.account,
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
@@ -124,8 +124,6 @@ export class E2eIdentityService {
       e2eClientId,
       connection: this.connectionService,
       apiClient: this.apiClient,
-      expiryDays: this.expiryDays,
-      account: accountData.account,
       nonce: authData.nonce,
     });
 
@@ -134,8 +132,7 @@ export class E2eIdentityService {
       authData,
       identity,
       connection: this.connectionService,
-      user: this.user,
-      account: accountData.account,
+      OAuthIdToken: this.user.OAuthIdToken,
       nonce: dpopData.nonce,
     });
 

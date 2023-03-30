@@ -20,11 +20,10 @@
 import {NewAcmeAuthz, AcmeChallenge, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeConnectionService} from '../Connection';
-import {Account, Nonce} from '../E2eIdentityService.types';
+import {Nonce} from '../E2eIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
 interface GetAuthorizationParams {
-  account: Account;
   nonce: Nonce;
   authzUrl: string;
   identity: WireE2eIdentity;
@@ -34,13 +33,12 @@ type TempNewAcmeAuthzFix = Omit<NewAcmeAuthz, 'wireHttpChallenge'> & {wireDpopCh
 export type GetAuthorizationReturnValue = {authorization: TempNewAcmeAuthzFix; nonce: Nonce};
 
 export const getAuthorization = async ({
-  account,
   authzUrl,
   nonce,
   identity,
   connection,
 }: GetAuthorizationParams): Promise<GetAuthorizationReturnValue> => {
-  const reqBody = identity.newAuthzRequest(authzUrl, account, nonce);
+  const reqBody = identity.newAuthzRequest(authzUrl, nonce);
   const response = await connection.getAuthorization(authzUrl, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {

@@ -33,26 +33,13 @@ const getClientNonce = async ({apiClient, e2eClientId}: GetClientNonceParams) =>
   }
 };
 
-const getClientAccessToken = async ({
-  apiClient,
-  e2eClientId,
-  clientNonce,
-  identity,
-  expiryDays,
-  wireDpopChallenge,
-}: GetClientAccessTokenParams) => {
+const getClientAccessToken = async ({apiClient, e2eClientId, clientNonce, identity}: GetClientAccessTokenParams) => {
   // The access token URL needs to be the same URL we call to get the Access Token
   const accessTokenUrl = `${apiClient.api.client.getAccessTokenUrl(e2eClientId)}`;
   // We need to decode the client nonce because the DPoP token expects a string
   const decodedClientNonce = Decoder.fromBase64(clientNonce).asString;
 
-  const dpopToken = identity.createDpopToken(
-    accessTokenUrl,
-    e2eClientId,
-    wireDpopChallenge,
-    decodedClientNonce,
-    expiryDays,
-  );
+  const dpopToken = identity.createDpopToken(accessTokenUrl, decodedClientNonce);
   return await apiClient.api.client.getAccessToken(e2eClientId, dpopToken);
 };
 
@@ -60,9 +47,7 @@ export const doWireDpopChallenge = async ({
   apiClient,
   e2eClientId,
   authData,
-  expiryDays,
   identity,
-  account,
   nonce,
   connection,
 }: DoWireDpopChallengeParams) => {
@@ -76,12 +61,10 @@ export const doWireDpopChallenge = async ({
     apiClient,
     e2eClientId,
     clientNonce,
-    expiryDays,
     identity,
-    wireDpopChallenge,
   });
 
-  const reqBody = identity.newDpopChallengeRequest(clientAccessTokenData.token, wireDpopChallenge, account, nonce);
+  const reqBody = identity.newDpopChallengeRequest(clientAccessTokenData.token, nonce);
 
   const dpopChallengeResponse = await connection.validateDpopChallenge(wireDpopChallenge.url, reqBody);
   if (!dpopChallengeResponse) {

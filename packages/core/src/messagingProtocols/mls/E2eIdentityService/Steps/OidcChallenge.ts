@@ -22,31 +22,29 @@ import {WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {GetAuthorizationReturnValue} from './Authorization';
 
 import {AcmeConnectionService} from '../Connection';
-import {Nonce, Account, User} from '../E2eIdentityService.types';
+import {Nonce} from '../E2eIdentityService.types';
 
 interface DoWireOidcChallengeParams {
   authData: GetAuthorizationReturnValue;
   identity: WireE2eIdentity;
-  user: User;
   connection: AcmeConnectionService;
-  account: Account;
   nonce: Nonce;
+  OAuthIdToken: string;
 }
 
 export const doWireOidcChallenge = async ({
   connection,
-  account,
   authData,
   identity,
   nonce,
-  user,
+  OAuthIdToken,
 }: DoWireOidcChallengeParams) => {
   const {wireOidcChallenge} = authData.authorization;
   if (!wireOidcChallenge) {
     throw new Error('No wireDpopChallenge defined');
   }
 
-  const reqBody = identity.newOidcChallengeRequest(user.OAuthIdToken, wireOidcChallenge, account, nonce);
+  const reqBody = identity.newOidcChallengeRequest(OAuthIdToken, nonce);
 
   const oidcChallengeResponse = await connection.validateOidcChallenge(wireOidcChallenge.url, reqBody);
   if (!oidcChallengeResponse) {

@@ -20,34 +20,24 @@
 import {AcmeDirectory, NewAcmeOrder, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeConnectionService} from '../Connection';
-import {Nonce, Account, User} from '../E2eIdentityService.types';
-import {E2eClientId, jsonToByteArray} from '../Helper';
+import {Nonce} from '../E2eIdentityService.types';
+import {jsonToByteArray} from '../Helper';
 
 export interface CreateNewOrderParams {
   identity: WireE2eIdentity;
-  account: Account;
   nonce: Nonce;
-  expiryDays: number;
-  e2eClientId: E2eClientId;
-  user: User;
   directory: AcmeDirectory;
   connection: AcmeConnectionService;
 }
 export type CreateNewOrderReturnValue = Promise<{order: NewAcmeOrder; nonce: string; authzUrl: string}>;
 
 export const createNewOrder = async ({
-  account,
-  nonce,
-  e2eClientId,
-  directory,
-  expiryDays,
   identity,
-  user,
+  nonce,
+  directory,
   connection,
 }: CreateNewOrderParams): CreateNewOrderReturnValue => {
-  const {displayName, handle} = user;
-  console.log(e2eClientId);
-  const reqBody = identity.newOrderRequest(displayName, e2eClientId, handle, expiryDays, directory, account, nonce);
+  const reqBody = identity.newOrderRequest(nonce);
 
   const response = await connection.createNewOrder(directory.newOrder, reqBody);
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {

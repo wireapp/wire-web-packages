@@ -227,7 +227,7 @@ export class ClientAPI {
   public getAccessTokenUrl = (clientId: string): string =>
     `${this.client.getBaseUrl()}${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
 
-  public async getAccessToken(clientId: string, dpopToken: string) {
+  public async getAccessToken(clientId: string, dpopToken: Uint8Array) {
     const ResponseSchema = z.object({
       expires_in: z.number().min(1),
       token: z.string().min(1),
@@ -238,7 +238,7 @@ export class ClientAPI {
       method: 'post',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
       headers: {
-        DPoP: dpopToken,
+        DPoP: new TextDecoder().decode(dpopToken),
       },
     };
 

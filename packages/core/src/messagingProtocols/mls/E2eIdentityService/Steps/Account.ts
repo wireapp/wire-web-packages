@@ -29,7 +29,7 @@ type CreateNewAccountParams = {
   connection: AcmeConnectionService;
   directory: AcmeDirectory;
 };
-type CreateNewAccountReturnValue = Promise<{account: Uint8Array; nonce: string}>;
+type CreateNewAccountReturnValue = Promise<Nonce>;
 
 export const createNewAccount = async ({
   nonce,
@@ -37,14 +37,12 @@ export const createNewAccount = async ({
   directory,
   identity,
 }: CreateNewAccountParams): CreateNewAccountReturnValue => {
-  const reqBody = identity.newAccountRequest(directory, nonce);
+  const reqBody = identity.newAccountRequest(nonce);
   const response = await connection.createNewAccount(directory.newAccount, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
-    return {
-      account: identity.newAccountResponse(jsonToByteArray(JSON.stringify(response.data))),
-      nonce: response.nonce,
-    };
+    identity.newAccountResponse(jsonToByteArray(JSON.stringify(response.data)));
+    return response.nonce;
   }
 
   throw new Error('No account-data received');
