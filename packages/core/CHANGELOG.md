@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.1.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.2...@wireapp/core@40.1.3) (2023-03-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.1...@wireapp/core@40.1.2) (2023-03-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.0...@wireapp/core@40.1.1) (2023-03-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.0.0...@wireapp/core@40.1.0) (2023-03-23)
+
+### Features
+
+* **core:** allow retrying to send asset metadatas on an existing message ([#4995](https://github.com/wireapp/wire-web-packages/issues/4995)) ([3553d2a](https://github.com/wireapp/wire-web-packages/commit/3553d2a71b43a890ea99c4d6f479b222dd758bd0))
+
+# [40.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.4...@wireapp/core@40.0.0) (2023-03-22)
+
+### Features
+
+* allow partial user listing for federated backends ([#4994](https://github.com/wireapp/wire-web-packages/issues/4994)) ([51f2545](https://github.com/wireapp/wire-web-packages/commit/51f25456fb48e6a6a1e8837c1e40f0496540f03c))
+
+### BREAKING CHANGES
+
+* The return type of postListUser will now always wrap the result in a full UsersResponse
+
+## [39.3.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.3...@wireapp/core@39.3.4) (2023-03-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.3.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.2...@wireapp/core@39.3.3) (2023-03-21)
+
+### Bug Fixes
+
+* Make sure current client is not duplicated in database ([#4992](https://github.com/wireapp/wire-web-packages/issues/4992)) ([9a86fb1](https://github.com/wireapp/wire-web-packages/commit/9a86fb1e50ce0ae5f543b954b5c0498866028d17))
+
+## [39.3.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.1...@wireapp/core@39.3.2) (2023-03-21)
+
+### Bug Fixes
+
+* **core:** wait until corecrypto is ready to call .wipe method [FS-1562] ([#4972](https://github.com/wireapp/wire-web-packages/issues/4972)) ([413a149](https://github.com/wireapp/wire-web-packages/commit/413a14971648cd5f9e2106553e4d94a059a0414f))
+
+## [39.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.0...@wireapp/core@39.3.1) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [39.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.7...@wireapp/core@39.3.0) (2023-03-20)
+
+### Features
+
+* update reaction type ([#4973](https://github.com/wireapp/wire-web-packages/issues/4973)) ([4cb5773](https://github.com/wireapp/wire-web-packages/commit/4cb577367b725381baec6707e8cbfaeca0b8bad9))
+
+## [39.2.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.6...@wireapp/core@39.2.7) (2023-03-16)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [39.2.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.5...@wireapp/core@39.2.6) (2023-03-16)
 
 ### Bug Fixes

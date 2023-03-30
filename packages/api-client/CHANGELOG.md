@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [24.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.1.1...@wireapp/api-client@24.2.0) (2023-03-30)
+
+### Features
+
+* Return domain when api version is initialized ([#5013](https://github.com/wireapp/wire-web-packages/issues/5013)) ([5be4df5](https://github.com/wireapp/wire-web-packages/commit/5be4df550566ffe60019a261cce68dc10479e066))
+
+## [24.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.1.0...@wireapp/api-client@24.1.1) (2023-03-28)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [24.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.0.0...@wireapp/api-client@24.1.0) (2023-03-27)
+
+### Features
+
+* updated api for pkce ([#5010](https://github.com/wireapp/wire-web-packages/issues/5010)) ([38ba539](https://github.com/wireapp/wire-web-packages/commit/38ba53972d5cb357f8cfde7d8f8b887171428897))
+
+# [24.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@23.3.1...@wireapp/api-client@24.0.0) (2023-03-22)
+
+### Features
+
+* allow partial user listing for federated backends ([#4994](https://github.com/wireapp/wire-web-packages/issues/4994)) ([51f2545](https://github.com/wireapp/wire-web-packages/commit/51f25456fb48e6a6a1e8837c1e40f0496540f03c))
+
+### BREAKING CHANGES
+
+* The return type of postListUser will now always wrap the result in a full UsersResponse
+
+## [23.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@23.3.0...@wireapp/api-client@23.3.1) (2023-03-22)
+
+### Bug Fixes
+
+* oauth redirects ([#4993](https://github.com/wireapp/wire-web-packages/issues/4993)) ([34f5a4f](https://github.com/wireapp/wire-web-packages/commit/34f5a4f975c753d405c7fe5cdb822e9cdfd56bd4))
+
+# [23.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@23.2.2...@wireapp/api-client@23.3.0) (2023-03-20)
+
+### Features
+
+* return response url from code endpoint ([#4990](https://github.com/wireapp/wire-web-packages/issues/4990)) ([edc82a6](https://github.com/wireapp/wire-web-packages/commit/edc82a61811401191cc4d438211ad570ede1999e))
+
+## [23.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@23.2.1...@wireapp/api-client@23.2.2) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/api-client
+
 ## [23.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@23.2.0...@wireapp/api-client@23.2.1) (2023-03-16)
 
 ### Bug Fixes
