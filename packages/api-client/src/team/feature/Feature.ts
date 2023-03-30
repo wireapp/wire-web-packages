@@ -32,6 +32,8 @@ export enum FeatureLockStatus {
 export interface FeatureWithoutConfig {
   status: FeatureStatus;
   lockStatus?: FeatureLockStatus;
+  // Time to Live.
+  ttl?: number;
 }
 export interface Feature<T extends FeatureConfig> extends FeatureWithoutConfig {
   config: T;
