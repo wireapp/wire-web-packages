@@ -3110,6 +3110,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@testing-library/user-event@npm:14.4.3":
+  version: 14.4.3
+  resolution: "@testing-library/user-event@npm:14.4.3"
+  peerDependencies:
+    "@testing-library/dom": ">=7.21.4"
+  checksum: 852c48ea6db1c9471b18276617c84fec4320771e466cd58339a732ca3fd73ad35e5a43ae14f51af51a8d0a150dcf60fcaab049ef367871207bea8f92c4b8195e
+  languageName: node
+  linkType: hard
+
 "@tippyjs/react@npm:4.1.0":
   version: 4.1.0
   resolution: "@tippyjs/react@npm:4.1.0"
@@ -4616,6 +4625,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 14.0.0
+    "@testing-library/user-event": 14.4.3
     "@types/color": 3.0.3
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
