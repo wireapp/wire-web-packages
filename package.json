@@ -13,7 +13,7 @@
     "@types/node": "^18.11.5",
     "@types/rimraf": "3.0.2",
     "@typescript-eslint/eslint-plugin": "5.57.0",
-    "@typescript-eslint/parser": "5.56.0",
+    "@typescript-eslint/parser": "5.57.0",
     "@wireapp/eslint-config": "workspace:^",
     "eslint": "8.37.0",
     "eslint-config-prettier": "8.8.0",
