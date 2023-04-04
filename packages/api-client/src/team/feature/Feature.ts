@@ -32,7 +32,7 @@ export enum FeatureLockStatus {
 export interface FeatureWithoutConfig {
   status: FeatureStatus;
   lockStatus?: FeatureLockStatus;
-  // Time to Live.
+  // Time to Live. The time after which the feature resets to its default value.
   ttl?: number;
 }
 export interface Feature<T extends FeatureConfig> extends FeatureWithoutConfig {
@@ -72,6 +72,7 @@ export interface FeatureMLSConfig extends FeatureConfig {
 
 export interface FeatureMLSE2EIdConfig extends FeatureConfig {
   verificationExpiration: number;
+  acmeUrl?: string;
 }
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
