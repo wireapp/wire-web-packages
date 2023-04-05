@@ -21,22 +21,22 @@ import {WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
+import {ClientId} from '../../../types';
 import {AcmeConnectionService} from '../../Connection';
 import {Nonce} from '../../E2eIdentityService.types';
-import {E2eClientId} from '../../Helper';
 import {GetAuthorizationReturnValue} from '../Authorization';
 
 export interface DoWireDpopChallengeParams {
   apiClient: APIClient;
-  e2eClientId: E2eClientId;
+  clientId: ClientId;
   authData: GetAuthorizationReturnValue;
   identity: WireE2eIdentity;
   connection: AcmeConnectionService;
   nonce: Nonce;
 }
 
-export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'e2eClientId' | 'apiClient'>;
+export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient'>;
 
-export type GetClientAccessTokenParams = Pick<DoWireDpopChallengeParams, 'e2eClientId' | 'apiClient' | 'identity'> & {
+export type GetClientAccessTokenParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient' | 'identity'> & {
   clientNonce: Nonce;
 };

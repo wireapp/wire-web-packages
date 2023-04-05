@@ -121,7 +121,7 @@ export class E2eIdentityService {
     const dpopData = await doWireDpopChallenge({
       authData,
       identity,
-      e2eClientId,
+      clientId: this.clientId,
       connection: this.connectionService,
       apiClient: this.apiClient,
       nonce: authData.nonce,
