@@ -32,7 +32,7 @@
     "start": "ts-node src/index.ts"
   },
   "bin": {
-    "wire-cli": "dist/index.js"
+    "wire-cli": "lib/index.js"
   },
   "version": "12.0.109",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
