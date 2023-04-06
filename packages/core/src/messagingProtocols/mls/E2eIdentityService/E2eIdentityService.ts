@@ -21,7 +21,7 @@ import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/p
 
 import {APIClient} from '@wireapp/api-client';
 
-import {AcmeConnectionService} from './Connection';
+import {AcmeService} from './Connection/AcmeServer';
 import {User} from './E2eIdentityService.types';
 import {getE2eClientId} from './Helper';
 import {createNewAccount} from './Steps/Account';
@@ -32,7 +32,6 @@ import {createNewOrder} from './Steps/Order';
 
 export class E2eIdentityService {
   //private readonly logger = logdown('@wireapp/core/E2EIdentityService');
-  private readonly connectionService: AcmeConnectionService = new AcmeConnectionService();
   private readonly expiryDays = 90;
 
   constructor(
@@ -44,9 +43,9 @@ export class E2eIdentityService {
 
   // ############ Internal Functions ############
 
-  private async getDirectory(identity: WireE2eIdentity): Promise<AcmeDirectory | undefined> {
+  private async getDirectory(identity: WireE2eIdentity, connection: AcmeService): Promise<AcmeDirectory | undefined> {
     try {
-      const directory = await this.connectionService.getDirectory();
+      const directory = await connection.getDirectory();
 
       if (directory) {
         const parsedDirectory = identity.directoryResponse(directory);
@@ -58,9 +57,9 @@ export class E2eIdentityService {
     return undefined;
   }
 
-  private async getInitialNonce(directory: AcmeDirectory): Promise<string> {
+  private async getInitialNonce(directory: AcmeDirectory, connection: AcmeService): Promise<string> {
     try {
-      const nonce = await this.connectionService.getInitialNonce(directory.newNonce);
+      const nonce = await connection.getInitialNonce(directory.newNonce);
       if (nonce) {
         return nonce;
       }
@@ -75,6 +74,7 @@ export class E2eIdentityService {
   public async getNewCertificate(): Promise<void> {
     // Create a new identity
     const e2eClientId = getE2eClientId(this.user, this.clientId);
+    const connection = new AcmeService();
     const identity = await this.coreCryptoClient.newAcmeEnrollment(
       e2eClientId,
       this.user.displayName,
@@ -82,20 +82,20 @@ export class E2eIdentityService {
       this.expiryDays,
     );
     // Get the directory
-    const directory = await this.getDirectory(identity);
+    const directory = await this.getDirectory(identity, connection);
     if (!directory) {
       throw new Error('No directory received');
     }
 
     // Step 1: Get a new nonce from ACME server
-    const nonce = await this.getInitialNonce(directory);
+    const nonce = await this.getInitialNonce(directory, connection);
     if (!nonce) {
       throw new Error('No nonce received');
     }
 
     // Step 2: Create a new account
     const newAccountNonce = await createNewAccount({
-      connection: this.connectionService,
+      connection,
       directory,
       identity,
       nonce,
@@ -103,16 +103,16 @@ export class E2eIdentityService {
 
     // Step 3: Create a new order
     const orderData = await createNewOrder({
-      identity,
       directory,
-      connection: this.connectionService,
+      connection,
+      identity,
       nonce: newAccountNonce,
     });
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
+      connection,
       identity,
-      connection: this.connectionService,
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
@@ -120,19 +120,23 @@ export class E2eIdentityService {
     // Step 5: Do DPOP Challenge
     const dpopData = await doWireDpopChallenge({
       authData,
+      connection,
       identity,
       clientId: this.clientId,
-      connection: this.connectionService,
       apiClient: this.apiClient,
       nonce: authData.nonce,
     });
 
-    // Step 6: Do OIDC client challenge
+    // Step 6: Start E2E OAuth flow
+    const oAuthIdToken =
+      'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzU5NjE3NTYsImV4cCI6MTY3NjA0ODE1NiwibmJmIjoxNjc1OTYxNzU2LCJpc3MiOiJodHRwOi8vaWRwLyIsInN1YiI6ImltcHA6d2lyZWFwcD1OREV5WkdZd05qYzJNekZrTkRCaU5UbGxZbVZtTWpReVpUSXpOVGM0TldRLzY1YzNhYzFhMTYzMWMxMzZAZXhhbXBsZS5jb20iLCJhdWQiOiJodHRwOi8vaWRwLyIsIm5hbWUiOiJTbWl0aCwgQWxpY2UgTSAoUUEpIiwiaGFuZGxlIjoiaW1wcDp3aXJlYXBwPWFsaWNlLnNtaXRoLnFhQGV4YW1wbGUuY29tIiwia2V5YXV0aCI6IlNZNzR0Sm1BSUloZHpSdEp2cHgzODlmNkVLSGJYdXhRLi15V29ZVDlIQlYwb0ZMVElSRGw3cjhPclZGNFJCVjhOVlFObEw3cUxjbWcifQ.0iiq3p5Bmmp8ekoFqv4jQu_GrnPbEfxJ36SCuw-UvV6hCi6GlxOwU7gwwtguajhsd1sednGWZpN8QssKI5_CDQ';
+
+    // Step 7: Do OIDC client challenge
     const oidcData = await doWireOidcChallenge({
       authData,
+      connection,
       identity,
-      connection: this.connectionService,
-      OAuthIdToken: this.user.OAuthIdToken,
+      oAuthIdToken,
       nonce: dpopData.nonce,
     });
 

@@ -17,26 +17,24 @@
  *
  */
 
-import {WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {ZodSchema} from 'zod';
 
-import {APIClient} from '@wireapp/api-client';
-
-import {ClientId} from '../../../types';
-import {AcmeService} from '../../Connection/AcmeServer';
 import {Nonce} from '../../E2eIdentityService.types';
-import {GetAuthorizationReturnValue} from '../Authorization';
 
-export interface DoWireDpopChallengeParams {
-  apiClient: APIClient;
-  clientId: ClientId;
-  authData: GetAuthorizationReturnValue;
-  identity: WireE2eIdentity;
-  connection: AcmeService;
-  nonce: Nonce;
+export type GetDirectoryReturnValue = Promise<Uint8Array | undefined>;
+
+export type GetInitialNonceReturnValue = Promise<string | undefined>;
+
+export interface PostJoseRequestParams<T> {
+  url: string;
+  payload: Uint8Array;
+  schema: ZodSchema<T>;
+  errorMessage: string;
 }
-
-export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient'>;
-
-export type GetClientAccessTokenParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient' | 'identity'> & {
-  clientNonce: Nonce;
-};
+export type PostJoseRequestReturnValue<T> = Promise<
+  | {
+      data: T;
+      nonce: Nonce;
+    }
+  | undefined
+>;

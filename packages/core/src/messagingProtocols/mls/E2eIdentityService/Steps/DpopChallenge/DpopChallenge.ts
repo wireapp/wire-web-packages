@@ -17,8 +17,6 @@
  *
  */
 
-import {Decoder} from 'bazinga64';
-
 import {DoWireDpopChallengeParams, GetClientAccessTokenParams, GetClientNonceParams} from './DpopChallenge.types';
 
 const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
@@ -36,10 +34,8 @@ const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
 const getClientAccessToken = async ({apiClient, clientNonce, identity, clientId}: GetClientAccessTokenParams) => {
   // The access token URL needs to be the same URL we call to get the Access Token
   const accessTokenUrl = `${apiClient.api.client.getAccessTokenUrl(clientId)}`;
-  // We need to decode the client nonce because the DPoP token expects a string
-  const decodedClientNonce = Decoder.fromBase64(clientNonce).asString;
 
-  const dpopToken = identity.createDpopToken(accessTokenUrl, decodedClientNonce);
+  const dpopToken = identity.createDpopToken(accessTokenUrl, clientNonce);
   return await apiClient.api.client.getAccessToken(clientId, dpopToken);
 };
 
@@ -57,6 +53,7 @@ export const doWireDpopChallenge = async ({
   }
 
   const clientNonce = await getClientNonce({clientId, apiClient});
+
   const clientAccessTokenData = await getClientAccessToken({
     apiClient,
     clientId,

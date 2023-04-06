@@ -17,19 +17,4 @@
  *
  */
 
-import {AcmeChallenge} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
-export type User = {
-  id: string;
-  domain: string;
-  displayName: string;
-  handle: string;
-};
-export type Account = Uint8Array;
-export type Nonce = string;
-
-export interface FinishOidcChallengeParams {
-  oidcChallenge: AcmeChallenge;
-  nonce: Nonce;
-  account: Account;
-}
+export * from './Auth0Service';

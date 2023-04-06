@@ -289,12 +289,12 @@ export class Account extends TypedEventEmitter<Events> {
     if (!validClient) {
       return undefined;
     }
-    this.apiClient.context.clientId = validClient.id;
+    //this.apiClient.context.clientId = validClient.id;
 
     // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    //await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
     if (this.service.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       if (!client) {
@@ -302,19 +302,20 @@ export class Account extends TypedEventEmitter<Events> {
         await this.service.mls.initClient({id: userId, domain}, validClient.id);
       }
       // initialize schedulers for pending mls proposals once client is initialized
-      await this.service.mls.checkExistingPendingProposals();
+      //await this.service.mls.checkExistingPendingProposals();
 
       // initialize schedulers for renewing key materials
-      this.service.mls.checkForKeyMaterialsUpdate();
+      //this.service.mls.checkForKeyMaterialsUpdate();
 
       // initialize scheduler for syncing key packages with backend
-      this.service.mls.checkForKeyPackagesBackendSync();
+      //this.service.mls.checkForKeyPackagesBackendSync();
 
       // leave stale conference subconversations (e.g after a crash)
-      await this.service.mls.leaveStaleConferenceSubconversations();
+      //await this.service.mls.leaveStaleConferenceSubconversations();
     }
 
-    return validClient;
+    //return validClient;
+    return undefined;
   }
 
   private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, enableMLS: boolean) {

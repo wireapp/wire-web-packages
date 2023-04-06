@@ -17,24 +17,4 @@
  *
  */
 
-import {ZodSchema} from 'zod';
-
-import {Nonce} from '../E2eIdentityService.types';
-
-export type GetDirectoryReturnValue = Promise<Uint8Array | undefined>;
-
-export type GetInitialNonceReturnValue = Promise<string | undefined>;
-
-export interface PostJoseRequestParams<T> {
-  url: string;
-  payload: Uint8Array;
-  schema: ZodSchema<T>;
-  errorMessage: string;
-}
-export type PostJoseRequestReturnValue<T> = Promise<
-  | {
-      data: T;
-      nonce: Nonce;
-    }
-  | undefined
->;
+export * from './AcmeService';

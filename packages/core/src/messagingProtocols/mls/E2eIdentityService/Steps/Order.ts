@@ -19,7 +19,7 @@
 
 import {AcmeDirectory, NewAcmeOrder, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-import {AcmeConnectionService} from '../Connection';
+import {AcmeService} from '../Connection';
 import {Nonce} from '../E2eIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
@@ -27,7 +27,7 @@ export interface CreateNewOrderParams {
   identity: WireE2eIdentity;
   nonce: Nonce;
   directory: AcmeDirectory;
-  connection: AcmeConnectionService;
+  connection: AcmeService;
 }
 export type CreateNewOrderReturnValue = Promise<{order: NewAcmeOrder; nonce: string; authzUrl: string}>;
 

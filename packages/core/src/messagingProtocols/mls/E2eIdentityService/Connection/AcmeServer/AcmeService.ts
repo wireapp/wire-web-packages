@@ -26,7 +26,7 @@ import {
   GetInitialNonceReturnValue,
   PostJoseRequestParams,
   PostJoseRequestReturnValue,
-} from './AcmeConnectionService.types';
+} from './AcmeService.types';
 import {
   AuthorizationResponseData,
   AuthorizationResponseDataSchema,
@@ -43,8 +43,8 @@ import {
   ValidateOidcChallengeResponseDataSchema,
 } from './schema';
 
-export class AcmeConnectionService {
-  private logger = logdown('@wireapp/core/AcmeConnectionService');
+export class AcmeService {
+  private logger = logdown('@wireapp/core/AcmeService');
   private readonly axiosInstance: AxiosInstance = axios.create();
   private readonly certificateAuthority = 'acme';
   private readonly acmeProvisioner = 'acme';

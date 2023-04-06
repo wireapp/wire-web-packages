@@ -19,7 +19,7 @@
 
 import {NewAcmeAuthz, AcmeChallenge, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-import {AcmeConnectionService} from '../Connection';
+import {AcmeService} from '../Connection';
 import {Nonce} from '../E2eIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
@@ -27,7 +27,7 @@ interface GetAuthorizationParams {
   nonce: Nonce;
   authzUrl: string;
   identity: WireE2eIdentity;
-  connection: AcmeConnectionService;
+  connection: AcmeService;
 }
 type TempNewAcmeAuthzFix = Omit<NewAcmeAuthz, 'wireHttpChallenge'> & {wireDpopChallenge?: AcmeChallenge};
 export type GetAuthorizationReturnValue = {authorization: TempNewAcmeAuthzFix; nonce: Nonce};

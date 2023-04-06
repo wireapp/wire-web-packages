@@ -19,14 +19,14 @@
 
 import {WireE2eIdentity, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
-import {AcmeConnectionService} from '../Connection';
+import {AcmeService} from '../Connection/AcmeServer';
 import {Nonce} from '../E2eIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
 type CreateNewAccountParams = {
   nonce: Nonce;
   identity: WireE2eIdentity;
-  connection: AcmeConnectionService;
+  connection: AcmeService;
   directory: AcmeDirectory;
 };
 type CreateNewAccountReturnValue = Promise<Nonce>;
