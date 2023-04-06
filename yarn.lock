@@ -3464,16 +3464,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:*":
-  version: 8.0.0
-  resolution: "@types/glob@npm:8.0.0"
-  dependencies:
-    "@types/minimatch": "*"
-    "@types/node": "*"
-  checksum: 1817b05f5a8aed851d102a65b5e926d5c777bef927ea62b36d635860eef5364f2046bb5a692d135b6f2b28f34e4a9d44ade9396122c0845bcc7636d35f624747
-  languageName: node
-  linkType: hard
-
 "@types/glob@npm:^7.1.1":
   version: 7.2.0
   resolution: "@types/glob@npm:7.2.0"
@@ -3786,13 +3776,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/rimraf@npm:3.0.2, @types/rimraf@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@types/rimraf@npm:3.0.2"
+"@types/rimraf@npm:4.0.5, @types/rimraf@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "@types/rimraf@npm:4.0.5"
   dependencies:
-    "@types/glob": "*"
-    "@types/node": "*"
-  checksum: b47fa302f46434cba704d20465861ad250df79467d3d289f9d6490d3aeeb41e8cb32dd80bd1a8fd833d1e185ac719fbf9be12e05ad9ce9be094d8ee8f1405347
+    rimraf: "*"
+  checksum: 8c7201ff0ea89c4917d5010b22113e906930da65b6506ff4b45f99bde39099dc5195f095206fde8b84bc364cf801ee5eaf594c2676d3f3dd0e468344ab316187
   languageName: node
   linkType: hard
 
@@ -4403,7 +4392,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     reconnecting-websocket: 4.4.0
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     spark-md5: 3.0.2
     tough-cookie: 4.1.2
     ts-node: ^10.9.1
@@ -4429,10 +4418,10 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/jsrsasign": 10.5.8
     "@types/node": ^18.11.5
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     jest: ^29.2.1
     jsrsasign: 10.7.0
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: ^10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4443,7 +4432,7 @@ __metadata:
   resolution: "@wireapp/cli-client@workspace:packages/cli-client"
   dependencies:
     "@types/fs-extra": 9.0.13
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@wireapp/api-client": "workspace:^"
     "@wireapp/core": "workspace:^"
     "@wireapp/core-crypto": "file:./overrides/core-crypto"
@@ -4453,7 +4442,7 @@ __metadata:
     dotenv: 16.0.3
     fake-indexeddb: ^4.0.1
     fs-extra: 11.1.0
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: ^10.9.1
     typescript: ^4.8.4
   bin:
@@ -4470,13 +4459,13 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
     "@types/platform": 1.3.4
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     ansi-regex: 5.0.1
     fs-extra: 11.1.0
     jest: ^29.2.1
     logdown: 3.3.1
     platform: 1.3.6
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -4491,7 +4480,7 @@ __metadata:
     "@types/copy": 0.3.2
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     axios: 1.3.4
     copy: 0.3.2
     cosmiconfig: 8.1.3
@@ -4499,7 +4488,7 @@ __metadata:
     jest: ^29.2.1
     jszip: 3.10.1
     logdown: 3.3.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
   bin:
     copy-config: lib/cli.js
@@ -4508,8 +4497,8 @@ __metadata:
 
 "@wireapp/core-crypto@file:./overrides/core-crypto::locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client":
   version: 0.0.0
-  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=78ad8a&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
-  checksum: 49219b68b581a4ed28d5a7b37b538093f6961b024be3287c84aefb95cea63b0fce49e5d83005d457af67fd8c86f12ae68e5da0d48640c6a8e315218a7991f9f6
+  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=1e7e72&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
+  checksum: 5cf1ce9c9ed5e6296991a93acf927d676c90ab65cdd8f626ab2e23d4196df9609e876f5769f2a841ebd3d4f36b2ede54f050d23d1dca5d641b76f43d0f3ece0a
   languageName: node
   linkType: hard
 
@@ -4529,7 +4518,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/long": ^5.0.0
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@types/tough-cookie": 4.0.2
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
@@ -4554,7 +4543,7 @@ __metadata:
     logdown: 3.3.1
     long: ^5.2.0
     nock: 13.3.0
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
     uuidjs: 4.2.13
   languageName: unknown
@@ -4637,13 +4626,13 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/license-checker": ^25
     "@types/npm-registry-package-info": 1.0.1
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     fs-extra: 11.1.0
     license-checker: ^25.0.1
     logdown: 3.3.1
     npm-license-crawler: 0.2.1
     npm-registry-package-info: 1.0.5
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
   bin:
     collect-licenses: src/cli.js
@@ -4682,9 +4671,9 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: ^10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4697,10 +4686,10 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@wireapp/commons": "workspace:^"
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -4752,7 +4741,7 @@ __metadata:
     "@types/node": ^18.11.5
     "@types/react": ^18.0.25
     "@types/react-dom": ^18.0.8
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@types/webpack-env": 1.18.0
     babel-jest: 29.5.0
     babel-loader: 9.1.2
@@ -4767,7 +4756,7 @@ __metadata:
     react-styleguidist: 13.0.0
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     typescript: ^4.8.4
     webpack: ^5.74.0
   peerDependencies:
@@ -4789,13 +4778,13 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@wireapp/store-engine": "workspace:^"
     dexie: 3.2.3
     fake-indexeddb: ^4.0.0
     jest: ^29.2.1
     logdown: 3.3.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: ^10.9.1
     typescript: ^4.8.4
     uuidjs: 4.2.13
@@ -4813,11 +4802,11 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     "@wireapp/store-engine": "workspace:^"
     fs-extra: 11.1.0
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: 10.9.1
     typescript: ^4.8.4
   peerDependencies:
@@ -4842,9 +4831,9 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: 10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -4854,8 +4843,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/webapp-events@workspace:packages/webapp-events"
   dependencies:
-    "@types/rimraf": ^3.0.2
-    rimraf: ^3.0.2
+    "@types/rimraf": ^4.0.5
+    rimraf: ^4.4.1
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -5720,11 +5709,11 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/libsodium-wrappers-sumo": 0.7.5
     "@types/node": ^18.11.9
-    "@types/rimraf": ^3.0.2
+    "@types/rimraf": ^4.0.5
     cross-env: 7.0.3
     jest: ^29.2.1
     libsodium-wrappers-sumo: 0.7.11
-    rimraf: ^3.0.2
+    rimraf: ^4.4.1
     ts-node: 10.9.1
     typescript: ^4.8.4
   languageName: unknown
@@ -9440,6 +9429,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:^9.2.0":
+  version: 9.3.4
+  resolution: "glob@npm:9.3.4"
+  dependencies:
+    fs.realpath: ^1.0.0
+    minimatch: ^8.0.2
+    minipass: ^4.2.4
+    path-scurry: ^1.6.1
+  checksum: bcf49eaf475dc4ce8d4e98f896408a9f6507a2cb7d24a207c012cb318b969e04a02bcde2ff2920eadd5055ccae444a007b769e418147a56268fab2cda8694cde
+  languageName: node
+  linkType: hard
+
 "global-modules@npm:^0.2.3":
   version: 0.2.3
   resolution: "global-modules@npm:0.2.3"
@@ -12326,6 +12327,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru-cache@npm:^7.14.1":
+  version: 7.18.3
+  resolution: "lru-cache@npm:7.18.3"
+  checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^7.4.4, lru-cache@npm:^7.5.1, lru-cache@npm:^7.7.1":
   version: 7.14.1
   resolution: "lru-cache@npm:7.14.1"
@@ -12759,6 +12767,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^8.0.2":
+  version: 8.0.3
+  resolution: "minimatch@npm:8.0.3"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 8957d8105be6729bf1d3af9c410b2a38ffcf3cd17d4ffaf715b2aa4841490aaa82f1ebff785e71b5b97747199ccc61027db597495941cf46243d9a64382e1560
+  languageName: node
+  linkType: hard
+
 "minimist-options@npm:4.1.0":
   version: 4.1.0
   resolution: "minimist-options@npm:4.1.0"
@@ -12868,6 +12885,13 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: 7a609afbf394abfcf9c48e6c90226f471676c8f2a67f07f6838871afb03215ede431d1433feffe1b855455bcb13ef0eb89162841b9796109d6fed8d89790f381
+  languageName: node
+  linkType: hard
+
+"minipass@npm:^4.0.2, minipass@npm:^4.2.4":
+  version: 4.2.5
+  resolution: "minipass@npm:4.2.5"
+  checksum: 4f9c19af23a5d4a9e7156feefc9110634b178a8cff8f8271af16ec5ebf7e221725a97429952c856f5b17b30c2065ebd24c81722d90c93d2122611d75b952b48f
   languageName: node
   linkType: hard
 
@@ -13979,6 +14003,16 @@ __metadata:
   version: 1.0.7
   resolution: "path-parse@npm:1.0.7"
   checksum: 49abf3d81115642938a8700ec580da6e830dde670be21893c62f4e10bd7dd4c3742ddc603fe24f898cba7eb0c6bc1777f8d9ac14185d34540c6d4d80cd9cae8a
+  languageName: node
+  linkType: hard
+
+"path-scurry@npm:^1.6.1":
+  version: 1.6.3
+  resolution: "path-scurry@npm:1.6.3"
+  dependencies:
+    lru-cache: ^7.14.1
+    minipass: ^4.0.2
+  checksum: 814ebd7f8df717e2381dc707ba3a3ddf84d0a4f9d653036c7554cb1fea632d4d78eb17dd5f4c85111b78ba8b8c0a5b59c756645c9d343bdacacda4ba8d1626c2
   languageName: node
   linkType: hard
 
@@ -15475,14 +15509,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:3.0.2, rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "rimraf@npm:3.0.2"
+"rimraf@npm:*, rimraf@npm:4.4.1, rimraf@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "rimraf@npm:4.4.1"
   dependencies:
-    glob: ^7.1.3
+    glob: ^9.2.0
   bin:
-    rimraf: bin.js
-  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
+    rimraf: dist/cjs/src/bin.js
+  checksum: b786adc02651e2e24bbedb04bbdea80652fc9612632931ff2d9f898c5e4708fe30956186597373c568bd5230a4dc2fadfc816ccacba8a1daded3a006a6b74f1a
   languageName: node
   linkType: hard
 
@@ -15494,6 +15528,17 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: cdc7f6eacb17927f2a075117a823e1c5951792c6498ebcce81ca8203454a811d4cf8900314154d3259bb8f0b42ab17f67396a8694a54cae3283326e57ad250cd
+  languageName: node
+  linkType: hard
+
+"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "rimraf@npm:3.0.2"
+  dependencies:
+    glob: ^7.1.3
+  bin:
+    rimraf: bin.js
+  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
   languageName: node
   linkType: hard
 
@@ -15512,7 +15557,7 @@ __metadata:
     "@types/babel__core": ^7
     "@types/jest": ^29.2.0
     "@types/node": ^18.11.5
-    "@types/rimraf": 3.0.2
+    "@types/rimraf": 4.0.5
     "@typescript-eslint/eslint-plugin": 5.57.0
     "@typescript-eslint/parser": 5.56.0
     "@wireapp/eslint-config": "workspace:^"
@@ -15539,7 +15584,7 @@ __metadata:
     jest-environment-jsdom: ^29.2.1
     lint-staged: 13.2.0
     prettier: 2.8.7
-    rimraf: 3.0.2
+    rimraf: 4.4.1
     tsconfig-paths: 4.2.0
     typescript: ^4.8.4
   languageName: unknown
