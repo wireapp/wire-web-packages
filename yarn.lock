@@ -4373,26 +4373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/api-client@npm:24.3.0, @wireapp/api-client@npm:^24.3.0":
-  version: 24.3.0
-  resolution: "@wireapp/api-client@npm:24.3.0"
-  dependencies:
-    "@wireapp/commons": ^5.0.4
-    "@wireapp/priority-queue": ^2.0.3
-    "@wireapp/protocol-messaging": 1.44.0
-    axios: 1.3.4
-    axios-retry: 3.4.0
-    http-status-codes: 2.2.0
-    logdown: 3.3.1
-    reconnecting-websocket: 4.4.0
-    spark-md5: 3.0.2
-    tough-cookie: 4.1.2
-    ws: 8.11.0
-  checksum: 2340df018e1d79dec993a752b87e67c3f75ca4aad5dbaf34ec6d9b9984ff368a50d9434a5e16d5b1c9fd19317050ad21244b2bfc03a050bcb6de07aafd0f7c18
-  languageName: node
-  linkType: hard
-
-"@wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
+"@wireapp/api-client@24.3.0, @wireapp/api-client@^24.3.0, @wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
   version: 0.0.0-use.local
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
@@ -4464,7 +4445,7 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/rimraf": ^3.0.2
     "@wireapp/api-client": 24.3.0
-    "@wireapp/core": 40.1.5
+    "@wireapp/core": 40.1.6
     "@wireapp/core-crypto": "file:./overrides/core-crypto"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.3.4
@@ -4526,9 +4507,9 @@ __metadata:
   linkType: soft
 
 "@wireapp/core-crypto@file:./overrides/core-crypto::locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client":
-  version: 1.0.0
-  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=e649b2&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
-  checksum: f38e0fd87ee5f673814659e836bad49e1fe08de296ef70eba0c0ec135802ff97f6e0a5e4c3800e6130a188b3bd37d46860770782b49241c0500453847271b694
+  version: 0.0.0
+  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=8dd2c7&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
+  checksum: fa43bf76288d5c870c9d2b224b4c9dc80ea95179a818c53509a9f2398af455d198a14d3a46016a136de69e5c06d8a77a6895c59d2e199b9a8592066853ec66e4
   languageName: node
   linkType: hard
 
@@ -4539,15 +4520,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/core@npm:40.1.5":
-  version: 40.1.5
-  resolution: "@wireapp/core@npm:40.1.5"
+"@wireapp/core@npm:40.1.6":
+  version: 40.1.6
+  resolution: "@wireapp/core@npm:40.1.6"
   dependencies:
     "@wireapp/api-client": ^24.3.0
     "@wireapp/commons": ^5.0.4
     "@wireapp/core-crypto": 0.7.0-rc.4
     "@wireapp/cryptobox": 12.8.0
-    "@wireapp/promise-queue": ^2.1.1
+    "@wireapp/promise-queue": ^2.1.2
     "@wireapp/protocol-messaging": 1.44.0
     "@wireapp/store-engine": 5.0.3
     "@wireapp/store-engine-dexie": ^2.0.5
@@ -4560,7 +4541,7 @@ __metadata:
     logdown: 3.3.1
     long: ^5.2.0
     uuidjs: 4.2.13
-  checksum: 157bc4b6387ba233a3250b80fed1579617b64f8fc317c05aaf2aa8166545923945ac96d82cac692ae6aaa8b748bf1e9b3e80118cfa7d51a0a052cd18d0f1e439
+  checksum: 7ea16c872ad697e32dcef5ed61d940f1c9a546b76a99413fe4c933b92b77330cb4b035e269447865d5d9bb208ff150e82cf829699b1484b4de98a5e9d4c2d04e
   languageName: node
   linkType: hard
 
@@ -4709,7 +4690,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@^2.0.3, @wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
+"@wireapp/priority-queue@npm:1.6.38":
+  version: 1.6.38
+  resolution: "@wireapp/priority-queue@npm:1.6.38"
+  dependencies:
+    "@types/node": ~14
+  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
+  languageName: node
+  linkType: hard
+
+"@wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/priority-queue@workspace:packages/priority-queue"
   dependencies:
@@ -4725,16 +4715,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@npm:1.6.38":
-  version: 1.6.38
-  resolution: "@wireapp/priority-queue@npm:1.6.38"
-  dependencies:
-    "@types/node": ~14
-  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
+"@wireapp/promise-queue@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@wireapp/promise-queue@npm:2.1.2"
+  checksum: eb2014b6e1b321f007be6810069589b43e12fdda708ecba876068309aadb2688b63edb4f6bacc921790ca30b97e90fe3dfccba7b3c3799249377343a8a42568c
   languageName: node
   linkType: hard
 
-"@wireapp/promise-queue@^2.1.1, @wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
+"@wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/promise-queue@workspace:packages/promise-queue"
   dependencies:

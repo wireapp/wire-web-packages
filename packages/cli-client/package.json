@@ -9,7 +9,7 @@
   "main": "lib/index",
   "dependencies": {
     "@wireapp/api-client": "24.3.0",
-    "@wireapp/core": "40.1.5",
+    "@wireapp/core": "40.1.6",
     "@wireapp/core-crypto": "file:./overrides/core-crypto",
     "@wireapp/store-engine-fs": "workspace:^",
     "axios": "1.3.4",
