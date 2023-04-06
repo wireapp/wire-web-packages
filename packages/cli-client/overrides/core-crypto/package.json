@@ -1,4 +1,8 @@
 {
   "name": "@wireapp/core-crypto",
-  "main": "./index.js"
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.js",
+  "author": "",
+  "license": "ISC"
 }

@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+/* eslint-disable header/header */
+
 /*
  * Wire
  * Copyright (C) 2018 Wire Swiss GmbH
