@@ -4373,6 +4373,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wireapp/api-client@npm:24.3.0, @wireapp/api-client@npm:^24.3.0":
+  version: 24.3.0
+  resolution: "@wireapp/api-client@npm:24.3.0"
+  dependencies:
+    "@wireapp/commons": ^5.0.4
+    "@wireapp/priority-queue": ^2.0.3
+    "@wireapp/protocol-messaging": 1.44.0
+    axios: 1.3.4
+    axios-retry: 3.4.0
+    http-status-codes: 2.2.0
+    logdown: 3.3.1
+    reconnecting-websocket: 4.4.0
+    spark-md5: 3.0.2
+    tough-cookie: 4.1.2
+    ws: 8.11.0
+  checksum: 2340df018e1d79dec993a752b87e67c3f75ca4aad5dbaf34ec6d9b9984ff368a50d9434a5e16d5b1c9fd19317050ad21244b2bfc03a050bcb6de07aafd0f7c18
+  languageName: node
+  linkType: hard
+
 "@wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
   version: 0.0.0-use.local
   resolution: "@wireapp/api-client@workspace:packages/api-client"
@@ -4444,21 +4463,24 @@ __metadata:
   dependencies:
     "@types/fs-extra": 9.0.13
     "@types/rimraf": ^3.0.2
-    "@wireapp/api-client": "workspace:^"
-    "@wireapp/core": "workspace:^"
+    "@wireapp/api-client": 24.3.0
+    "@wireapp/core": 40.1.5
+    "@wireapp/core-crypto": "file:./overrides/core-crypto"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.3.4
     commander: 10.0.0
     dotenv: 16.0.3
+    fake-indexeddb: ^4.0.1
     fs-extra: 11.1.0
     rimraf: ^3.0.2
+    ts-node: ^10.9.1
     typescript: ^4.8.4
   bin:
     wire-cli: dist/index.js
   languageName: unknown
   linkType: soft
 
-"@wireapp/commons@workspace:^, @wireapp/commons@workspace:packages/commons":
+"@wireapp/commons@^5.0.4, @wireapp/commons@workspace:^, @wireapp/commons@workspace:packages/commons":
   version: 0.0.0-use.local
   resolution: "@wireapp/commons@workspace:packages/commons"
   dependencies:
@@ -4503,6 +4525,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@wireapp/core-crypto@file:./overrides/core-crypto::locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client":
+  version: 1.0.0
+  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=e649b2&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
+  checksum: f38e0fd87ee5f673814659e836bad49e1fe08de296ef70eba0c0ec135802ff97f6e0a5e4c3800e6130a188b3bd37d46860770782b49241c0500453847271b694
+  languageName: node
+  linkType: hard
+
 "@wireapp/core-crypto@npm:0.7.0-rc.4":
   version: 0.7.0-rc.4
   resolution: "@wireapp/core-crypto@npm:0.7.0-rc.4"
@@ -4510,7 +4539,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/core@workspace:^, @wireapp/core@workspace:packages/core":
+"@wireapp/core@npm:40.1.5":
+  version: 40.1.5
+  resolution: "@wireapp/core@npm:40.1.5"
+  dependencies:
+    "@wireapp/api-client": ^24.3.0
+    "@wireapp/commons": ^5.0.4
+    "@wireapp/core-crypto": 0.7.0-rc.4
+    "@wireapp/cryptobox": 12.8.0
+    "@wireapp/promise-queue": ^2.1.1
+    "@wireapp/protocol-messaging": 1.44.0
+    "@wireapp/store-engine": 5.0.3
+    "@wireapp/store-engine-dexie": ^2.0.5
+    axios: 1.3.4
+    bazinga64: 6.0.4
+    deepmerge-ts: 4.3.0
+    hash.js: 1.1.7
+    http-status-codes: 2.2.0
+    idb: 7.1.1
+    logdown: 3.3.1
+    long: ^5.2.0
+    uuidjs: 4.2.13
+  checksum: 157bc4b6387ba233a3250b80fed1579617b64f8fc317c05aaf2aa8166545923945ac96d82cac692ae6aaa8b748bf1e9b3e80118cfa7d51a0a052cd18d0f1e439
+  languageName: node
+  linkType: hard
+
+"@wireapp/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@wireapp/core@workspace:packages/core"
   dependencies:
@@ -4655,16 +4709,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@npm:1.6.38":
-  version: 1.6.38
-  resolution: "@wireapp/priority-queue@npm:1.6.38"
-  dependencies:
-    "@types/node": ~14
-  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
-  languageName: node
-  linkType: hard
-
-"@wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
+"@wireapp/priority-queue@^2.0.3, @wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/priority-queue@workspace:packages/priority-queue"
   dependencies:
@@ -4680,7 +4725,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
+"@wireapp/priority-queue@npm:1.6.38":
+  version: 1.6.38
+  resolution: "@wireapp/priority-queue@npm:1.6.38"
+  dependencies:
+    "@types/node": ~14
+  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
+  languageName: node
+  linkType: hard
+
+"@wireapp/promise-queue@^2.1.1, @wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/promise-queue@workspace:packages/promise-queue"
   dependencies:
@@ -4771,7 +4825,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-dexie@workspace:^, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
+"@wireapp/store-engine-dexie@^2.0.5, @wireapp/store-engine-dexie@workspace:^, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie"
   dependencies:
@@ -4815,16 +4869,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@npm:4.9.8":
-  version: 4.9.8
-  resolution: "@wireapp/store-engine@npm:4.9.8"
-  dependencies:
-    "@types/node": ~14
-  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
-  languageName: node
-  linkType: hard
-
-"@wireapp/store-engine@workspace:*, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@5.0.3, @wireapp/store-engine@workspace:*, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
@@ -4839,6 +4884,15 @@ __metadata:
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
+
+"@wireapp/store-engine@npm:4.9.8":
+  version: 4.9.8
+  resolution: "@wireapp/store-engine@npm:4.9.8"
+  dependencies:
+    "@types/node": ~14
+  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
+  languageName: node
+  linkType: hard
 
 "@wireapp/webapp-events@workspace:packages/webapp-events":
   version: 0.0.0-use.local
@@ -8673,7 +8727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fake-indexeddb@npm:^4.0.0":
+"fake-indexeddb@npm:^4.0.0, fake-indexeddb@npm:^4.0.1":
   version: 4.0.1
   resolution: "fake-indexeddb@npm:4.0.1"
   dependencies:
