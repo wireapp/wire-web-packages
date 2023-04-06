@@ -4507,9 +4507,9 @@ __metadata:
   linkType: soft
 
 "@wireapp/core-crypto@file:./overrides/core-crypto::locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client":
-  version: 0.0.0
-  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=8dd2c7&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
-  checksum: fa43bf76288d5c870c9d2b224b4c9dc80ea95179a818c53509a9f2398af455d198a14d3a46016a136de69e5c06d8a77a6895c59d2e199b9a8592066853ec66e4
+  version: 1.0.0
+  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=2d8984&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
+  checksum: 36a39ada93783b951450caf93b7f04bf7b4c7ff09d8ca882649a2ea0a9bd507c364aee153c0967326dd93e16da901c8b82eec94d519f213abfe179bb9625698c
   languageName: node
   linkType: hard
 
