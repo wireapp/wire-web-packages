@@ -24,4 +24,6 @@ export interface ConversationCode {
   key: string;
   /** Full URI (containing key/code) to join a conversation */
   uri?: string;
+  /** If the conversation/code has a password */
+  has_password?: boolean;
 }

@@ -558,11 +558,18 @@ export class ConversationAPI {
    * @param conversationId ID of conversation to request the code for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createConversationCode
    */
-  public async postConversationCodeRequest(conversationId: string): Promise<ConversationCodeUpdateEvent> {
+  public async postConversationCodeRequest(
+    conversationId: string,
+    password?: string,
+  ): Promise<ConversationCodeUpdateEvent> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
     };
+
+    if (password) {
+      config.data = {password};
+    }
 
     const response = await this.client.sendJSON<ConversationCodeUpdateEvent>(config);
     return response.data;
