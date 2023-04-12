@@ -11,7 +11,6 @@
     "./lib/cryptography/AssetCryptography/crypto.node": "./lib/cryptography/AssetCryptography/crypto.browser.js"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.0.4",
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
     "@wireapp/core-crypto": "0.7.0-rc.4",
@@ -29,6 +28,7 @@
     "idb": "7.1.1",
     "logdown": "3.3.1",
     "long": "^5.2.0",
+    "oidc-client-ts": "^2.2.2",
     "uuidjs": "4.2.13",
     "zod": "^3.21.4"
   },

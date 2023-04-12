@@ -18,4 +18,4 @@
  */
 
 export * from './AcmeServer';
-export * from './Auth0Server';
+export * from './OIDCClient';
