@@ -30,7 +30,7 @@ import {ClientPreKey, PreKeyBundle} from '../auth/';
 import {VerificationActionType} from '../auth/VerificationActionType';
 import {PublicClient, QualifiedPublicClients} from '../client/';
 import {QualifiedUserClients} from '../conversation/';
-import {BackendError, HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
+import {BackendError, BackendErrorLabel, HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
 import {
   Activate,
   ActivationResponse,
@@ -533,12 +533,40 @@ export class UserAPI {
       method: 'post',
       url: UserAPI.URL.LIST_USERS,
     };
-
-    const {data: userData} = await this.client.sendJSON<User[] | UsersReponse>(config);
-    if (isUsersResponse(userData)) {
-      return userData;
+    try {
+      const {data: userData} = await this.client.sendJSON<User[] | UsersReponse>(config);
+      if (isUsersResponse(userData)) {
+        return userData;
+      }
+      return {found: userData};
+    } catch (error: any) {
+      if (
+        error.label === BackendErrorLabel.FEDERATION_NOT_AVAILABLE ||
+        error.label === BackendErrorLabel.FEDERATION_BACKEND_NOT_FOUND ||
+        error.label === BackendErrorLabel.FEDERATION_REMOTE_ERROR ||
+        error.label === BackendErrorLabel.FEDERATION_TLS_ERROR
+      ) {
+        const selfDomain = this.backendFeatures.domain;
+        const sameBackendUsers: QualifiedId[] = [];
+        const federatedUsers: QualifiedId[] = [];
+        if ('qualified_ids' in users) {
+          users.qualified_ids.forEach(userId => {
+            if (userId.domain === selfDomain) {
+              sameBackendUsers.push(userId);
+            } else {
+              federatedUsers.push(userId);
+            }
+          });
+          const {data: sameBackendUserData} = await this.client.sendJSON<User[]>({
+            data: {qualified_ids: sameBackendUsers},
+            method: 'post',
+            url: UserAPI.URL.LIST_USERS,
+          });
+          return {found: sameBackendUserData, failed: federatedUsers};
+        }
+      }
+      throw error;
     }
-    return {found: userData};
   }
 
   /**
