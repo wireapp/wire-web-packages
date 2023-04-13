@@ -541,29 +541,25 @@ export class UserAPI {
       return {found: userData};
     } catch (error: any) {
       if (
-        error.label === BackendErrorLabel.FEDERATION_NOT_AVAILABLE ||
-        error.label === BackendErrorLabel.FEDERATION_BACKEND_NOT_FOUND ||
-        error.label === BackendErrorLabel.FEDERATION_REMOTE_ERROR ||
-        error.label === BackendErrorLabel.FEDERATION_TLS_ERROR
+        [
+          BackendErrorLabel.FEDERATION_NOT_AVAILABLE,
+          BackendErrorLabel.FEDERATION_BACKEND_NOT_FOUND,
+          BackendErrorLabel.FEDERATION_REMOTE_ERROR,
+          BackendErrorLabel.FEDERATION_TLS_ERROR,
+        ].includes(error.label) &&
+        'qualified_ids' in users
       ) {
+        /* UserAPI,backendFeatures.domain returns the domain of the current user*/
         const selfDomain = this.backendFeatures.domain;
-        const sameBackendUsers: QualifiedId[] = [];
-        const federatedUsers: QualifiedId[] = [];
-        if ('qualified_ids' in users) {
-          users.qualified_ids.forEach(userId => {
-            if (userId.domain === selfDomain) {
-              sameBackendUsers.push(userId);
-            } else {
-              federatedUsers.push(userId);
-            }
-          });
-          const {data: sameBackendUserData} = await this.client.sendJSON<User[]>({
-            data: {qualified_ids: sameBackendUsers},
-            method: 'post',
-            url: UserAPI.URL.LIST_USERS,
-          });
-          return {found: sameBackendUserData, failed: federatedUsers};
-        }
+        const sameBackendUsers = users.qualified_ids.filter(userId => userId.domain === selfDomain);
+        const federatedUsers = users.qualified_ids.filter(userId => userId.domain !== selfDomain);
+
+        const {data: sameBackendUserData} = await this.client.sendJSON<User[]>({
+          data: {qualified_ids: sameBackendUsers},
+          method: 'post',
+          url: UserAPI.URL.LIST_USERS,
+        });
+        return {found: sameBackendUserData, failed: federatedUsers};
       }
       throw error;
     }
