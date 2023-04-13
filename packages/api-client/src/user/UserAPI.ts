@@ -534,12 +534,20 @@ export class UserAPI {
       url: UserAPI.URL.LIST_USERS,
     };
     try {
+      /**
+       * We expect two differents responses depending on which version of the API the back-end is running
+       * of type UserResponse in the case of a newer back-end
+       * of type User[] in the case of an older back-end
+       */
       const {data: userData} = await this.client.sendJSON<User[] | UsersReponse>(config);
+      /* If the response is of type UserResponse, the webapp consumes it as is */
       if (isUsersResponse(userData)) {
         return userData;
       }
+      /* If the response is of type User[], we format it in a way that the webapp can consume */
       return {found: userData};
     } catch (error: any) {
+      /* We handle errors with the older API by re-fetching users on the same back-end and returning all federated users as "failed" */
       if (
         [
           BackendErrorLabel.FEDERATION_NOT_AVAILABLE,
@@ -549,7 +557,6 @@ export class UserAPI {
         ].includes(error.label) &&
         'qualified_ids' in users
       ) {
-        /* UserAPI,backendFeatures.domain returns the domain of the current user*/
         const selfDomain = this.backendFeatures.domain;
         const sameBackendUsers = users.qualified_ids.filter(userId => userId.domain === selfDomain);
         const federatedUsers = users.qualified_ids.filter(userId => userId.domain !== selfDomain);
