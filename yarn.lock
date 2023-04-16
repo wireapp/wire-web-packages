@@ -4508,15 +4508,15 @@ __metadata:
 
 "@wireapp/core-crypto@file:./overrides/core-crypto::locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client":
   version: 0.0.0
-  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=78ad8a&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
-  checksum: 49219b68b581a4ed28d5a7b37b538093f6961b024be3287c84aefb95cea63b0fce49e5d83005d457af67fd8c86f12ae68e5da0d48640c6a8e315218a7991f9f6
+  resolution: "@wireapp/core-crypto@file:./overrides/core-crypto#./overrides/core-crypto::hash=1e7e72&locator=%40wireapp%2Fcli-client%40workspace%3Apackages%2Fcli-client"
+  checksum: 5cf1ce9c9ed5e6296991a93acf927d676c90ab65cdd8f626ab2e23d4196df9609e876f5769f2a841ebd3d4f36b2ede54f050d23d1dca5d641b76f43d0f3ece0a
   languageName: node
   linkType: hard
 
-"@wireapp/core-crypto@npm:0.7.0-rc.4":
-  version: 0.7.0-rc.4
-  resolution: "@wireapp/core-crypto@npm:0.7.0-rc.4"
-  checksum: 20beaa17648a069042445506aaf63e61164972b5ddbb1891c21ef919bda1c6dd5e36a9186945e0ac5b176cc59e3e5fbba4efedc96cefa66e123a86d4cc1e598b
+"@wireapp/core-crypto@npm:0.7.0":
+  version: 0.7.0
+  resolution: "@wireapp/core-crypto@npm:0.7.0"
+  checksum: 1204dee2208b7dfd1a1241a49977604b7bf9ba633af2e2c75613439b847df4d8dc49fd414955ec7a90431b63e268ed3f9b92d8feb50025dcf75e219dd7147e2b
   languageName: node
   linkType: hard
 
@@ -4533,7 +4533,7 @@ __metadata:
     "@types/tough-cookie": 4.0.2
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 0.7.0-rc.4
+    "@wireapp/core-crypto": 0.7.0
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.44.0
