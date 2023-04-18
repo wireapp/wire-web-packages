@@ -52,6 +52,7 @@ import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
+import {OIDCService} from './oauth';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
@@ -125,6 +126,7 @@ export class Account extends TypedEventEmitter<Events> {
   private db?: CoreDatabase;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
+  private readonly enableMLS: () => boolean;
 
   public service?: {
     mls?: MLSService;
@@ -157,6 +159,7 @@ export class Account extends TypedEventEmitter<Events> {
     this.backendFeatures = this.apiClient.backendFeatures;
     this.cryptoProtocolConfig = cryptoProtocolConfig;
     this.nbPrekeys = nbPrekeys;
+    this.enableMLS = () => this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.createStore = createStore;
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
@@ -196,6 +199,24 @@ export class Account extends TypedEventEmitter<Events> {
   private persistCookie(storeEngine: CRUDEngine, cookie: Cookie): Promise<string> {
     const entity = {expiration: cookie.expiration, zuid: cookie.zuid};
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
+  }
+
+  private async startOAuthFlow() {
+    const oidcService = new OIDCService({
+      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
+      authorityUrl: 'https://accounts.google.com',
+      redirectUri: 'https://local.zinfra.io:8081/oidc',
+    });
+    await oidcService.authenticate();
+  }
+
+  public async continueOAuthFlow() {
+    const oidcService = new OIDCService({
+      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
+      authorityUrl: 'https://accounts.google.com',
+      redirectUri: 'https://local.zinfra.io:8081/oidc',
+    });
+    await oidcService.handleAuthentication();
   }
 
   get clientId(): string {
@@ -285,6 +306,12 @@ export class Account extends TypedEventEmitter<Events> {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set.');
     }
+
+    if (!!this.cryptoProtocolConfig?.mls?.useE2EI) {
+      await this.startOAuthFlow();
+      throw new Error('Adrian Break');
+    }
+
     const validClient = client ?? (await this.service!.client.loadClient());
     if (!validClient) {
       return undefined;
@@ -317,14 +344,14 @@ export class Account extends TypedEventEmitter<Events> {
     return validClient;
   }
 
-  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, enableMLS: boolean) {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine) {
     /* There are 3 cases where we want to instantiate CoreCrypto:
      * 1. MLS is enabled
      * 2. The user has enabled CoreCrypto in the config
      * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
      */
     const clientType =
-      enableMLS ||
+      this.enableMLS() ||
       !!this.cryptoProtocolConfig?.useCoreCrypto ||
       cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
         ? CryptoClientType.CORE_CRYPTO
@@ -356,17 +383,16 @@ export class Account extends TypedEventEmitter<Events> {
   }
 
   public async initServices(context: Context): Promise<void> {
-    const enableMLS = this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.storeEngine = await this.initEngine(context);
     this.db = await openDB(this.generateCoreDbName(context));
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, enableMLS);
+    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
     const [clientType, cryptoClient] = cryptoClientDef;
 
     const mlsService =
-      clientType === CryptoClientType.CORE_CRYPTO && enableMLS
+      clientType === CryptoClientType.CORE_CRYPTO && this.enableMLS()
         ? new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
             ...this.cryptoProtocolConfig?.mls,
             nbKeyPackages: this.nbPrekeys,
