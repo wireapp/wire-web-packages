@@ -27,3 +27,15 @@ export interface ConversationCode {
   /** If the conversation/code has a password */
   has_password?: boolean;
 }
+
+/**
+ * Request body for joining a conversation by code
+ */
+export interface JoinConversationByCodePayload extends Omit<ConversationCode, 'has_password'> {
+  /**
+   * code password
+   * minLength: 8
+   * maxLength: 1024
+   */
+  password?: string;
+}
