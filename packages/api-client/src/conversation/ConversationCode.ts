@@ -33,7 +33,8 @@ export interface ConversationCode {
  */
 export interface JoinConversationByCodePayload extends Omit<ConversationCode, 'has_password'> {
   /**
-   * code password
+   * password for the conversation/code invite
+   * can be optional because a converation/code may or may not have a password
    * minLength: 8
    * maxLength: 1024
    */
