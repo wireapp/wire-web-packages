@@ -4182,7 +4182,7 @@ __metadata:
     "@types/node": ^18.11.5
     "@types/rimraf": ^3.0.2
     jest: ^29.2.1
-    jsrsasign: 10.7.0
+    jsrsasign: 10.8.3
     rimraf: ^3.0.2
     ts-node: ^10.9.1
     typescript: ^4.8.4
@@ -11308,10 +11308,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsrsasign@npm:10.7.0":
-  version: 10.7.0
-  resolution: "jsrsasign@npm:10.7.0"
-  checksum: 0cbce1bc40a2ec29ca0b475beca153bc3cfdd425b31f5b225dd7e7dc1e16f81eb9e770eb96cde655edce1467beb0b0c4f769efec358eadae6d709207d514a21b
+"jsrsasign@npm:10.8.3":
+  version: 10.8.3
+  resolution: "jsrsasign@npm:10.8.3"
+  checksum: d815d61c954f38505b41ab792d67b69c4b27cf376ad5969420bd3bf1f2fc3384c496dfdf2343417ba3e1fe241bb8f4f4f5c7064f763945883c5e0d18dc5308c3
   languageName: node
   linkType: hard
 
