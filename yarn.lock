@@ -4099,7 +4099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:5.57.0, @typescript-eslint/utils@npm:^5.10.0, @typescript-eslint/utils@npm:^5.43.0":
+"@typescript-eslint/utils@npm:5.57.0, @typescript-eslint/utils@npm:^5.10.0":
   version: 5.57.0
   resolution: "@typescript-eslint/utils@npm:5.57.0"
   dependencies:
@@ -4117,7 +4117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:5.59.1":
+"@typescript-eslint/utils@npm:5.59.1, @typescript-eslint/utils@npm:^5.58.0":
   version: 5.59.1
   resolution: "@typescript-eslint/utils@npm:5.59.1"
   dependencies:
@@ -8258,13 +8258,13 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-testing-library@npm:^5.9.1":
-  version: 5.10.2
-  resolution: "eslint-plugin-testing-library@npm:5.10.2"
+  version: 5.10.3
+  resolution: "eslint-plugin-testing-library@npm:5.10.3"
   dependencies:
-    "@typescript-eslint/utils": ^5.43.0
+    "@typescript-eslint/utils": ^5.58.0
   peerDependencies:
     eslint: ^7.5.0 || ^8.0.0
-  checksum: 3b2b330e62f4a6dc438050006f0d0c97605f6861828b153271dc6d2fafb1e60f4e86fbaa8166c7afd452e3b6cad39413738fd4c8e2eb2def1915c678154676da
+  checksum: 3033121a0040b98280cd41856273ad1b268f56083759401e7af72ac8a96dcb213892f1248983aa9a18988b44913263e93f0d182dbb0c5b27b00242bfffc9cdcc
   languageName: node
   linkType: hard
 
