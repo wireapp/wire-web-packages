@@ -33,10 +33,14 @@ export interface DoWireDpopChallengeParams {
   identity: WireE2eIdentity;
   connection: AcmeService;
   nonce: Nonce;
+  expirySecs: number;
 }
 
 export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient'>;
 
-export type GetClientAccessTokenParams = Pick<DoWireDpopChallengeParams, 'clientId' | 'apiClient' | 'identity'> & {
+export type GetClientAccessTokenParams = Pick<
+  DoWireDpopChallengeParams,
+  'clientId' | 'apiClient' | 'identity' | 'expirySecs'
+> & {
   clientNonce: Nonce;
 };

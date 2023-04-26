@@ -41,6 +41,11 @@ export const createNewOrder = async ({
 
   const response = await connection.createNewOrder(directory.newOrder, reqBody);
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
+    console.log(
+      'acme Order response data: ',
+      JSON.stringify(response.data),
+      jsonToByteArray(JSON.stringify(response.data)),
+    );
     return {
       order: identity.newOrderResponse(jsonToByteArray(JSON.stringify(response.data))),
       authzUrl: response.data.authorizations[0],

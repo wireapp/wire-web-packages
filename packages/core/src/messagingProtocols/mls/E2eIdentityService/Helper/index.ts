@@ -27,5 +27,14 @@ export const jsonToByteArray = (json: string): Uint8Array => {
 
 export type E2eClientId = `${string}:${string}@${string}`;
 export const getE2eClientId = (user: User, clientId: string): E2eClientId => {
+  console.log(
+    `acme Generate E2eClientId with:`,
+    JSON.stringify({
+      originalUserId: user.id,
+      base64UserId: Encoder.toBase64(user.id).asString,
+      clientId,
+      userDomain: user.domain,
+    }),
+  );
   return `${Encoder.toBase64(user.id).asString}:${clientId}@${user.domain}`;
 };

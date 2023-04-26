@@ -115,7 +115,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         displayName: 'adrian+mls2',
         handle: '@adrianweissmls2',
         domain: userId.domain,
-        id: 'a3461283-fda6-4d36-a817-8e6c5c15c405',
+        id: userId.id,
       },
       clientId,
     );

@@ -41,6 +41,11 @@ export const createNewAccount = async ({
   const response = await connection.createNewAccount(directory.newAccount, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
+    console.log(
+      'acme Account response data: ',
+      JSON.stringify(response.data),
+      jsonToByteArray(JSON.stringify(response.data)),
+    );
     identity.newAccountResponse(jsonToByteArray(JSON.stringify(response.data)));
     return response.nonce;
   }

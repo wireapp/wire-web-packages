@@ -42,6 +42,11 @@ export const getAuthorization = async ({
   const response = await connection.getAuthorization(authzUrl, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
+    console.log(
+      'acme Authorization response data: ',
+      JSON.stringify(response.data),
+      jsonToByteArray(JSON.stringify(response.data)),
+    );
     return {
       authorization: identity.newAuthzResponse(
         jsonToByteArray(JSON.stringify(response.data)),

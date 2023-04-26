@@ -234,6 +234,16 @@ export class ClientAPI {
       type: z.literal('DPoP'),
     });
 
+    console.log(
+      'acme send Dpop Token request',
+      JSON.stringify({
+        dpopToken,
+        clientId,
+        decodedDpopToken: new TextDecoder().decode(dpopToken),
+        url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
+      }),
+    );
+
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,

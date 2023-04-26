@@ -47,8 +47,8 @@ export class AcmeService {
   private logger = logdown('@wireapp/core/AcmeService');
   private readonly axiosInstance: AxiosInstance = axios.create();
   private readonly certificateAuthority = 'acme';
-  private readonly acmeProvisioner = 'acme';
-  private readonly acmeBackendUri = 'https://balderdash.hogwash.work:9000';
+  private readonly acmeProvisioner = 'wire';
+  private readonly acmeBackendUri = 'https://136.243.148.68:9000';
   private readonly url = {
     DIRECTORY: '/directory',
   };

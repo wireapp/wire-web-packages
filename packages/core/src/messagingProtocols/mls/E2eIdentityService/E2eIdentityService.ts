@@ -31,7 +31,8 @@ import {createNewOrder} from './Steps/Order';
 
 export class E2eIdentityService {
   //private readonly logger = logdown('@wireapp/core/E2EIdentityService');
-  private readonly expiryDays = 90;
+  private readonly expiryDays = 2;
+  private readonly expirySecs = 20;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -80,6 +81,10 @@ export class E2eIdentityService {
       this.user.handle,
       this.expiryDays,
     );
+    console.log(
+      'acme Identity created with: ',
+      JSON.stringify({e2eClientId, expiryDays: this.expiryDays, user: this.user}),
+    );
     // Get the directory
     const directory = await this.getDirectory(identity, connection);
     if (!directory) {
@@ -99,6 +104,7 @@ export class E2eIdentityService {
       identity,
       nonce,
     });
+    console.log('acme newAccountNonce', JSON.stringify(newAccountNonce));
 
     // Step 3: Create a new order
     const orderData = await createNewOrder({
@@ -107,6 +113,7 @@ export class E2eIdentityService {
       identity,
       nonce: newAccountNonce,
     });
+    console.log('acme orderData', JSON.stringify(orderData));
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
@@ -115,16 +122,19 @@ export class E2eIdentityService {
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
+    console.log('acme authData', JSON.stringify(authData));
 
     // Step 5: Do DPOP Challenge
     const dpopData = await doWireDpopChallenge({
       authData,
       connection,
       identity,
-      clientId: `${parseInt(this.clientId, 16)}`,
+      clientId: this.clientId,
       apiClient: this.apiClient,
+      expirySecs: this.expirySecs,
       nonce: authData.nonce,
     });
+    console.log('acme dpopData', JSON.stringify(dpopData));
 
     // Step 6: Start E2E OAuth flow
 
