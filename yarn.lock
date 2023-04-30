@@ -1522,13 +1522,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css-prettifier@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@emotion/css-prettifier@npm:1.1.1"
+"@emotion/css-prettifier@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@emotion/css-prettifier@npm:1.1.2"
   dependencies:
     "@emotion/memoize": ^0.8.0
-    stylis: 4.1.3
-  checksum: b58fd5d97a6b36fa2eedf169e598db7d9c8b8734006bb60ec7f1f67f2faf01896a9e28d940c0224bcaa7c324437165a70cf66887b245e9a246da29675bec312b
+    stylis: 4.1.4
+  checksum: 393fbd9a1234dea8d4336ca90c78fedb9f345529b21103373c66003ec8f99068ce6b5f0805631ae5e5eec3f8cf3b81bb5858e55ed98b1680d6f499b673822ee7
   languageName: node
   linkType: hard
 
@@ -1548,15 +1548,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:11.10.5":
-  version: 11.10.5
-  resolution: "@emotion/jest@npm:11.10.5"
+"@emotion/jest@npm:11.10.8":
+  version: 11.10.8
+  resolution: "@emotion/jest@npm:11.10.8"
   dependencies:
     "@babel/runtime": ^7.18.3
-    "@emotion/css-prettifier": ^1.1.1
+    "@emotion/css-prettifier": ^1.1.2
     chalk: ^4.1.0
     specificity: ^0.4.1
-    stylis: 4.1.3
+    stylis: 4.1.4
   peerDependencies:
     "@types/jest": ^26.0.14 || ^27.0.0 || ^28.0.0 || ^29.0.0
     enzyme-to-json: ^3.2.1
@@ -1565,7 +1565,7 @@ __metadata:
       optional: true
     enzyme-to-json:
       optional: true
-  checksum: 7d5ed1b700abd657f0365e3dbc9c905217df5ec28f7d2f0783305d30e153e6b080b2eb246190d9553952890c4ac0c582900c77f283f571d26f95fb6d10772f0a
+  checksum: 99251eee87f3fb49e45fea26060e87d381c59818a386b9555742f9fd71af7782897d6d1504fba3aebddca3e80550594774d03213ebd83d9efd3daa2ac1a5e8eb
   languageName: node
   linkType: hard
 
@@ -4429,7 +4429,7 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.21.4
     "@emotion/babel-preset-css-prop": ^11.10.0
-    "@emotion/jest": 11.10.5
+    "@emotion/jest": 11.10.8
     "@emotion/react": ^11.10.4
     "@hot-loader/react-dom": 17.0.2
     "@swc/core": ^1.3.10
@@ -16367,6 +16367,13 @@ __metadata:
   version: 4.1.3
   resolution: "stylis@npm:4.1.3"
   checksum: d04dbffcb9bf2c5ca8d8dc09534203c75df3bf711d33973ea22038a99cc475412a350b661ebd99cbc01daa50d7eedcf0d130d121800eb7318759a197023442a6
+  languageName: node
+  linkType: hard
+
+"stylis@npm:4.1.4":
+  version: 4.1.4
+  resolution: "stylis@npm:4.1.4"
+  checksum: cd929bd89709def13b47e6c16b11317bf996a09b4e987fc45a235549c3adf49d41531e017d7df511daa095bc9468c923ae9094a934fe9c62440b7351874dafb7
   languageName: node
   linkType: hard
 
