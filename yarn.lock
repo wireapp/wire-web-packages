@@ -22,9 +22,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/cli@npm:7.21.0":
-  version: 7.21.0
-  resolution: "@babel/cli@npm:7.21.0"
+"@babel/cli@npm:7.21.5":
+  version: 7.21.5
+  resolution: "@babel/cli@npm:7.21.5"
   dependencies:
     "@jridgewell/trace-mapping": ^0.3.17
     "@nicolo-ribaudo/chokidar-2": 2.1.8-no-fsevents.3
@@ -45,7 +45,7 @@ __metadata:
   bin:
     babel: ./bin/babel.js
     babel-external-helpers: ./bin/babel-external-helpers.js
-  checksum: 2168c0c7e93368f2fcb77a0be132f1cb1a7195f63017fce325fcae81c14325b7f0a031e849cc177ef1615248c860c32c53d8c8592eaaa5cedb55aba21a1afc9b
+  checksum: 5d2e48e63b37120e44e9fd0bd74c3c5561f3cfaff8aab844227194708142f9b8210f86a129041787c199db58f6911bea9999e8469b4f46874baaf4ecc1725f47
   languageName: node
   linkType: hard
 
@@ -4423,7 +4423,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/react-ui-kit@workspace:packages/react-ui-kit"
   dependencies:
-    "@babel/cli": 7.21.0
+    "@babel/cli": 7.21.5
     "@babel/core": 7.21.4
     "@babel/preset-env": 7.21.4
     "@babel/preset-react": 7.18.6
