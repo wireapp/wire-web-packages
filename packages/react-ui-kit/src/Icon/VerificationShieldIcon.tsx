@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2021 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,15 @@
  *
  */
 
-import {QualifiedUserClients} from './QualifiedUserClients';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export interface MessageSendingStatus {
-  deleted: QualifiedUserClients;
-  failed_to_send?: QualifiedUserClients;
-  missing: QualifiedUserClients;
-  redundant: QualifiedUserClients;
-  time: string;
-}
+export const VerificationShieldIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={14} realHeight={17} {...props}>
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.4085 8.81445V2.68642L6.70423 0.814453L0 2.81445V8.81445C0 12.8145 2.88011 15.9122 6.70423 16.8145C10.5681 15.9122 13.4085 12.8145 13.4085 8.81445ZM11.493 6.16017L5.60492 12.8145L1.91554 8.6605L3.09447 7.31478L5.60492 10.123L10.3141 4.81445L11.493 6.16017Z"
+      color={props.color ?? 'black'}
+    />
+  </SVGIcon>
+);

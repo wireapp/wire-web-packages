@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [24.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.6.0...@wireapp/api-client@24.7.0) (2023-05-02)
+
+### Features
+
+* **api-client:** Add support guest links with passwords to backend features (SQSERVICES-1975) ([#5114](https://github.com/wireapp/wire-web-packages/issues/5114)) ([3137b0c](https://github.com/wireapp/wire-web-packages/commit/3137b0c90a14e03a7301f17b2f7d94a3ffe2d99e))
+
+# [24.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.5.1...@wireapp/api-client@24.6.0) (2023-04-27)
+
+### Features
+
+* **api-client:** Add invalid conversation password error to BackendErro (SQSERVICES-1975) ([#5096](https://github.com/wireapp/wire-web-packages/issues/5096)) ([0109093](https://github.com/wireapp/wire-web-packages/commit/0109093aa521a5b3b92ca73223601e41088742dd))
+
+## [24.5.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.5.0...@wireapp/api-client@24.5.1) (2023-04-26)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [24.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.4.0...@wireapp/api-client@24.5.0) (2023-04-24)
+
+### Features
+
+* Update getConversationJoin result data (SQSERVICES-1975) ([#5087](https://github.com/wireapp/wire-web-packages/issues/5087)) ([39213a1](https://github.com/wireapp/wire-web-packages/commit/39213a1711a4d6e3e83709a0409678aa9e91b0cd))
+
+# [24.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.3.2...@wireapp/api-client@24.4.0) (2023-04-19)
+
+### Features
+
+* **api-client:** Add support for guest link passwords (SQSERVICES-1975) ([#5049](https://github.com/wireapp/wire-web-packages/issues/5049)) ([b2ccfff](https://github.com/wireapp/wire-web-packages/commit/b2ccfff7cbd12358da704932b7085822d165a895))
+
+## [24.3.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.3.1...@wireapp/api-client@24.3.2) (2023-04-13)
+
+### Bug Fixes
+
+* ensure fetching users is backward compatible [FS-1784] ([#5051](https://github.com/wireapp/wire-web-packages/issues/5051)) ([1a8a8f0](https://github.com/wireapp/wire-web-packages/commit/1a8a8f04b0dbb32a6c12f084f8d794fc89343eeb))
+
+## [24.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.3.0...@wireapp/api-client@24.3.1) (2023-04-12)
+
+### Bug Fixes
+
+* Improve detection of valid prekey responses ([#5048](https://github.com/wireapp/wire-web-packages/issues/5048)) ([649796b](https://github.com/wireapp/wire-web-packages/commit/649796b8b99bc6d59ac87eba191e635ccc49190f))
+
+# [24.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.2.1...@wireapp/api-client@24.3.0) (2023-04-04)
+
+### Features
+
+* mls E2Eid config ([#5015](https://github.com/wireapp/wire-web-packages/issues/5015)) ([d6fdab2](https://github.com/wireapp/wire-web-packages/commit/d6fdab2883a8917cc096c483b860f6be20162f86))
+
+## [24.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.2.0...@wireapp/api-client@24.2.1) (2023-04-04)
+
+### Bug Fixes
+
+* Align failed_to_send signature with backend ([#5033](https://github.com/wireapp/wire-web-packages/issues/5033)) ([2778b7c](https://github.com/wireapp/wire-web-packages/commit/2778b7c79533a8233f084301285ded7a0bfcd7d1))
+
 # [24.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.1.1...@wireapp/api-client@24.2.0) (2023-03-30)
 
 ### Features
