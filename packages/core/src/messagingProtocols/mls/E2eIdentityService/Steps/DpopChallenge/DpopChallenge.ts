@@ -44,6 +44,10 @@ const getClientAccessToken = async ({
   console.log('acme create Dpop Token with', JSON.stringify({accessTokenUrl, clientNonce, expirySecs}));
 
   const dpopToken = identity.createDpopToken(accessTokenUrl, expirySecs, clientNonce);
+
+  // Remove this when the server is ready to accept the token
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   return await apiClient.api.client.getAccessToken(clientId, dpopToken);
 };
 
