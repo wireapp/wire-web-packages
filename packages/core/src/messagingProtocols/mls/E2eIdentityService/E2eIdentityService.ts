@@ -129,6 +129,7 @@ export class E2eIdentityService {
       authData,
       connection,
       identity,
+      userDomain: this.user.domain,
       clientId: this.clientId,
       apiClient: this.apiClient,
       expirySecs: this.expirySecs,

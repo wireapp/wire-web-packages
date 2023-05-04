@@ -23,12 +23,13 @@ import {APIClient} from '@wireapp/api-client';
 
 import {ClientId} from '../../../types';
 import {AcmeService} from '../../Connection/AcmeServer';
-import {Nonce} from '../../E2eIdentityService.types';
+import {Nonce, User} from '../../E2eIdentityService.types';
 import {GetAuthorizationReturnValue} from '../Authorization';
 
 export interface DoWireDpopChallengeParams {
   apiClient: APIClient;
   clientId: ClientId;
+  userDomain: User['domain'];
   authData: GetAuthorizationReturnValue;
   identity: WireE2eIdentity;
   connection: AcmeService;
@@ -40,7 +41,7 @@ export type GetClientNonceParams = Pick<DoWireDpopChallengeParams, 'clientId' | 
 
 export type GetClientAccessTokenParams = Pick<
   DoWireDpopChallengeParams,
-  'clientId' | 'apiClient' | 'identity' | 'expirySecs'
+  'clientId' | 'apiClient' | 'identity' | 'expirySecs' | 'userDomain'
 > & {
   clientNonce: Nonce;
 };

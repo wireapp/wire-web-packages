@@ -37,11 +37,10 @@ const getClientAccessToken = async ({
   identity,
   clientId,
   expirySecs,
+  userDomain,
 }: GetClientAccessTokenParams) => {
   // The access token URL needs to be the same URL we call to get the Access Token
-  const accessTokenUrl = `${apiClient.api.client.getAccessTokenUrl(clientId)}`;
-
-  console.log('acme create Dpop Token with', JSON.stringify({accessTokenUrl, clientNonce, expirySecs}));
+  const accessTokenUrl = 'https://' + `${userDomain}${apiClient.api.client.getAccessTokenPath(clientId)}`;
 
   const dpopToken = identity.createDpopToken(accessTokenUrl, expirySecs, clientNonce);
 
@@ -59,8 +58,8 @@ export const doWireDpopChallenge = async ({
   nonce,
   connection,
   expirySecs,
+  userDomain,
 }: DoWireDpopChallengeParams) => {
-  console.log('acme Start Dpop with', JSON.stringify({clientId, authData, nonce}));
   const {wireDpopChallenge} = authData.authorization;
   if (!wireDpopChallenge) {
     throw new Error('No wireDpopChallenge defined');
@@ -74,6 +73,7 @@ export const doWireDpopChallenge = async ({
     clientNonce,
     identity,
     expirySecs,
+    userDomain,
   });
 
   const reqBody = identity.newDpopChallengeRequest(clientAccessTokenData.token, nonce);

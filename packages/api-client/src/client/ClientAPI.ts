@@ -224,8 +224,8 @@ export class ClientAPI {
     return NonceSchema.parse(headers)[NonceKey];
   }
 
-  public getAccessTokenUrl = (clientId: string): string =>
-    `${this.client.getBaseUrl()}${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
+  public getAccessTokenPath = (clientId: string): string =>
+    `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
 
   public async getAccessToken(clientId: string, dpopToken: Uint8Array) {
     const ResponseSchema = z.object({
@@ -240,13 +240,13 @@ export class ClientAPI {
         dpopToken,
         clientId,
         decodedDpopToken: new TextDecoder().decode(dpopToken),
-        url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
+        url: this.getAccessTokenPath(clientId),
       }),
     );
 
     const config: AxiosRequestConfig = {
       method: 'post',
-      url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
+      url: this.getAccessTokenPath(clientId),
       headers: {
         DPoP: new TextDecoder().decode(dpopToken),
       },
