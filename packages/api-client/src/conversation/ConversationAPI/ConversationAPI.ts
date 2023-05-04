@@ -24,6 +24,7 @@ import {AxiosRequestConfig} from 'axios';
 import {
   Conversation,
   ConversationCode,
+  ConversationProtocol,
   ConversationRolesList,
   Conversations,
   DefaultConversationRoleName,
@@ -94,6 +95,7 @@ export class ConversationAPI {
     NAME: 'name',
     OTR: 'otr',
     PROTEUS: 'proteus',
+    PROTOCOL: 'protocol',
     RECEIPT_MODE: 'receipt-mode',
     ROLES: 'roles',
     SELF: 'self',
@@ -927,6 +929,28 @@ export class ConversationAPI {
       data: memberData,
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.SELF}`,
+    };
+
+    await this.client.sendJSON(config);
+  }
+
+  /**
+   * Update the protocol of the conversation.
+   * Used in MLS Migration feature:
+   * - changing the protocol from "proteus" to "mixed" will assign a groupId to the conversation.
+   * - changing the protocol from "mixed" to "mls" will finalise the migration of the conversation.
+   * @param conversationId id of the conversation
+   * @param memberData the new conversation
+   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateSelf
+   */
+  public async putConversationProtocol(
+    conversationId: QualifiedId,
+    protocol: ConversationProtocol.MIXED | ConversationProtocol.MLS,
+  ): Promise<void> {
+    const config: AxiosRequestConfig = {
+      data: {protocol},
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTOCOL}`,
     };
 
     await this.client.sendJSON(config);
