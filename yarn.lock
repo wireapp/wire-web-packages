@@ -4321,7 +4321,7 @@ __metadata:
     spark-md5: 3.0.2
     tough-cookie: 4.1.2
     ts-node: ^10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
     webpack: ^5.74.0
     ws: 8.11.0
   languageName: unknown
@@ -4348,7 +4348,7 @@ __metadata:
     jsrsasign: 10.8.6
     rimraf: ^3.0.2
     ts-node: ^10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4368,7 +4368,7 @@ __metadata:
     logdown: 3.3.1
     platform: 1.3.6
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4391,7 +4391,7 @@ __metadata:
     jszip: 3.10.1
     logdown: 3.3.1
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   bin:
     copy-config: lib/cli.js
   languageName: unknown
@@ -4439,7 +4439,7 @@ __metadata:
     long: ^5.2.0
     nock: 13.3.1
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
     uuidjs: 4.2.13
   languageName: unknown
   linkType: soft
@@ -4485,7 +4485,7 @@ __metadata:
     eslint-plugin-testing-library: ^5.9.1
     eslint-plugin-unused-imports: ^2.0.0
     prettier: ^2.7.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   peerDependencies:
     "@types/eslint": ^8
     "@types/prettier": ^2
@@ -4528,7 +4528,7 @@ __metadata:
     npm-license-crawler: 0.2.1
     npm-registry-package-info: 1.0.5
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   bin:
     collect-licenses: src/cli.js
   languageName: unknown
@@ -4545,7 +4545,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/prettier-config@workspace:packages/prettier-config"
   dependencies:
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4570,7 +4570,7 @@ __metadata:
     jest: ^29.2.1
     rimraf: ^3.0.2
     ts-node: ^10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4585,7 +4585,7 @@ __metadata:
     "@wireapp/commons": "workspace:^"
     jest: ^29.2.1
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4652,7 +4652,7 @@ __metadata:
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
     webpack: ^5.74.0
   peerDependencies:
     "@emotion/react": 11.10.4
@@ -4681,7 +4681,7 @@ __metadata:
     logdown: 3.3.1
     rimraf: ^3.0.2
     ts-node: ^10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
     uuidjs: 4.2.13
   peerDependencies:
     "@wireapp/store-engine": 5.x.x
@@ -4703,7 +4703,7 @@ __metadata:
     jest: ^29.2.1
     rimraf: ^3.0.2
     ts-node: 10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   peerDependencies:
     "@wireapp/store-engine": 5.x.x
   languageName: unknown
@@ -4730,7 +4730,7 @@ __metadata:
     jest: ^29.2.1
     rimraf: ^3.0.2
     ts-node: 10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -4740,7 +4740,7 @@ __metadata:
   dependencies:
     "@types/rimraf": ^3.0.2
     rimraf: ^3.0.2
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -5647,7 +5647,7 @@ __metadata:
     libsodium-wrappers-sumo: 0.7.11
     rimraf: ^3.0.2
     ts-node: 10.9.1
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -15491,7 +15491,7 @@ __metadata:
     prettier: 2.8.8
     rimraf: 3.0.2
     tsconfig-paths: 4.2.0
-    typescript: ^4.8.4
+    typescript: ^5.0.4
   languageName: unknown
   linkType: soft
 
@@ -17186,13 +17186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.8.4":
-  version: 4.9.5
-  resolution: "typescript@npm:4.9.5"
+"typescript@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "typescript@npm:5.0.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ee000bc26848147ad423b581bd250075662a354d84f0e06eb76d3b892328d8d4440b7487b5a83e851b12b255f55d71835b008a66cbf8f255a11e4400159237db
+  checksum: 82b94da3f4604a8946da585f7d6c3025fff8410779e5bde2855ab130d05e4fd08938b9e593b6ebed165bda6ad9292b230984f10952cf82f0a0ca07bbeaa08172
   languageName: node
   linkType: hard
 
@@ -17206,13 +17206,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
-  version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=701156"
+"typescript@patch:typescript@^5.0.4#~builtin<compat/typescript>":
+  version: 5.0.4
+  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=701156"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 2eee5c37cad4390385db5db5a8e81470e42e8f1401b0358d7390095d6f681b410f2c4a0c496c6ff9ebd775423c7785cdace7bcdad76c7bee283df3d9718c0f20
+  checksum: 6a1fe9a77bb9c5176ead919cc4a1499ee63e46b4e05bf667079f11bf3a8f7887f135aa72460a4c3b016e6e6bb65a822cb8689a6d86cbfe92d22cc9f501f09213
   languageName: node
   linkType: hard
 
