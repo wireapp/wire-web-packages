@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.1.13](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.12...@wireapp/core@40.1.13) (2023-05-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.11...@wireapp/core@40.1.12) (2023-04-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.10...@wireapp/core@40.1.11) (2023-04-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.9...@wireapp/core@40.1.10) (2023-04-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.8...@wireapp/core@40.1.9) (2023-04-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.7...@wireapp/core@40.1.8) (2023-04-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.6...@wireapp/core@40.1.7) (2023-04-12)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [40.1.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.5...@wireapp/core@40.1.6) (2023-04-06)
 
 **Note:** Version bump only for package @wireapp/core
