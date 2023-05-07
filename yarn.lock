@@ -2707,46 +2707,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/version@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@lerna-lite/version@npm:2.1.0"
-  dependencies:
-    "@lerna-lite/cli": 2.1.0
-    "@lerna-lite/core": 2.1.0
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^19.0.7
-    chalk: ^5.2.0
-    conventional-changelog-angular: ^5.0.13
-    conventional-changelog-core: ^4.2.4
-    conventional-changelog-writer: ^5.0.1
-    conventional-commits-parser: ^3.2.4
-    conventional-recommended-bump: ^6.1.0
-    dedent: ^0.7.0
-    fs-extra: ^11.1.1
-    get-stream: ^6.0.1
-    git-url-parse: ^13.1.0
-    graceful-fs: ^4.2.11
-    is-stream: ^3.0.0
-    load-json-file: ^7.0.1
-    make-dir: ^3.1.0
-    minimatch: ^9.0.0
-    new-github-release-url: ^2.0.0
-    node-fetch: ^3.3.1
-    npm-package-arg: ^10.1.0
-    npmlog: ^7.0.1
-    p-map: ^5.5.0
-    p-pipe: ^4.0.0
-    p-reduce: ^3.0.0
-    pify: ^6.1.0
-    semver: ^7.5.0
-    slash: ^5.0.0
-    temp-dir: ^3.0.0
-    uuid: ^9.0.0
-    write-json-file: ^5.0.0
-  checksum: 54429a2b89b532aae6fb3f217dcad22184d0df44a39fe6ad3168a823c353f042c0510eb3f46d8399458b0a43f27040d8a7121f3e9579a321622c7e6c3181996e
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/version@npm:2.3.0":
   version: 2.3.0
   resolution: "@lerna-lite/version@npm:2.3.0"
@@ -16057,7 +16017,7 @@ __metadata:
     "@lerna-lite/cli": 2.3.0
     "@lerna-lite/publish": 2.3.0
     "@lerna-lite/run": 2.1.0
-    "@lerna-lite/version": 2.1.0
+    "@lerna-lite/version": 2.3.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/babel__core": ^7
