@@ -81,6 +81,10 @@ export interface CryptoProtocolConfig {
      * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
      */
     keyingMaterialUpdateThreshold?: number;
+    /**
+     * signals if the E2E - Identity process should be used
+     */
+    useE2EI: boolean;
   };
 
   /** if set to true, will use experimental proteus encryption/decryption library (core-crypto). If not set will fallback to the legacy proteus library (cryptobox) */
