@@ -56,8 +56,9 @@ import {cancelRecurringTask, registerRecurringTask} from '../../../util/Recurrin
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
+import {E2eIdentityService} from '../E2eIdentityService';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
-import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
+import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -72,7 +73,7 @@ const defaultConfig: MLSServiceConfig = {
 
 export interface SubconversationEpochInfoMember {
   userid: string;
-  clientid: string;
+  clientid: ClientId;
   in_subconv: boolean;
 }
 
@@ -101,13 +102,31 @@ export class MLSService extends TypedEventEmitter<Events> {
     };
   }
 
-  public async initClient(userId: QualifiedId, clientId: string) {
+  public async initClient(userId: QualifiedId, clientId: ClientId) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
     await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId));
   }
 
-  public async createClient(userId: QualifiedId, clientId: string) {
+  public async createClient(userId: QualifiedId, clientId: ClientId) {
+    const identityService = new E2eIdentityService(
+      this.apiClient,
+      this.coreCryptoClient,
+      {
+        displayName: 'adrian+mls2',
+        handle: '@adrianweissmls2',
+        domain: userId.domain,
+        id: userId.id,
+      },
+      clientId,
+    );
+    await identityService.getNewCertificate();
+
+    throw new Error('Adrian throw');
+
     await this.initClient(userId, clientId);
+    // ACME Enrollment process here
+
+    // After receiving the ACME certificate, we need to upload the public key and key packages to the backend
     // If the device is new, we need to upload keypackages and public key to the backend
     const publicKey = await this.coreCryptoClient.clientPublicKey();
     const keyPackages = await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages);
@@ -411,7 +430,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId groupId of the conversation
    * @param clientIds the list of **qualified** ids of the clients we want to remove from the group
    */
-  public removeClientsFromConversation(groupId: string, clientIds: string[]) {
+  public removeClientsFromConversation(groupId: string, clientIds: ClientId[]) {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     return this.processCommitAction(groupIdBytes, () =>
@@ -538,13 +557,13 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param mlsClient Intance of the coreCrypto that represents the mls client
    * @param clientId The id of the client
    */
-  private async uploadMLSPublicKeys(publicKey: Uint8Array, clientId: string) {
+  private async uploadMLSPublicKeys(publicKey: Uint8Array, clientId: ClientId) {
     return this.apiClient.api.client.putClient(clientId, {
       mls_public_keys: {ed25519: btoa(Converter.arrayBufferViewToBaselineString(publicKey))},
     });
   }
 
-  private async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: string) {
+  private async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: ClientId) {
     return this.apiClient.api.client.uploadMLSKeyPackages(
       clientId,
       keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
@@ -654,7 +673,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param groupId groupId of the conversation
    */
-  public async getClientIds(groupId: string): Promise<{userId: string; clientId: string; domain: string}[]> {
+  public async getClientIds(groupId: string): Promise<{userId: string; clientId: ClientId; domain: string}[]> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     const rawClientIds = await this.coreCryptoClient.getClientIds(groupIdBytes);

@@ -18,6 +18,7 @@
  */
 
 import {AxiosRequestConfig} from 'axios';
+import {z} from 'zod';
 
 import {ClientCapabilityData} from './ClientCapabilityData';
 import {ClientCapabilityRemovedError} from './ClientError';
@@ -52,6 +53,8 @@ export class ClientAPI {
     CAPABILITIES: 'capabilities',
     PREKEYS: 'prekeys',
     PUBLIC_KEYS: 'public-keys',
+    NONCE: 'nonce',
+    ACCESS_TOKEN: 'access-token',
   };
 
   public async postClient(newClient: CreateClientPayload): Promise<RegisteredClient> {
@@ -203,5 +206,54 @@ export class ClientAPI {
 
     const response = await this.client.sendJSON<PublicKeys>(config, true);
     return response.data;
+  }
+
+  public async getNonce(clientId: string): Promise<string> {
+    const NonceKey = 'replay-nonce';
+    const NonceSchema = z.object({
+      [NonceKey]: z.string().min(1),
+    });
+
+    const config: AxiosRequestConfig = {
+      method: 'head',
+      url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.NONCE}`,
+    };
+
+    const {headers} = await this.client.sendRequest(config);
+
+    return NonceSchema.parse(headers)[NonceKey];
+  }
+
+  public getAccessTokenPath = (clientId: string): string =>
+    `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
+
+  public async getAccessToken(clientId: string, dpopToken: Uint8Array) {
+    const ResponseSchema = z.object({
+      expires_in: z.number().min(1),
+      token: z.string().min(1),
+      type: z.literal('DPoP'),
+    });
+
+    console.log(
+      'acme send Dpop Token request',
+      JSON.stringify({
+        dpopToken,
+        clientId,
+        decodedDpopToken: new TextDecoder().decode(dpopToken),
+        url: this.getAccessTokenPath(clientId),
+      }),
+    );
+
+    const config: AxiosRequestConfig = {
+      method: 'post',
+      url: this.getAccessTokenPath(clientId),
+      headers: {
+        DPoP: new TextDecoder().decode(dpopToken),
+      },
+    };
+
+    const {data} = await this.client.sendJSON(config);
+
+    return ResponseSchema.parse(data);
   }
 }

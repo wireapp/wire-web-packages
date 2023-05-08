@@ -13,12 +13,13 @@
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
-    "@wireapp/core-crypto": "0.7.0-rc.4",
+    "@wireapp/core-crypto": "0.8.2",
     "@wireapp/cryptobox": "12.8.0",
     "@wireapp/promise-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.44.0",
     "@wireapp/store-engine": "workspace:*",
     "@wireapp/store-engine-dexie": "workspace:^",
+    "auth0-spa-js": "^1.6.5",
     "axios": "1.4.0",
     "bazinga64": "6.0.4",
     "deepmerge-ts": "4.3.0",
@@ -28,7 +29,8 @@
     "logdown": "3.3.1",
     "long": "^5.2.0",
     "oidc-client-ts": "^2.2.2",
-    "uuidjs": "4.2.13"
+    "uuidjs": "4.2.13",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

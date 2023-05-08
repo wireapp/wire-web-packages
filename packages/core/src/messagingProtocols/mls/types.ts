@@ -22,6 +22,8 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {CoreCryptoCallbacks} from '@wireapp/core-crypto';
 
+export type ClientId = string;
+
 export type SecretCrypto =
   | {
       encrypt: (value: Uint8Array) => Promise<Uint8Array>;
