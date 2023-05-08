@@ -4619,7 +4619,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:*"
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.4.0
-    bazinga64: 6.1.0
+    bazinga64: 6.1.1
     commander: 10.0.1
     cross-env: 7.0.3
     deepmerge-ts: 4.3.0
@@ -5808,7 +5808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bazinga64@6.1.0, bazinga64@workspace:packages/bazinga64":
+"bazinga64@6.1.1, bazinga64@workspace:packages/bazinga64":
   version: 0.0.0-use.local
   resolution: "bazinga64@workspace:packages/bazinga64"
   dependencies:
