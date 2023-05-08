@@ -23,19 +23,21 @@ interface OIDCServiceConfig {
   authorityUrl: string;
   audience: string;
   redirectUri: string;
+  clientSecret?: string;
 }
 
 export class OIDCService {
   private userManager: UserManager;
 
   constructor(config: OIDCServiceConfig) {
-    const {authorityUrl, audience, redirectUri} = config;
+    const {authorityUrl, audience, redirectUri, clientSecret = ''} = config;
     const dexioConfig: UserManagerSettings = {
       authority: authorityUrl,
       client_id: audience,
       redirect_uri: redirectUri,
       response_type: 'code',
-      scope: 'openid profile',
+      scope: 'openid profile email',
+      client_secret: clientSecret,
     };
 
     this.userManager = new UserManager(dexioConfig);
@@ -46,7 +48,11 @@ export class OIDCService {
   }
 
   public handleAuthentication(): Promise<User> {
-    return this.userManager.signinRedirectCallback().then(user => {
+    // Remove the hash (hash router) from the url before processing
+    const url = window.location.href.replace('/#', '');
+
+    return this.userManager.signinRedirectCallback(url).then(user => {
+      console.log(user);
       return user;
     });
   }

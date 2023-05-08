@@ -201,11 +201,12 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  private async startOAuthFlow() {
+  public async startOAuthFlow() {
     const oidcService = new OIDCService({
       audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
       authorityUrl: 'https://accounts.google.com',
       redirectUri: 'https://local.zinfra.io:8081/oidc',
+      clientSecret: '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',
     });
     await oidcService.authenticate();
   }
@@ -215,6 +216,7 @@ export class Account extends TypedEventEmitter<Events> {
       audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
       authorityUrl: 'https://accounts.google.com',
       redirectUri: 'https://local.zinfra.io:8081/oidc',
+      clientSecret: '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',
     });
     await oidcService.handleAuthentication();
   }
