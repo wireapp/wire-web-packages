@@ -942,7 +942,7 @@ export class ConversationAPI {
    * - changing the protocol from "mixed" to "mls" will finalise the migration of the conversation.
    * @param conversationId id of the conversation
    * @param memberData the new conversation
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateSelf
+   * @see https://wearezeta.atlassian.net/wiki/spaces/CORE/pages/746488003/Proteus+to+MLS+Migration for more details
    */
   public async putConversationProtocol(
     conversationId: QualifiedId,
