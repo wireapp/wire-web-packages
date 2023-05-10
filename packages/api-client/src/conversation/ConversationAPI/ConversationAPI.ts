@@ -45,6 +45,7 @@ import {
   ConversationMemberJoinEvent,
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
+  ConversationProtocolUpdateEvent,
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../../event';
@@ -946,13 +947,14 @@ export class ConversationAPI {
   public async putConversationProtocol(
     conversationId: QualifiedId,
     protocol: ConversationProtocol.MIXED | ConversationProtocol.MLS,
-  ): Promise<void> {
+  ): Promise<ConversationProtocolUpdateEvent> {
     const config: AxiosRequestConfig = {
       data: {protocol},
       method: 'put',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTOCOL}`,
     };
 
-    await this.client.sendJSON(config);
+    const response = await this.client.sendJSON<ConversationProtocolUpdateEvent>(config);
+    return response.data;
   }
 }
