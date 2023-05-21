@@ -4687,7 +4687,7 @@ __metadata:
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.4.0
     axios-retry: 3.5.0
-    browser-sync: 2.29.1
+    browser-sync: 2.29.3
     concurrently: 8.0.1
     cross-env: 7.0.3
     dotenv: 16.0.3
@@ -6145,20 +6145,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-sync-client@npm:^2.29.1":
-  version: 2.29.1
-  resolution: "browser-sync-client@npm:2.29.1"
+"browser-sync-client@npm:^2.29.3":
+  version: 2.29.3
+  resolution: "browser-sync-client@npm:2.29.3"
   dependencies:
     etag: 1.8.1
     fresh: 0.5.2
     mitt: ^1.1.3
-  checksum: 9ed2828e1d7edab4cbb07b5e029d5a58a187e67e55220543aa8fa0cac5c6c6c64c7f701abb091345542353e342ac50e75df00a32f39eb8bec0d34db68c9730ba
+  checksum: b73d7ffacd957597a1e7ee0b80133ef05908610e6a6e64c95b2dcb80803b6a35474ef9ae414748188c6c74c5ba56e510563e8f3c8d4f1bc7d8d797a689109e07
   languageName: node
   linkType: hard
 
-"browser-sync-ui@npm:^2.29.1":
-  version: 2.29.1
-  resolution: "browser-sync-ui@npm:2.29.1"
+"browser-sync-ui@npm:^2.29.3":
+  version: 2.29.3
+  resolution: "browser-sync-ui@npm:2.29.3"
   dependencies:
     async-each-series: 0.1.1
     chalk: 4.1.2
@@ -6167,18 +6167,17 @@ __metadata:
     server-destroy: 1.0.1
     socket.io-client: ^4.4.1
     stream-throttle: ^0.1.3
-  checksum: db70373cc3eed83d2d76d906c0e23749950734c00a8cf426ec9a2adfa32e40ed30a8ae432d1a7873402907a5ae8d5b5286851a55d1130763659b8783c3d1f76d
+  checksum: 0fa95676df642a82f70e339ed75b76ace0a827b97881b74305f03c0d4eb16fcab316fb1beb4b6abd64d62cc78a379c0cf3d3080a97866bccece1f153e23315d4
   languageName: node
   linkType: hard
 
-"browser-sync@npm:2.29.1":
-  version: 2.29.1
-  resolution: "browser-sync@npm:2.29.1"
+"browser-sync@npm:2.29.3":
+  version: 2.29.3
+  resolution: "browser-sync@npm:2.29.3"
   dependencies:
-    browser-sync-client: ^2.29.1
-    browser-sync-ui: ^2.29.1
+    browser-sync-client: ^2.29.3
+    browser-sync-ui: ^2.29.3
     bs-recipes: 1.3.4
-    bs-snippet-injector: ^2.0.1
     chalk: 4.1.2
     chokidar: ^3.5.1
     connect: 3.6.6
@@ -6195,7 +6194,6 @@ __metadata:
     micromatch: ^4.0.2
     opn: 5.3.0
     portscanner: 2.2.0
-    qs: ^6.11.0
     raw-body: ^2.3.2
     resp-modifier: 6.0.2
     rx: 4.1.0
@@ -6208,7 +6206,7 @@ __metadata:
     yargs: ^17.3.1
   bin:
     browser-sync: dist/bin.js
-  checksum: 5f04e6bdd76d194c5bf7687e09d070ec7511eefd722ef9b9ae676e56f2007a8e048eab9730c4ca8e948a2a69b704c38b5bc39343eada942529b980b7aa0fbaad
+  checksum: 232392bf4124767d55112ce98508d47838a8d640b81dd55d8adc03d0deff97c35406ef8fa9a0898e0a9a0f104cb329ad2a309b162257803e6f791fe883fcbcc2
   languageName: node
   linkType: hard
 
@@ -6230,13 +6228,6 @@ __metadata:
   version: 1.3.4
   resolution: "bs-recipes@npm:1.3.4"
   checksum: 2cd89e27730463dac8736f08042faae926f21fbc74788704825b727ad08a85fb5b663d57575aeda3fb188be3c0d446fce60d98560e7b0e76736f1e78e547d345
-  languageName: node
-  linkType: hard
-
-"bs-snippet-injector@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "bs-snippet-injector@npm:2.0.1"
-  checksum: f37863c6571fa5e23d80183eda2307ac001110eb149d9154ab68ccbda046d0ea546c9bbdcddec32bf5fe0e12ff2225581f84bddcfb623618bc7014fa753ca406
   languageName: node
   linkType: hard
 
@@ -14924,7 +14915,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0, qs@npm:^6.11.0":
+"qs@npm:6.11.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
