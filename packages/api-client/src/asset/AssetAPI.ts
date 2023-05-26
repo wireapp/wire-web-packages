@@ -310,7 +310,8 @@ export class AssetAPI {
       throw new TypeError(`Expected asset ID "${assetId}" to only contain alphanumeric values and dashes.`);
     }
 
-    const isValidDomain = (domain: string) => !!domain && /^((([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/.test(domain);
+    const isValidDomain = (domain: string) =>
+      !!domain && /^([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}$/.test(domain);
 
     if (!isValidDomain(assetDomain)) {
       throw new TypeError(`Invalid asset domain ${assetDomain}`);
