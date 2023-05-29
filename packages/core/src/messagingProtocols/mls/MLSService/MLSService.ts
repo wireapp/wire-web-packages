@@ -153,6 +153,9 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
+    if (invitee.length < 1) {
+      return null;
+    }
     return this.processCommitAction(groupId, () => this.coreCryptoClient.addClientsToConversation(groupId, invitee));
   }
 
