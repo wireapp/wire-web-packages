@@ -275,12 +275,11 @@ export class ConversationService {
     const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
 
     let response: PostMlsMessageResponse | null = null;
-
+    let sentAt: string = '';
     try {
       response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
+      sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
     } catch {}
-
-    const sentAt = response?.time || '';
 
     const failedToSend =
       response?.failed || (response?.failed_to_send ?? []).length > 0
