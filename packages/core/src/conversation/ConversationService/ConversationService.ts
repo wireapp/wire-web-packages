@@ -278,7 +278,7 @@ export class ConversationService {
       time: new Date().toISOString(),
       events: [],
       failed_to_send: [],
-      failed: [],
+      failed: undefined,
     };
 
     try {
