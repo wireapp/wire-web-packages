@@ -216,10 +216,18 @@ export class MLSService extends TypedEventEmitter<Events> {
       return {groupId: conversationId, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
-    return this.uploadCommitBundle(groupId, commitBundle, {
+    const mlsResponse = await this.uploadCommitBundle(groupId, commitBundle, {
       isExternalCommit: true,
       regenerateCommitBundle: async () => (await generateCommit()).commitBundle,
     });
+
+    if (mlsResponse) {
+      //after we've successfully joined via external commit, we schedule periodic key material renewal
+      const groupIdStr = Encoder.toBase64(groupId).asString;
+      this.scheduleKeyMaterialRenewal(groupIdStr);
+    }
+
+    return mlsResponse;
   }
 
   public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
@@ -404,7 +412,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         : // If there are no clients to add, just update the keying material
           await this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
 
-    // We schedule a key material renewal
+    // We schedule a periodic key material renewal
     this.scheduleKeyMaterialRenewal(groupId);
 
     return response;
