@@ -92,10 +92,10 @@ const cancelTask = (key: string) => {
  * @param task function to be executed
  * @param key unique key for the task
  */
-const continueTask = ({key, task}: Omit<ScheduleTaskParams, 'firingDate'>) => {
+const continueTask = ({key, task}: Omit<ScheduleTaskParams, 'firingDate' | 'persist'>) => {
   const activeTaskEndTime = TaskSchedulerStore.get(key);
   if (activeTaskEndTime) {
-    addTask({task, firingDate: activeTaskEndTime, key});
+    addTask({task, firingDate: activeTaskEndTime, key, persist: true});
   }
 };
 
