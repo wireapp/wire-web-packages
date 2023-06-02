@@ -35,6 +35,8 @@ const handleWelcomeMessage = async ({mlsService, event}: HandleWelcomeMessagePar
   const newGroupId = await mlsService.processWelcomeMessage(data);
   const groupIdStr = Encoder.toBase64(newGroupId).asString;
   // The groupId can then be sent back to the consumer
+
+  mlsService.scheduleKeyMaterialRenewal(groupIdStr);
   return {
     event: {...event, data: groupIdStr},
   };
