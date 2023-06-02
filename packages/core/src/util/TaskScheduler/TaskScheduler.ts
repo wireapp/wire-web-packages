@@ -47,7 +47,7 @@ const addTask = ({task, firingDate, key, persist = false}: ScheduleTaskParams) =
   const execute = new Date(firingDate);
   const delay = execute.getTime() - now;
 
-  if (persist && TaskSchedulerStore.has(key)) {
+  if (TaskSchedulerStore.has(key)) {
     TaskSchedulerStore.remove(key);
   }
   if (activeTimeouts[key]) {
