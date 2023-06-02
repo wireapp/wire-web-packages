@@ -506,7 +506,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public schedulePeriodicKeyMaterialRenewals(groupIds: string[]) {
     try {
-      groupIds.forEach(this.scheduleKeyMaterialRenewal);
+      groupIds.forEach(groupId => this.scheduleKeyMaterialRenewal(groupId));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
