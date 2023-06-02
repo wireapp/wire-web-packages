@@ -45,7 +45,6 @@ import {
 
 import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
@@ -455,7 +454,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupConversationExists = await this.conversationExists(groupId);
 
       if (!groupConversationExists) {
-        keyMaterialUpdatesStore.deleteLastKeyMaterialUpdateDate({groupId});
+        this.cancelKeyMaterialRenewal(groupId);
         return;
       }
 
@@ -475,8 +474,16 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId The group that should have its key material updated
    */
   public resetKeyMaterialRenewal(groupId: string) {
-    cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
+    this.cancelKeyMaterialRenewal(groupId);
     this.scheduleKeyMaterialRenewal(groupId);
+  }
+
+  /**
+   * Will cancel the renewal of the key material for a given groupId
+   * @param groupId The group that should stop having its key material updated
+   */
+  public cancelKeyMaterialRenewal(groupId: string) {
+    return cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
   }
 
   /**
@@ -497,10 +504,9 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Get all keying material last update dates and schedule tasks for renewal
    * Function must only be called once, after application start
    */
-  public checkForKeyMaterialsUpdate() {
+  public schedulePeriodicKeyMaterialRenewals(groupIds: string[]) {
     try {
-      const keyMaterialUpdateDates = keyMaterialUpdatesStore.getAllUpdateDates();
-      keyMaterialUpdateDates.forEach(({groupId}) => this.scheduleKeyMaterialRenewal(groupId));
+      groupIds.forEach(this.scheduleKeyMaterialRenewal);
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
