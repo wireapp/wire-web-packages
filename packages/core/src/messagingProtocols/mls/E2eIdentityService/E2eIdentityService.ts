@@ -71,10 +71,10 @@ export class E2eIdentityService {
 
   // ############ Public Functions ############
 
-  public async getNewCertificate(): Promise<void> {
+  public async getNewCertificate(discoveryUrl: string): Promise<void> {
     // Create a new identity
     const e2eClientId = getE2eClientId(this.user, this.clientId);
-    const connection = new AcmeService();
+    const connection = new AcmeService(discoveryUrl);
     const identity = await this.coreCryptoClient.newAcmeEnrollment(
       e2eClientId,
       this.user.displayName,

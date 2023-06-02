@@ -46,15 +46,11 @@ import {
 export class AcmeService {
   private logger = logdown('@wireapp/core/AcmeService');
   private readonly axiosInstance: AxiosInstance = axios.create();
-  private readonly certificateAuthority = 'acme';
-  private readonly acmeProvisioner = 'wire';
-  //private readonly acmeBackendUri = 'https://136.243.148.68:9000';
-  private readonly acmeBackendUri = 'https://balderdash.hogwash.work:9000';
   private readonly url = {
     DIRECTORY: '/directory',
   };
 
-  constructor() {}
+  constructor(private discoveryUrl: string) {}
 
   // ############ Internal Functions ############
 
@@ -90,9 +86,7 @@ export class AcmeService {
 
   public async getDirectory(): GetDirectoryReturnValue {
     try {
-      const {data} = await this.axiosInstance.get(
-        `${this.acmeBackendUri}/${this.certificateAuthority}/${this.acmeProvisioner}${this.url.DIRECTORY}`,
-      );
+      const {data} = await this.axiosInstance.get(`${this.discoveryUrl}${this.url.DIRECTORY}`);
       const directory = DirectoryResponseDataSchema.parse(data);
       return new TextEncoder().encode(JSON.stringify(directory));
     } catch (e) {

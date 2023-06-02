@@ -35,6 +35,8 @@ import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket
 import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
+import {CoreCrypto} from '@wireapp/core-crypto';
+import {Cryptobox} from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -47,12 +49,17 @@ import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conve
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
+import {E2eIdentityService} from './messagingProtocols/mls/E2eIdentityService';
+import {User} from './messagingProtocols/mls/E2eIdentityService/E2eIdentityService.types';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
-import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {
+  buildCryptoClient,
+  CryptoClientDef,
+  CryptoClientType,
+} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
-import {OIDCService} from './oauth';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
@@ -122,11 +129,12 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
-  private storeEngine?: CRUDEngine;
-  private db?: CoreDatabase;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
   private readonly enableMLS: () => boolean;
+  private storeEngine?: CRUDEngine;
+  private db?: CoreDatabase;
+  private cryptoClientDef?: CryptoClientDef;
 
   public service?: {
     mls?: MLSService;
@@ -201,24 +209,27 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  public async startOAuthFlow() {
-    const oidcService = new OIDCService({
-      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
-      authorityUrl: 'https://accounts.google.com',
-      redirectUri: 'https://local.zinfra.io:8081/oidc',
-      clientSecret: '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',
-    });
-    await oidcService.authenticate();
-  }
+  public async startE2EIEnrollment(discoveryUrl: string, displayName: string, handle: string) {
+    if (this.cryptoClientDef && this.apiClient.context) {
+      const [, cryptoClient] = this.cryptoClientDef;
+      const {domain = ''} = this.apiClient.context;
 
-  public async continueOAuthFlow() {
-    const oidcService = new OIDCService({
-      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
-      authorityUrl: 'https://accounts.google.com',
-      redirectUri: 'https://local.zinfra.io:8081/oidc',
-      clientSecret: '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',
-    });
-    await oidcService.handleAuthentication();
+      const isCoreCrypto = (client: CoreCrypto | Cryptobox): client is CoreCrypto => client instanceof CoreCrypto;
+      const client = cryptoClient.getNativeClient();
+
+      if (isCoreCrypto(client)) {
+        const user: User = {
+          displayName,
+          handle,
+          domain,
+          id: this.userId,
+        };
+        const identityService = new E2eIdentityService(this.apiClient, client, user, this.clientId);
+        await identityService.getNewCertificate(discoveryUrl);
+      } else {
+        this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+      }
+    }
   }
 
   get clientId(): string {
@@ -308,22 +319,16 @@ export class Account extends TypedEventEmitter<Events> {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set.');
     }
-
-    if (!!this.cryptoProtocolConfig?.mls?.useE2EI) {
-      await this.startOAuthFlow();
-      throw new Error('Adrian Break');
-    }
-
     const validClient = client ?? (await this.service!.client.loadClient());
     if (!validClient) {
       return undefined;
     }
-    //this.apiClient.context.clientId = validClient.id;
+    this.apiClient.context.clientId = validClient.id;
 
     // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
-    //await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
     if (this.service.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       if (!client) {
@@ -331,20 +336,19 @@ export class Account extends TypedEventEmitter<Events> {
         await this.service.mls.initClient({id: userId, domain}, validClient.id);
       }
       // initialize schedulers for pending mls proposals once client is initialized
-      //await this.service.mls.checkExistingPendingProposals();
+      await this.service.mls.checkExistingPendingProposals();
 
       // initialize schedulers for renewing key materials
-      //this.service.mls.checkForKeyMaterialsUpdate();
+      this.service.mls.checkForKeyMaterialsUpdate();
 
       // initialize scheduler for syncing key packages with backend
-      //this.service.mls.checkForKeyPackagesBackendSync();
+      this.service.mls.checkForKeyPackagesBackendSync();
 
       // leave stale conference subconversations (e.g after a crash)
-      //await this.service.mls.leaveStaleConferenceSubconversations();
+      await this.service.mls.leaveStaleConferenceSubconversations();
     }
 
-    //return validClient;
-    return undefined;
+    return validClient;
   }
 
   private async buildCryptoClient(context: Context, storeEngine: CRUDEngine) {
@@ -391,8 +395,8 @@ export class Account extends TypedEventEmitter<Events> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
-    const [clientType, cryptoClient] = cryptoClientDef;
+    this.cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
+    const [clientType, cryptoClient] = this.cryptoClientDef;
 
     const mlsService =
       clientType === CryptoClientType.CORE_CRYPTO && this.enableMLS()

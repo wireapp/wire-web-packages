@@ -56,7 +56,6 @@ import {cancelRecurringTask, registerRecurringTask} from '../../../util/Recurrin
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
-import {E2eIdentityService} from '../E2eIdentityService';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -108,25 +107,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async createClient(userId: QualifiedId, clientId: ClientId) {
-    const identityService = new E2eIdentityService(
-      this.apiClient,
-      this.coreCryptoClient,
-      {
-        displayName: 'adrian+mls2',
-        handle: '@adrianweissmls2',
-        domain: userId.domain,
-        id: userId.id,
-      },
-      clientId,
-    );
-    await identityService.getNewCertificate();
-
-    throw new Error('Adrian throw');
-
     await this.initClient(userId, clientId);
-    // ACME Enrollment process here
-
-    // After receiving the ACME certificate, we need to upload the public key and key packages to the backend
     // If the device is new, we need to upload keypackages and public key to the backend
     const publicKey = await this.coreCryptoClient.clientPublicKey();
     const keyPackages = await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages);
