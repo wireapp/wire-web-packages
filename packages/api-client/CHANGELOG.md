@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [24.15.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.15.0...@wireapp/api-client@24.15.1) (2023-05-31)
+
+### Bug Fixes
+
+* Correct type for mls failed_to_send (FS-2030) ([#5187](https://github.com/wireapp/wire-web-packages/issues/5187)) ([18b86ac](https://github.com/wireapp/wire-web-packages/commit/18b86ac0490aad6d37657180333761f353942664))
+
+# [24.15.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.14.1...@wireapp/api-client@24.15.0) (2023-05-29)
+
+### Features
+
+* Return failed users when sending mls message (FS-2030) ([#5186](https://github.com/wireapp/wire-web-packages/issues/5186)) ([93b01d8](https://github.com/wireapp/wire-web-packages/commit/93b01d86f9cba1f09c7ffdc7084c8e8c777ffaf1))
+
+## [24.14.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.14.0...@wireapp/api-client@24.14.1) (2023-05-26)
+
+### Bug Fixes
+
+* [wire-webapp] Add validation of domain for assets in api-client(… ([#5170](https://github.com/wireapp/wire-web-packages/issues/5170)) ([db09832](https://github.com/wireapp/wire-web-packages/commit/db098329c20566bac57ce7bd5aa42f9f193729ef))
+
+# [24.14.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.13.0...@wireapp/api-client@24.14.0) (2023-05-18)
+
+### Features
+
+* **api-client:** improve conversation protocol put request handler ([#5151](https://github.com/wireapp/wire-web-packages/issues/5151)) ([ab52d8f](https://github.com/wireapp/wire-web-packages/commit/ab52d8f87ea38cf7ffa9eb319223f0f4cddcdccf))
+
+# [24.13.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.12.0...@wireapp/api-client@24.13.0) (2023-05-16)
+
+### Features
+
+* **api-client:** change date ts type ([#5150](https://github.com/wireapp/wire-web-packages/issues/5150)) ([2f4bed1](https://github.com/wireapp/wire-web-packages/commit/2f4bed1457979327d77f39e9401bc81826bc6daf))
+
+# [24.12.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.11.0...@wireapp/api-client@24.12.0) (2023-05-16)
+
+### Features
+
+* **api-client:** add mls migration config ([#5148](https://github.com/wireapp/wire-web-packages/issues/5148)) ([287f1b9](https://github.com/wireapp/wire-web-packages/commit/287f1b91a436585c5ac83d8785d991a00d28e898))
+
+# [24.11.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.10.0...@wireapp/api-client@24.11.0) (2023-05-12)
+
+### Features
+
+* Add new failed_to_add field to conversation (FS-1548) ([#5139](https://github.com/wireapp/wire-web-packages/issues/5139)) ([5e76b64](https://github.com/wireapp/wire-web-packages/commit/5e76b64be0173c10658336f6f900a8ddea3a92ea))
+
+# [24.10.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.9.1...@wireapp/api-client@24.10.0) (2023-05-10)
+
+### Features
+
+* **api-client:** put conversation protocol [FS-1888] ([#5138](https://github.com/wireapp/wire-web-packages/issues/5138)) ([2aed6cd](https://github.com/wireapp/wire-web-packages/commit/2aed6cda2a458ea09989517aaea7654038d402a4))
+
+## [24.9.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.9.0...@wireapp/api-client@24.9.1) (2023-05-08)
+
+### Bug Fixes
+
+* Add empty body to code creation endpoint (FS-1836) ([#5137](https://github.com/wireapp/wire-web-packages/issues/5137)) ([037fad3](https://github.com/wireapp/wire-web-packages/commit/037fad3c7f3733102f28b0c0511e59ebf9124543))
+
+# [24.9.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.8.0...@wireapp/api-client@24.9.0) (2023-05-04)
+
+### Features
+
+* update mls e2eid feature config ([#5116](https://github.com/wireapp/wire-web-packages/issues/5116)) ([a2fefca](https://github.com/wireapp/wire-web-packages/commit/a2fefca3c89ff5aa4a2caabb1e102ff3f392a0f8))
+
+# [24.8.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.7.0...@wireapp/api-client@24.8.0) (2023-05-04)
+
+### Features
+
+* update typescript ([#5115](https://github.com/wireapp/wire-web-packages/issues/5115)) ([f1f39de](https://github.com/wireapp/wire-web-packages/commit/f1f39dee4d5985980b187dc00199beeb1e849f55))
+
 # [24.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.6.0...@wireapp/api-client@24.7.0) (2023-05-02)
 
 ### Features

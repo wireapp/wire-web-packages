@@ -72,7 +72,14 @@ export interface FeatureMLSConfig extends FeatureConfig {
 
 export interface FeatureMLSE2EIdConfig extends FeatureConfig {
   verificationExpiration: number;
-  acmeUrl?: string;
+  acmeDiscoveryUrl?: string;
+}
+
+export interface FeatureMLSMigrationConfig extends FeatureConfig {
+  startTime?: string;
+  finaliseRegardlessAfter?: string;
+  usersThreshold?: number;
+  clientsThreshold?: number;
 }
 
 export type FeatureAppLock = Feature<FeatureAppLockConfig>;
@@ -86,6 +93,7 @@ export type FeatureSearchVisibility = FeatureWithoutConfig;
 export type FeatureSelfDeletingMessages = Feature<FeatureSelfDeletingMessagesConfig>;
 export type FeatureMLS = Feature<FeatureMLSConfig>;
 export type FeatureMLSE2EId = Feature<FeatureMLSE2EIdConfig>;
+export type FeatureMLSMigration = Feature<FeatureMLSMigrationConfig>;
 export type FeatureSSO = FeatureWithoutConfig;
 export type FeatureSndFactorPassword = FeatureWithoutConfig;
 export type FeatureValidateSAMLEmails = FeatureWithoutConfig;

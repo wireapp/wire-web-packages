@@ -153,6 +153,11 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
+    if (invitee.length < 1) {
+      // providing an empty invitee list to addClientsToConversation method would make core-crypto throw an error
+      // we want to skip adding clinets in this case
+      return null;
+    }
     return this.processCommitAction(groupId, () => this.coreCryptoClient.addClientsToConversation(groupId, invitee));
   }
 
@@ -558,6 +563,10 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
     return handleBackendEvent({...params, mlsService: this}, async groupId => {
+      const conversationExists = await this.conversationExists(groupId);
+      if (!conversationExists) {
+        return;
+      }
       const newEpoch = await this.getEpoch(groupId);
       this.emit('newEpoch', {groupId, epoch: newEpoch});
     });

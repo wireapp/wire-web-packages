@@ -24,6 +24,7 @@ import {AxiosRequestConfig} from 'axios';
 import {
   Conversation,
   ConversationCode,
+  ConversationProtocol,
   ConversationRolesList,
   Conversations,
   DefaultConversationRoleName,
@@ -44,6 +45,7 @@ import {
   ConversationMemberJoinEvent,
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
+  ConversationProtocolUpdateEvent,
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../../event';
@@ -67,6 +69,8 @@ import {
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
+  failed_to_send?: QualifiedId[];
+  failed?: QualifiedId[];
   events: ConversationEvent[];
   time: string;
 };
@@ -94,6 +98,7 @@ export class ConversationAPI {
     NAME: 'name',
     OTR: 'otr',
     PROTEUS: 'proteus',
+    PROTOCOL: 'protocol',
     RECEIPT_MODE: 'receipt-mode',
     ROLES: 'roles',
     SELF: 'self',
@@ -566,6 +571,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
+      data: {},
     };
 
     if (password) {
@@ -720,7 +726,7 @@ export class ConversationAPI {
    * @see https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-message-framing
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_messages
    */
-  public async postMlsMessage(messageData: Uint8Array) {
+  public async postMlsMessage(messageData: Uint8Array): Promise<PostMlsMessageResponse> {
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
@@ -929,5 +935,35 @@ export class ConversationAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   * Update the protocol of the conversation.
+   * Used in MLS Migration feature:
+   * - changing the protocol from "proteus" to "mixed" will assign a groupId to the conversation.
+   * - changing the protocol from "mixed" to "mls" will finalise the migration of the conversation.
+   * @param conversationId id of the conversation
+   * @param protocol new protocol of the conversation
+   * @returns ConversationProtocolUpdateEvent if the protocol was updated, null if the protocol was not changed
+   * @see https://wearezeta.atlassian.net/wiki/spaces/CORE/pages/746488003/Proteus+to+MLS+Migration for more details
+   */
+  public async putConversationProtocol(
+    conversationId: QualifiedId,
+    protocol: ConversationProtocol.MIXED | ConversationProtocol.MLS,
+  ): Promise<ConversationProtocolUpdateEvent | null> {
+    const config: AxiosRequestConfig = {
+      data: {protocol},
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTOCOL}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationProtocolUpdateEvent>(config);
+
+    //if the protocol was not changed (it already was the same), the response will be 204, response data is empty
+    if (response.status === 204) {
+      return null;
+    }
+
+    return response.data;
   }
 }

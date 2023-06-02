@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.3.0...@wireapp/core@40.3.1) (2023-05-31)
+
+### Bug Fixes
+
+* Correct type for mls failed_to_send (FS-2030) ([#5187](https://github.com/wireapp/wire-web-packages/issues/5187)) ([18b86ac](https://github.com/wireapp/wire-web-packages/commit/18b86ac0490aad6d37657180333761f353942664))
+
+# [40.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.10...@wireapp/core@40.3.0) (2023-05-29)
+
+### Features
+
+* Return failed users when sending mls message (FS-2030) ([#5186](https://github.com/wireapp/wire-web-packages/issues/5186)) ([93b01d8](https://github.com/wireapp/wire-web-packages/commit/93b01d86f9cba1f09c7ffdc7084c8e8c777ffaf1))
+
+## [40.2.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.9...@wireapp/core@40.2.10) (2023-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.8...@wireapp/core@40.2.9) (2023-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.7...@wireapp/core@40.2.8) (2023-05-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.6...@wireapp/core@40.2.7) (2023-05-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.5...@wireapp/core@40.2.6) (2023-05-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.4...@wireapp/core@40.2.5) (2023-05-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.3...@wireapp/core@40.2.4) (2023-05-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.2...@wireapp/core@40.2.3) (2023-05-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.1...@wireapp/core@40.2.2) (2023-05-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.0...@wireapp/core@40.2.1) (2023-05-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.13...@wireapp/core@40.2.0) (2023-05-04)
+
+### Features
+
+* update typescript ([#5115](https://github.com/wireapp/wire-web-packages/issues/5115)) ([f1f39de](https://github.com/wireapp/wire-web-packages/commit/f1f39dee4d5985980b187dc00199beeb1e849f55))
+
 ## [40.1.13](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.12...@wireapp/core@40.1.13) (2023-05-02)
 
 **Note:** Version bump only for package @wireapp/core
