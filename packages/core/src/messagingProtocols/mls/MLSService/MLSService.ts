@@ -571,6 +571,13 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
+    const isMLSConversationEstablished = await this.conversationExists(groupId);
+    if (!isMLSConversationEstablished) {
+      //if the mls group does not exist, we don't need to wipe it
+      return;
+    }
+    this.cancelKeyMaterialRenewal(groupId);
+
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
   }
