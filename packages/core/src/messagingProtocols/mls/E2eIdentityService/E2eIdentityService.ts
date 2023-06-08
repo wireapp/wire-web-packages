@@ -17,7 +17,7 @@
  *
  */
 
-import {AcmeDirectory, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeDirectory, Ciphersuite, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
@@ -75,11 +75,12 @@ export class E2eIdentityService {
     // Create a new identity
     const e2eClientId = getE2eClientId(this.user, this.clientId);
     const connection = new AcmeService(discoveryUrl);
-    const identity = await this.coreCryptoClient.newAcmeEnrollment(
+    const identity = await this.coreCryptoClient.e2eiNewEnrollment(
       e2eClientId,
       this.user.displayName,
       this.user.handle,
       this.expiryDays,
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
     );
     console.log(
       'acme Identity created with: ',
