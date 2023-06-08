@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.5.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.0...@wireapp/core@40.5.1) (2023-06-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.2...@wireapp/core@40.5.0) (2023-06-06)
+
+### Features
+
+* update core-crypto ([#5208](https://github.com/wireapp/wire-web-packages/issues/5208)) ([ef36ad0](https://github.com/wireapp/wire-web-packages/commit/ef36ad0f24f066ffbd83fb03dbade7f65dd5d09a))
+
+## [40.4.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.1...@wireapp/core@40.4.2) (2023-06-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.4.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.0...@wireapp/core@40.4.1) (2023-06-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.3.1...@wireapp/core@40.4.0) (2023-06-02)
+
+### Features
+
+* add persistance option to TaskScheduler ([#5188](https://github.com/wireapp/wire-web-packages/issues/5188)) ([09bc24d](https://github.com/wireapp/wire-web-packages/commit/09bc24d3221b6f5130b081080e51d87bbb29cd4f))
+
 ## [40.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.3.0...@wireapp/core@40.3.1) (2023-05-31)
 
 ### Bug Fixes

@@ -29,12 +29,14 @@ import {APIClient} from '@wireapp/api-client';
 import {TimeUtil} from '@wireapp/commons';
 import {
   AddProposalArgs,
+  Ciphersuite,
   CommitBundle,
   ConversationConfiguration,
   ConversationId,
   CoreCrypto,
+  CredentialType,
   DecryptedMessage,
-  ExternalProposalArgs,
+  ExternalAddProposalArgs,
   ExternalProposalType,
   ExternalRemoveProposalArgs,
   Invitee,
@@ -45,7 +47,6 @@ import {
 
 import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
@@ -103,14 +104,21 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async initClient(userId: QualifiedId, clientId: ClientId) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId));
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+    ]);
   }
 
   public async createClient(userId: QualifiedId, clientId: ClientId) {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
-    const publicKey = await this.coreCryptoClient.clientPublicKey();
-    const keyPackages = await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages);
+    const publicKey = await this.coreCryptoClient.clientPublicKey(
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+    );
+    const keyPackages = await this.coreCryptoClient.clientKeypackages(
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      this.config.nbKeyPackages,
+    );
     await this.uploadMLSPublicKeys(publicKey, clientId);
     await this.uploadMLSKeyPackages(keyPackages, clientId);
   }
@@ -213,14 +221,25 @@ export class MLSService extends TypedEventEmitter<Events> {
   public async joinByExternalCommit(getGroupInfo: () => Promise<Uint8Array>) {
     const generateCommit = async () => {
       const groupInfo = await getGroupInfo();
-      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(groupInfo);
+      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
+        groupInfo,
+        CredentialType.Basic,
+      );
       return {groupId: conversationId, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
-    return this.uploadCommitBundle(groupId, commitBundle, {
+    const mlsResponse = await this.uploadCommitBundle(groupId, commitBundle, {
       isExternalCommit: true,
       regenerateCommitBundle: async () => (await generateCommit()).commitBundle,
     });
+
+    if (mlsResponse) {
+      //after we've successfully joined via external commit, we schedule periodic key material renewal
+      const groupIdStr = Encoder.toBase64(groupId).asString;
+      this.scheduleKeyMaterialRenewal(groupIdStr);
+    }
+
+    return mlsResponse;
   }
 
   public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
@@ -325,7 +344,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async newExternalProposal(
     externalProposalType: ExternalProposalType,
-    args: ExternalProposalArgs | ExternalRemoveProposalArgs,
+    args: ExternalAddProposalArgs | ExternalRemoveProposalArgs,
   ) {
     return this.coreCryptoClient.newExternalProposal(externalProposalType, args);
   }
@@ -381,10 +400,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const configuration: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: 1, // TODO: Use the correct ciphersuite enum.
+      ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
     };
 
-    await this.coreCryptoClient.createConversation(groupIdBytes, configuration);
+    await this.coreCryptoClient.createConversation(groupIdBytes, CredentialType.Basic, configuration);
 
     const keyPackages = await this.getKeyPackagesPayload(
       users.map(user => {
@@ -405,7 +424,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         : // If there are no clients to add, just update the keying material
           await this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
 
-    // We schedule a key material renewal
+    // We schedule a periodic key material renewal
     this.scheduleKeyMaterialRenewal(groupId);
 
     return response;
@@ -438,11 +457,14 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount();
+    return this.coreCryptoClient.clientValidKeypackagesCount(Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519);
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
-    return this.coreCryptoClient.clientKeypackages(amountRequested);
+    return this.coreCryptoClient.clientKeypackages(
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      amountRequested,
+    );
   }
 
   /**
@@ -455,7 +477,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupConversationExists = await this.conversationExists(groupId);
 
       if (!groupConversationExists) {
-        keyMaterialUpdatesStore.deleteLastKeyMaterialUpdateDate({groupId});
+        this.cancelKeyMaterialRenewal(groupId);
         return;
       }
 
@@ -475,8 +497,16 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId The group that should have its key material updated
    */
   public resetKeyMaterialRenewal(groupId: string) {
-    cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
+    this.cancelKeyMaterialRenewal(groupId);
     this.scheduleKeyMaterialRenewal(groupId);
+  }
+
+  /**
+   * Will cancel the renewal of the key material for a given groupId
+   * @param groupId The group that should stop having its key material updated
+   */
+  public cancelKeyMaterialRenewal(groupId: string) {
+    return cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
   }
 
   /**
@@ -497,10 +527,9 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Get all keying material last update dates and schedule tasks for renewal
    * Function must only be called once, after application start
    */
-  public checkForKeyMaterialsUpdate() {
+  public schedulePeriodicKeyMaterialRenewals(groupIds: string[]) {
     try {
-      const keyMaterialUpdateDates = keyMaterialUpdatesStore.getAllUpdateDates();
-      keyMaterialUpdateDates.forEach(({groupId}) => this.scheduleKeyMaterialRenewal(groupId));
+      groupIds.forEach(groupId => this.scheduleKeyMaterialRenewal(groupId));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
@@ -557,6 +586,13 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
+    const isMLSConversationEstablished = await this.conversationExists(groupId);
+    if (!isMLSConversationEstablished) {
+      //if the mls group does not exist, we don't need to wipe it
+      return;
+    }
+    this.cancelKeyMaterialRenewal(groupId);
+
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
   }

@@ -17,7 +17,7 @@
   "devDependencies": {
     "@babel/cli": "7.21.5",
     "@babel/core": "7.22.1",
-    "@babel/preset-env": "7.22.2",
+    "@babel/preset-env": "7.22.4",
     "@babel/preset-react": "7.22.3",
     "@babel/preset-typescript": "7.21.5",
     "@emotion/babel-preset-css-prop": "^11.10.0",
@@ -70,5 +70,5 @@
     "test:watch": "jest --watch",
     "test:update": "jest --updateSnapshot"
   },
-  "version": "9.7.2"
+  "version": "9.7.3"
 }

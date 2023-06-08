@@ -35,7 +35,7 @@ import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
-import {ExternalProposalType} from '@wireapp/core-crypto';
+import {Ciphersuite, CredentialType, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
@@ -231,11 +231,12 @@ export class ConversationService {
    * Will create a conversation on backend and register it to CoreCrypto once created
    * @param conversationData
    */
-  public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
-    const {selfUserId, qualified_users: qualifiedUsers = []} = conversationData;
-    if (!selfUserId) {
-      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
-    }
+  public async createMLSConversation(
+    conversationData: NewConversation,
+    selfUserId: QualifiedId,
+    selfClientId: string,
+  ): Promise<MLSReturnType> {
+    const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
      * @note For creating MLS conversations the users & qualified_users
@@ -254,7 +255,7 @@ export class ConversationService {
 
     const response = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
       user: selfUserId,
-      client: conversationData.creator_client,
+      client: selfClientId,
     });
 
     // We fetch the fresh version of the conversation created on backend with the newly added users
@@ -362,6 +363,8 @@ export class ConversationService {
       const externalProposal = await this.mlsService.newExternalProposal(ExternalProposalType.Add, {
         epoch,
         conversationId: groupIdBytes,
+        ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+        credentialType: CredentialType.Basic,
       });
       await this.apiClient.api.conversation.postMlsMessage(
         //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array
@@ -378,11 +381,6 @@ export class ConversationService {
   }
 
   public async wipeMLSConversation(groupId: string): Promise<void> {
-    const isMLSConversationEstablished = await this.isMLSConversationEstablished(groupId);
-    if (!isMLSConversationEstablished) {
-      //if the mls group does not exist, we don't need to wipe it
-      return;
-    }
     return this.mlsService.wipeConversation(groupId);
   }
 
