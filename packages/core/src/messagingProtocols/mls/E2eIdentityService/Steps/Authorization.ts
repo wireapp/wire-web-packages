@@ -17,7 +17,7 @@
  *
  */
 
-import {NewAcmeAuthz, AcmeChallenge, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {NewAcmeAuthz, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection';
 import {Nonce} from '../E2eIdentityService.types';
@@ -29,8 +29,7 @@ interface GetAuthorizationParams {
   identity: WireE2eIdentity;
   connection: AcmeService;
 }
-type TempNewAcmeAuthzFix = Omit<NewAcmeAuthz, 'wireHttpChallenge'> & {wireDpopChallenge?: AcmeChallenge};
-export type GetAuthorizationReturnValue = {authorization: TempNewAcmeAuthzFix; nonce: Nonce};
+export type GetAuthorizationReturnValue = {authorization: NewAcmeAuthz; nonce: Nonce};
 
 export const getAuthorization = async ({
   authzUrl,
@@ -42,15 +41,14 @@ export const getAuthorization = async ({
   const response = await connection.getAuthorization(authzUrl, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
+    // eslint-disable-next-line no-console
     console.log(
       'acme Authorization response data: ',
       JSON.stringify(response.data),
       jsonToByteArray(JSON.stringify(response.data)),
     );
     return {
-      authorization: identity.newAuthzResponse(
-        jsonToByteArray(JSON.stringify(response.data)),
-      ) as unknown as TempNewAcmeAuthzFix,
+      authorization: identity.newAuthzResponse(jsonToByteArray(JSON.stringify(response.data))),
       nonce: response.nonce,
     };
   }
