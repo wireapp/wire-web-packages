@@ -209,7 +209,7 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  public async startE2EIEnrollment(discoveryUrl: string, displayName: string, handle: string) {
+  public async startE2EIEnrollment(discoveryUrl: string, displayName: string, handle: string): Promise<boolean> {
     if (this.cryptoClientDef && this.apiClient.context) {
       const [, cryptoClient] = this.cryptoClientDef;
       const {domain = ''} = this.apiClient.context;
@@ -224,12 +224,17 @@ export class Account extends TypedEventEmitter<Events> {
           domain,
           id: this.userId,
         };
-        const identityService = new E2eIdentityService(this.apiClient, client, user, this.clientId);
-        await identityService.getNewCertificate(discoveryUrl);
-      } else {
-        this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+        try {
+          const identityService = new E2eIdentityService(this.apiClient, client, user, this.clientId);
+          await identityService.getNewCertificate(discoveryUrl);
+          return true;
+        } catch (error) {
+          this.logger.error('Failed to enroll user', error);
+        }
       }
+      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
     }
+    return false;
   }
 
   get clientId(): string {
