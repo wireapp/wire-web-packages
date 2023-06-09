@@ -32,7 +32,10 @@ interface ToolTipProps<T = HTMLDivElement> extends React.HTMLProps<T> {
 const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
   position: 'relative',
   width: 'fit-content',
-  '&:hover .tooltip-content': {visibility: 'visible', opacity: 1},
+  '&:hover .tooltip-content, &:focus-within .tooltip-content,': {
+    visibility: 'visible',
+    opacity: 1,
+  },
   '.tooltip-content': {
     textAlign: 'center',
     visibility: 'hidden',
