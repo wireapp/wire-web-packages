@@ -38,14 +38,12 @@ import {
   DecryptedMessage,
   ExternalAddProposalArgs,
   ExternalProposalType,
-  ExternalRemoveProposalArgs,
   Invitee,
   ProposalArgs,
   ProposalType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 
-import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
@@ -128,9 +126,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     commitBundle: CommitBundle,
     {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
   ): Promise<PostMlsMessageResponse | null> {
-    const bundlePayload = toProtobufCommitBundle(commitBundle);
+    const {commit, groupInfo, welcome} = commitBundle;
+    const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload.slice());
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
       if (isExternalCommit) {
         await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
       } else {
@@ -342,10 +341,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
-  public async newExternalProposal(
-    externalProposalType: ExternalProposalType,
-    args: ExternalAddProposalArgs | ExternalRemoveProposalArgs,
-  ) {
+  public async newExternalProposal(externalProposalType: ExternalProposalType, args: ExternalAddProposalArgs) {
     return this.coreCryptoClient.newExternalProposal(externalProposalType, args);
   }
 
