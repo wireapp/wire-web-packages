@@ -84,6 +84,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
+  private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -102,19 +103,15 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async initClient(userId: QualifiedId, clientId: string) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    ]);
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.defaultCiphersuite]);
   }
 
   public async createClient(userId: QualifiedId, clientId: string) {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
-    const publicKey = await this.coreCryptoClient.clientPublicKey(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    );
+    const publicKey = await this.coreCryptoClient.clientPublicKey(this.defaultCiphersuite);
     const keyPackages = await this.coreCryptoClient.clientKeypackages(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      this.defaultCiphersuite,
       this.config.nbKeyPackages,
     );
     await this.uploadMLSPublicKeys(publicKey, clientId);
@@ -396,7 +393,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const configuration: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      ciphersuite: this.defaultCiphersuite,
     };
 
     await this.coreCryptoClient.createConversation(groupIdBytes, CredentialType.Basic, configuration);
@@ -453,14 +450,11 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount(Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519);
+    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite);
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
-    return this.coreCryptoClient.clientKeypackages(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-      amountRequested,
-    );
+    return this.coreCryptoClient.clientKeypackages(this.defaultCiphersuite, amountRequested);
   }
 
   /**
