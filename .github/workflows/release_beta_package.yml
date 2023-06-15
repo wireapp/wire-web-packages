@@ -73,7 +73,7 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Release
+      - name: Release beta versions
         env:
           NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         run: |
