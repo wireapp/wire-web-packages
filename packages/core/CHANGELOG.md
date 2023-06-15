@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.5.3-beta.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.2...@wireapp/core@40.5.3-beta.0) (2023-06-15)
+
+### Features
+
+* update corecrypto to draft-20 version ([060c929](https://github.com/wireapp/wire-web-packages/commit/060c929eb4e45b907d36326c0c1f758c177ab9c6))
+
 ## [40.5.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.1...@wireapp/core@40.5.2) (2023-06-13)
 
 **Note:** Version bump only for package @wireapp/core
