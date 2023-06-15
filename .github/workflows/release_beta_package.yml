@@ -81,12 +81,3 @@ jobs:
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
           yarn beta-release ${{inputs.tag}}
-
-      - name: Notify CI error
-        if: failure() && github.event_name != 'pull_request'
-        uses: wireapp/github-action-wire-messenger@v2.0.0
-        with:
-          email: ${{secrets.WIRE_EMAIL}}
-          password: ${{secrets.WIRE_PASSWORD}}
-          conversation: 'b2cc7120-4154-4be4-b0c0-45a8c361c4d1'
-          text: '🌵 ${{env.COMMITTER}} broke the "${{env.BRANCH_NAME}}" branch on "${{github.repository}}" with [${{env.TITLE}}](${{env.COMMIT_URL}})'
