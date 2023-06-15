@@ -27,6 +27,7 @@ import {filterProps} from '../util';
 interface ToolTipProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   position?: 'top' | 'right' | 'left' | 'bottom';
   body: React.ReactNode;
+  isOpen?: boolean;
 }
 
 const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
@@ -125,11 +126,11 @@ const tooltipStyle: (theme: Theme) => CSSObject = theme => ({
   },
 });
 
-const filterTooltipProps = (props: ToolTipProps) => filterProps(props, ['position', 'body']);
+const filterTooltipProps = (props: ToolTipProps) => filterProps(props, ['position', 'body', 'isOpen']);
 
 export const Tooltip = ({children, ...props}: ToolTipProps) => {
   const filteredProps = filterTooltipProps(props);
-  const {body, position = 'top'} = props;
+  const {body, position = 'top', isOpen = true} = props;
 
   return (
     <div
@@ -138,10 +139,12 @@ export const Tooltip = ({children, ...props}: ToolTipProps) => {
       {...filteredProps}
       data-testid="tooltip-wrapper"
     >
-      <div className="tooltip-content" data-testid="tooltip-content">
-        {body}
-        <div className="tooltip-arrow"></div>
-      </div>
+      {isOpen && (
+        <div className="tooltip-content" data-testid="tooltip-content">
+          {body}
+          <div className="tooltip-arrow"></div>
+        </div>
+      )}
       {children}
     </div>
   );
