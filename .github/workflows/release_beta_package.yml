@@ -8,10 +8,6 @@ on:
         default: 'beta'
         required: true
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test_build_release:
     runs-on: ubuntu-latest
