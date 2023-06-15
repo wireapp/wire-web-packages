@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  test_build_release:
+  test_build_release_beta:
     runs-on: ubuntu-latest
     env:
       COMMITTER: ${{github.event.head_commit.committer.name}}
