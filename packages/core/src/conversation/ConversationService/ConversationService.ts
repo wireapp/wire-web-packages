@@ -262,7 +262,7 @@ export class ConversationService {
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
     return {
-      events: response.events ?? [],
+      events: response.events,
       conversation,
     };
   }
