@@ -61,6 +61,13 @@ export const NewOrderResponseDataSchema = z.object({
 });
 export type NewOrderResponseData = z.infer<typeof NewOrderResponseDataSchema>;
 
+const AcmeChallengesSchema = z.object({
+  type: nonOptionalString,
+  url: z.string().url(),
+  status: nonOptionalString,
+  token: nonOptionalString,
+  target: z.string().url(),
+});
 export const AuthorizationResponseDataSchema = z.object({
   status: nonOptionalString,
   expires: nonOptionalString,
@@ -69,15 +76,7 @@ export const AuthorizationResponseDataSchema = z.object({
     type: nonOptionalString,
     value: nonOptionalString,
   }),
-  challenges: z.array(
-    z.object({
-      type: nonOptionalString,
-      url: z.string().url(),
-      status: nonOptionalString,
-      token: nonOptionalString,
-      target: z.string().url(),
-    }),
-  ),
+  challenges: z.array(AcmeChallengesSchema),
 });
 export type AuthorizationResponseData = z.infer<typeof AuthorizationResponseDataSchema>;
 

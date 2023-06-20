@@ -43,7 +43,17 @@ export class OIDCService {
     this.userManager = new UserManager(dexioConfig);
   }
 
-  public async authenticate(): Promise<User> {
-    return await this.userManager.signinPopup();
+  public async authenticate(): Promise<void> {
+    await this.userManager.signinRedirect();
+  }
+
+  public handleAuthentication(): Promise<User> {
+    // Remove the hash (hash router) from the url before processing
+    const url = window.location.href.replace('/#', '');
+
+    return this.userManager.signinRedirectCallback(url).then(user => {
+      console.log(user);
+      return user;
+    });
   }
 }

@@ -22,8 +22,9 @@ module.exports = {
   clearMocks: true,
   transform: {
     '^.+\\.(ts|tsx|jsx)$': '@swc/jest',
+    'node_modules/@wireapp/.+\\.(j|t)sx?$': '@swc/jest',
   },
-  transformIgnorePatterns: ['node_modules/'],
+  transformIgnorePatterns: ['node_modules/(?!@wireapp/.*)'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ignoredPaths,
   coveragePathIgnorePatterns: ignoredPaths,

@@ -209,32 +209,61 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  public async startE2EIEnrollment(discoveryUrl: string, displayName: string, handle: string): Promise<boolean> {
+  private getCoreCryptoClient(): CoreCrypto | undefined {
     if (this.cryptoClientDef && this.apiClient.context) {
       const [, cryptoClient] = this.cryptoClientDef;
-      const {domain = ''} = this.apiClient.context;
-
       const isCoreCrypto = (client: CoreCrypto | Cryptobox): client is CoreCrypto => client instanceof CoreCrypto;
       const client = cryptoClient.getNativeClient();
 
       if (isCoreCrypto(client)) {
-        const user: User = {
-          displayName,
-          handle,
-          domain,
-          id: this.userId,
-        };
-        try {
-          const identityService = new E2eIdentityService(this.apiClient, client, user, this.clientId);
-          await identityService.getNewCertificate(discoveryUrl);
-          return true;
-        } catch (error) {
-          this.logger.error('Failed to enroll user', error);
-        }
+        return client;
       }
-      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
     }
-    return false;
+    return undefined;
+  }
+
+  public async startE2EIEnrollment(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
+    const client = this.getCoreCryptoClient();
+    const {domain = ''} = this.apiClient.context;
+
+    if (!client) {
+      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+      return false;
+    }
+
+    const user: User = {
+      displayName,
+      handle,
+      domain,
+      id: this.userId,
+    };
+    try {
+      const instance = await E2eIdentityService.getInstance({
+        apiClient: this.apiClient,
+        coreCryptClient: client,
+        user,
+        clientId: this.clientId,
+        discoveryUrl,
+      });
+      return await instance.getNewCertificate();
+    } catch (error) {
+      this.logger.error('Failed to enroll user', error);
+      return false;
+    }
+  }
+
+  public async continueE2EIEnrollment(): Promise<boolean> {
+    const client = this.getCoreCryptoClient();
+    if (!client) {
+      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+      return false;
+    }
+    const instance = await E2eIdentityService.getInstance({
+      skipInit: true,
+      coreCryptClient: client,
+      apiClient: this.apiClient,
+    });
+    return await instance.getNewCertificate();
   }
 
   get clientId(): string {

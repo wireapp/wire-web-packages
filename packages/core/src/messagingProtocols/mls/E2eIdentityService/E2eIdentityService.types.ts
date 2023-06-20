@@ -17,7 +17,9 @@
  *
  */
 
-import {AcmeChallenge} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeChallenge, CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
+
+import {APIClient} from '@wireapp/api-client';
 
 export type User = {
   id: string;
@@ -32,4 +34,18 @@ export interface FinishOidcChallengeParams {
   oidcChallenge: AcmeChallenge;
   nonce: Nonce;
   account: Account;
+}
+
+export interface GetNewCertificateParams {
+  discoveryUrl: string;
+}
+
+export interface InitParams {
+  apiClient: APIClient;
+  coreCryptClient: CoreCrypto;
+  user?: User;
+  clientId?: string;
+  // If a entrollment is in progress, the init function will not start a new enrollment
+  skipInit?: boolean;
+  discoveryUrl?: string;
 }

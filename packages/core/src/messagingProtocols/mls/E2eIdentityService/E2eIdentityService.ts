@@ -18,30 +18,131 @@
  */
 
 import {AcmeDirectory, Ciphersuite, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {Decoder, Encoder} from 'bazinga64';
+import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {User} from './E2eIdentityService.types';
+import {InitParams, User} from './E2eIdentityService.types';
 import {getE2eClientId} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
-import {doWireDpopChallenge} from './Steps/DpopChallenge';
 import {createNewOrder} from './Steps/Order';
+import {AcmeStorage} from './Storage/AcmeStorage';
 
-export class E2eIdentityService {
-  //private readonly logger = logdown('@wireapp/core/E2EIdentityService');
+import {OIDCService} from '../../../oauth';
+
+class E2eIdentityService {
+  private static instance: E2eIdentityService;
+  private readonly logger = logdown('@wireapp/core/E2EIdentityService');
   private readonly expiryDays = 2;
-  private readonly expirySecs = 20;
+  private readonly coreCryptoClient: CoreCrypto;
+  //private readonly apiClient: APIClient;
+  private identity?: WireE2eIdentity;
+  private acmeService?: AcmeService;
+  private user?: User;
+  private clientId?: string;
+  private e2eClientId?: string;
+  private isInitialized = false;
+  private isInProgress = false;
 
-  constructor(
-    private readonly apiClient: APIClient,
-    private readonly coreCryptoClient: CoreCrypto,
-    private readonly user: User,
-    private readonly clientId: string,
-  ) {}
+  private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient) {
+    this.coreCryptoClient = coreCryptClient;
+    console.log(apiClient);
+    //this.apiClient = apiClient;
+  }
+
+  // ############ Public Functions ############
+
+  public static async getInstance(params?: InitParams): Promise<E2eIdentityService> {
+    if (!E2eIdentityService.instance) {
+      if (!params) {
+        throw new Error('GracePeriodTimer is not initialized. Please call getInstance with params.');
+      }
+      const {skipInit = false, coreCryptClient, apiClient} = params;
+      E2eIdentityService.instance = new E2eIdentityService(coreCryptClient, apiClient);
+      if (!skipInit) {
+        const {discoveryUrl, user, clientId} = params;
+        if (!discoveryUrl || !user || !clientId) {
+          throw new Error('discoveryUrl, user and clientId are required to initialize E2eIdentityService');
+        }
+        await E2eIdentityService.instance.init({clientId, discoveryUrl, user});
+      }
+    }
+    return E2eIdentityService.instance;
+  }
+
+  public async getNewCertificate(): Promise<boolean> {
+    // Step 0: Check if we have a handle in local storage
+    // If we don't have a handle, we need to start a new OAuth flow
+    this.isInProgress = AcmeStorage.hasHandle();
+
+    if (this.isInProgress) {
+      try {
+        return await this.continueOAuthFlow();
+      } catch (error) {
+        return this.exitWithError('Error while trying to continue OAuth flow with error:', error);
+      }
+    } else {
+      try {
+        return await this.startNewOAuthFlow();
+      } catch (error) {
+        return this.exitWithError('Error while trying to start OAuth flow with error:', error);
+      }
+    }
+
+    // Step 7: Do OIDC client challenge
+    // const oidcData = await doWireOidcChallenge({
+    //   authData,
+    //   connection,
+    //   identity,
+    //   oAuthIdToken,
+    //   nonce: dpopData.nonce,
+    // });
+
+    // Step 5: Do DPOP Challenge
+    // const dpopData = await doWireDpopChallenge({
+    //   authData,
+    //   connection,
+    //   identity,
+    //   userDomain: this.user.domain,
+    //   clientId: this.clientId,
+    //   apiClient: this.apiClient,
+    //   expirySecs: this.expirySecs,
+    //   nonce: authData.nonce,
+    // });
+    //console.log('acme dpopData', JSON.stringify(dpopData));
+
+    //console.log(authData, dpopData);
+  }
 
   // ############ Internal Functions ############
+
+  private exitWithError(message: string, error?: unknown) {
+    this.logger.error(message, error);
+    return false;
+  }
+
+  private async init(params: Required<Pick<InitParams, 'user' | 'clientId' | 'discoveryUrl'>>): Promise<void> {
+    const {user, clientId, discoveryUrl} = params;
+    if (!user || !clientId) {
+      this.logger.error('user and clientId are required to initialize E2eIdentityService');
+      throw new Error();
+    }
+    this.acmeService = new AcmeService(discoveryUrl);
+    this.user = user;
+    this.clientId = clientId;
+    this.e2eClientId = getE2eClientId(this.user, this.clientId);
+    this.identity = await this.coreCryptoClient.e2eiNewEnrollment(
+      this.e2eClientId,
+      this.user.displayName,
+      this.user.handle,
+      this.expiryDays,
+      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+    );
+    this.isInitialized = true;
+  }
 
   private async getDirectory(identity: WireE2eIdentity, connection: AcmeService): Promise<AcmeDirectory | undefined> {
     try {
@@ -69,40 +170,31 @@ export class E2eIdentityService {
     }
   }
 
-  // ############ Public Functions ############
+  private async startNewOAuthFlow() {
+    if (this.isInProgress) {
+      return this.exitWithError('Error while trying to start OAuth flow. There is already a flow in progress');
+    }
+    if (!this.isInitialized || !this.identity || !this.acmeService) {
+      return this.exitWithError('Error while trying to start OAuth flow. E2eIdentityService is not fully initialized');
+    }
 
-  public async getNewCertificate(discoveryUrl: string): Promise<void> {
-    // Create a new identity
-    const e2eClientId = getE2eClientId(this.user, this.clientId);
-    const connection = new AcmeService(discoveryUrl);
-    const identity = await this.coreCryptoClient.e2eiNewEnrollment(
-      e2eClientId,
-      this.user.displayName,
-      this.user.handle,
-      this.expiryDays,
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    );
-    console.log(
-      'acme Identity created with: ',
-      JSON.stringify({e2eClientId, expiryDays: this.expiryDays, user: this.user}),
-    );
     // Get the directory
-    const directory = await this.getDirectory(identity, connection);
+    const directory = await this.getDirectory(this.identity, this.acmeService);
     if (!directory) {
-      throw new Error('No directory received');
+      return this.exitWithError('Error while trying to start OAuth flow. No directory received');
     }
 
     // Step 1: Get a new nonce from ACME server
-    const nonce = await this.getInitialNonce(directory, connection);
+    const nonce = await this.getInitialNonce(directory, this.acmeService);
     if (!nonce) {
-      throw new Error('No nonce received');
+      return this.exitWithError('Error while trying to start OAuth flow. No nonce received');
     }
 
     // Step 2: Create a new account
     const newAccountNonce = await createNewAccount({
-      connection,
+      connection: this.acmeService,
       directory,
-      identity,
+      identity: this.identity,
       nonce,
     });
     console.log('acme newAccountNonce', JSON.stringify(newAccountNonce));
@@ -110,48 +202,56 @@ export class E2eIdentityService {
     // Step 3: Create a new order
     const orderData = await createNewOrder({
       directory,
-      connection,
-      identity,
+      connection: this.acmeService,
+      identity: this.identity,
       nonce: newAccountNonce,
     });
     console.log('acme orderData', JSON.stringify(orderData));
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
-      connection,
-      identity,
+      connection: this.acmeService,
+      identity: this.identity,
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
     console.log('acme authData', JSON.stringify(authData));
 
-    // Step 5: Do DPOP Challenge
-    const dpopData = await doWireDpopChallenge({
-      authData,
-      connection,
-      identity,
-      userDomain: this.user.domain,
-      clientId: this.clientId,
-      apiClient: this.apiClient,
-      expirySecs: this.expirySecs,
-      nonce: authData.nonce,
-    });
-    console.log('acme dpopData', JSON.stringify(dpopData));
-
     // Step 6: Start E2E OAuth flow
+    const {
+      authorization: {wireOidcChallenge},
+    } = authData;
+    if (wireOidcChallenge) {
+      // stash the identity for later use
+      const handle = await this.coreCryptoClient.e2eiEnrollmentStash(this.identity);
+      // stash the handle in local storage
+      AcmeStorage.storeHandle(Encoder.toBase64(handle).asString);
+      AcmeStorage.storeAuthData(authData);
+      // this will cause a redirect to the OIDC provider
+      const oidcService = new OIDCService({
+        audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
+        authorityUrl: 'https://accounts.google.com' || wireOidcChallenge.target,
+        redirectUri: 'https://local.zinfra.io:8081/oidc',
+        clientSecret: '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',
+      });
+      await oidcService.authenticate();
+    }
+    return true;
+  }
 
-    // const oAuthIdToken =
-    //   'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzU5NjE3NTYsImV4cCI6MTY3NjA0ODE1NiwibmJmIjoxNjc1OTYxNzU2LCJpc3MiOiJodHRwOi8vaWRwLyIsInN1YiI6ImltcHA6d2lyZWFwcD1OREV5WkdZd05qYzJNekZrTkRCaU5UbGxZbVZtTWpReVpUSXpOVGM0TldRLzY1YzNhYzFhMTYzMWMxMzZAZXhhbXBsZS5jb20iLCJhdWQiOiJodHRwOi8vaWRwLyIsIm5hbWUiOiJTbWl0aCwgQWxpY2UgTSAoUUEpIiwiaGFuZGxlIjoiaW1wcDp3aXJlYXBwPWFsaWNlLnNtaXRoLnFhQGV4YW1wbGUuY29tIiwia2V5YXV0aCI6IlNZNzR0Sm1BSUloZHpSdEp2cHgzODlmNkVLSGJYdXhRLi15V29ZVDlIQlYwb0ZMVElSRGw3cjhPclZGNFJCVjhOVlFObEw3cUxjbWcifQ.0iiq3p5Bmmp8ekoFqv4jQu_GrnPbEfxJ36SCuw-UvV6hCi6GlxOwU7gwwtguajhsd1sednGWZpN8QssKI5_CDQ';
-
-    // Step 7: Do OIDC client challenge
-    // const oidcData = await doWireOidcChallenge({
-    //   authData,
-    //   connection,
-    //   identity,
-    //   oAuthIdToken,
-    //   nonce: dpopData.nonce,
-    // });
-
-    console.log(authData, dpopData);
+  private async continueOAuthFlow() {
+    // If we have a handle, the user has already started the process to authenticate with the OIDC provider. We can continue the flow.
+    try {
+      const handle = AcmeStorage.getAndVerifyHandle();
+      //const {authData, nonce} = AcmeStorage.getAndVerifyAuthData();
+      this.identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
+      this.logger.log('retrieved identity from stash');
+    } catch (error) {
+      this.logger.error('Error while trying to continue OAuth flow');
+      throw error;
+    }
+    return true;
   }
 }
+
+export {E2eIdentityService};
