@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [24.15.7-draft-20-cc.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.15.6...@wireapp/api-client@24.15.7-draft-20-cc.0) (2023-06-21)
+
+### Features
+
+* **api-client:** add supported_protocols field to user response ([2d7277a](https://github.com/wireapp/wire-web-packages/commit/2d7277a26d0ec17882425440e8e29fb1f0330c25))
+* update corecrypto to draft-20 version ([989270a](https://github.com/wireapp/wire-web-packages/commit/989270a118ac016f07fdd990419493b66271cf25))
+
 ## [24.15.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.15.5...@wireapp/api-client@24.15.6) (2023-06-20)
 
 **Note:** Version bump only for package @wireapp/api-client
