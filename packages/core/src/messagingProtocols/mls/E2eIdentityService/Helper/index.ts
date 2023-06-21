@@ -21,8 +21,9 @@ import {Encoder} from 'bazinga64';
 
 import {User} from '../E2eIdentityService.types';
 
-export const jsonToByteArray = (json: string): Uint8Array => {
-  return new TextEncoder().encode(json);
+export const jsonToByteArray = (data: any): Uint8Array => {
+  const encoder = new TextEncoder();
+  return encoder.encode(JSON.stringify(data, null, 0));
 };
 
 export type E2eClientId = `${string}:${string}@${string}`;

@@ -210,7 +210,7 @@ export class Account extends TypedEventEmitter<Events> {
   }
 
   private getCoreCryptoClient(): CoreCrypto | undefined {
-    if (this.cryptoClientDef && this.apiClient.context) {
+    if (this.cryptoClientDef) {
       const [, cryptoClient] = this.cryptoClientDef;
       const isCoreCrypto = (client: CoreCrypto | Cryptobox): client is CoreCrypto => client instanceof CoreCrypto;
       const client = cryptoClient.getNativeClient();
@@ -224,7 +224,8 @@ export class Account extends TypedEventEmitter<Events> {
 
   public async startE2EIEnrollment(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
     const client = this.getCoreCryptoClient();
-    const {domain = ''} = this.apiClient.context;
+    const context = this.apiClient.context;
+    const domain = context?.domain ?? '';
 
     if (!client) {
       this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());

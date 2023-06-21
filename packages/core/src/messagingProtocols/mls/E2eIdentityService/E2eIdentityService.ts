@@ -17,7 +17,13 @@
  *
  */
 
-import {AcmeDirectory, Ciphersuite, CoreCrypto, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {
+  AcmeChallenge,
+  AcmeDirectory,
+  Ciphersuite,
+  CoreCrypto,
+  WireE2eIdentity,
+} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -170,6 +176,16 @@ class E2eIdentityService {
     }
   }
 
+  private getOidcService(challenge: AcmeChallenge): OIDCService {
+    const oidcService = new OIDCService({
+      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
+      authorityUrl: 'https://accounts.google.com' || challenge.target,
+      redirectUri: 'https://local.zinfra.io:8081/oidc',
+      clientSecret: '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',
+    });
+    return oidcService;
+  }
+
   private async startNewOAuthFlow() {
     if (this.isInProgress) {
       return this.exitWithError('Error while trying to start OAuth flow. There is already a flow in progress');
@@ -215,8 +231,9 @@ class E2eIdentityService {
       authzUrl: orderData.authzUrl,
       nonce: orderData.nonce,
     });
-    console.log('acme authData', JSON.stringify(authData));
+    // Manual copy of the data because of a problem with copying the wasm object
 
+    console.log('acme authData', authData);
     // Step 6: Start E2E OAuth flow
     const {
       authorization: {wireOidcChallenge},
@@ -228,12 +245,7 @@ class E2eIdentityService {
       AcmeStorage.storeHandle(Encoder.toBase64(handle).asString);
       AcmeStorage.storeAuthData(authData);
       // this will cause a redirect to the OIDC provider
-      const oidcService = new OIDCService({
-        audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
-        authorityUrl: 'https://accounts.google.com' || wireOidcChallenge.target,
-        redirectUri: 'https://local.zinfra.io:8081/oidc',
-        clientSecret: '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',
-      });
+      const oidcService = this.getOidcService(wireOidcChallenge);
       await oidcService.authenticate();
     }
     return true;
@@ -243,9 +255,18 @@ class E2eIdentityService {
     // If we have a handle, the user has already started the process to authenticate with the OIDC provider. We can continue the flow.
     try {
       const handle = AcmeStorage.getAndVerifyHandle();
-      //const {authData, nonce} = AcmeStorage.getAndVerifyAuthData();
+      const {
+        authorization: {wireOidcChallenge},
+        //nonce,
+      } = AcmeStorage.getAndVerifyAuthData();
+      if (!wireOidcChallenge) {
+        return this.exitWithError('Error while trying to continue OAuth flow. No wireOidcChallenge received');
+      }
       this.identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
       this.logger.log('retrieved identity from stash');
+      const service = this.getOidcService(wireOidcChallenge);
+      const user = service.handleAuthentication();
+      this.logger.log('received user data', user);
     } catch (error) {
       this.logger.error('Error while trying to continue OAuth flow');
       throw error;

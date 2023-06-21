@@ -26,9 +26,9 @@ export const InitialDataSchema = z.object({
 });
 export type InitialData = z.infer<typeof InitialDataSchema>;
 
-const Uint8ArraySchema = z.unknown().refine(value => value instanceof Uint8Array, {
-  message: 'Expected Uint8Array',
-});
+const Uint8ArraySchema = z.custom<Uint8Array>(value =>
+  value instanceof Uint8Array ? {success: true} : {success: false, message: 'Expected Uint8Array'},
+);
 const AcmeChallengeSchema = z.object({
   delegate: Uint8ArraySchema,
   url: z.string(),

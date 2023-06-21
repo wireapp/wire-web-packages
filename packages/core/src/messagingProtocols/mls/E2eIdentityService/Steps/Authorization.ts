@@ -42,13 +42,24 @@ export const getAuthorization = async ({
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
     // eslint-disable-next-line no-console
-    console.log(
-      'acme Authorization response data: ',
-      JSON.stringify(response.data),
-      jsonToByteArray(JSON.stringify(response.data)),
-    );
+    console.log('acme Authorization response data: ', JSON.stringify(response.data), jsonToByteArray(response.data));
+    const wasmData = identity.newAuthzResponse(jsonToByteArray(response.data));
+    // manual copy of the wasm data because of a problem while cloning it
+    const authorization: NewAcmeAuthz = {
+      identifier: wasmData.identifier,
+      wireDpopChallenge: {
+        delegate: wasmData.wireDpopChallenge!.delegate,
+        target: wasmData.wireDpopChallenge!.target,
+        url: wasmData.wireDpopChallenge!.url,
+      },
+      wireOidcChallenge: {
+        delegate: wasmData.wireOidcChallenge!.delegate,
+        target: wasmData.wireOidcChallenge!.target,
+        url: wasmData.wireOidcChallenge!.url,
+      },
+    };
     return {
-      authorization: identity.newAuthzResponse(jsonToByteArray(JSON.stringify(response.data))),
+      authorization,
       nonce: response.nonce,
     };
   }
