@@ -71,7 +71,7 @@
     "new-version": "lerna version --sync-workspace-lock",
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
-    "new-version-beta": "lerna version prerelease --sync-workspace-lock --preid ${0}",
+    "new-version-beta": "lerna version prerelease --sync-workspace-lock --preid ${0} --no-changelog",
     "new-publish-beta": "lerna publish from-package --dist-tag beta --preid ${0}",
     "beta-release": "yarn new-version-beta ${0} && yarn new-publish-beta ${0}",
     "test": "lerna run build --include-dependencies --since && lerna run test --since --parallel",
