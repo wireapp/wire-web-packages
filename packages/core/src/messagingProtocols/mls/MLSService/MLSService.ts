@@ -122,7 +122,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     groupId: Uint8Array,
     commitBundle: CommitBundle,
     {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
-  ): Promise<PostMlsMessageResponse | null> {
+  ): Promise<PostMlsMessageResponse> {
     const {commit, groupInfo, welcome} = commitBundle;
     const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
