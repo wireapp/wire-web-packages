@@ -2857,46 +2857,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/version@npm:2.4.1":
-  version: 2.4.1
-  resolution: "@lerna-lite/version@npm:2.4.1"
-  dependencies:
-    "@lerna-lite/cli": 2.4.1
-    "@lerna-lite/core": 2.4.1
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^19.0.11
-    chalk: ^5.2.0
-    conventional-changelog-angular: ^5.0.13
-    conventional-changelog-core: ^4.2.4
-    conventional-changelog-writer: ^5.0.1
-    conventional-commits-parser: ^3.2.4
-    conventional-recommended-bump: ^6.1.0
-    dedent: ^0.7.0
-    fs-extra: ^11.1.1
-    get-stream: ^7.0.0
-    git-url-parse: ^13.1.0
-    graceful-fs: ^4.2.11
-    is-stream: ^3.0.0
-    load-json-file: ^7.0.1
-    make-dir: ^3.1.0
-    minimatch: ^9.0.1
-    new-github-release-url: ^2.0.0
-    node-fetch: ^3.3.1
-    npm-package-arg: ^10.1.0
-    npmlog: ^7.0.1
-    p-map: ^6.0.0
-    p-pipe: ^4.0.0
-    p-reduce: ^3.0.0
-    pify: ^6.1.0
-    semver: ^7.5.1
-    slash: ^5.1.0
-    temp-dir: ^3.0.0
-    uuid: ^9.0.0
-    write-json-file: ^5.0.0
-  checksum: 0807c656d20666512af88f337479f4b3299211d85a5cb09329963b737392b41db14a7bf487420b6050528156ab8d908bbce606eb58858a530da22e60f4849298
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/version@npm:2.4.2":
   version: 2.4.2
   resolution: "@lerna-lite/version@npm:2.4.2"
@@ -3293,18 +3253,6 @@ __metadata:
     node-fetch: ^2.6.7
     universal-user-agent: ^6.0.0
   checksum: fef4097be8375d20bb0b3276d8a3adf866ec628f2b0664d334f3c29b92157da847899497abdc7a5be540053819b55564990543175ad48f04e9e6f25f0395d4d3
-  languageName: node
-  linkType: hard
-
-"@octokit/rest@npm:^19.0.11":
-  version: 19.0.11
-  resolution: "@octokit/rest@npm:19.0.11"
-  dependencies:
-    "@octokit/core": ^4.2.1
-    "@octokit/plugin-paginate-rest": ^6.1.2
-    "@octokit/plugin-request-log": ^1.0.4
-    "@octokit/plugin-rest-endpoint-methods": ^7.1.2
-  checksum: 147518ad51d214ead88adc717b5fdc4f33317949d58c124f4069bdf07d2e6b49fa66861036b9e233aed71fcb88ff367a6da0357653484e466175ab4fb7183b3b
   languageName: node
   linkType: hard
 
@@ -16231,7 +16179,7 @@ __metadata:
     "@lerna-lite/cli": 2.4.2
     "@lerna-lite/publish": 2.4.3
     "@lerna-lite/run": 2.4.1
-    "@lerna-lite/version": 2.4.1
+    "@lerna-lite/version": 2.4.2
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/babel__core": ^7
