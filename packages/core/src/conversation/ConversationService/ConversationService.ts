@@ -262,7 +262,7 @@ export class ConversationService {
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
     return {
-      events: response?.events ?? [],
+      events: response.events,
       conversation,
     };
   }
@@ -280,7 +280,9 @@ export class ConversationService {
     try {
       response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
       sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
-    } catch {}
+    } catch (error) {
+      throw error;
+    }
 
     const failedToSend =
       response?.failed || (response?.failed_to_send ?? []).length > 0
@@ -318,7 +320,7 @@ export class ConversationService {
     //We store the info when user was added (and key material was created), so we will know when to renew it
     this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
-      events: response?.events || [],
+      events: response.events,
       conversation,
     };
   }
@@ -342,7 +344,7 @@ export class ConversationService {
     const conversation = await this.getConversation(conversationId);
 
     return {
-      events: messageResponse?.events || [],
+      events: messageResponse.events,
       conversation,
     };
   }
