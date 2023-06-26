@@ -19,9 +19,9 @@
 
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
+import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
-import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -138,7 +138,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
       return response;
     } catch (error) {
-      const shouldRetry = axios.isAxiosError(error) && error.code === '409';
+      if (isExternalCommit) {
+        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
+      } else {
+        await this.coreCryptoClient.clearPendingCommit(groupId);
+      }
+
+      const shouldRetry = error instanceof BackendError && error.code === StatusCode.CONFLICT;
       if (shouldRetry && regenerateCommitBundle) {
         // in case of a 409, we want to retry to generate the commit and resend it
         // could be that we are trying to upload a commit to a conversation that has a different epoch on backend
@@ -146,11 +152,6 @@ export class MLSService extends TypedEventEmitter<Events> {
         this.logger.warn(`Uploading commitBundle failed. Will retry generating a new bundle`);
         const updatedCommitBundle = await regenerateCommitBundle();
         return this.uploadCommitBundle(groupId, updatedCommitBundle, {isExternalCommit});
-      }
-      if (isExternalCommit) {
-        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
-      } else {
-        await this.coreCryptoClient.clearPendingCommit(groupId);
       }
       throw error;
     }
@@ -373,7 +374,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return sendMessage<PostMlsMessageResponse>(async () => {
       await this.commitProposals(groupId);
       const commitBundle = await generateCommit();
-      return this.uploadCommitBundle(groupId, commitBundle);
+      return this.uploadCommitBundle(groupId, commitBundle, {regenerateCommitBundle: generateCommit});
     });
   }
 
