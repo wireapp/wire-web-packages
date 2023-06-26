@@ -38,14 +38,12 @@ import {
   DecryptedMessage,
   ExternalAddProposalArgs,
   ExternalProposalType,
-  ExternalRemoveProposalArgs,
   Invitee,
   ProposalArgs,
   ProposalType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 
-import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
@@ -86,6 +84,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
+  private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -104,19 +103,15 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async initClient(userId: QualifiedId, clientId: ClientId) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    ]);
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.defaultCiphersuite]);
   }
 
   public async createClient(userId: QualifiedId, clientId: ClientId) {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
-    const publicKey = await this.coreCryptoClient.clientPublicKey(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    );
+    const publicKey = await this.coreCryptoClient.clientPublicKey(this.defaultCiphersuite);
     const keyPackages = await this.coreCryptoClient.clientKeypackages(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      this.defaultCiphersuite,
       this.config.nbKeyPackages,
     );
     await this.uploadMLSPublicKeys(publicKey, clientId);
@@ -128,9 +123,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     commitBundle: CommitBundle,
     {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
   ): Promise<PostMlsMessageResponse> {
-    const bundlePayload = toProtobufCommitBundle(commitBundle);
+    const {commit, groupInfo, welcome} = commitBundle;
+    const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload.slice());
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
       if (isExternalCommit) {
         await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
       } else {
@@ -347,10 +343,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
-  public async newExternalProposal(
-    externalProposalType: ExternalProposalType,
-    args: ExternalAddProposalArgs | ExternalRemoveProposalArgs,
-  ) {
+  public async newExternalProposal(externalProposalType: ExternalProposalType, args: ExternalAddProposalArgs) {
     return this.coreCryptoClient.newExternalProposal(externalProposalType, args);
   }
 
@@ -405,7 +398,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const configuration: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      ciphersuite: this.defaultCiphersuite,
     };
 
     await this.coreCryptoClient.createConversation(groupIdBytes, CredentialType.Basic, configuration);
@@ -462,14 +455,11 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount(Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519);
+    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite);
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
-    return this.coreCryptoClient.clientKeypackages(
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-      amountRequested,
-    );
+    return this.coreCryptoClient.clientKeypackages(this.defaultCiphersuite, amountRequested);
   }
 
   /**
