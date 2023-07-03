@@ -202,7 +202,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     /**
      * @note We are filtering failed requests for key packages
-     * this is required because on federation enviroments it possible
+     * this is required because on federation environments it is possible
      * that due to a backend being offline we would not be able to fetch
      * a specific user's key packages.
      */
