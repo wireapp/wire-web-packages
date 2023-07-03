@@ -325,6 +325,8 @@ export class ConversationService {
     const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
 
+    conversation.failed_to_add = failedToFetchKeyPackages;
+
     //We store the info when user was added (and key material was created), so we will know when to renew it
     this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
