@@ -17,11 +17,12 @@
  *
  */
 
+import type {ClaimedKeyPackages} from '@wireapp/api-client/lib/client';
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
+import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
-import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -138,7 +139,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
       return response;
     } catch (error) {
-      const shouldRetry = axios.isAxiosError(error) && error.code === '409';
+      if (isExternalCommit) {
+        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
+      } else {
+        await this.coreCryptoClient.clearPendingCommit(groupId);
+      }
+
+      const shouldRetry = error instanceof BackendError && error.code === StatusCode.CONFLICT;
       if (shouldRetry && regenerateCommitBundle) {
         // in case of a 409, we want to retry to generate the commit and resend it
         // could be that we are trying to upload a commit to a conversation that has a different epoch on backend
@@ -146,11 +153,6 @@ export class MLSService extends TypedEventEmitter<Events> {
         this.logger.warn(`Uploading commitBundle failed. Will retry generating a new bundle`);
         const updatedCommitBundle = await regenerateCommitBundle();
         return this.uploadCommitBundle(groupId, updatedCommitBundle, {isExternalCommit});
-      }
-      if (isExternalCommit) {
-        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
-      } else {
-        await this.coreCryptoClient.clearPendingCommit(groupId);
       }
       throw error;
     }
@@ -187,11 +189,26 @@ export class MLSService extends TypedEventEmitter<Events> {
      * we want to add to the new MLS conversations,
      * includes self user too.
      */
-    const keyPackages = await Promise.all(
+    const failedToFetchKeyPackages: QualifiedId[] = [];
+    const keyPackagesSettledResult = await Promise.allSettled(
       qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId),
+        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId).catch(error => {
+          failedToFetchKeyPackages.push({id, domain});
+          // Throw the error so we don't get {status: 'fulfilled', value: undefined}
+          throw error;
+        }),
       ),
     );
+
+    /**
+     * @note We are filtering failed requests for key packages
+     * this is required because on federation environments it is possible
+     * that due to a backend being offline we would not be able to fetch
+     * a specific user's key packages.
+     */
+    const keyPackages = keyPackagesSettledResult
+      .filter((result): result is PromiseFulfilledResult<ClaimedKeyPackages> => result.status === 'fulfilled')
+      .map(result => result.value);
 
     const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
       // skip users that have not uploaded their MLS key packages
@@ -207,7 +224,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       return previousValue;
     }, []);
 
-    return coreCryptoKeyPackagesPayload;
+    return {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages};
   }
 
   public getEpoch(groupId: string | Uint8Array) {
@@ -373,7 +390,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return sendMessage<PostMlsMessageResponse>(async () => {
       await this.commitProposals(groupId);
       const commitBundle = await generateCommit();
-      return this.uploadCommitBundle(groupId, commitBundle);
+      return this.uploadCommitBundle(groupId, commitBundle, {regenerateCommitBundle: generateCommit});
     });
   }
 
@@ -403,7 +420,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     await this.coreCryptoClient.createConversation(groupIdBytes, CredentialType.Basic, configuration);
 
-    const keyPackages = await this.getKeyPackagesPayload(
+    const {coreCryptoKeyPackagesPayload: keyPackages, failedToFetchKeyPackages} = await this.getKeyPackagesPayload(
       users.map(user => {
         if (user.id === creator?.user.id) {
           /**
@@ -425,6 +442,11 @@ export class MLSService extends TypedEventEmitter<Events> {
     // We schedule a periodic key material renewal
     this.scheduleKeyMaterialRenewal(groupId);
 
+    /**
+     * @note If we can't fetch a user's key packages then we can not add them to mls conversation
+     * so we're adding them to the list of failed users.
+     */
+    response.failed = response.failed ? [...response.failed, ...failedToFetchKeyPackages] : failedToFetchKeyPackages;
     return response;
   }
 

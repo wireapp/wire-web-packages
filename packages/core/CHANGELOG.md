@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.6.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.2...@wireapp/core@40.6.3) (2023-07-03)
+
+### Bug Fixes
+
+* **api-client,core:** Handle failure to fetch keypackages (WPB-1913) ([#5286](https://github.com/wireapp/wire-web-packages/issues/5286)) ([56018fa](https://github.com/wireapp/wire-web-packages/commit/56018fa8aac514a30132e8fd391769a0b1c49d5d))
+
+## [40.6.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.1...@wireapp/core@40.6.2) (2023-06-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.6.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.0...@wireapp/core@40.6.1) (2023-06-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.5...@wireapp/core@40.6.0) (2023-06-26)
+
+### Features
+
+* draft-20 core-crypto ([#5258](https://github.com/wireapp/wire-web-packages/issues/5258)) ([138222e](https://github.com/wireapp/wire-web-packages/commit/138222ec6b3d233b44ac2764fec89eb824dde5a8)), closes [#5272](https://github.com/wireapp/wire-web-packages/issues/5272)
+
 ## [40.5.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.4...@wireapp/core@40.5.5) (2023-06-22)
 
 **Note:** Version bump only for package @wireapp/core

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [24.18.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.18.0...@wireapp/api-client@24.18.1) (2023-07-03)
+
+### Bug Fixes
+
+* **api-client,core:** Handle failure to fetch keypackages (WPB-1913) ([#5286](https://github.com/wireapp/wire-web-packages/issues/5286)) ([56018fa](https://github.com/wireapp/wire-web-packages/commit/56018fa8aac514a30132e8fd391769a0b1c49d5d))
+
+# [24.18.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.17.0...@wireapp/api-client@24.18.0) (2023-06-30)
+
+### Features
+
+* **api-client:** add supportedProtocols to mls feature config ([#5274](https://github.com/wireapp/wire-web-packages/issues/5274)) ([c2380b8](https://github.com/wireapp/wire-web-packages/commit/c2380b8c7fba02173116ec92e4de18d68d33a306))
+
+# [24.17.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.16.0...@wireapp/api-client@24.17.0) (2023-06-27)
+
+### Features
+
+* supported protocols ([#5256](https://github.com/wireapp/wire-web-packages/issues/5256)) ([e9b3389](https://github.com/wireapp/wire-web-packages/commit/e9b338990cbdcd793d689015022119d0771c97fb))
+
+# [24.16.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.15.7...@wireapp/api-client@24.16.0) (2023-06-26)
+
+### Features
+
+* draft-20 core-crypto ([#5258](https://github.com/wireapp/wire-web-packages/issues/5258)) ([138222e](https://github.com/wireapp/wire-web-packages/commit/138222ec6b3d233b44ac2764fec89eb824dde5a8)), closes [#5272](https://github.com/wireapp/wire-web-packages/issues/5272)
+
 ## [24.15.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.15.6...@wireapp/api-client@24.15.7) (2023-06-22)
 
 ### Reverts
