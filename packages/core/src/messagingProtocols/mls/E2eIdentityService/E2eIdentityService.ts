@@ -34,7 +34,10 @@ import {InitParams, User} from './E2eIdentityService.types';
 import {getE2eClientId} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
-import {createNewOrder} from './Steps/Order';
+import {getCertificate} from './Steps/Certificate';
+import {doWireDpopChallenge} from './Steps/DpopChallenge';
+import {doWireOidcChallenge} from './Steps/OidcChallenge';
+import {createNewOrder, finalizeOrder} from './Steps/Order';
 import {AcmeStorage} from './Storage/AcmeStorage';
 
 import {OIDCService} from '../../../oauth';
@@ -43,8 +46,9 @@ class E2eIdentityService {
   private static instance: E2eIdentityService;
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
   private readonly expiryDays = 2;
+  private readonly expirySecs = 30;
   private readonly coreCryptoClient: CoreCrypto;
-  //private readonly apiClient: APIClient;
+  private readonly apiClient: APIClient;
   private identity?: WireE2eIdentity;
   private acmeService?: AcmeService;
   private user?: User;
@@ -55,8 +59,7 @@ class E2eIdentityService {
 
   private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient) {
     this.coreCryptoClient = coreCryptClient;
-    console.log(apiClient);
-    //this.apiClient = apiClient;
+    this.apiClient = apiClient;
   }
 
   // ############ Public Functions ############
@@ -73,6 +76,7 @@ class E2eIdentityService {
         if (!discoveryUrl || !user || !clientId) {
           throw new Error('discoveryUrl, user and clientId are required to initialize E2eIdentityService');
         }
+        AcmeStorage.storeInitialData({discoveryUrl, user, clientId});
         await E2eIdentityService.instance.init({clientId, discoveryUrl, user});
       }
     }
@@ -97,30 +101,6 @@ class E2eIdentityService {
         return this.exitWithError('Error while trying to start OAuth flow with error:', error);
       }
     }
-
-    // Step 7: Do OIDC client challenge
-    // const oidcData = await doWireOidcChallenge({
-    //   authData,
-    //   connection,
-    //   identity,
-    //   oAuthIdToken,
-    //   nonce: dpopData.nonce,
-    // });
-
-    // Step 5: Do DPOP Challenge
-    // const dpopData = await doWireDpopChallenge({
-    //   authData,
-    //   connection,
-    //   identity,
-    //   userDomain: this.user.domain,
-    //   clientId: this.clientId,
-    //   apiClient: this.apiClient,
-    //   expirySecs: this.expirySecs,
-    //   nonce: authData.nonce,
-    // });
-    //console.log('acme dpopData', JSON.stringify(dpopData));
-
-    //console.log(authData, dpopData);
   }
 
   // ############ Internal Functions ############
@@ -180,7 +160,7 @@ class E2eIdentityService {
     const oidcService = new OIDCService({
       audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
       authorityUrl: 'https://accounts.google.com' || challenge.target,
-      redirectUri: 'https://local.zinfra.io:8081/oidc',
+      redirectUri: 'https://local.anta.wire.link:8081/',
       clientSecret: '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',
     });
     return oidcService;
@@ -213,7 +193,6 @@ class E2eIdentityService {
       identity: this.identity,
       nonce,
     });
-    console.log('acme newAccountNonce', JSON.stringify(newAccountNonce));
 
     // Step 3: Create a new order
     const orderData = await createNewOrder({
@@ -222,7 +201,6 @@ class E2eIdentityService {
       identity: this.identity,
       nonce: newAccountNonce,
     });
-    console.log('acme orderData', JSON.stringify(orderData));
 
     // Step 4: Get authorization challenges
     const authData = await getAuthorization({
@@ -233,7 +211,6 @@ class E2eIdentityService {
     });
     // Manual copy of the data because of a problem with copying the wasm object
 
-    console.log('acme authData', authData);
     // Step 6: Start E2E OAuth flow
     const {
       authorization: {wireOidcChallenge},
@@ -244,6 +221,7 @@ class E2eIdentityService {
       // stash the handle in local storage
       AcmeStorage.storeHandle(Encoder.toBase64(handle).asString);
       AcmeStorage.storeAuthData(authData);
+      AcmeStorage.storeOrderData({orderUrl: orderData.orderUrl});
       // this will cause a redirect to the OIDC provider
       const oidcService = this.getOidcService(wireOidcChallenge);
       await oidcService.authenticate();
@@ -254,21 +232,86 @@ class E2eIdentityService {
   private async continueOAuthFlow() {
     // If we have a handle, the user has already started the process to authenticate with the OIDC provider. We can continue the flow.
     try {
+      if (!this.acmeService) {
+        return this.exitWithError('Error while trying to continue OAuth flow. AcmeService is not initialized');
+      }
+
       const handle = AcmeStorage.getAndVerifyHandle();
-      const {
-        authorization: {wireOidcChallenge},
-        //nonce,
-      } = AcmeStorage.getAndVerifyAuthData();
-      if (!wireOidcChallenge) {
+      const authData = AcmeStorage.getAndVerifyAuthData();
+
+      if (!authData.authorization.wireOidcChallenge) {
         return this.exitWithError('Error while trying to continue OAuth flow. No wireOidcChallenge received');
       }
+
       this.identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
       this.logger.log('retrieved identity from stash');
-      const service = this.getOidcService(wireOidcChallenge);
-      const user = service.handleAuthentication();
-      this.logger.log('received user data', user);
+      const service = this.getOidcService(authData.authorization.wireOidcChallenge);
+      const oauthUser = await service.handleAuthentication();
+      this.logger.log('received user data', oauthUser);
+
+      if (!oauthUser || !oauthUser.id_token) {
+        return this.exitWithError('Error while trying to continue OAuth flow. No user or id_token received');
+      }
+
+      // Step 7: Do OIDC client challenge
+      const oidcData = await doWireOidcChallenge({
+        oAuthIdToken: oauthUser.id_token,
+        authData,
+        connection: this.acmeService,
+        identity: this.identity,
+        nonce: authData.nonce,
+      });
+      this.logger.log('received oidcData', oidcData);
+
+      if (!oidcData.data.validated) {
+        return this.exitWithError('Error while trying to continue OAuth flow. OIDC challenge not validated');
+      }
+
+      const {user: wireUser, clientId} = AcmeStorage.getInitialData();
+      //Step 8: Do DPOP Challenge
+      const dpopData = await doWireDpopChallenge({
+        authData,
+        clientId,
+        connection: this.acmeService,
+        identity: this.identity,
+        userDomain: wireUser.domain,
+        apiClient: this.apiClient,
+        expirySecs: this.expirySecs,
+        nonce: oidcData.nonce,
+      });
+      this.logger.log('acme dpopData', JSON.stringify(dpopData));
+      if (dpopData.data.status !== 'valid') {
+        return this.exitWithError('Error while trying to continue OAuth flow. DPOP challenge not validated');
+      }
+
+      //Step 9: Finalize Order
+      const orderData = AcmeStorage.getAndVerifyOrderData();
+      const finalizeOrderData = await finalizeOrder({
+        connection: this.acmeService,
+        identity: this.identity,
+        nonce: dpopData.nonce,
+        orderUrl: orderData.orderUrl,
+      });
+      if (!finalizeOrderData.certificateUrl) {
+        return this.exitWithError('Error while trying to continue OAuth flow. No certificateUrl received');
+      }
+
+      // Step 9: Get certificate
+      const {certificate} = await getCertificate({
+        certificateUrl: finalizeOrderData.certificateUrl,
+        nonce: finalizeOrderData.nonce,
+        connection: this.acmeService,
+        identity: this.identity,
+      });
+      if (!certificate) {
+        return this.exitWithError('Error while trying to continue OAuth flow. No certificate received');
+      }
+      AcmeStorage.storeCertificate(certificate);
+      // Step 10: Initialize MLS with the certificate
+      // TODO: This is not working yet (since we initialize mls beforehand) and will be replaced by a new core-crypto function later on
+      //await this.coreCryptoClient.e2eiMlsInit(this.identity, certificate);
     } catch (error) {
-      this.logger.error('Error while trying to continue OAuth flow');
+      this.logger.error('Error while trying to continue OAuth flow', error);
       throw error;
     }
     return true;

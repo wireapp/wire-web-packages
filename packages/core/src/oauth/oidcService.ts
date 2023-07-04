@@ -52,7 +52,6 @@ export class OIDCService {
     const url = window.location.href.replace('/#', '');
 
     return this.userManager.signinRedirectCallback(url).then(user => {
-      console.log(user);
       return user;
     });
   }

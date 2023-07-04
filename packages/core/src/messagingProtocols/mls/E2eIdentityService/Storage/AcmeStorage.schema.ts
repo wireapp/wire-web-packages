@@ -21,8 +21,13 @@ import {z} from 'zod';
 
 export const InitialDataSchema = z.object({
   discoveryUrl: z.string(),
-  name: z.string(),
-  handle: z.string(),
+  clientId: z.string(),
+  user: z.object({
+    id: z.string(),
+    displayName: z.string(),
+    handle: z.string(),
+    domain: z.string(),
+  }),
 });
 export type InitialData = z.infer<typeof InitialDataSchema>;
 
@@ -43,3 +48,8 @@ export const AuthDataSchema = z.object({
   nonce: z.string(),
 });
 export type AuthData = z.infer<typeof AuthDataSchema>;
+
+export const OrderDataSchema = z.object({
+  orderUrl: z.string().url(),
+});
+export type OrderData = z.infer<typeof OrderDataSchema>;

@@ -264,7 +264,7 @@ export class Account extends TypedEventEmitter<Events> {
       coreCryptClient: client,
       apiClient: this.apiClient,
     });
-    return await instance.getNewCertificate();
+    return instance.getNewCertificate();
   }
 
   get clientId(): string {

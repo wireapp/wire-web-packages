@@ -41,7 +41,7 @@ export const doWireOidcChallenge = async ({
 }: DoWireOidcChallengeParams) => {
   const {wireOidcChallenge} = authData.authorization;
   if (!wireOidcChallenge) {
-    throw new Error('No wireDpopChallenge defined');
+    throw new Error('No wireOIDCChallenge defined');
   }
 
   const reqBody = identity.newOidcChallengeRequest(oAuthIdToken, nonce);
