@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
  *
  */
 
-import {UserClients} from './';
-
-export interface ClientMismatch {
-  deleted: UserClients;
-  missing: UserClients;
-  redundant: UserClients;
-  time: string;
+export interface OAuthBody {
+  client_id: string;
+  code_challenge: string;
+  code_challenge_method: string;
+  redirect_uri: string;
+  response_type: string;
+  scope: string;
+  state: string;
 }

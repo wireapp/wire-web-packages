@@ -1,0 +1,77 @@
+name: Test, Build and release beta version of packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      preid:
+        description: 'Prerelease identifier.'
+        default: 'beta'
+        required: true
+
+jobs:
+  test_build_release_beta:
+    runs-on: ubuntu-latest
+    env:
+      COMMITTER: ${{github.event.head_commit.committer.name}}
+      COMMIT_URL: ${{github.event.head_commit.url}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
+        with:
+          fetch-depth: 0
+
+      - name: Set environment variables
+        run: |
+          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
+
+      - name: Set TITLE
+        env:
+          PR_TITLE: ${{github.event.pull_request.title || env.COMMIT_MESSAGE}}
+        run: echo "TITLE=$PR_TITLE" >> $GITHUB_ENV
+
+      - name: Print environment variables
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
+        run: |
+          echo -e "BRANCH_NAME = ${BRANCH_NAME}"
+          echo -e "TAG = ${TAG}"
+          echo -e "TITLE = ${TITLE}"
+          echo -e "COMMIT_MESSAGE = ${COMMIT_MESSAGE}"
+          echo -e "COMMIT_URL = ${COMMIT_URL}"
+          echo -e "COMMITTER = ${COMMITTER}"
+          echo -e "HOME = ${HOME}"
+          echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{github.token}}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+
+      - name: Authenticate git clone
+        env:
+          GH_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}
+        run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
+
+      - name: Install JS dependencies
+        run: yarn --immutable
+
+      - name: Test
+        run: yarn test
+
+      - name: Release beta versions
+        env:
+          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
+          git config --global user.email webapp+otto@wire.com
+          git config --global user.name "Otto the Bot"
+          yarn beta-release ${{inputs.preid}}

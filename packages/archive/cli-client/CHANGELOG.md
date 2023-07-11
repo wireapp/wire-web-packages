@@ -3,6 +3,244 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.0.115](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.114...@wireapp/cli-client@12.0.115) (2023-04-24)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.114](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.113...@wireapp/cli-client@12.0.114) (2023-04-19)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.113](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.112...@wireapp/cli-client@12.0.113) (2023-04-13)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.112](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.111...@wireapp/cli-client@12.0.112) (2023-04-12)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.111](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.110...@wireapp/cli-client@12.0.111) (2023-04-06)
+
+### Bug Fixes
+
+* make cli-client compatible with latest core ([#5035](https://github.com/wireapp/wire-web-packages/issues/5035)) ([f077526](https://github.com/wireapp/wire-web-packages/commit/f077526696b3dba1657d145b8d5067599ea2f8ab))
+
+## [12.0.110](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.109...@wireapp/cli-client@12.0.110) (2023-04-06)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.109](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.108...@wireapp/cli-client@12.0.109) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.108](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.107...@wireapp/cli-client@12.0.108) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.107](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.106...@wireapp/cli-client@12.0.107) (2023-03-30)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.106](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.105...@wireapp/cli-client@12.0.106) (2023-03-28)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.105](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.104...@wireapp/cli-client@12.0.105) (2023-03-27)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.104](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.103...@wireapp/cli-client@12.0.104) (2023-03-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.103](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.102...@wireapp/cli-client@12.0.103) (2023-03-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.102](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.101...@wireapp/cli-client@12.0.102) (2023-03-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.101](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.100...@wireapp/cli-client@12.0.101) (2023-03-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.100](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.99...@wireapp/cli-client@12.0.100) (2023-03-21)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.99](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.98...@wireapp/cli-client@12.0.99) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.98](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.97...@wireapp/cli-client@12.0.98) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.97](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.96...@wireapp/cli-client@12.0.97) (2023-03-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.96](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.95...@wireapp/cli-client@12.0.96) (2023-03-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.95](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.94...@wireapp/cli-client@12.0.95) (2023-03-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.94](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.93...@wireapp/cli-client@12.0.94) (2023-03-15)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.93](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.92...@wireapp/cli-client@12.0.93) (2023-03-14)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.92](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.91...@wireapp/cli-client@12.0.92) (2023-03-14)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.91](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.90...@wireapp/cli-client@12.0.91) (2023-03-13)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.90](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.89...@wireapp/cli-client@12.0.90) (2023-03-13)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.89](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.88...@wireapp/cli-client@12.0.89) (2023-03-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.88](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.87...@wireapp/cli-client@12.0.88) (2023-03-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.87](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.86...@wireapp/cli-client@12.0.87) (2023-03-06)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.86](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.85...@wireapp/cli-client@12.0.86) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.85](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.84...@wireapp/cli-client@12.0.85) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.84](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.83...@wireapp/cli-client@12.0.84) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.83](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.82...@wireapp/cli-client@12.0.83) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.82](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.81...@wireapp/cli-client@12.0.82) (2023-03-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.81](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.80...@wireapp/cli-client@12.0.81) (2023-03-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.80](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.79...@wireapp/cli-client@12.0.80) (2023-03-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.79](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.78...@wireapp/cli-client@12.0.79) (2023-02-27)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.78](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.77...@wireapp/cli-client@12.0.78) (2023-02-27)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.77](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.76...@wireapp/cli-client@12.0.77) (2023-02-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.76](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.75...@wireapp/cli-client@12.0.76) (2023-02-23)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.75](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.74...@wireapp/cli-client@12.0.75) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.74](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.73...@wireapp/cli-client@12.0.74) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.73](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.72...@wireapp/cli-client@12.0.73) (2023-02-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.72](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.71...@wireapp/cli-client@12.0.72) (2023-02-17)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.71](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.70...@wireapp/cli-client@12.0.71) (2023-02-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.70](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.69...@wireapp/cli-client@12.0.70) (2023-02-16)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.69](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.68...@wireapp/cli-client@12.0.69) (2023-02-15)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.68](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.67...@wireapp/cli-client@12.0.68) (2023-02-14)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.67](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.66...@wireapp/cli-client@12.0.67) (2023-02-09)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.66](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.65...@wireapp/cli-client@12.0.66) (2023-02-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.65](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.64...@wireapp/cli-client@12.0.65) (2023-02-08)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.64](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.63...@wireapp/cli-client@12.0.64) (2023-02-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.63](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.62...@wireapp/cli-client@12.0.63) (2023-02-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.62](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.61...@wireapp/cli-client@12.0.62) (2023-02-07)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.61](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.60...@wireapp/cli-client@12.0.61) (2023-02-06)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.60](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.59...@wireapp/cli-client@12.0.60) (2023-02-06)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.59](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.58...@wireapp/cli-client@12.0.59) (2023-02-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.58](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.57...@wireapp/cli-client@12.0.58) (2023-02-02)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+## [12.0.57](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.56...@wireapp/cli-client@12.0.57) (2023-02-01)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
 ## [12.0.56](https://github.com/wireapp/wire-web-packages/compare/@wireapp/cli-client@12.0.55...@wireapp/cli-client@12.0.56) (2023-01-31)
 
 **Note:** Version bump only for package @wireapp/cli-client

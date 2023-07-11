@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.7.0...@wireapp/certificate-check@0.7.1) (2023-05-08)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
+# [0.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.11...@wireapp/certificate-check@0.7.0) (2023-05-04)
+
+### Features
+
+* update typescript ([#5115](https://github.com/wireapp/wire-web-packages/issues/5115)) ([f1f39de](https://github.com/wireapp/wire-web-packages/commit/f1f39dee4d5985980b187dc00199beeb1e849f55))
+
+## [0.6.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.10...@wireapp/certificate-check@0.6.11) (2023-05-02)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
+## [0.6.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.9...@wireapp/certificate-check@0.6.10) (2023-04-26)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
+## [0.6.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.8...@wireapp/certificate-check@0.6.9) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
+## [0.6.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.7...@wireapp/certificate-check@0.6.8) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
+## [0.6.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.6...@wireapp/certificate-check@0.6.7) (2023-03-14)
+
+**Note:** Version bump only for package @wireapp/certificate-check
+
 ## [0.6.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/certificate-check@0.6.5...@wireapp/certificate-check@0.6.6) (2023-01-30)
 
 **Note:** Version bump only for package @wireapp/certificate-check

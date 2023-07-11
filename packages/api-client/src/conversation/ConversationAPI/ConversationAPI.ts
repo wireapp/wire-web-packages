@@ -19,20 +19,20 @@
 
 import {chunk} from '@wireapp/commons/lib/util/ArrayUtil';
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
-import axios, {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
 import {
-  ClientMismatch,
   Conversation,
   ConversationCode,
+  ConversationProtocol,
   ConversationRolesList,
   Conversations,
   DefaultConversationRoleName,
   Invite,
+  JoinConversationByCodePayload,
   Member,
   MessageSendingStatus,
   NewConversation,
-  NewOTRMessage,
   QualifiedConversationIds,
   RemoteConversations,
 } from '..';
@@ -45,12 +45,12 @@ import {
   ConversationMemberJoinEvent,
   ConversationMemberLeaveEvent,
   ConversationMessageTimerUpdateEvent,
+  ConversationProtocolUpdateEvent,
   ConversationReceiptModeUpdateEvent,
   ConversationRenameEvent,
 } from '../../event';
 import {BackendError, BackendErrorLabel, HttpClient} from '../../http';
 import {QualifiedId} from '../../user';
-import {ValidationError} from '../../validation';
 import {
   ConversationFullError,
   ConversationCodeNotFoundError,
@@ -66,11 +66,12 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from '../data';
-import {MlsEvent} from '../data/MlsEventData';
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
-  events: MlsEvent[];
+  failed_to_send?: QualifiedId[];
+  failed?: QualifiedId[];
+  events: ConversationEvent[];
   time: string;
 };
 
@@ -97,6 +98,7 @@ export class ConversationAPI {
     NAME: 'name',
     OTR: 'otr',
     PROTEUS: 'proteus',
+    PROTOCOL: 'protocol',
     RECEIPT_MODE: 'receipt-mode',
     ROLES: 'roles',
     SELF: 'self',
@@ -107,7 +109,7 @@ export class ConversationAPI {
   constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
   private generateBaseConversationUrl(conversationId: QualifiedId, supportsQualifiedEndpoint: boolean = true): string {
-    return this.backendFeatures.federationEndpoints && supportsQualifiedEndpoint && conversationId.domain
+    return supportsQualifiedEndpoint && conversationId.domain
       ? `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}`
       : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}`;
   }
@@ -165,33 +167,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Get all conversations.
-   * @deprecated - use getConversationList instead
-   */
-  public getAllConversations(): Promise<Conversation[]> {
-    let allConversations: Conversation[] = [];
-
-    const getConversationChunks = async (conversationId?: string): Promise<Conversation[]> => {
-      const {conversations, has_more} = await this.getConversations(conversationId, ConversationAPI.MAX_CHUNK_SIZE);
-
-      if (conversations.length) {
-        allConversations = allConversations.concat(conversations);
-      }
-
-      if (has_more) {
-        const lastConversation = conversations.pop();
-        if (lastConversation) {
-          return getConversationChunks(lastConversation.id);
-        }
-      }
-
-      return allConversations;
-    };
-
-    return getConversationChunks();
-  }
-
-  /**
    * Get a conversation code.
    * @param conversationId ID of conversation to get the code for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/getConversationCode
@@ -220,29 +195,7 @@ export class ConversationAPI {
     return response.data;
   }
 
-  public async getConversation(conversationId: string | QualifiedId): Promise<Conversation> {
-    return this.backendFeatures.federationEndpoints && typeof conversationId !== 'string'
-      ? this.getConversation_v2(conversationId)
-      : this.getConversation_v1(typeof conversationId === 'string' ? conversationId : conversationId.id);
-  }
-
-  /**
-   * Get a conversation by ID.
-   * @param conversationId The conversation ID
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversation
-   */
-  private async getConversation_v1(conversationId: string): Promise<Conversation> {
-    const url = `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`;
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url,
-    };
-
-    const response = await this.client.sendJSON<Conversation>(config);
-    return response.data;
-  }
-
-  private async getConversation_v2(conversationId: QualifiedId): Promise<Conversation> {
+  public async getConversation(conversationId: QualifiedId): Promise<Conversation> {
     const {id, domain} = conversationId;
     const url = `${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`;
     const config: AxiosRequestConfig = {
@@ -399,9 +352,6 @@ export class ConversationAPI {
    * Get all local & remote conversations from a federated backend.
    */
   public async getConversationList(): Promise<RemoteConversations> {
-    if (!this.backendFeatures.federationEndpoints) {
-      return {found: await this.getAllConversations()};
-    }
     const allConversationIds = await this.getQualifiedConversationIds();
     const conversations = await this.getConversationsByQualifiedIds(allConversationIds);
     return conversations;
@@ -614,11 +564,19 @@ export class ConversationAPI {
    * @param conversationId ID of conversation to request the code for
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createConversationCode
    */
-  public async postConversationCodeRequest(conversationId: string): Promise<ConversationCodeUpdateEvent> {
+  public async postConversationCodeRequest(
+    conversationId: string,
+    password?: string,
+  ): Promise<ConversationCodeUpdateEvent> {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.CODE}`,
+      data: {},
     };
+
+    if (password) {
+      config.data = {password};
+    }
 
     const response = await this.client.sendJSON<ConversationCodeUpdateEvent>(config);
     return response.data;
@@ -654,7 +612,7 @@ export class ConversationAPI {
    * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
    */
-  public async postJoinByCode(conversationCode: ConversationCode): Promise<ConversationMemberJoinEvent> {
+  public async postJoinByCode(conversationCode: JoinConversationByCodePayload): Promise<ConversationMemberJoinEvent> {
     const config: AxiosRequestConfig = {
       data: conversationCode,
       method: 'post',
@@ -683,7 +641,9 @@ export class ConversationAPI {
    * @param conversationCode The conversation code
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/joinConversationByCode
    */
-  public async getJoinByCode(conversationCode: Omit<ConversationCode, 'uri'>): Promise<ConversationJoinData> {
+  public async getJoinByCode(
+    conversationCode: Omit<ConversationCode, 'uri' | 'has_password'>,
+  ): Promise<ConversationJoinData> {
     const config: AxiosRequestConfig = {
       params: conversationCode,
       method: 'get',
@@ -720,55 +680,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Post an encrypted message to a conversation.
-   * @param sendingClientId The sender's client ID
-   * @param conversationId The conversation ID
-   * @param messageData The message content
-   * @param ignoreMissing Whether to report missing clients or not:
-   * `false`: Report about all missing clients
-   * `true`: Ignore all missing clients and force sending.
-   * Array: User IDs specifying which user IDs are allowed to have
-   * missing clients
-   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
-   */
-  public async postOTRMessage(
-    sendingClientId: string,
-    conversationId: string,
-    messageData?: NewOTRMessage<string>,
-    ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
-
-    messageData ||= {
-      recipients: {},
-      sender: sendingClientId,
-    };
-
-    const config: AxiosRequestConfig = {
-      data: messageData,
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
-    };
-
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      delete messageData.report_missing;
-    } else if (typeof messageData.report_missing === 'undefined' || !messageData.report_missing.length) {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.data};
-    }
-
-    const response = await this.client.sendJSON<ClientMismatch>(config, true);
-    return response.data;
-  }
-
-  /**
    * This endpoint ensures that the list of clients is correct and only sends the message if the list is correct.
    * To override this, the endpoint accepts `client_mismatch_strategy` in the body. It can have these values:
    *
@@ -790,7 +701,7 @@ export class ConversationAPI {
    *
    * @see https://nginz-https.anta.wire.link/api/swagger-ui/#/default/post_conversations__cnv_domain___cnv__proteus_messages
    */
-  public async postOTRMessageV2(
+  public async postOTRMessage(
     conversationId: string,
     domain: string,
     messageData: ProtobufOTR.QualifiedNewOtrMessage,
@@ -811,59 +722,11 @@ export class ConversationAPI {
 
   /**
    * Post an encrypted message to a conversation.
-   * @param sendingClientId The sender's client ID
-   * @param conversationId The conversation ID
-   * @param messageData The message content
-   * @param ignoreMissing Whether to report missing clients or not:
-   * `false`: Report about all missing clients
-   * `true`: Ignore all missing clients and force sending.
-   * Array: User IDs specifying which user IDs are allowed to have
-   * missing clients
-   * `undefined`: Default to setting of `report_missing` in `NewOTRMessage`
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/postOtrMessage
-   */
-  public async postOTRProtobufMessage(
-    sendingClientId: string,
-    conversationId: string,
-    messageData: ProtobufOTR.NewOtrMessage,
-    ignoreMissing?: boolean | string[],
-  ): Promise<ClientMismatch> {
-    if (!sendingClientId) {
-      throw new ValidationError('Unable to send OTR message without client ID.');
-    }
-
-    const config: AxiosRequestConfig = {
-      /*
-       * We need to slice the content of what protobuf has generated in order for Axios to send the correct buffer (see https://github.com/axios/axios/issues/4068)
-       * FIXME: The `slice` can be removed as soon as Axios publishes a version with the dataview issue fixed.
-       */
-      data: ProtobufOTR.NewOtrMessage.encode(messageData).finish().slice(),
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.OTR}/${ConversationAPI.URL.MESSAGES}`,
-    };
-
-    if (typeof ignoreMissing !== 'undefined') {
-      const ignore_missing = Array.isArray(ignoreMissing) ? ignoreMissing.join(',') : ignoreMissing;
-      config.params = {ignore_missing};
-      // `ignore_missing` takes precedence on the server so we can remove
-      // `report_missing` to save some bandwidth.
-      messageData.reportMissing = [];
-    } else if (typeof messageData.reportMissing === 'undefined' || !messageData.reportMissing.length) {
-      // both `ignore_missing` and `report_missing` are undefined
-      config.params = {ignore_missing: !!messageData.blob};
-    }
-
-    const response = await this.client.sendProtocolBuffer<ClientMismatch>(config, true);
-    return response.data;
-  }
-
-  /**
-   * Post an encrypted message to a conversation.
    * @param messageData Mls message payload in TLS format. Please refer to the MLS specification for details.
    * @see https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-message-framing
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_messages
    */
-  public async postMlsMessage(messageData: Uint8Array) {
+  public async postMlsMessage(messageData: Uint8Array): Promise<PostMlsMessageResponse> {
     const config: AxiosRequestConfig = {
       data: messageData,
       method: 'post',
@@ -887,20 +750,8 @@ export class ConversationAPI {
       url: `${ConversationAPI.URL.MLS}/commit-bundles`,
     };
 
-    const response = await this.client.sendProtocolBuffer<PostMlsMessageResponse>(config, true);
+    const response = await this.client.sendProtocolMls<PostMlsMessageResponse>(config, true);
     return response.data;
-  }
-
-  public async postForClients(clientId: string, conversationId: string): Promise<void> {
-    try {
-      await this.postOTRMessage(clientId, conversationId);
-      throw new Error(`Expected backend to throw error.`);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        return error.response.data;
-      }
-      throw error;
-    }
   }
 
   /**
@@ -1015,47 +866,11 @@ export class ConversationAPI {
   }
 
   /**
-   * Add users to an existing conversation.
-   * @param conversationId The conversation ID to add the users to
-   * @param users List of users to add to a conversation
-   */
-  private async postMembersV0(conversationId: string, userIds: string[]) {
-    const config: AxiosRequestConfig = {
-      data: {
-        conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
-        users: userIds,
-      },
-      method: 'post',
-      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.MEMBERS}`,
-    };
-
-    try {
-      const response = await this.client.sendJSON<ConversationMemberJoinEvent>(config);
-      return response.data;
-    } catch (error) {
-      const backendError = error as BackendError;
-      switch (backendError.label) {
-        case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
-          throw new ConversationLegalholdMissingConsentError(backendError.message);
-        }
-      }
-      throw error;
-    }
-  }
-
-  /**
    * Add qualified members to an existing Proteus conversation.
    * @param conversationId The conversation ID to add the users to
    * @param users List of users to add to a conversation
    */
   public async postMembers(conversationId: QualifiedId, users: QualifiedId[]) {
-    if (!this.backendFeatures.federationEndpoints) {
-      return this.postMembersV0(
-        conversationId.id,
-        users.map(user => user.id),
-      );
-    }
-
     const config: AxiosRequestConfig = {
       data: {
         conversation_role: DefaultConversationRoleName.WIRE_MEMBER,
@@ -1120,5 +935,35 @@ export class ConversationAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   * Update the protocol of the conversation.
+   * Used in MLS Migration feature:
+   * - changing the protocol from "proteus" to "mixed" will assign a groupId to the conversation.
+   * - changing the protocol from "mixed" to "mls" will finalise the migration of the conversation.
+   * @param conversationId id of the conversation
+   * @param protocol new protocol of the conversation
+   * @returns ConversationProtocolUpdateEvent if the protocol was updated, null if the protocol was not changed
+   * @see https://wearezeta.atlassian.net/wiki/spaces/CORE/pages/746488003/Proteus+to+MLS+Migration for more details
+   */
+  public async putConversationProtocol(
+    conversationId: QualifiedId,
+    protocol: ConversationProtocol.MIXED | ConversationProtocol.MLS,
+  ): Promise<ConversationProtocolUpdateEvent | null> {
+    const config: AxiosRequestConfig = {
+      data: {protocol},
+      method: 'put',
+      url: `${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.PROTOCOL}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationProtocolUpdateEvent>(config);
+
+    //if the protocol was not changed (it already was the same), the response will be 204, response data is empty
+    if (response.status === 204) {
+      return null;
+    }
+
+    return response.data;
   }
 }

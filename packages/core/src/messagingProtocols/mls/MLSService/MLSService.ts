@@ -17,11 +17,12 @@
  *
  */
 
+import type {ClaimedKeyPackages} from '@wireapp/api-client/lib/client';
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
+import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
-import axios from 'axios';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -29,27 +30,26 @@ import {APIClient} from '@wireapp/api-client';
 import {TimeUtil} from '@wireapp/commons';
 import {
   AddProposalArgs,
+  Ciphersuite,
   CommitBundle,
   ConversationConfiguration,
   ConversationId,
   CoreCrypto,
+  CredentialType,
   DecryptedMessage,
-  ExternalProposalArgs,
+  ExternalAddProposalArgs,
   ExternalProposalType,
-  ExternalRemoveProposalArgs,
   Invitee,
   ProposalArgs,
   ProposalType,
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 
-import {toProtobufCommitBundle} from './commitBundleUtil';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {keyMaterialUpdatesStore} from './stores/keyMaterialUpdatesStore';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
-import {getGroupId, storeSubconversationGroupId} from './subconversationGroupIdMapper';
+import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
-import {QualifiedUsers} from '../../../conversation';
+import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
@@ -83,6 +83,9 @@ export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: MLSServiceConfig;
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
+  private readonly textEncoder = new TextEncoder();
+  private readonly textDecoder = new TextDecoder();
+  private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -100,16 +103,18 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async initClient(userId: QualifiedId, clientId: string) {
-    const encoder = new TextEncoder();
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(encoder.encode(qualifiedClientId));
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.defaultCiphersuite]);
   }
 
   public async createClient(userId: QualifiedId, clientId: string) {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
-    const publicKey = await this.coreCryptoClient.clientPublicKey();
-    const keyPackages = await this.coreCryptoClient.clientKeypackages(this.config.nbKeyPackages);
+    const publicKey = await this.coreCryptoClient.clientPublicKey(this.defaultCiphersuite);
+    const keyPackages = await this.coreCryptoClient.clientKeypackages(
+      this.defaultCiphersuite,
+      this.config.nbKeyPackages,
+    );
     await this.uploadMLSPublicKeys(publicKey, clientId);
     await this.uploadMLSKeyPackages(keyPackages, clientId);
   }
@@ -118,10 +123,11 @@ export class MLSService extends TypedEventEmitter<Events> {
     groupId: Uint8Array,
     commitBundle: CommitBundle,
     {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
-  ): Promise<PostMlsMessageResponse | null> {
-    const bundlePayload = toProtobufCommitBundle(commitBundle);
+  ): Promise<PostMlsMessageResponse> {
+    const {commit, groupInfo, welcome} = commitBundle;
+    const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload.slice());
+      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
       if (isExternalCommit) {
         await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
       } else {
@@ -133,7 +139,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
       return response;
     } catch (error) {
-      const shouldRetry = axios.isAxiosError(error) && error.code === '409';
+      if (isExternalCommit) {
+        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
+      } else {
+        await this.coreCryptoClient.clearPendingCommit(groupId);
+      }
+
+      const shouldRetry = error instanceof BackendError && error.code === StatusCode.CONFLICT;
       if (shouldRetry && regenerateCommitBundle) {
         // in case of a 409, we want to retry to generate the commit and resend it
         // could be that we are trying to upload a commit to a conversation that has a different epoch on backend
@@ -142,45 +154,61 @@ export class MLSService extends TypedEventEmitter<Events> {
         const updatedCommitBundle = await regenerateCommitBundle();
         return this.uploadCommitBundle(groupId, updatedCommitBundle, {isExternalCommit});
       }
-      if (isExternalCommit) {
-        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
-      } else {
-        await this.coreCryptoClient.clearPendingCommit(groupId);
-      }
+      throw error;
     }
-    return null;
   }
 
+  /**
+   * Will add users to an existing MLS group and send a commit bundle to backend.
+   * Cannot be called with an empty array of keys.
+   *
+   * @param groupId - the group id of the MLS group
+   * @param invitee - the list of keys of clients to add to the MLS group
+   */
   public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
+    if (invitee.length < 1) {
+      throw new Error('Empty list of keys provided to addUsersToExistingConversation');
+    }
     return this.processCommitAction(groupId, () => this.coreCryptoClient.addClientsToConversation(groupId, invitee));
   }
 
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
-    this.coreCryptoClient.registerCallbacks({
+    void this.coreCryptoClient.registerCallbacks({
       ...coreCryptoCallbacks,
-      clientIsExistingGroupUser: (client, otherClients) => {
-        const decoder = new TextDecoder();
-        const {user} = parseFullQualifiedClientId(decoder.decode(client));
-        return otherClients.some(client => {
-          const {user: otherUser} = parseFullQualifiedClientId(decoder.decode(client));
-          return otherUser.toLowerCase() === user.toLowerCase();
-        });
+      clientIsExistingGroupUser: (_groupId, _client, _otherClients): Promise<boolean> => {
+        // All authorization/membership rules are enforced on backend
+        return Promise.resolve(true);
       },
     });
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
-  public async getKeyPackagesPayload(qualifiedUsers: QualifiedUsers[]) {
+  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
     /**
      * @note We need to fetch key packages for all the users
      * we want to add to the new MLS conversations,
      * includes self user too.
      */
-    const keyPackages = await Promise.all([
-      ...qualifiedUsers.map(({id, domain, skipOwn}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwn),
+    const failedToFetchKeyPackages: QualifiedId[] = [];
+    const keyPackagesSettledResult = await Promise.allSettled(
+      qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
+        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId).catch(error => {
+          failedToFetchKeyPackages.push({id, domain});
+          // Throw the error so we don't get {status: 'fulfilled', value: undefined}
+          throw error;
+        }),
       ),
-    ]);
+    );
+
+    /**
+     * @note We are filtering failed requests for key packages
+     * this is required because on federation environments it is possible
+     * that due to a backend being offline we would not be able to fetch
+     * a specific user's key packages.
+     */
+    const keyPackages = keyPackagesSettledResult
+      .filter((result): result is PromiseFulfilledResult<ClaimedKeyPackages> => result.status === 'fulfilled')
+      .map(result => result.value);
 
     const coreCryptoKeyPackagesPayload = keyPackages.reduce<Invitee[]>((previousValue, currentValue) => {
       // skip users that have not uploaded their MLS key packages
@@ -196,7 +224,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       return previousValue;
     }, []);
 
-    return coreCryptoKeyPackagesPayload;
+    return {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages};
   }
 
   public getEpoch(groupId: string | Uint8Array) {
@@ -211,14 +239,25 @@ export class MLSService extends TypedEventEmitter<Events> {
   public async joinByExternalCommit(getGroupInfo: () => Promise<Uint8Array>) {
     const generateCommit = async () => {
       const groupInfo = await getGroupInfo();
-      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(groupInfo);
+      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
+        groupInfo,
+        CredentialType.Basic,
+      );
       return {groupId: conversationId, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
-    return this.uploadCommitBundle(groupId, commitBundle, {
+    const mlsResponse = await this.uploadCommitBundle(groupId, commitBundle, {
       isExternalCommit: true,
       regenerateCommitBundle: async () => (await generateCommit()).commitBundle,
     });
+
+    if (mlsResponse) {
+      //after we've successfully joined via external commit, we schedule periodic key material renewal
+      const groupIdStr = Encoder.toBase64(groupId).asString;
+      this.scheduleKeyMaterialRenewal(groupIdStr);
+    }
+
+    return mlsResponse;
   }
 
   public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
@@ -233,12 +272,55 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
+   * Will leave conference subconversation if it's known by client and established.
+   *
+   * @param conversationId Id of the parent conversation which subconversation we want to leave
+   */
+  public async leaveConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
+    const subconversationGroupId = subconversationGroupIdStore.getGroupId(
+      conversationId,
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
+
+    if (!subconversationGroupId) {
+      return;
+    }
+
+    const isSubconversationEstablished = await this.conversationExists(subconversationGroupId);
+    if (!isSubconversationEstablished) {
+      // if the subconversation was known by a client but is not established anymore, we can remove it from the store
+      return subconversationGroupIdStore.removeGroupId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+    }
+
+    try {
+      await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+    } catch (error) {
+      this.logger.error(`Failed to leave conference subconversation:`, error);
+    }
+
+    await this.wipeConversation(subconversationGroupId);
+
+    // once we've left the subconversation, we can remove it from the store
+    subconversationGroupIdStore.removeGroupId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+  }
+
+  public async leaveStaleConferenceSubconversations(): Promise<void> {
+    const conversationIds = subconversationGroupIdStore.getAllGroupIdsBySubconversationId(
+      SUBCONVERSATION_ID.CONFERENCE,
+    );
+
+    for (const {parentConversationId} of conversationIds) {
+      await this.leaveConferenceSubconversation(parentConversationId);
+    }
+  }
+
+  /**
    * Will join or register an mls subconversation for conference calls.
    * Will return the secret key derived from the subconversation
    *
    * @param conversationId Id of the parent conversation in which the call should happen
    */
-  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
+  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<{groupId: string; epoch: number}> {
     const subconversation = await this.getConferenceSubconversation(conversationId);
 
     if (subconversation.epoch === 0) {
@@ -264,17 +346,12 @@ export class MLSService extends TypedEventEmitter<Events> {
       );
     }
 
-    // We refetch subconversation after joining/registering
-    // This way we're sure we return the fresh list of subconversation members
-    const updatedSubconversation = await this.apiClient.api.conversation.getSubconversation(
-      conversationId,
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
+    const epoch = Number(await this.getEpoch(subconversation.group_id));
 
     // We store the mapping between the subconversation and the parent conversation
-    storeSubconversationGroupId(conversationId, updatedSubconversation.subconv_id, updatedSubconversation.group_id);
+    subconversationGroupIdStore.storeGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
 
-    return updatedSubconversation;
+    return {groupId: subconversation.group_id, epoch};
   }
 
   public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
@@ -283,10 +360,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
-  public async newExternalProposal(
-    externalProposalType: ExternalProposalType,
-    args: ExternalProposalArgs | ExternalRemoveProposalArgs,
-  ) {
+  public async newExternalProposal(externalProposalType: ExternalProposalType, args: ExternalAddProposalArgs) {
     return this.coreCryptoClient.newExternalProposal(externalProposalType, args);
   }
 
@@ -313,10 +387,10 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param generateCommit The function that will generate a coreCrypto CommitBundle
    */
   private async processCommitAction(groupId: ConversationId, generateCommit: () => Promise<CommitBundle>) {
-    return sendMessage<PostMlsMessageResponse | null>(async () => {
+    return sendMessage<PostMlsMessageResponse>(async () => {
       await this.commitProposals(groupId);
       const commitBundle = await generateCommit();
-      return this.uploadCommitBundle(groupId, commitBundle);
+      return this.uploadCommitBundle(groupId, commitBundle, {regenerateCommitBundle: generateCommit});
     });
   }
 
@@ -334,26 +408,26 @@ export class MLSService extends TypedEventEmitter<Events> {
     groupId: string,
     users: QualifiedId[],
     creator?: {user: QualifiedId; client?: string},
-  ): Promise<PostMlsMessageResponse | null | undefined> {
+  ): Promise<PostMlsMessageResponse> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const configuration: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: 1, // TODO: Use the correct ciphersuite enum.
+      ciphersuite: this.defaultCiphersuite,
     };
 
-    await this.coreCryptoClient.createConversation(groupIdBytes, configuration);
+    await this.coreCryptoClient.createConversation(groupIdBytes, CredentialType.Basic, configuration);
 
-    const keyPackages = await this.getKeyPackagesPayload(
+    const {coreCryptoKeyPackagesPayload: keyPackages, failedToFetchKeyPackages} = await this.getKeyPackagesPayload(
       users.map(user => {
         if (user.id === creator?.user.id) {
           /**
            * we should skip fetching key packages for current self client,
            * it's already added by the backend on the group creation time
            */
-          return {...creator.user, skipOwn: creator.client};
+          return {...creator.user, skipOwnClientId: creator.client};
         }
         return user;
       }),
@@ -365,15 +439,30 @@ export class MLSService extends TypedEventEmitter<Events> {
         : // If there are no clients to add, just update the keying material
           await this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
 
-    // We schedule a key material renewal
+    // We schedule a periodic key material renewal
     this.scheduleKeyMaterialRenewal(groupId);
 
+    /**
+     * @note If we can't fetch a user's key packages then we can not add them to mls conversation
+     * so we're adding them to the list of failed users.
+     */
+    response.failed = response.failed ? [...response.failed, ...failedToFetchKeyPackages] : failedToFetchKeyPackages;
     return response;
   }
 
-  public removeClientsFromConversation(conversationId: ConversationId, clientIds: Uint8Array[]) {
-    return this.processCommitAction(conversationId, () =>
-      this.coreCryptoClient.removeClientsFromConversation(conversationId, clientIds),
+  /**
+   * Will send a removal commit for given clients
+   * @param groupId groupId of the conversation
+   * @param clientIds the list of **qualified** ids of the clients we want to remove from the group
+   */
+  public removeClientsFromConversation(groupId: string, clientIds: string[]) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+
+    return this.processCommitAction(groupIdBytes, () =>
+      this.coreCryptoClient.removeClientsFromConversation(
+        groupIdBytes,
+        clientIds.map(id => this.textEncoder.encode(id)),
+      ),
     );
   }
 
@@ -388,11 +477,11 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount();
+    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite);
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
-    return this.coreCryptoClient.clientKeypackages(amountRequested);
+    return this.coreCryptoClient.clientKeypackages(this.defaultCiphersuite, amountRequested);
   }
 
   /**
@@ -400,12 +489,12 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param groupId groupId of the conversation
    */
-  private async renewKeyMaterial(groupId: string) {
+  public async renewKeyMaterial(groupId: string) {
     try {
       const groupConversationExists = await this.conversationExists(groupId);
 
       if (!groupConversationExists) {
-        keyMaterialUpdatesStore.deleteLastKeyMaterialUpdateDate({groupId});
+        this.cancelKeyMaterialRenewal(groupId);
         return;
       }
 
@@ -425,8 +514,16 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId The group that should have its key material updated
    */
   public resetKeyMaterialRenewal(groupId: string) {
-    cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
+    this.cancelKeyMaterialRenewal(groupId);
     this.scheduleKeyMaterialRenewal(groupId);
+  }
+
+  /**
+   * Will cancel the renewal of the key material for a given groupId
+   * @param groupId The group that should stop having its key material updated
+   */
+  public cancelKeyMaterialRenewal(groupId: string) {
+    return cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
   }
 
   /**
@@ -447,10 +544,9 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Get all keying material last update dates and schedule tasks for renewal
    * Function must only be called once, after application start
    */
-  public checkForKeyMaterialsUpdate() {
+  public schedulePeriodicKeyMaterialRenewals(groupIds: string[]) {
     try {
-      const keyMaterialUpdateDates = keyMaterialUpdatesStore.getAllUpdateDates();
-      keyMaterialUpdateDates.forEach(({groupId}) => this.scheduleKeyMaterialRenewal(groupId));
+      groupIds.forEach(groupId => this.scheduleKeyMaterialRenewal(groupId));
     } catch (error) {
       this.logger.error('Could not get last key material update dates', error);
     }
@@ -507,12 +603,23 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
+    const isMLSConversationEstablished = await this.conversationExists(groupId);
+    if (!isMLSConversationEstablished) {
+      //if the mls group does not exist, we don't need to wipe it
+      return;
+    }
+    this.cancelKeyMaterialRenewal(groupId);
+
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
   }
 
   public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
     return handleBackendEvent({...params, mlsService: this}, async groupId => {
+      const conversationExists = await this.conversationExists(groupId);
+      if (!conversationExists) {
+        return;
+      }
       const newEpoch = await this.getEpoch(groupId);
       this.emit('newEpoch', {groupId, epoch: newEpoch});
     });
@@ -526,16 +633,12 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async getGroupIdFromConversationId(
     conversationQualifiedId: QualifiedId,
-    subconversationId?: string,
-  ): Promise<string> {
-    const {id: conversationId, domain: conversationDomain} = conversationQualifiedId;
+    subconversationId?: SUBCONVERSATION_ID,
+  ): Promise<string | undefined> {
     const groupId = subconversationId
-      ? getGroupId(conversationQualifiedId, subconversationId)
+      ? subconversationGroupIdStore.getGroupId(conversationQualifiedId, subconversationId)
       : await this.groupIdFromConversationId?.(conversationQualifiedId);
 
-    if (!groupId) {
-      throw new Error(`Could not find a group_id for conversation ${conversationId}@${conversationDomain}`);
-    }
     return groupId;
   }
 
@@ -615,12 +718,11 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async getClientIds(groupId: string): Promise<{userId: string; clientId: string; domain: string}[]> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const decoder = new TextDecoder();
 
     const rawClientIds = await this.coreCryptoClient.getClientIds(groupIdBytes);
 
     const clientIds = rawClientIds.map(id => {
-      const {user, client, domain} = parseFullQualifiedClientId(decoder.decode(id));
+      const {user, client, domain} = parseFullQualifiedClientId(this.textDecoder.decode(id));
       return {userId: user, clientId: client, domain};
     });
     return clientIds;

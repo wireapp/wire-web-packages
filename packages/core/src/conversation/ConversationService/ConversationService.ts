@@ -18,16 +18,14 @@
  */
 
 import {
-  MessageSendingStatus,
   Conversation,
   DefaultConversationRoleName,
   MutedStatus,
   NewConversation,
   QualifiedUserClients,
-  UserClients,
-  ClientMismatch,
   ConversationProtocol,
   RemoteConversations,
+  PostMlsMessageResponse,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
@@ -37,7 +35,7 @@ import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
-import {ExternalProposalType} from '@wireapp/core-crypto';
+import {Ciphersuite, CredentialType, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
@@ -54,21 +52,17 @@ import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
-import {MessageService} from '../message/MessageService';
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
-  private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ConversationService');
 
   constructor(
     private readonly apiClient: APIClient,
-    private readonly config: {useQualifiedIds?: boolean},
     private readonly proteusService: ProteusService,
     private readonly _mlsService?: MLSService,
   ) {
     this.messageTimer = new MessageTimer();
-    this.messageService = new MessageService(this.apiClient, this.proteusService);
   }
 
   get mlsService(): MLSService {
@@ -80,53 +74,14 @@ export class ConversationService {
 
   /**
    * Get a fresh list from backend of clients for all the participants of the conversation.
-   * This is a hacky way of getting all the clients for a conversation.
-   * The idea is to send an empty message to the backend to absolutely no users and let backend reply with a mismatch error.
-   * We then get the missing members in the mismatch, that is our fresh list of participants' clients.
-   *
-   * @deprecated
-   * @param {string} conversationId
-   * @param {string} conversationDomain? - If given will send the message to the new qualified endpoint
-   */
-  public getAllParticipantsClients(conversationId: QualifiedId): Promise<UserClients | QualifiedUserClients> {
-    const sendingClientId = this.apiClient.validatedClientId;
-    const recipients = {};
-    const text = new Uint8Array();
-    return new Promise(async resolve => {
-      const onClientMismatch = (mismatch: ClientMismatch | MessageSendingStatus) => {
-        resolve(mismatch.missing);
-        // When the mismatch happens, we ask the messageService to cancel the sending
-        return false;
-      };
-
-      if (conversationId.domain && this.config.useQualifiedIds) {
-        await this.messageService.sendFederatedMessage(sendingClientId, recipients, text, {
-          conversationId,
-          onClientMismatch,
-          reportMissing: true,
-        });
-      } else {
-        await this.messageService.sendMessage(sendingClientId, recipients, text, {
-          conversationId,
-          onClientMismatch,
-        });
-      }
-    });
-  }
-
-  /**
-   * Get a fresh list from backend of clients for all the participants of the conversation.
    * @fixme there are some case where this method is not enough to detect removed devices
    * @param {string} conversationId
    * @param {string} conversationDomain? - If given will send the message to the new qualified endpoint
    */
-  public async fetchAllParticipantsClients(
-    conversationId: string,
-    conversationDomain?: string,
-  ): Promise<UserClients | QualifiedUserClients> {
+  public async fetchAllParticipantsClients(conversationId: QualifiedId): Promise<QualifiedUserClients> {
     const qualifiedMembers = await getConversationQualifiedMembers({
       apiClient: this.apiClient,
-      conversationId: conversationDomain ? {id: conversationId, domain: conversationDomain} : conversationId,
+      conversationId,
     });
     const allClients = await this.apiClient.api.user.postListClients({qualified_users: qualifiedMembers});
     const qualifiedUserClients: QualifiedUserClients = {};
@@ -276,11 +231,12 @@ export class ConversationService {
    * Will create a conversation on backend and register it to CoreCrypto once created
    * @param conversationData
    */
-  public async createMLSConversation(conversationData: NewConversation): Promise<MLSReturnType> {
-    const {selfUserId, qualified_users: qualifiedUsers = []} = conversationData;
-    if (!selfUserId) {
-      throw new Error('You need to pass self user qualified id in order to create an MLS conversation');
-    }
+  public async createMLSConversation(
+    conversationData: NewConversation,
+    selfUserId: QualifiedId,
+    selfClientId: string,
+  ): Promise<MLSReturnType> {
+    const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
      * @note For creating MLS conversations the users & qualified_users
@@ -299,14 +255,19 @@ export class ConversationService {
 
     const response = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
       user: selfUserId,
-      client: conversationData.creator_client,
+      client: selfClientId,
     });
 
     // We fetch the fresh version of the conversation created on backend with the newly added users
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
+    /**
+     * @note Add users whom we could not fetch their keypackages to list of failed to add users.
+     */
+    conversation.failed_to_add = response.failed || [];
+
     return {
-      events: response?.events ?? [],
+      events: response.events,
       conversation,
     };
   }
@@ -319,33 +280,57 @@ export class ConversationService {
 
     const encrypted = await this.mlsService.encryptMessage(groupIdBytes, GenericMessage.encode(payload).finish());
 
+    let response: PostMlsMessageResponse | null = null;
     let sentAt: string = '';
     try {
-      const {time = ''} = await this.apiClient.api.conversation.postMlsMessage(encrypted);
-      sentAt = time?.length > 0 ? time : new Date().toISOString();
-    } catch {}
+      response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
+      sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
+    } catch (error) {
+      throw error;
+    }
+
+    const failedToSend =
+      response?.failed || (response?.failed_to_send ?? []).length > 0
+        ? {
+            queued: response?.failed_to_send,
+            failed: response?.failed,
+          }
+        : undefined;
 
     return {
       id: payload.messageId,
       sentAt,
-      state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELLED,
+      failedToSend,
+      state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELED,
     };
   }
 
+  /**
+   * Will add users to existing MLS group by claiming their key packages and passing them to CoreCrypto.addClientsToConversation
+   *
+   * @param qualifiedUsers List of qualified user ids (with optional skipOwnClientId field - if provided we will not claim key package for this self client)
+   * @param groupId Id of the group to which we want to add users
+   * @param conversationId Id of the conversation to which we want to add users
+   */
   public async addUsersToMLSConversation({
-    qualifiedUserIds,
+    qualifiedUsers,
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSReturnType> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    const coreCryptoKeyPackagesPayload = await this.mlsService.getKeyPackagesPayload([...qualifiedUserIds]);
+    const {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages} = await this.mlsService.getKeyPackagesPayload(
+      qualifiedUsers,
+    );
+
     const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
+
+    conversation.failed_to_add = failedToFetchKeyPackages;
 
     //We store the info when user was added (and key material was created), so we will know when to renew it
     this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
-      events: response?.events || [],
+      events: response.events,
       conversation,
     };
   }
@@ -355,15 +340,13 @@ export class ConversationService {
     conversationId,
     qualifiedUserIds,
   }: RemoveUsersParams): Promise<MLSReturnType> {
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
     const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
       clientsToRemove.qualified_user_map,
     );
 
-    const messageResponse = await this.mlsService.removeClientsFromConversation(groupIdBytes, fullyQualifiedClientIds);
+    const messageResponse = await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
 
     //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
     this.mlsService.resetKeyMaterialRenewal(groupId);
@@ -371,7 +354,7 @@ export class ConversationService {
     const conversation = await this.getConversation(conversationId);
 
     return {
-      events: messageResponse?.events || [],
+      events: messageResponse.events,
       conversation,
     };
   }
@@ -392,6 +375,8 @@ export class ConversationService {
       const externalProposal = await this.mlsService.newExternalProposal(ExternalProposalType.Add, {
         epoch,
         conversationId: groupIdBytes,
+        ciphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+        credentialType: CredentialType.Basic,
       });
       await this.apiClient.api.conversation.postMlsMessage(
         //@todo: it's temporary - we wait for core-crypto fix to return the actual Uint8Array instead of regular array

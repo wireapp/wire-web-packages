@@ -4,8 +4,8 @@
   "description": "Wire Prettier config",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/prettier-config",
   "main": "index.json",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "devDependencies": {
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.4"
   }
 }

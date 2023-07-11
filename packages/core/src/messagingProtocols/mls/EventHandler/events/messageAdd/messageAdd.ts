@@ -34,14 +34,21 @@ interface HandleMLSMessageAddParams extends EventHandlerParams {
 }
 const handleMLSMessageAdd = async (
   {mlsService, event}: HandleMLSMessageAddParams,
-  onEpochChanged: (groupId: string) => void,
+  onEpochChanged: (groupId: string) => Promise<void>,
 ): EventHandlerResult => {
   const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
-  const groupId = await mlsService.getGroupIdFromConversationId(
-    event.qualified_conversation ?? {id: event.conversation, domain: ''},
-    event.subconv,
-  );
+  const qualifiedConversationId = event.qualified_conversation ?? {id: event.conversation, domain: ''};
+
+  const groupId = await mlsService.getGroupIdFromConversationId(qualifiedConversationId, event.subconv);
+
+  // We should not receive a message for a group the client is not aware of
+  if (!groupId) {
+    throw new Error(
+      `Could not find a group_id for conversation ${qualifiedConversationId.id}@${qualifiedConversationId.domain}`,
+    );
+  }
+
   const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
   const {
@@ -68,8 +75,9 @@ const handleMLSMessageAdd = async (
       eventTime: event.time,
     });
   }
+
   if (hasEpochChanged) {
-    onEpochChanged(groupId);
+    await onEpochChanged(groupId);
   }
 
   return message ? {event, decryptedData: GenericMessage.decode(message)} : undefined;

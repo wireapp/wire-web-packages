@@ -19,13 +19,11 @@
 
 import {
   QualifiedUserClients,
-  ClientMismatch,
   ConversationProtocol,
   MessageSendingStatus,
-  UserClients,
   Conversation,
 } from '@wireapp/api-client/lib/conversation';
-import {MlsEvent} from '@wireapp/api-client/lib/conversation/data/MlsEventData';
+import {ConversationEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {GenericMessage} from '@wireapp/protocol-messaging';
@@ -45,12 +43,8 @@ export interface MessageSendingOptions {
    *    When given a QualifiedId[] the method will fetch the freshest list of devices for those users (since they are not given by the consumer). As a consequence no ClientMismatch error will trigger and we will ignore missing clients when sending
    *    When given a QualifiedUserClients the method will only send to the clients listed in the userIds. This could lead to ClientMismatch (since the given list of devices might not be the freshest one and new clients could have been created)
    */
-  userIds?: string[] | QualifiedId[] | UserClients | QualifiedUserClients;
+  userIds?: QualifiedId[] | QualifiedUserClients;
 
-  /**
-   * Will send the message as a protobuf payload
-   */
-  sendAsProtobuf?: boolean;
   nativePush?: boolean;
 
   /**
@@ -75,10 +69,7 @@ export interface MessageSendingCallbacks {
    * @param wasSent Indicate whether the message was already sent or if it can still be canceled
    * @return
    */
-  onClientMismatch?: (
-    status: ClientMismatch | MessageSendingStatus,
-    wasSent: boolean,
-  ) => void | boolean | Promise<boolean>;
+  onClientMismatch?: (status: MessageSendingStatus, wasSent: boolean) => void | boolean | Promise<boolean>;
 }
 
 /**
@@ -109,11 +100,11 @@ export type SendMlsMessageParams = SendCommonParams & {
   protocol: ConversationProtocol.MLS;
 };
 
-export type QualifiedUsers = QualifiedId & {skipOwn?: string};
+export type KeyPackageClaimUser = QualifiedId & {skipOwnClientId?: string};
 
 export type AddUsersParams = {
   conversationId: QualifiedId;
-  qualifiedUserIds: QualifiedId[];
+  qualifiedUsers: KeyPackageClaimUser[];
   groupId?: string;
 };
 
@@ -123,7 +114,7 @@ export type RemoveUsersParams = {
   groupId: string;
 };
 
-export type MLSReturnType = {events: MlsEvent[]; conversation: Conversation};
+export type MLSReturnType = {events: ConversationEvent[]; conversation: Conversation};
 
 export type SendResult = {
   /** The id of the message sent */
@@ -132,4 +123,11 @@ export type SendResult = {
   sentAt: string;
   /** The sending state of the payload (has the payload been succesfully sent or canceled) */
   state: MessageSendingState;
+  /** In case the message was sent to some federated backend, if the backend was down at the moment of sending the `failedToSend` property will contain all the users/devices that couldn't get the message */
+  failedToSend?: {
+    /** the message was encrypted for those recipients but will reach them later (a session existed but their backend is offline) */
+    queued?: QualifiedUserClients | QualifiedId[];
+    /** the message could not be encrypted for those recipients and thus will never reach them (a session did not exist and their backend if offline) */
+    failed?: QualifiedId[];
+  };
 };

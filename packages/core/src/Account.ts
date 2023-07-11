@@ -50,12 +50,12 @@ import {MLSService} from './messagingProtocols/mls';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
-import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './util/encryptedStore';
 import {TypedEventEmitter} from './util/TypedEventEmitter';
 
 export type ProcessedEventPayload = HandledEventPayload;
@@ -81,7 +81,7 @@ export enum ConnectionState {
 
 export type CreateStoreFn = (storeName: string, context: Context) => undefined | Promise<CRUDEngine | undefined>;
 
-interface AccountOptions<T> {
+interface AccountOptions {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
 
@@ -99,7 +99,7 @@ interface AccountOptions<T> {
   /**
    * Config for MLS and proteus devices. Will fallback to the old proteus logic if not provided
    */
-  cryptoProtocolConfig?: CryptoProtocolConfig<T>;
+  cryptoProtocolConfig?: CryptoProtocolConfig;
 }
 
 type InitOptions = {
@@ -117,15 +117,14 @@ type Events = {
   [EVENTS.NEW_SESSION]: NewClient;
 };
 
-export class Account<T = any> extends TypedEventEmitter<Events> {
+export class Account extends TypedEventEmitter<Events> {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
-  private secretsDb?: EncryptedStore<any>;
   private readonly nbPrekeys: number;
-  private readonly cryptoProtocolConfig?: CryptoProtocolConfig<T>;
+  private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
 
   public service?: {
     mls?: MLSService;
@@ -151,7 +150,7 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions<T> = {},
+    {createStore = () => undefined, nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions = {},
   ) {
     super();
     this.apiClient = apiClient;
@@ -179,16 +178,17 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
   /**
    * Will set the APIClient to use a specific version of the API (by default uses version 0)
    * It will fetch the API Config and use the highest possible version
-   * @param acceptedVersions Which version the consumer supports
-   * @param useDevVersion allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
+   * @param min mininum version to use
+   * @param max maximum version to use
+   * @param allowDev allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
    *   If we have version 2 that is a dev version, this is going to be the output of those calls
-   *   - useVersion([0, 1, 2], true) > version 2 is used
-   *   - useVersion([0, 1, 2], false) > version 1 is used
-   *   - useVersion([0, 1], true) > version 1 is used
+   *   - useVersion(0, 2, true) > version 2 is used
+   *   - useVersion(0, 2) > version 1 is used
+   *   - useVersion(0, 1, true) > version 1 is used
    * @return The highest version that is both supported by client and backend
    */
-  public async useAPIVersion(supportedVersions: number[], useDevVersion?: boolean) {
-    const features = await this.apiClient.useVersion(supportedVersions, useDevVersion);
+  public async useAPIVersion(min: number, max: number, allowDev?: boolean) {
+    const features = await this.apiClient.useVersion(min, max, allowDev);
     this.backendFeatures = features;
     return features;
   }
@@ -256,8 +256,9 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set or context not initialized.');
     }
+    // we reset the services to re-instantiate a new CryptoClient instance
+    await this.initServices(this.apiClient.context);
     const initialPreKeys = await this.service.proteus.createClient(entropyData);
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
@@ -268,10 +269,9 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     this.logger.info(`Created new client {mls: ${!!this.service.mls}, id: ${client.id}}`);
 
     await this.service.notification.initializeNotificationStream();
-    await this.service.client.synchronizeClients();
+    await this.service.client.synchronizeClients(client.id);
 
-    await this.initClient(client);
-    return client;
+    return this.initClient(client);
   }
 
   /**
@@ -279,6 +279,8 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
    *
    * @returns The local existing client or undefined if the client does not exist or is not valid (non existing on backend)
    */
+  public async initClient(client: RegisteredClient): Promise<RegisteredClient>;
+  public async initClient(): Promise<RegisteredClient | undefined>;
   public async initClient(client?: RegisteredClient): Promise<RegisteredClient | undefined> {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set.');
@@ -302,50 +304,34 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
       // initialize schedulers for pending mls proposals once client is initialized
       await this.service.mls.checkExistingPendingProposals();
 
-      // initialize schedulers for renewing key materials
-      this.service.mls.checkForKeyMaterialsUpdate();
-
       // initialize scheduler for syncing key packages with backend
       this.service.mls.checkForKeyPackagesBackendSync();
+
+      // leave stale conference subconversations (e.g after a crash)
+      await this.service.mls.leaveStaleConferenceSubconversations();
     }
 
     return validClient;
   }
 
-  private async generateSecretKey(baseDbName: string) {
-    const coreCryptoKeyId = 'corecrypto-key';
-    const dbName = `secrets-${baseDbName}`;
-
-    const systemCrypto = this.cryptoProtocolConfig?.systemCrypto;
-    this.secretsDb = systemCrypto
-      ? await createCustomEncryptedStore(dbName, systemCrypto)
-      : await createEncryptedStore(dbName);
-
-    let key = await this.secretsDb.getsecretValue(coreCryptoKeyId);
-    if (!key) {
-      key = crypto.getRandomValues(new Uint8Array(16));
-      await this.secretsDb.saveSecretValue(coreCryptoKeyId, key);
-    }
-    await this.secretsDb?.close();
-    return key;
-  }
-
-  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, db: CoreDatabase, enableMLS: boolean) {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, enableMLS: boolean) {
+    /* There are 3 cases where we want to instantiate CoreCrypto:
+     * 1. MLS is enabled
+     * 2. The user has enabled CoreCrypto in the config
+     * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
+     */
     const clientType =
-      enableMLS || !!this.cryptoProtocolConfig?.useCoreCrypto
+      enableMLS ||
+      !!this.cryptoProtocolConfig?.useCoreCrypto ||
+      cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
         ? CryptoClientType.CORE_CRYPTO
         : CryptoClientType.CRYPTOBOX;
 
-    let key = Uint8Array.from([]);
-    if (clientType === CryptoClientType.CORE_CRYPTO) {
-      key = await this.generateSecretKey(storeEngine.storeName);
-    }
-
-    return buildCryptoClient(clientType, db, {
+    return buildCryptoClient(clientType, {
       storeEngine,
-      secretKey: key,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
+      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
@@ -373,7 +359,7 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, this.db, enableMLS);
+    const cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine, enableMLS);
     const [clientType, cryptoClient] = cryptoClientDef;
 
     const mlsService =
@@ -385,8 +371,6 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
         : undefined;
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {
-      // We can use qualified ids to send messages as long as the backend supports federated endpoints
-      useQualifiedIds: this.backendFeatures.federationEndpoints,
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
       nbPrekeys: this.nbPrekeys,
     });
@@ -396,21 +380,13 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
     const notificationService = new NotificationService(this.apiClient, proteusService, this.storeEngine, mlsService);
-    const conversationService = new ConversationService(
-      this.apiClient,
-      {
-        // We can use qualified ids to send messages as long as the backend supports federated endpoints
-        useQualifiedIds: this.backendFeatures.federationEndpoints,
-      },
-      proteusService,
-      mlsService,
-    );
+    const conversationService = new ConversationService(this.apiClient, proteusService, mlsService);
 
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
-    const userService = new UserService(this.apiClient, broadcastService, connectionService);
+    const userService = new UserService(this.apiClient);
 
     this.service = {
       mls: mlsService,
@@ -448,9 +424,11 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
     this.resetContext();
   }
 
+  /**
+   * Will delete the identity of the current user
+   */
   private async wipe(): Promise<void> {
-    await this.service?.proteus.wipe();
-    await this.secretsDb?.wipe();
+    await this.service?.proteus.wipe(this.storeEngine);
     if (this.db) {
       await deleteDB(this.db);
     }
@@ -518,7 +496,7 @@ export class Account<T = any> extends TypedEventEmitter<Events> {
           break;
         }
       }
-      onEvent(payload, source);
+      await onEvent(payload, source);
     };
 
     const handleNotification = async (notification: Notification, source: NotificationSource): Promise<void> => {

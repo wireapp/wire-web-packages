@@ -19,41 +19,67 @@
 
 import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Encoder} from 'bazinga64';
+import {deleteDB} from 'idb';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
+import {Ciphersuite, CoreCrypto} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
-import {CryptoClient, LAST_PREKEY_ID} from './CryptoClient.types';
 import {PrekeyTracker} from './PrekeysTracker';
+import {generateSecretKey, CorruptedKeyError} from './secretKeyGenerator';
 
-import {CoreDatabase} from '../../../../storage/CoreDB';
+import {SecretCrypto} from '../../../../mls/types';
+import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
+  systemCrypto?: SecretCrypto;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
 
+type ClientConfig = Config & {
+  onWipe: () => Promise<void>;
+};
+
 export async function buildClient(
   storeEngine: CRUDEngine,
-  secretKey: Uint8Array,
   coreCryptoWasmFilePath: string,
-  db: CoreDatabase,
-  {nbPrekeys, onNewPrekeys}: Config,
+  {systemCrypto, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
-  const coreCrypto = await CoreCrypto.deferredInit(
-    `corecrypto-${storeEngine.storeName}`,
-    Encoder.toBase64(secretKey).asString,
-    undefined, // We pass a placeholder entropy data. It will be set later on by calling `reseedRng`
-    coreCryptoWasmFilePath,
-  );
-  return new CoreCryptoWrapper(coreCrypto, db, {nbPrekeys, onNewPrekeys});
+  let key;
+  const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
+  const secretKeysDbName = `secrets-${storeEngine.storeName}`;
+  try {
+    key = await generateSecretKey({
+      dbName: secretKeysDbName,
+      systemCrypto,
+    });
+  } catch (error) {
+    if (error instanceof CorruptedKeyError) {
+      // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
+      await deleteDB(secretKeysDbName);
+      await deleteDB(coreCryptoDbName);
+      key = await generateSecretKey({
+        dbName: secretKeysDbName,
+        systemCrypto,
+      });
+    } else {
+      throw error;
+    }
+  }
+  const coreCrypto = await CoreCrypto.deferredInit({
+    databaseName: coreCryptoDbName,
+    key: Encoder.toBase64(key.key).asString,
+    wasmFilePath: coreCryptoWasmFilePath,
+    ciphersuites: [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
+  });
+  return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
 }
 
 export class CoreCryptoWrapper implements CryptoClient {
   private readonly prekeyTracker: PrekeyTracker;
 
-  constructor(private readonly coreCrypto: CoreCrypto, db: CoreDatabase, config: Config) {
-    this.prekeyTracker = new PrekeyTracker(this, db, config);
+  constructor(private readonly coreCrypto: CoreCrypto, private readonly config: ClientConfig) {
+    this.prekeyTracker = new PrekeyTracker(this, config);
   }
 
   getNativeClient() {
@@ -68,7 +94,10 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusDecrypt(sessionId, message);
   }
 
-  init() {
+  init(nbInitialPrekeys?: number) {
+    if (nbInitialPrekeys) {
+      this.prekeyTracker.setInitialState(nbInitialPrekeys);
+    }
     return this.coreCrypto.proteusInit();
   }
 
@@ -79,13 +108,17 @@ export class CoreCryptoWrapper implements CryptoClient {
     await this.init();
     const prekeys: PreKey[] = [];
     for (let id = 0; id < nbPrekeys; id++) {
-      prekeys.push(await this.newPrekey(id));
+      prekeys.push(await this.newPrekey());
     }
-    await this.prekeyTracker.setInitialState(prekeys.length);
+
+    const lastPrekeyBytes = await this.coreCrypto.proteusLastResortPrekey();
+    const lastPrekey = Encoder.toBase64(lastPrekeyBytes).asString;
+
+    const lastPrekeyId = CoreCrypto.proteusLastResortPrekeyId();
 
     return {
       prekeys,
-      lastPrekey: await this.newPrekey(LAST_PREKEY_ID),
+      lastPrekey: {id: lastPrekeyId, key: lastPrekey},
     };
   }
 
@@ -122,9 +155,9 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.prekeyTracker.consumePrekey();
   }
 
-  async newPrekey(id: number) {
-    const key = await this.coreCrypto.proteusNewPrekey(id);
-    return {id, key: Encoder.toBase64(key).asString};
+  async newPrekey() {
+    const {id, pkb} = await this.coreCrypto.proteusNewPrekeyAuto();
+    return {id, key: Encoder.toBase64(pkb).asString};
   }
 
   async debugBreakSession(sessionId: string) {
@@ -145,7 +178,29 @@ export class CoreCryptoWrapper implements CryptoClient {
     return this.coreCrypto.proteusCryptoboxMigrate(dbName);
   }
 
+  /**
+   * Will call the callback once corecrypto is ready.
+   * @param callback - Function to be called once corecrypto is ready.
+   * @see https://github.com/wireapp/wire-web-packages/pull/4972
+   */
+  private onReady(callback: () => Promise<void>) {
+    if (!this.coreCrypto.isLocked()) {
+      return callback();
+    }
+
+    return new Promise<void>(resolve => {
+      const intervalId = setInterval(async () => {
+        if (!this.coreCrypto.isLocked()) {
+          clearInterval(intervalId);
+          await callback();
+          return resolve();
+        }
+      }, 100);
+    });
+  }
+
   async wipe() {
-    return this.coreCrypto.wipe();
+    await this.config.onWipe();
+    await this.onReady(() => this.coreCrypto.wipe());
   }
 }

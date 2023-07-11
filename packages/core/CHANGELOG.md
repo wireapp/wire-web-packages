@@ -3,6 +3,438 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.6.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.2...@wireapp/core@40.6.3) (2023-07-03)
+
+### Bug Fixes
+
+* **api-client,core:** Handle failure to fetch keypackages (WPB-1913) ([#5286](https://github.com/wireapp/wire-web-packages/issues/5286)) ([56018fa](https://github.com/wireapp/wire-web-packages/commit/56018fa8aac514a30132e8fd391769a0b1c49d5d))
+
+## [40.6.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.1...@wireapp/core@40.6.2) (2023-06-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.6.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.6.0...@wireapp/core@40.6.1) (2023-06-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.5...@wireapp/core@40.6.0) (2023-06-26)
+
+### Features
+
+* draft-20 core-crypto ([#5258](https://github.com/wireapp/wire-web-packages/issues/5258)) ([138222e](https://github.com/wireapp/wire-web-packages/commit/138222ec6b3d233b44ac2764fec89eb824dde5a8)), closes [#5272](https://github.com/wireapp/wire-web-packages/issues/5272)
+
+## [40.5.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.4...@wireapp/core@40.5.5) (2023-06-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.5.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.3...@wireapp/core@40.5.4) (2023-06-20)
+
+### Bug Fixes
+
+* handle error when sending mls message [WBP-2300] ([#5254](https://github.com/wireapp/wire-web-packages/issues/5254)) ([b757118](https://github.com/wireapp/wire-web-packages/commit/b7571181fd72fbe145ab291e20e9fa0c60bd78f2))
+
+## [40.5.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.2...@wireapp/core@40.5.3) (2023-06-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.5.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.1...@wireapp/core@40.5.2) (2023-06-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.5.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.5.0...@wireapp/core@40.5.1) (2023-06-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.2...@wireapp/core@40.5.0) (2023-06-06)
+
+### Features
+
+* update core-crypto ([#5208](https://github.com/wireapp/wire-web-packages/issues/5208)) ([ef36ad0](https://github.com/wireapp/wire-web-packages/commit/ef36ad0f24f066ffbd83fb03dbade7f65dd5d09a))
+
+## [40.4.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.1...@wireapp/core@40.4.2) (2023-06-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.4.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.4.0...@wireapp/core@40.4.1) (2023-06-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.3.1...@wireapp/core@40.4.0) (2023-06-02)
+
+### Features
+
+* add persistance option to TaskScheduler ([#5188](https://github.com/wireapp/wire-web-packages/issues/5188)) ([09bc24d](https://github.com/wireapp/wire-web-packages/commit/09bc24d3221b6f5130b081080e51d87bbb29cd4f))
+
+## [40.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.3.0...@wireapp/core@40.3.1) (2023-05-31)
+
+### Bug Fixes
+
+* Correct type for mls failed_to_send (FS-2030) ([#5187](https://github.com/wireapp/wire-web-packages/issues/5187)) ([18b86ac](https://github.com/wireapp/wire-web-packages/commit/18b86ac0490aad6d37657180333761f353942664))
+
+# [40.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.10...@wireapp/core@40.3.0) (2023-05-29)
+
+### Features
+
+* Return failed users when sending mls message (FS-2030) ([#5186](https://github.com/wireapp/wire-web-packages/issues/5186)) ([93b01d8](https://github.com/wireapp/wire-web-packages/commit/93b01d86f9cba1f09c7ffdc7084c8e8c777ffaf1))
+
+## [40.2.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.9...@wireapp/core@40.2.10) (2023-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.8...@wireapp/core@40.2.9) (2023-05-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.7...@wireapp/core@40.2.8) (2023-05-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.6...@wireapp/core@40.2.7) (2023-05-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.5...@wireapp/core@40.2.6) (2023-05-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.4...@wireapp/core@40.2.5) (2023-05-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.3...@wireapp/core@40.2.4) (2023-05-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.2...@wireapp/core@40.2.3) (2023-05-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.1...@wireapp/core@40.2.2) (2023-05-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.2.0...@wireapp/core@40.2.1) (2023-05-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.13...@wireapp/core@40.2.0) (2023-05-04)
+
+### Features
+
+* update typescript ([#5115](https://github.com/wireapp/wire-web-packages/issues/5115)) ([f1f39de](https://github.com/wireapp/wire-web-packages/commit/f1f39dee4d5985980b187dc00199beeb1e849f55))
+
+## [40.1.13](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.12...@wireapp/core@40.1.13) (2023-05-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.11...@wireapp/core@40.1.12) (2023-04-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.10...@wireapp/core@40.1.11) (2023-04-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.9...@wireapp/core@40.1.10) (2023-04-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.8...@wireapp/core@40.1.9) (2023-04-19)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.7...@wireapp/core@40.1.8) (2023-04-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.6...@wireapp/core@40.1.7) (2023-04-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.5...@wireapp/core@40.1.6) (2023-04-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.4...@wireapp/core@40.1.5) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.3...@wireapp/core@40.1.4) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.2...@wireapp/core@40.1.3) (2023-03-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.1...@wireapp/core@40.1.2) (2023-03-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.1.0...@wireapp/core@40.1.1) (2023-03-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.0.0...@wireapp/core@40.1.0) (2023-03-23)
+
+### Features
+
+* **core:** allow retrying to send asset metadatas on an existing message ([#4995](https://github.com/wireapp/wire-web-packages/issues/4995)) ([3553d2a](https://github.com/wireapp/wire-web-packages/commit/3553d2a71b43a890ea99c4d6f479b222dd758bd0))
+
+# [40.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.4...@wireapp/core@40.0.0) (2023-03-22)
+
+### Features
+
+* allow partial user listing for federated backends ([#4994](https://github.com/wireapp/wire-web-packages/issues/4994)) ([51f2545](https://github.com/wireapp/wire-web-packages/commit/51f25456fb48e6a6a1e8837c1e40f0496540f03c))
+
+### BREAKING CHANGES
+
+* The return type of postListUser will now always wrap the result in a full UsersResponse
+
+## [39.3.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.3...@wireapp/core@39.3.4) (2023-03-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.3.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.2...@wireapp/core@39.3.3) (2023-03-21)
+
+### Bug Fixes
+
+* Make sure current client is not duplicated in database ([#4992](https://github.com/wireapp/wire-web-packages/issues/4992)) ([9a86fb1](https://github.com/wireapp/wire-web-packages/commit/9a86fb1e50ce0ae5f543b954b5c0498866028d17))
+
+## [39.3.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.1...@wireapp/core@39.3.2) (2023-03-21)
+
+### Bug Fixes
+
+* **core:** wait until corecrypto is ready to call .wipe method [FS-1562] ([#4972](https://github.com/wireapp/wire-web-packages/issues/4972)) ([413a149](https://github.com/wireapp/wire-web-packages/commit/413a14971648cd5f9e2106553e4d94a059a0414f))
+
+## [39.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.3.0...@wireapp/core@39.3.1) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [39.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.7...@wireapp/core@39.3.0) (2023-03-20)
+
+### Features
+
+* update reaction type ([#4973](https://github.com/wireapp/wire-web-packages/issues/4973)) ([4cb5773](https://github.com/wireapp/wire-web-packages/commit/4cb577367b725381baec6707e8cbfaeca0b8bad9))
+
+## [39.2.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.6...@wireapp/core@39.2.7) (2023-03-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.2.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.5...@wireapp/core@39.2.6) (2023-03-16)
+
+### Bug Fixes
+
+* Fix initClient type signature ([295d137](https://github.com/wireapp/wire-web-packages/commit/295d137db2ee3aec524e455fedcf9b65f39c7a55))
+
+## [39.2.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.4...@wireapp/core@39.2.5) (2023-03-16)
+
+### Bug Fixes
+
+* Improve prekeys tracking between client and backend ([#4967](https://github.com/wireapp/wire-web-packages/issues/4967)) ([388902c](https://github.com/wireapp/wire-web-packages/commit/388902cf08f0f5394143bad44f850683f6c3daff))
+
+## [39.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.3...@wireapp/core@39.2.4) (2023-03-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.2...@wireapp/core@39.2.3) (2023-03-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.1...@wireapp/core@39.2.2) (2023-03-14)
+
+### Bug Fixes
+
+* Do not try to fetch clients when no users are given ([#4968](https://github.com/wireapp/wire-web-packages/issues/4968)) ([f01cd78](https://github.com/wireapp/wire-web-packages/commit/f01cd785698434fe778590e2a9a000c08771d8e8))
+
+## [39.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.2.0...@wireapp/core@39.2.1) (2023-03-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [39.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.6...@wireapp/core@39.2.0) (2023-03-13)
+
+### Features
+
+* Forward users for which message could not be encrypted to sender ([#4949](https://github.com/wireapp/wire-web-packages/issues/4949)) ([0797eff](https://github.com/wireapp/wire-web-packages/commit/0797eff2926d9665d4c0a23e704a27d0fc50c97f))
+
+## [39.1.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.5...@wireapp/core@39.1.6) (2023-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.1.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.4...@wireapp/core@39.1.5) (2023-03-07)
+
+### Bug Fixes
+
+* More flexible useVersion api ([#4944](https://github.com/wireapp/wire-web-packages/issues/4944)) ([a328bfe](https://github.com/wireapp/wire-web-packages/commit/a328bfe85359fd371256e79b2545b50f89636ec2))
+
+## [39.1.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.3...@wireapp/core@39.1.4) (2023-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.1.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.2...@wireapp/core@39.1.3) (2023-03-02)
+
+### Bug Fixes
+
+* Improve fetchAllParticipantsClient types ([bc660e8](https://github.com/wireapp/wire-web-packages/commit/bc660e8e3e105aabaaba42115fb3ad7be36393aa))
+
+## [39.1.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.1...@wireapp/core@39.1.2) (2023-03-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [39.1.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.1.0...@wireapp/core@39.1.1) (2023-03-02)
+
+### Bug Fixes
+
+* Do not consume prekeys when listing members-clients of a conversation ([#4932](https://github.com/wireapp/wire-web-packages/issues/4932)) ([c6ffa42](https://github.com/wireapp/wire-web-packages/commit/c6ffa4217df8a3fc28aef04786392df575f4b097))
+
+# [39.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.2...@wireapp/core@39.1.0) (2023-03-02)
+
+### Features
+
+* Warn consumer that some prekeys could not be fetch when encrypting a message ([#4931](https://github.com/wireapp/wire-web-packages/issues/4931)) ([3c7e0eb](https://github.com/wireapp/wire-web-packages/commit/3c7e0eb59cbd34f25e11469a9b645cb8f2c306d2))
+
+## [39.0.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.1...@wireapp/core@39.0.2) (2023-03-01)
+
+### Bug Fixes
+
+* Avoid crashing when a mismatch happens on a domain we are not aware of ([#4929](https://github.com/wireapp/wire-web-packages/issues/4929)) ([958ee22](https://github.com/wireapp/wire-web-packages/commit/958ee22629283942e6ea87f5e15521f421bb2930))
+
+## [39.0.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@39.0.0...@wireapp/core@39.0.1) (2023-03-01)
+
+### Bug Fixes
+
+* Enable CoreCrypto if user has already started using it ([#4928](https://github.com/wireapp/wire-web-packages/issues/4928)) ([203d1b4](https://github.com/wireapp/wire-web-packages/commit/203d1b44d21164527b0d237fff6db62f6e9356bf))
+
+# [39.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.2...@wireapp/core@39.0.0) (2023-03-01)
+
+### Code Refactoring
+
+* Sunset non-domain-aware message sending ([#4927](https://github.com/wireapp/wire-web-packages/issues/4927)) ([6828876](https://github.com/wireapp/wire-web-packages/commit/6828876ce3a37b95804c55ecc040a9dd8dfe8d65))
+
+### BREAKING CHANGES
+
+* Will not be compatible with a backend that only supports api v0 (backends that are >1 year old). You will now be forced to pass fully qualified ID when calling method that need conversation or user identification
+
+## [38.15.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.1...@wireapp/core@38.15.2) (2023-02-27)
+
+### Bug Fixes
+
+* Reset CoreCrypto instance when client is registered ([#4926](https://github.com/wireapp/wire-web-packages/issues/4926)) ([a72fa5e](https://github.com/wireapp/wire-web-packages/commit/a72fa5e13ae38dfbbe071eee6359f5c9e9a0f8b2))
+
+## [38.15.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.15.0...@wireapp/core@38.15.1) (2023-02-27)
+
+### Bug Fixes
+
+* Warn consumer that some clients have been deleted ([#4914](https://github.com/wireapp/wire-web-packages/issues/4914)) ([e3376d2](https://github.com/wireapp/wire-web-packages/commit/e3376d27f5a26f0eb8656f24ea49389835ba6000))
+
+# [38.15.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.3...@wireapp/core@38.15.0) (2023-02-23)
+
+### Features
+
+* **core, api-client:** leave stale subconversations after crash [FS-1564] ([#4912](https://github.com/wireapp/wire-web-packages/issues/4912)) ([b42de93](https://github.com/wireapp/wire-web-packages/commit/b42de937a8a6189e77b4934aca4c251442672a02))
+
+## [38.14.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.2...@wireapp/core@38.14.3) (2023-02-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.14.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.1...@wireapp/core@38.14.2) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.14.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.14.0...@wireapp/core@38.14.1) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [38.14.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.13.2...@wireapp/core@38.14.0) (2023-02-20)
+
+### Features
+
+* user leaves mls conference call [FS-1288] ([#4834](https://github.com/wireapp/wire-web-packages/issues/4834)) ([fe31c0a](https://github.com/wireapp/wire-web-packages/commit/fe31c0a4da091a137d9633f8b50dbbac70cfc45a))
+
+## [38.13.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.13.1...@wireapp/core@38.13.2) (2023-02-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.13.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.13.0...@wireapp/core@38.13.1) (2023-02-16)
+
+### Bug Fixes
+
+* Improve secretKey generator to handle multiple system crypto ([#4885](https://github.com/wireapp/wire-web-packages/issues/4885)) ([bccadbf](https://github.com/wireapp/wire-web-packages/commit/bccadbfd9afebc9f3f9a3a1637f929f4d8fa0199))
+
+# [38.13.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.12.1...@wireapp/core@38.13.0) (2023-02-16)
+
+### Features
+
+* **core:** access last resort prekey and its id from corecrypto ([#4889](https://github.com/wireapp/wire-web-packages/issues/4889)) ([d376337](https://github.com/wireapp/wire-web-packages/commit/d376337c7172ba339a0e87dc7e73a58692a15bb5))
+
+## [38.12.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.12.0...@wireapp/core@38.12.1) (2023-02-15)
+
+### Bug Fixes
+
+* Make sure cryptobox and coreCrypto identity are deleted when needed ([#4887](https://github.com/wireapp/wire-web-packages/issues/4887)) ([6f865a9](https://github.com/wireapp/wire-web-packages/commit/6f865a9281bf5b5da29dfcdb84e235152fff463b))
+
+# [38.12.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.11.2...@wireapp/core@38.12.0) (2023-02-14)
+
+### Features
+
+* update @wireapp/core-crypto to latest version with ACME support ([#4884](https://github.com/wireapp/wire-web-packages/issues/4884)) ([da922b7](https://github.com/wireapp/wire-web-packages/commit/da922b7bd10f94b6cf76209d4ddb4482845138a8))
+
+## [38.11.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.11.1...@wireapp/core@38.11.2) (2023-02-09)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.11.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.11.0...@wireapp/core@38.11.1) (2023-02-08)
+
+### Bug Fixes
+
+* Await incoming event handler ([#4866](https://github.com/wireapp/wire-web-packages/issues/4866)) ([b98d83e](https://github.com/wireapp/wire-web-packages/commit/b98d83e291b9c170464fe8f83e2163ea058b8d97))
+
+# [38.11.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.3...@wireapp/core@38.11.0) (2023-02-08)
+
+### Features
+
+* Use latest coreCrypto decryption error handling ([#4865](https://github.com/wireapp/wire-web-packages/issues/4865)) ([9b01c44](https://github.com/wireapp/wire-web-packages/commit/9b01c4473f6d8a7a34a0b6993aaa43f87e6f1f98))
+
+## [38.10.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.2...@wireapp/core@38.10.3) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([96d8c6b](https://github.com/wireapp/wire-web-packages/commit/96d8c6b5cbabe119337f409447301b3f79dbdeab))
+
+## [38.10.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.1...@wireapp/core@38.10.2) (2023-02-07)
+
+### Bug Fixes
+
+* Improve MLS backend response types ([#4864](https://github.com/wireapp/wire-web-packages/issues/4864)) ([af02540](https://github.com/wireapp/wire-web-packages/commit/af025403eeae576e25a1a071f76576cf3ac581b3))
+
+## [38.10.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.10.0...@wireapp/core@38.10.1) (2023-02-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [38.10.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.9.1...@wireapp/core@38.10.0) (2023-02-06)
+
+### Features
+
+* expose material key renewal api ([#4854](https://github.com/wireapp/wire-web-packages/issues/4854)) ([feab950](https://github.com/wireapp/wire-web-packages/commit/feab9507f6d7d2956af35c1c52e5411947dec62a))
+
+## [38.9.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.9.0...@wireapp/core@38.9.1) (2023-02-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [38.9.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.3...@wireapp/core@38.9.0) (2023-02-02)
+
+### Features
+
+* **core:** Return federated users that could not receive a message ([#4844](https://github.com/wireapp/wire-web-packages/issues/4844)) ([9022e10](https://github.com/wireapp/wire-web-packages/commit/9022e102afb24ddbf99f07be7cd86178df086a2d))
+
+## [38.8.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.2...@wireapp/core@38.8.3) (2023-02-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [38.8.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.1...@wireapp/core@38.8.2) (2023-02-01)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [38.8.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@38.8.0...@wireapp/core@38.8.1) (2023-01-31)
 
 **Note:** Version bump only for package @wireapp/core

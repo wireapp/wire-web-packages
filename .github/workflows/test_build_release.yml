@@ -9,10 +9,13 @@ on:
 jobs:
   test_build_release:
     runs-on: ubuntu-latest
+    env:
+      COMMITTER: ${{github.event.head_commit.committer.name}}
+      COMMIT_URL: ${{github.event.head_commit.url}}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.3
         with:
           fetch-depth: 0
 
@@ -21,8 +24,6 @@ jobs:
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
-          echo "COMMIT_URL=${{github.event.head_commit.url}}" >> $GITHUB_ENV
-          echo "COMMITTER=${{github.event.head_commit.committer.name}}" >> $GITHUB_ENV
 
       - name: Set TITLE
         env:
@@ -56,7 +57,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
 
       - name: Authenticate git clone
@@ -70,25 +71,18 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Set release environment variables
-        if: env.BRANCH_NAME == 'main'
+      - name: Release
+        if: |
+          env.BRANCH_NAME == 'main' &&
+          !startsWith(env.TITLE, 'chore') &&
+          !startsWith(env.TITLE, 'test')
+        env:
+          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         run: |
-          HAS_UPDATES="$(npx lerna updated > /dev/null 2>&1; echo "${?}")"
-          echo "HAS_UPDATES=${HAS_UPDATES}" >> $GITHUB_ENV
-          echo -e "HAS_UPDATES = ${HAS_UPDATES}"
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
-
-      - name: Release
-        env:
-          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
-        if: |
-          env.BRANCH_NAME == 'main' &&
-          env.HAS_UPDATES == '0' &&
-          !startsWith(env.TITLE, 'chore') &&
-          !startsWith(env.TITLE, 'test')
-        run: yarn release
+          yarn release
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'

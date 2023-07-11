@@ -42,9 +42,11 @@ import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
 import {Backend} from './env/';
+import {GenericAPI} from './generic';
 import {GiphyAPI} from './giphy/';
 import {BackendError, HttpClient} from './http/';
 import {NotificationAPI} from './notification/';
+import {OAuthAPI} from './oauth/OAuthAPI';
 import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {ServiceProviderAPI} from './serviceProvider';
@@ -97,6 +99,7 @@ type Apis = {
   conversation: ConversationAPI;
   giphy: GiphyAPI;
   notification: NotificationAPI;
+  oauth: OAuthAPI;
   self: SelfAPI;
   services: ServicesAPI;
   serviceProvider: ServiceProviderAPI;
@@ -115,6 +118,7 @@ type Apis = {
     team: TeamAPI;
   };
   user: UserAPI;
+  generic: GenericAPI;
 };
 
 /** map of all the features that the backend supports (depending on the backend api version number) */
@@ -127,9 +131,17 @@ export type BackendFeatures = {
   isFederated: boolean;
   /** Does the backend API support MLS features */
   supportsMLS: boolean;
+  /** Does the backend API support creating guest links with password */
+  supportsGuestLinksWithPassword: boolean;
+  domain: string;
 };
 
-export type BackendVersionResponse = {supported: number[]; federation?: boolean; development?: number[]};
+export type BackendVersionResponse = {
+  supported: number[];
+  federation?: boolean;
+  development?: number[];
+  domain: string;
+};
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
@@ -197,10 +209,11 @@ export class APIClient extends EventEmitter {
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
       client: new ClientAPI(this.transport.http),
-      connection: new ConnectionAPI(this.transport.http, backendFeatures),
+      connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
       giphy: new GiphyAPI(this.transport.http),
       notification: new NotificationAPI(this.transport.http),
+      oauth: new OAuthAPI(this.transport.http),
       self: new SelfAPI(this.transport.http),
       serviceProvider: new ServiceProviderAPI(this.transport.http),
       teams: {
@@ -218,6 +231,7 @@ export class APIClient extends EventEmitter {
         team: new TeamAPI(this.transport.http),
       },
       user: new UserAPI(this.transport.http, backendFeatures),
+      generic: new GenericAPI(this.transport.http),
     };
   }
 
@@ -229,44 +243,42 @@ export class APIClient extends EventEmitter {
   private computeBackendFeatures(backendVersion: number, responsePayload?: BackendVersionResponse): BackendFeatures {
     return {
       version: backendVersion,
+      domain: responsePayload?.domain ?? '',
       federationEndpoints: backendVersion > 0,
       isFederated: responsePayload?.federation || false,
-      supportsMLS: backendVersion >= 2,
+      supportsMLS: backendVersion >= 4,
+      supportsGuestLinksWithPassword: backendVersion >= 4,
     };
   }
 
   /**
    * Will set the APIClient to use a specific version of the API (by default uses version 0)
    * It will fetch the API Config and use the highest possible version
-   * @param acceptedVersions Which version the consumer supports
-   * @param useDevVersion allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
+   * @param min mininum version to use
+   * @param max maximum version to use
+   * @param allowDev allow the api-client to use development version of the api (if present). The dev version also need to be listed on the supportedVersions given as parameters
    *   If we have version 2 that is a dev version, this is going to be the output of those calls
-   *   - useVersion([0, 1, 2], true) > version 2 is used
-   *   - useVersion([0, 1, 2], false) > version 1 is used
-   *   - useVersion([0, 1], true) > version 1 is used
+   *   - useVersion(0, 2, true) > version 2 is used
+   *   - useVersion(0, 2) > version 1 is used
+   *   - useVersion(0, 1, true) > version 1 is used
    * @return The highest version that is both supported by client and backend
    */
-  async useVersion(acceptedVersions: number[], useDevVersion = false): Promise<BackendFeatures> {
-    if (acceptedVersions.length === 1 && acceptedVersions[0] === 0) {
-      // Nothing to do since version 0 is the default one
-      return this.computeBackendFeatures(0);
-    }
-    let backendVersions: BackendVersionResponse = {supported: [0]};
+  async useVersion(min: number, max: number, allowDev?: boolean): Promise<BackendFeatures> {
+    let backendVersions: BackendVersionResponse = {supported: [0], domain: ''};
     try {
       backendVersions = (await this.transport.http.sendRequest<BackendVersionResponse>({url: '/api-version'})).data;
     } catch (error) {}
-    const devVersions = useDevVersion ? backendVersions.development ?? [] : [];
+    const devVersions = allowDev ? backendVersions.development ?? [] : [];
     const highestCommonVersion = backendVersions.supported
       .concat(devVersions)
       .sort()
       .reverse()
-      .find(version => acceptedVersions.includes(version));
+      .find(version => version >= min && version <= max);
 
     if (highestCommonVersion === undefined) {
+      const supportedStr = backendVersions.supported.join(', ');
       throw new Error(
-        `Backend does not support requested versions [${acceptedVersions.join(
-          ', ',
-        )}] (supported versions ${backendVersions.supported.join(', ')})`,
+        `Backend does not support requested versions [${min}-${max}] (supported versions ${supportedStr})`,
       );
     }
     this.backendFeatures = this.computeBackendFeatures(highestCommonVersion, backendVersions);

@@ -3,6 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.7.4...@wireapp/react-ui-kit@9.7.5) (2023-06-16)
+
+### Bug Fixes
+
+* [Web] Reactions: Keyboard navigation - Focus state of reaction pill does not show tooltip box ([#5235](https://github.com/wireapp/wire-web-packages/issues/5235)) ([e16b854](https://github.com/wireapp/wire-web-packages/commit/e16b85413d99b9b33a10128e60a8405cc9fc6c77))
+
+## [9.7.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.7.3...@wireapp/react-ui-kit@9.7.4) (2023-06-13)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.7.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.7.2...@wireapp/react-ui-kit@9.7.3) (2023-06-05)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.7.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.7.1...@wireapp/react-ui-kit@9.7.2) (2023-05-29)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.7.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.7.0...@wireapp/react-ui-kit@9.7.1) (2023-05-08)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.6.1...@wireapp/react-ui-kit@9.7.0) (2023-05-04)
+
+### Features
+
+* update typescript ([#5115](https://github.com/wireapp/wire-web-packages/issues/5115)) ([f1f39de](https://github.com/wireapp/wire-web-packages/commit/f1f39dee4d5985980b187dc00199beeb1e849f55))
+
+## [9.6.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.6.0...@wireapp/react-ui-kit@9.6.1) (2023-05-02)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.5.1...@wireapp/react-ui-kit@9.6.0) (2023-04-05)
+
+### Features
+
+* add verification shield icon ([#5034](https://github.com/wireapp/wire-web-packages/issues/5034)) ([699a822](https://github.com/wireapp/wire-web-packages/commit/699a8225c502d114ed30f94ed1ad246d150edf5f))
+
+## [9.5.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.5.0...@wireapp/react-ui-kit@9.5.1) (2023-04-04)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.4.3...@wireapp/react-ui-kit@9.5.0) (2023-03-30)
+
+### Features
+
+* **react-ui-kit:** Implement new tooltip ([#5012](https://github.com/wireapp/wire-web-packages/issues/5012)) ([ea4842e](https://github.com/wireapp/wire-web-packages/commit/ea4842ee14c7cda9a18a3a55691dfed749a407f1))
+
+## [9.4.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.4.2...@wireapp/react-ui-kit@9.4.3) (2023-03-27)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.4.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.4.1...@wireapp/react-ui-kit@9.4.2) (2023-03-20)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.4.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.4.0...@wireapp/react-ui-kit@9.4.1) (2023-03-13)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.9...@wireapp/react-ui-kit@9.4.0) (2023-03-07)
+
+### Features
+
+* improve typing for color packages ([#4930](https://github.com/wireapp/wire-web-packages/issues/4930)) ([4910695](https://github.com/wireapp/wire-web-packages/commit/491069528d53247384f6d6cdd2bb58aa5f921e3a))
+
+## [9.3.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.8...@wireapp/react-ui-kit@9.3.9) (2023-02-27)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.3.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.7...@wireapp/react-ui-kit@9.3.8) (2023-02-22)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.3.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.6...@wireapp/react-ui-kit@9.3.7) (2023-02-20)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.3.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.5...@wireapp/react-ui-kit@9.3.6) (2023-02-14)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 ## [9.3.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.3.4...@wireapp/react-ui-kit@9.3.5) (2023-01-30)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

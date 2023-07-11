@@ -27,7 +27,6 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 import {CRUDEngine} from '@wireapp/store-engine';
 
-import {deleteIdentity} from '../identity/identityClearer';
 import type {ProteusService} from '../messagingProtocols/proteus';
 import {InitialPrekeys} from '../messagingProtocols/proteus/ProteusService/CryptoClient';
 
@@ -54,7 +53,7 @@ export class ClientService {
     private readonly proteusService: ProteusService,
     private readonly storeEngine: CRUDEngine,
   ) {
-    this.database = new ClientDatabaseRepository(this.storeEngine, this.apiClient.backendFeatures.federationEndpoints);
+    this.database = new ClientDatabaseRepository(this.storeEngine);
     this.backend = new ClientBackendRepository(this.apiClient);
   }
 
@@ -119,12 +118,11 @@ export class ClientService {
       if (notFoundOnBackend && this.storeEngine) {
         this.logger.log('Could not find valid client on backend');
         const shouldDeleteWholeDatabase = loadedClient.type === ClientType.TEMPORARY;
+        this.logger.log('Deleting previous identity');
+        await this.proteusService.wipe(this.storeEngine);
         if (shouldDeleteWholeDatabase) {
-          this.logger.log('Last client was temporary - Deleting database');
+          this.logger.log('Last client was temporary - Deleting content database');
           await this.storeEngine.clearTables();
-        } else {
-          this.logger.log('Last client was permanent - Deleting previous identity');
-          deleteIdentity(this.storeEngine);
         }
       }
     }
@@ -135,13 +133,16 @@ export class ClientService {
     return this.database.createLocalClient(client, domain);
   }
 
-  public async synchronizeClients(): Promise<MetaClient[]> {
+  /**
+   * Will download all the clients of the self user (excluding the current client) and will store them in the database
+   * @param currentClient - the id of the current client (to be excluded from the list)
+   */
+  public async synchronizeClients(currentClient: string): Promise<MetaClient[]> {
     const registeredClients = await this.backend.getClients();
-    const filteredClients = registeredClients.filter(client => client.id !== this.apiClient.context!.clientId);
+    const filteredClients = registeredClients.filter(client => client.id !== currentClient);
     return this.database.createClientList(
-      this.apiClient.context!.userId,
+      {id: this.apiClient.context!.userId, domain: this.apiClient.context!.domain ?? ''},
       filteredClients,
-      this.apiClient.context?.domain,
     );
   }
 
