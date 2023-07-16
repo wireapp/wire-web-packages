@@ -135,16 +135,16 @@ __metadata:
   linkType: hard
 
 "@babel/eslint-parser@npm:^7.19.1":
-  version: 7.22.7
-  resolution: "@babel/eslint-parser@npm:7.22.7"
+  version: 7.22.9
+  resolution: "@babel/eslint-parser@npm:7.22.9"
   dependencies:
     "@nicolo-ribaudo/eslint-scope-5-internals": 5.1.1-v1
-    "@nicolo-ribaudo/semver-v6": ^6.3.3
     eslint-visitor-keys: ^2.1.0
+    semver: ^6.3.1
   peerDependencies:
     "@babel/core": ">=7.11.0"
     eslint: ^7.5.0 || ^8.0.0
-  checksum: 2909c61cca8a2eddb65c30181d7cbb740688a231dfd665ae4b189cc11494228dc15046084e3c15009f1203eb51f3cb3c1b62feed743e546603d18a040b60b108
+  checksum: 4f417796c803056aad2c8fa69b8a7a78a1fdacc307d95702f22894cab42b83554e47de7d0b3cfbee667f25014bca0179f859aa86ceb684b09803192e1200b48d
   languageName: node
   linkType: hard
 
@@ -16654,6 +16654,15 @@ __metadata:
   bin:
     semver: ./bin/semver.js
   checksum: 1b26ecf6db9e8292dd90df4e781d91875c0dcc1b1909e70f5d12959a23c7eebb8f01ea581c00783bbee72ceeaad9505797c381756326073850dc36ed284b21b9
+  languageName: node
+  linkType: hard
+
+"semver@npm:^6.3.1":
+  version: 6.3.1
+  resolution: "semver@npm:6.3.1"
+  bin:
+    semver: bin/semver.js
+  checksum: ae47d06de28836adb9d3e25f22a92943477371292d9b665fb023fae278d345d508ca1958232af086d85e0155aee22e313e100971898bbb8d5d89b8b1d4054ca2
   languageName: node
   linkType: hard
 
