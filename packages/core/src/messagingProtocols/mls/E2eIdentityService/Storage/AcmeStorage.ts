@@ -88,7 +88,7 @@ const getCertificateData = (): string => {
   return atob;
 };
 
-export const q = {
+export const AcmeStorage = {
   storeHandle,
   storeAuthData,
   storeOrderData,
