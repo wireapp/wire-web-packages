@@ -39,3 +39,5 @@ export const getE2eClientId = (user: User, clientId: string): E2eClientId => {
   );
   return `${Encoder.toBase64(user.id).asString}:${clientId}@${user.domain}`;
 };
+
+export const isResponseStatusValid = (status: string | undefined) => status && status === 'valid';

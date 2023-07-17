@@ -131,7 +131,7 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly createStore: CreateStoreFn;
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
-  private readonly enableMLS: () => boolean;
+  private readonly isMlsEnabled: () => boolean;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
   private cryptoClientDef?: CryptoClientDef;
@@ -167,7 +167,7 @@ export class Account extends TypedEventEmitter<Events> {
     this.backendFeatures = this.apiClient.backendFeatures;
     this.cryptoProtocolConfig = cryptoProtocolConfig;
     this.nbPrekeys = nbPrekeys;
-    this.enableMLS = () => this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
+    this.isMlsEnabled = () => this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.createStore = createStore;
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
@@ -228,7 +228,7 @@ export class Account extends TypedEventEmitter<Events> {
     const domain = context?.domain ?? '';
 
     if (!client) {
-      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.isMlsEnabled());
       return false;
     }
 
@@ -256,7 +256,7 @@ export class Account extends TypedEventEmitter<Events> {
   public async continueE2EIEnrollment(): Promise<boolean> {
     const client = this.getCoreCryptoClient();
     if (!client) {
-      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.enableMLS());
+      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.isMlsEnabled());
       return false;
     }
     const instance = await E2eIdentityService.getInstance({
@@ -390,7 +390,7 @@ export class Account extends TypedEventEmitter<Events> {
      * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
      */
     const clientType =
-      this.enableMLS() ||
+      this.isMlsEnabled() ||
       !!this.cryptoProtocolConfig?.useCoreCrypto ||
       cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
         ? CryptoClientType.CORE_CRYPTO
@@ -431,7 +431,7 @@ export class Account extends TypedEventEmitter<Events> {
     const [clientType, cryptoClient] = this.cryptoClientDef;
 
     const mlsService =
-      clientType === CryptoClientType.CORE_CRYPTO && this.enableMLS()
+      clientType === CryptoClientType.CORE_CRYPTO && this.isMlsEnabled()
         ? new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
             ...this.cryptoProtocolConfig?.mls,
             nbKeyPackages: this.nbPrekeys,

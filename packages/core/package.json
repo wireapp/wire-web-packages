@@ -30,7 +30,7 @@
     "long": "^5.2.0",
     "oidc-client-ts": "^2.2.2",
     "uuidjs": "4.2.13",
-    "zod": "^3.21.4"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.0",

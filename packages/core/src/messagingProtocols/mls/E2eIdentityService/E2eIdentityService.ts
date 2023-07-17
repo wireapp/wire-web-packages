@@ -31,7 +31,7 @@ import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
 import {InitParams, User} from './E2eIdentityService.types';
-import {getE2eClientId} from './Helper';
+import {getE2eClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
 import {getCertificate} from './Steps/Certificate';
@@ -280,7 +280,7 @@ class E2eIdentityService {
         nonce: oidcData.nonce,
       });
       this.logger.log('acme dpopData', JSON.stringify(dpopData));
-      if (dpopData.data.status !== 'valid') {
+      if (!isResponseStatusValid(dpopData.data.status)) {
         return this.exitWithError('Error while trying to continue OAuth flow. DPOP challenge not validated');
       }
 
