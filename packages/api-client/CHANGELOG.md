@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [24.20.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.19.0...@wireapp/api-client@24.20.0) (2023-07-24)
+
+### Features
+
+* 1to1 mls conversations ([#5336](https://github.com/wireapp/wire-web-packages/issues/5336)) ([fdf0e17](https://github.com/wireapp/wire-web-packages/commit/fdf0e174c3e4578a6515115a8428d47aa92502c2))
+
+# [24.19.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.18.1...@wireapp/api-client@24.19.0) (2023-07-13)
+
+### Features
+
+* **api-client, core:** parse client last active field [WPB-2186] ([#5306](https://github.com/wireapp/wire-web-packages/issues/5306)) ([09d0153](https://github.com/wireapp/wire-web-packages/commit/09d015359f2225f4d4bf516a3b82f58f6612a689))
+
 ## [24.18.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.18.0...@wireapp/api-client@24.18.1) (2023-07-03)
 
 ### Bug Fixes
