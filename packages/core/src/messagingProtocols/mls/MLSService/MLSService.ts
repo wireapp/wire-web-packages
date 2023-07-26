@@ -400,7 +400,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  public updateKeyingMaterial(groupId: string) {
+  private updateKeyingMaterial(groupId: string) {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
   }
@@ -504,7 +504,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Renew key material for a given groupId
+   * Will send an empty commit into a group (renew key material)
    *
    * @param groupId groupId of the conversation
    */
