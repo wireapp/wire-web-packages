@@ -19,7 +19,7 @@
 
 import {Task, PromiseQueue} from '@wireapp/promise-queue';
 
-const sendingQueue = new PromiseQueue({name: 'message-sender', paused: true});
+const sendingQueue = new PromiseQueue({name: 'message-sender', paused: false});
 
 export function sendMessage<T>(sendingFunction: Task<T>): Promise<T> {
   return sendingQueue.push(sendingFunction);
