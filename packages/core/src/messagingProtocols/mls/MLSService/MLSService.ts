@@ -513,8 +513,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupConversationExists = await this.conversationExists(groupId);
 
       if (!groupConversationExists) {
-        this.cancelKeyMaterialRenewal(groupId);
-        return;
+        return this.cancelKeyMaterialRenewal(groupId);
       }
 
       await this.updateKeyingMaterial(groupId);
