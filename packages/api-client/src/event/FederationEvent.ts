@@ -24,9 +24,6 @@ export enum FEDERATION_EVENT {
   FEDERATION_CONNECTION_REMOVED = 'federation.connectionRemoved',
 }
 
-// {"type":"federation.delete", "domain": "backendB.com"}
-// {"type":"federation.connectionRemoved", "domains":["backendA.com", "backendB.com"]}
-
 export type FederationEventData = FederationDeleteData | FederationConnectionRemovedData | null;
 
 export type FederationEvent = FederationDeleteEvent | FederationConnectionRemovedEvent;
