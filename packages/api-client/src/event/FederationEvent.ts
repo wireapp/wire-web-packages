@@ -30,7 +30,6 @@ export type FederationEvent = FederationDeleteEvent | FederationConnectionRemove
 
 export interface BaseFederationEvent {
   data: FederationEventData;
-  Federation: string;
   time: string;
   type: FEDERATION_EVENT;
 }
