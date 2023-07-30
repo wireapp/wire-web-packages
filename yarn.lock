@@ -4920,9 +4920,9 @@ __metadata:
   linkType: soft
 
 "@wireapp/core-crypto@npm:^1.0.0-rc.1":
-  version: 1.0.0-rc.1
-  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.1"
-  checksum: 7abee4741a82c863448b43caa5ee605495d92e9924671c5cb4f886d4d6c99ba98ccabff324dac616fa8a564c4dbcb1112e1a0d1c995147c4125c05613fb2f90c
+  version: 1.0.0-rc.2
+  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.2"
+  checksum: ee48152cc1ec5802472f7eda00d5e51c834ea352c08d09bd76e36da66a80189cb54c50687861487146c40d54b132434c2b1a269551e9e94eff76a396ba5b7a35
   languageName: node
   linkType: hard
 
