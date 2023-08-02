@@ -5182,7 +5182,7 @@ __metadata:
     bazinga64: 6.1.1
     commander: 11.0.0
     cross-env: 7.0.3
-    deepmerge-ts: 4.3.0
+    deepmerge-ts: 5.1.0
     dotenv-defaults: 5.0.2
     fake-indexeddb: ^4.0.0
     hash.js: 1.1.7
@@ -8038,10 +8038,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge-ts@npm:4.3.0":
-  version: 4.3.0
-  resolution: "deepmerge-ts@npm:4.3.0"
-  checksum: d5f8a96df9a2bc7177d59544b9390ba76e50fb725f776669068ca04eef319e98ee8870cf7b7ecca9f636b711d57cea571ac61553ee01101a614c045f7a86e0be
+"deepmerge-ts@npm:5.1.0":
+  version: 5.1.0
+  resolution: "deepmerge-ts@npm:5.1.0"
+  checksum: 6b57db93c2985e4a35f24b2451db31715050d143988b7d6346f4049c9aec21a6c289514b88d3ee3d6e0697e72ef5d96ff0bbb7cb75422d56fee55ee85c7168e7
   languageName: node
   linkType: hard
 
