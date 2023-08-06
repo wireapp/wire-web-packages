@@ -5127,9 +5127,9 @@ __metadata:
   linkType: soft
 
 "@wireapp/core-crypto@npm:^1.0.0-rc.1":
-  version: 1.0.0-rc.1
-  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.1"
-  checksum: 7abee4741a82c863448b43caa5ee605495d92e9924671c5cb4f886d4d6c99ba98ccabff324dac616fa8a564c4dbcb1112e1a0d1c995147c4125c05613fb2f90c
+  version: 1.0.0-rc.5
+  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.5"
+  checksum: e7c915d89ffe775f0a393260dfe1aa41fa2c4b7b422390b6538f310f8643352a6115fe2e0f98caa8b087cd03644d81fb2f2c2765d6b177b62cf3601f8f31bad0
   languageName: node
   linkType: hard
 
