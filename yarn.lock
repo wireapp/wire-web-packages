@@ -2562,15 +2562,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/schemas@npm:^28.1.3":
-  version: 28.1.3
-  resolution: "@jest/schemas@npm:28.1.3"
-  dependencies:
-    "@sinclair/typebox": ^0.24.1
-  checksum: 3cf1d4b66c9c4ffda58b246de1ddcba8e6ad085af63dccdf07922511f13b68c0cc480a7bc620cb4f3099a6f134801c747e1df7bfc7a4ef4dceefbdea3e31e1de
-  languageName: node
-  linkType: hard
-
 "@jest/schemas@npm:^29.4.3":
   version: 29.4.3
   resolution: "@jest/schemas@npm:29.4.3"
@@ -3533,13 +3524,6 @@ __metadata:
   version: 0.1.0
   resolution: "@sigstore/protobuf-specs@npm:0.1.0"
   checksum: 9959bc5176906609dda6ad2a1f5226fac1e49fcb4d29f38969d2a2e3a05cba8e2479721ba78c46a507513abacb63f25a991e5e8856c300204cded455f34ba8c5
-  languageName: node
-  linkType: hard
-
-"@sinclair/typebox@npm:^0.24.1":
-  version: 0.24.51
-  resolution: "@sinclair/typebox@npm:0.24.51"
-  checksum: fd0d855e748ef767eb19da1a60ed0ab928e91e0f358c1dd198d600762c0015440b15755e96d1176e2a0db7e09c6a64ed487828ee10dd0c3e22f61eb09c478cd0
   languageName: node
   linkType: hard
 
@@ -5208,7 +5192,7 @@ __metadata:
     http-status-codes: 2.2.0
     idb: 7.1.1
     jest: ^29.2.1
-    jest-websocket-mock: 2.4.0
+    jest-websocket-mock: 2.4.1
     logdown: 3.3.1
     long: ^5.2.0
     nock: 13.3.2
@@ -8246,13 +8230,6 @@ __metadata:
     asap: ^2.0.0
     wrappy: 1
   checksum: 895389c6aead740d2ab5da4d3466d20fa30f738010a4d3f4dcccc9fc645ca31c9d10b7e1804ae489b1eb02c7986f9f1f34ba132d409b043082a86d9a4e745624
-  languageName: node
-  linkType: hard
-
-"diff-sequences@npm:^28.1.1":
-  version: 28.1.1
-  resolution: "diff-sequences@npm:28.1.1"
-  checksum: e2529036505567c7ca5a2dea86b6bcd1ca0e3ae63bf8ebf529b8a99cfa915bbf194b7021dc1c57361a4017a6d95578d4ceb29fabc3232a4f4cb866a2726c7690
   languageName: node
   linkType: hard
 
@@ -12206,15 +12183,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^28.0.2":
-  version: 28.1.3
-  resolution: "jest-diff@npm:28.1.3"
+"jest-diff@npm:^29.2.0, jest-diff@npm:^29.6.2":
+  version: 29.6.2
+  resolution: "jest-diff@npm:29.6.2"
   dependencies:
     chalk: ^4.0.0
-    diff-sequences: ^28.1.1
-    jest-get-type: ^28.0.2
-    pretty-format: ^28.1.3
-  checksum: fa8583e0ccbe775714ce850b009be1b0f6b17a4b6759f33ff47adef27942ebc610dbbcc8a5f7cfb7f12b3b3b05afc9fb41d5f766674616025032ff1e4f9866e0
+    diff-sequences: ^29.4.3
+    jest-get-type: ^29.4.3
+    pretty-format: ^29.6.2
+  checksum: 0effd66a0c23f8c139ebf7ca99ed30b479b86fff66f19ad4869f130aaf7ae6a24ca1533f697b7e4930cbe2ddffc85387723fcca673501c653fb77a38f538e959
   languageName: node
   linkType: hard
 
@@ -12227,18 +12204,6 @@ __metadata:
     jest-get-type: ^29.4.3
     pretty-format: ^29.5.0
   checksum: dfd0f4a299b5d127779c76b40106c37854c89c3e0785098c717d52822d6620d227f6234c3a9291df204d619e799e3654159213bf93220f79c8e92a55475a3d39
-  languageName: node
-  linkType: hard
-
-"jest-diff@npm:^29.6.2":
-  version: 29.6.2
-  resolution: "jest-diff@npm:29.6.2"
-  dependencies:
-    chalk: ^4.0.0
-    diff-sequences: ^29.4.3
-    jest-get-type: ^29.4.3
-    pretty-format: ^29.6.2
-  checksum: 0effd66a0c23f8c139ebf7ca99ed30b479b86fff66f19ad4869f130aaf7ae6a24ca1533f697b7e4930cbe2ddffc85387723fcca673501c653fb77a38f538e959
   languageName: node
   linkType: hard
 
@@ -12296,13 +12261,6 @@ __metadata:
     jest-mock: ^29.6.2
     jest-util: ^29.6.2
   checksum: 0b754ac2d3bdb7ce5d6fc28595b9d1c64176f20506b6f773b18b0280ab0b396ed7d927c8519779d3c560fa2b13236ee7077092ccb19a13bea23d40dd30f06450
-  languageName: node
-  linkType: hard
-
-"jest-get-type@npm:^28.0.2":
-  version: 28.0.2
-  resolution: "jest-get-type@npm:28.0.2"
-  checksum: 5281d7c89bc8156605f6d15784f45074f4548501195c26e9b188742768f72d40948252d13230ea905b5349038865a1a8eeff0e614cc530ff289dfc41fe843abd
   languageName: node
   linkType: hard
 
@@ -12606,13 +12564,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-websocket-mock@npm:2.4.0":
-  version: 2.4.0
-  resolution: "jest-websocket-mock@npm:2.4.0"
+"jest-websocket-mock@npm:2.4.1":
+  version: 2.4.1
+  resolution: "jest-websocket-mock@npm:2.4.1"
   dependencies:
-    jest-diff: ^28.0.2
+    jest-diff: ^29.2.0
     mock-socket: ^9.1.0
-  checksum: 03c0707b70bbdbcdf4c2f5579d3423b41317bdecb38ede593061c7894421d24d903bf9dc53062f7a3f2fc3302374d35436cb36d6db6ac84058b63862438d6d27
+  checksum: 5091bfc1baef36146ea1d0f7e16c591d8f8cd9604b7daaeb3d61d98cb1034f4ea3825c122477eb15d55f7d7fe6ec93a8e7b58d54f39838238d7345675d0afb37
   languageName: node
   linkType: hard
 
@@ -15639,18 +15597,6 @@ __metadata:
     ansi-styles: ^5.0.0
     react-is: ^17.0.1
   checksum: cf610cffcb793885d16f184a62162f2dd0df31642d9a18edf4ca298e909a8fe80bdbf556d5c9573992c102ce8bf948691da91bf9739bee0ffb6e79c8a8a6e088
-  languageName: node
-  linkType: hard
-
-"pretty-format@npm:^28.1.3":
-  version: 28.1.3
-  resolution: "pretty-format@npm:28.1.3"
-  dependencies:
-    "@jest/schemas": ^28.1.3
-    ansi-regex: ^5.0.1
-    ansi-styles: ^5.0.0
-    react-is: ^18.0.0
-  checksum: e69f857358a3e03d271252d7524bec758c35e44680287f36c1cb905187fbc82da9981a6eb07edfd8a03bc3cbeebfa6f5234c13a3d5b59f2bbdf9b4c4053e0a7f
   languageName: node
   linkType: hard
 
