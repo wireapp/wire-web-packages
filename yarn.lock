@@ -4311,10 +4311,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:^2":
-  version: 2.7.3
-  resolution: "@types/prettier@npm:2.7.3"
-  checksum: 705384209cea6d1433ff6c187c80dcc0b95d99d5c5ce21a46a9a58060c527973506822e428789d842761e0280d25e3359300f017fbe77b9755bc772ab3dc2f83
+"@types/prettier@npm:^3":
+  version: 3.0.0
+  resolution: "@types/prettier@npm:3.0.0"
+  dependencies:
+    prettier: "*"
+  checksum: a2a512d304e5bcf78f38089dc88ad19215e6ab871d435a17aef3ce538a63b07c0e359c18db23989dc1ed9fff96d99eee1f680416080184df5c7e0e3bf767e165
   languageName: node
   linkType: hard
 
@@ -5187,7 +5189,7 @@ __metadata:
   resolution: "@wireapp/eslint-config@workspace:packages/eslint-config"
   dependencies:
     "@types/eslint": ^8
-    "@types/prettier": ^2
+    "@types/prettier": ^3
     "@typescript-eslint/eslint-plugin": ^6.0.0
     "@typescript-eslint/parser": ^6.0.0
     eslint: ^8.27.0
@@ -5209,32 +5211,7 @@ __metadata:
     eslint-plugin-testing-library: ^5.9.1
     eslint-plugin-unused-imports: ^2.0.0
     prettier: ^2.7.1
-    typescript: ^5.0.4
-  peerDependencies:
-    "@types/eslint": ^8
-    "@types/prettier": ^2
-    "@typescript-eslint/eslint-plugin": ^5
-    "@typescript-eslint/parser": ^5
-    eslint: ^8
-    eslint-config-prettier: ^8
-    eslint-import-resolver-alias: ^1
-    eslint-import-resolver-typescript: ^3
-    eslint-plugin-better-styled-components: ^1
-    eslint-plugin-header: ^3
-    eslint-plugin-import: ^2
-    eslint-plugin-jest: ^27
-    eslint-plugin-jest-dom: ^4
-    eslint-plugin-jsdoc: ^39
-    eslint-plugin-jsx-a11y: ^6
-    eslint-plugin-no-unsanitized: ^4
-    eslint-plugin-prettier: ^4
-    eslint-plugin-react: ^7
-    eslint-plugin-react-hooks: ^4
-    eslint-plugin-simple-import-sort: ^8
-    eslint-plugin-testing-library: ^5
-    eslint-plugin-unused-imports: ^2
-    prettier: ^2
-    typescript: ^4
+    typescript: ^5
   languageName: unknown
   linkType: soft
 
@@ -15553,6 +15530,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:*":
+  version: 3.0.1
+  resolution: "prettier@npm:3.0.1"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: e1f3f16c7fe0495de3faa182597871f74927d787cce3c52095a66ff5d7eacc05173371d5f58bf12141a0a1b6bfe739a338531d6cf18b92c7256c1319f2c84e73
+  languageName: node
+  linkType: hard
+
 "prettier@npm:2.8.8, prettier@npm:^2.7.1":
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
@@ -18760,7 +18746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.0.4":
+"typescript@npm:^5, typescript@npm:^5.0.4":
   version: 5.1.6
   resolution: "typescript@npm:5.1.6"
   bin:
@@ -18780,7 +18766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^5.0.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^5#~builtin<compat/typescript>, typescript@patch:typescript@^5.0.4#~builtin<compat/typescript>":
   version: 5.1.6
   resolution: "typescript@patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=701156"
   bin:
