@@ -4404,7 +4404,7 @@ __metadata:
     "@types/prettier": ^3
     "@typescript-eslint/eslint-plugin": ^6.0.0
     "@typescript-eslint/parser": ^6.0.0
-    eslint: ^8.27.0
+    eslint: ^8
     eslint-config-prettier: ^9
     eslint-import-resolver-alias: ^1.1.2
     eslint-import-resolver-typescript: ^3.5.2
@@ -4424,6 +4424,9 @@ __metadata:
     eslint-plugin-unused-imports: ^3
     prettier: ^3
     typescript: ^5
+  peerDependencies:
+    eslint: ^8
+    prettier: ^3
   languageName: unknown
   linkType: soft
 
@@ -8236,7 +8239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.46.0, eslint@npm:^8.27.0":
+"eslint@npm:8.46.0, eslint@npm:^8":
   version: 8.46.0
   resolution: "eslint@npm:8.46.0"
   dependencies:
