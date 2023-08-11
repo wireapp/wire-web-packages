@@ -17,9 +17,7 @@
  *
  */
 
-import {SVGIcon} from '@wireapp/react-ui-kit/lib/Icon/SVGIcon';
-
-interface SVGIconProps {}
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const ExpiresSoon = (props: SVGIconProps) => (
   <SVGIcon realWidth={17} realHeight={18} {...props}>
