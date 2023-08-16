@@ -32,6 +32,7 @@ import {
   JoinConversationByCodePayload,
   Member,
   MessageSendingStatus,
+  MLSConversation,
   NewConversation,
   QualifiedConversationIds,
   RemoteConversations,
@@ -107,10 +108,7 @@ export class ConversationAPI {
     ONE_2_ONE: 'one2one',
   };
 
-  constructor(
-    protected readonly client: HttpClient,
-    protected readonly backendFeatures: BackendFeatures,
-  ) {}
+  constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
 
   private generateBaseConversationUrl(conversationId: QualifiedId, supportsQualifiedEndpoint: boolean = true): string {
     return supportsQualifiedEndpoint && conversationId.domain
@@ -484,13 +482,13 @@ export class ConversationAPI {
    * Get a MLS 1:1-conversation with a given user.
    * @param userId - qualified user id
    */
-  public async getMLS1to1Conversation({domain, id}: QualifiedId): Promise<Conversation> {
+  public async getMLS1to1Conversation({domain, id}: QualifiedId): Promise<MLSConversation> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.ONE_2_ONE}/${domain}/${id}`,
     };
 
-    const response = await this.client.sendJSON<Conversation>(config);
+    const response = await this.client.sendJSON<MLSConversation>(config);
     return response.data;
   }
 
