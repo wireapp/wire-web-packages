@@ -217,7 +217,8 @@ export class ProteusService {
               qualifiedUsers,
               backends,
             );
-            const response = this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
+            // In case the request to add users failed with a `UNREACHABLE_BACKENDS` error, we try again with the users from available backends
+            const response = await this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
             return {
               ...response,
               failedToAdd: unreachableUsers,
