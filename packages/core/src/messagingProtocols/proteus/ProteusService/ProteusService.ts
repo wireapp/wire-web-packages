@@ -21,12 +21,13 @@ import type {APIClient} from '@wireapp/api-client/lib/APIClient';
 import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
 import {
   Conversation,
-  FederatedBackendsError,
+  isFederatedBackendsError,
   FederatedBackendsErrorLabel,
   NewConversation,
   QualifiedOTRRecipients,
   QualifiedUserClients,
 } from '@wireapp/api-client/lib/conversation';
+import type {ConversationMemberJoinEvent} from '@wireapp/api-client/lib/event';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
@@ -44,6 +45,7 @@ import type {
   SendProteusMessageParams,
 } from './ProteusService.types';
 import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
+import {filterUsersFromDomains} from './userDomainFilters';
 
 import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
@@ -172,15 +174,15 @@ export class ProteusService {
     }
 
     return this.apiClient.api.conversation.postConversation(payload).catch(async (error: unknown) => {
-      const backendError = error as FederatedBackendsError;
-      switch (backendError.label) {
+      if (!isFederatedBackendsError(error)) {
+        throw error;
+      }
+      switch (error.label) {
         case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
-          const {backends} = backendError;
-          const users = payload.qualified_users ?? [];
-          const availableUsers: QualifiedId[] = [];
-          const unreachableUsers: QualifiedId[] = [];
-          users.forEach(user =>
-            backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
+          const {backends} = error;
+          const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
+            payload.qualified_users ?? [],
+            backends,
           );
           payload = {...payload, qualified_users: availableUsers};
           // If conversation creation returns an error because a backend is offline,
@@ -200,8 +202,31 @@ export class ProteusService {
     });
   }
 
-  public async addUsersToConversation({conversationId, qualifiedUsers}: AddUsersToProteusConversationParams) {
-    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers);
+  public async addUsersToConversation({
+    conversationId,
+    qualifiedUsers,
+  }: AddUsersToProteusConversationParams): Promise<ConversationMemberJoinEvent & {failedToAdd?: QualifiedId[]}> {
+    try {
+      return await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers);
+    } catch (error) {
+      if (isFederatedBackendsError(error)) {
+        switch (error.label) {
+          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+            const {backends} = error;
+            const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
+              qualifiedUsers,
+              backends,
+            );
+            const response = this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
+            return {
+              ...response,
+              failedToAdd: unreachableUsers,
+            };
+          }
+        }
+      }
+      throw error;
+    }
   }
 
   public async sendMessage({
