@@ -19,7 +19,7 @@
 
 import {AxiosError} from 'axios';
 
-export const enum FederatedBackendsErrorLabel {
+export enum FederatedBackendsErrorLabel {
   UNREACHABLE_BACKENDS = 'UnreachableBackendsError',
   NOT_CONNECTED_BACKENDS = 'NotConnectedBackendsError',
 }
