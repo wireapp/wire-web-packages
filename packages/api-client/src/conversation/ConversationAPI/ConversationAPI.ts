@@ -66,7 +66,7 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from '../data';
-import {handleFederationErrors} from '../FederatedBackendError';
+import {handleFederationErrors} from '../FederatedBackendsError';
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {

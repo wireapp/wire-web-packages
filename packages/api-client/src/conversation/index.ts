@@ -21,7 +21,7 @@ export * from './Conversation';
 export * from './ConversationAPI';
 export * from './ConversationCode';
 export * from './ConversationError';
-export * from './FederatedBackendError';
+export * from './FederatedBackendsError';
 export * from './ConversationIds';
 export * from './ConversationMembers';
 export * from './Conversations';

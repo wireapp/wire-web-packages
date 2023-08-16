@@ -19,17 +19,32 @@
 
 import {AxiosError} from 'axios';
 
-export class UnreachableBackendsError extends Error {
-  constructor(public backends: string[]) {
-    super('unreachable backends');
-    this.name = 'UnreachableBackendsError';
+export enum FederatedBackendsErrorLabel {
+  UNREACHABLE_BACKENDS = 'UnreachableBackendsError',
+  NOT_CONNECTED_BACKENDS = 'NotConnectedBackendsError',
+}
+
+enum FederatedBackendsErrorCode {
+  UNREACHABLE = 533,
+}
+
+export class FederatedBackendsError extends Error {
+  constructor(
+    public readonly label: FederatedBackendsErrorLabel,
+    public readonly backends: string[],
+  ) {
+    super('federatedBackendsError');
+    this.name = 'FederatedBackendsError';
   }
 }
 
 export function handleFederationErrors(error: AxiosError<any>) {
   switch (error.response?.status) {
-    case 533: {
-      throw new UnreachableBackendsError(error.response.data.unreachable_backends);
+    case FederatedBackendsErrorCode.UNREACHABLE: {
+      throw new FederatedBackendsError(
+        FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS,
+        error.response.data.unreachable_backends,
+      );
     }
   }
 }

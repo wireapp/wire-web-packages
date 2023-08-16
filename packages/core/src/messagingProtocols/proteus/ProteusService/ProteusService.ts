@@ -19,9 +19,10 @@
 
 import type {APIClient} from '@wireapp/api-client/lib/APIClient';
 import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
-import type {
+import {
   Conversation,
-  UnreachableBackendsError,
+  FederatedBackendsError,
+  FederatedBackendsErrorLabel,
   NewConversation,
   QualifiedOTRRecipients,
   QualifiedUserClients,
@@ -171,31 +172,31 @@ export class ProteusService {
     }
 
     return this.apiClient.api.conversation.postConversation(payload).catch(async (error: unknown) => {
-      const backendError = error as UnreachableBackendsError;
+      const backendError = error as FederatedBackendsError;
       if (typeof conversationData !== 'string') {
-        // switch (conversationError.label) {
-        // case BackendErrorLabel.UNREACHABLE_BACKENDS: {
-        const {backends} = backendError;
-        const users: QualifiedId[] | undefined = conversationData.qualified_users;
-        if (users !== undefined) {
-          const availableUsers: QualifiedId[] = [];
-          const unreachableUsers: QualifiedId[] = [];
-          users.forEach(user =>
-            backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
-          );
-          conversationData.qualified_users = availableUsers;
-          const refetchedConversation = await this.apiClient.api.conversation
-            .postConversation(conversationData)
-            .catch((error: unknown) => {
-              throw error;
-            });
+        switch (backendError.label) {
+          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+            const {backends} = backendError;
+            const users: QualifiedId[] | undefined = conversationData.qualified_users;
+            if (users !== undefined) {
+              const availableUsers: QualifiedId[] = [];
+              const unreachableUsers: QualifiedId[] = [];
+              users.forEach(user =>
+                backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
+              );
+              conversationData.qualified_users = availableUsers;
+              const refetchedConversation = await this.apiClient.api.conversation
+                .postConversation(conversationData)
+                .catch((error: unknown) => {
+                  throw error;
+                });
 
-          refetchedConversation.failed_to_add = unreachableUsers;
-          return refetchedConversation;
+              refetchedConversation.failed_to_add = unreachableUsers;
+              return refetchedConversation;
+            }
+          }
         }
       }
-      // }
-      // }
 
       throw error;
     });
