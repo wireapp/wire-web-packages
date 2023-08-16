@@ -174,27 +174,26 @@ export class ProteusService {
     }
 
     return this.apiClient.api.conversation.postConversation(payload).catch(async (error: unknown) => {
-      if (!isFederatedBackendsError(error)) {
-        throw error;
-      }
-      switch (error.label) {
-        case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
-          const {backends} = error;
-          const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
-            payload.qualified_users ?? [],
-            backends,
-          );
-          payload = {...payload, qualified_users: availableUsers};
-          // If conversation creation returns an error because a backend is offline,
-          // we try creating the conversation again with users from available backends
-          const response = await this.apiClient.api.conversation.postConversation(payload).catch((error: unknown) => {
-            throw error;
-          });
+      if (isFederatedBackendsError(error)) {
+        switch (error.label) {
+          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+            const {backends} = error;
+            const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
+              payload.qualified_users ?? [],
+              backends,
+            );
+            payload = {...payload, qualified_users: availableUsers};
+            // If conversation creation returns an error because a backend is offline,
+            // we try creating the conversation again with users from available backends
+            const response = await this.apiClient.api.conversation.postConversation(payload).catch((error: unknown) => {
+              throw error;
+            });
 
-          // on a succesfull conversation creation with the available users,
-          // we append the users from an unreachable backend to the response
-          response.failed_to_add = unreachableUsers;
-          return response;
+            // on a succesfull conversation creation with the available users,
+            // we append the users from an unreachable backend to the response
+            response.failed_to_add = unreachableUsers;
+            return response;
+          }
         }
       }
 
