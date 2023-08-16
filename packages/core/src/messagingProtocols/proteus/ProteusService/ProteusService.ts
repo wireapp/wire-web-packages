@@ -176,23 +176,21 @@ export class ProteusService {
       switch (backendError.label) {
         case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
           const {backends} = backendError;
-          const users = payload.qualified_users;
-          if (users !== undefined) {
-            const availableUsers: QualifiedId[] = [];
-            const unreachableUsers: QualifiedId[] = [];
-            users.forEach(user =>
-              backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
-            );
-            payload = {...payload, qualified_users: availableUsers};
-            const refetchedConversation = await this.apiClient.api.conversation
-              .postConversation(payload)
-              .catch((error: unknown) => {
-                throw error;
-              });
+          const users = payload.qualified_users ?? [];
+          const availableUsers: QualifiedId[] = [];
+          const unreachableUsers: QualifiedId[] = [];
+          users.forEach(user =>
+            backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
+          );
+          payload = {...payload, qualified_users: availableUsers};
+          const refetchedConversation = await this.apiClient.api.conversation
+            .postConversation(payload)
+            .catch((error: unknown) => {
+              throw error;
+            });
 
-            refetchedConversation.failed_to_add = unreachableUsers;
-            return refetchedConversation;
-          }
+          refetchedConversation.failed_to_add = unreachableUsers;
+          return refetchedConversation;
         }
       }
 
