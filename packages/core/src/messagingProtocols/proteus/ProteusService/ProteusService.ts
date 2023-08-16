@@ -202,12 +202,16 @@ export class ProteusService {
     });
   }
 
-  public async addUsersToConversation({
-    conversationId,
-    qualifiedUsers,
-  }: AddUsersToProteusConversationParams): Promise<ConversationMemberJoinEvent & {failedToAdd?: QualifiedId[]}> {
+  /**
+   * Tries to add all the given users to the given conversation.
+   * If some users are not reachable, it will try to add the remaining users and list them in the `failedToAdd` property of the response.
+   */
+  public async addUsersToConversation({conversationId, qualifiedUsers}: AddUsersToProteusConversationParams): Promise<{
+    event?: ConversationMemberJoinEvent;
+    failedToAdd?: QualifiedId[];
+  }> {
     try {
-      return await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers);
+      return {event: await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers)};
     } catch (error) {
       if (isFederatedBackendsError(error)) {
         switch (error.label) {
@@ -217,10 +221,13 @@ export class ProteusService {
               qualifiedUsers,
               backends,
             );
+            if (availableUsers.length === 0) {
+              return {failedToAdd: unreachableUsers};
+            }
             // In case the request to add users failed with a `UNREACHABLE_BACKENDS` error, we try again with the users from available backends
             const response = await this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
             return {
-              ...response,
+              event: response,
               failedToAdd: unreachableUsers,
             };
           }

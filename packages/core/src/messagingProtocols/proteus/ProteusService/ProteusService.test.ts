@@ -574,13 +574,15 @@ describe('ProteusService', () => {
   });
 
   describe('addUsersToConversation', () => {
-    const baseResponse: Awaited<ReturnType<typeof ProteusService.prototype.addUsersToConversation>> = {
-      conversation: '',
-      from: '',
-      time: Date.now().toString(),
-      data: {users: [], user_ids: []},
-      type: CONVERSATION_EVENT.MEMBER_JOIN,
-    };
+    const baseResponse = {
+      event: {
+        conversation: '',
+        from: '',
+        time: Date.now().toString(),
+        data: {users: [], user_ids: []},
+        type: CONVERSATION_EVENT.MEMBER_JOIN,
+      },
+    } satisfies Awaited<ReturnType<typeof ProteusService.prototype.addUsersToConversation>>;
 
     const conversationId = {id: 'conv1', domain: 'domain1'};
     const userDomain1 = {id: 'user-1-1', domain: 'domain1'};
@@ -590,7 +592,7 @@ describe('ProteusService', () => {
     it('adds all requested users to an existing conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
 
-      jest.spyOn(apiClient.api.conversation, 'postMembers').mockResolvedValueOnce({...baseResponse});
+      jest.spyOn(apiClient.api.conversation, 'postMembers').mockResolvedValueOnce(baseResponse.event);
 
       const event = await proteusService.addUsersToConversation({
         conversationId,
@@ -608,7 +610,7 @@ describe('ProteusService', () => {
         .mockRejectedValueOnce(
           new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [userDomain1.domain]),
         )
-        .mockResolvedValueOnce(baseResponse);
+        .mockResolvedValueOnce(baseResponse.event);
 
       const result = await proteusService.addUsersToConversation({
         conversationId,
