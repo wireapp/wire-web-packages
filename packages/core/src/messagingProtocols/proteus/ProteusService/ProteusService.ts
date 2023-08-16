@@ -183,14 +183,16 @@ export class ProteusService {
             backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
           );
           payload = {...payload, qualified_users: availableUsers};
-          const refetchedConversation = await this.apiClient.api.conversation
-            .postConversation(payload)
-            .catch((error: unknown) => {
-              throw error;
-            });
+          // If conversation creation returns an error because a backend is offline,
+          // we try creating the conversation again with users from available backends
+          const response = await this.apiClient.api.conversation.postConversation(payload).catch((error: unknown) => {
+            throw error;
+          });
 
-          refetchedConversation.failed_to_add = unreachableUsers;
-          return refetchedConversation;
+          // on a succesfull conversation creation with the available users,
+          // we append the users from an unreachable backend to the response
+          response.failed_to_add = unreachableUsers;
+          return response;
         }
       }
 
