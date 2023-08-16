@@ -598,8 +598,9 @@ describe('ProteusService', () => {
       protocol: ConversationProtocol.PROTEUS,
     };
 
-    const userDomain1 = {id: 'user-1', domain: 'domain1'};
-    const userDomain2 = {id: 'user-2', domain: 'domain2'};
+    const userDomain1 = {id: 'user-1-1', domain: 'domain1'};
+    const user2Domain1 = {id: 'user-2-1', domain: 'domain1'};
+    const userDomain2 = {id: 'user-2-2', domain: 'domain2'};
 
     it('adds all requested users to a new conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
@@ -609,7 +610,7 @@ describe('ProteusService', () => {
       const result = await proteusService.createConversation({
         conversationData: {
           receipt_mode: null,
-          qualified_users: [userDomain1, userDomain2],
+          qualified_users: [userDomain1, user2Domain1, userDomain2],
         },
       });
 
@@ -629,11 +630,11 @@ describe('ProteusService', () => {
       const result = await proteusService.createConversation({
         conversationData: {
           receipt_mode: null,
-          qualified_users: [userDomain1, userDomain2],
+          qualified_users: [userDomain1, user2Domain1, userDomain2],
         },
       });
 
-      expect(result.failed_to_add).toEqual([userDomain1]);
+      expect(result.failed_to_add).toEqual([userDomain1, user2Domain1]);
     });
 
     it('creates an empty conversation if no backend is reachable', async () => {
@@ -642,18 +643,21 @@ describe('ProteusService', () => {
       jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, ['domain1', 'domain2']),
+          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [
+            userDomain1.domain,
+            userDomain2.domain,
+          ]),
         )
         .mockResolvedValueOnce({} as any);
 
       const result = await proteusService.createConversation({
         conversationData: {
           receipt_mode: null,
-          qualified_users: [userDomain1, userDomain2],
+          qualified_users: [userDomain1, user2Domain1, userDomain2],
         },
       });
 
-      expect(result.failed_to_add).toEqual([userDomain1, userDomain2]);
+      expect(result.failed_to_add).toEqual([userDomain1, user2Domain1, userDomain2]);
     });
   });
 });
