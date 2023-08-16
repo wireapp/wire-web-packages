@@ -55,7 +55,6 @@ import {
   ConversationFullError,
   ConversationCodeNotFoundError,
   ConversationLegalholdMissingConsentError,
-  ConversationCreationUnreachableBackends,
 } from '../ConversationError';
 import {
   ConversationAccessUpdateData,
@@ -67,6 +66,7 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from '../data';
+import {handleFederationErrors} from '../FederatedBackendError';
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
@@ -575,11 +575,7 @@ export class ConversationAPI {
         }
       }
       if (isAxiosError(error)) {
-        switch (error.response?.status) {
-          case 533: {
-            throw new ConversationCreationUnreachableBackends(error.message, error.response.data.unreachable_backends);
-          }
-        }
+        handleFederationErrors(error);
       }
       throw error;
     }

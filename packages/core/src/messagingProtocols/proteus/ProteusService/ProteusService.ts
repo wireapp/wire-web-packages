@@ -21,7 +21,7 @@ import type {APIClient} from '@wireapp/api-client/lib/APIClient';
 import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
 import type {
   Conversation,
-  ConversationCreationUnreachableBackends,
+  UnreachableBackendsError,
   NewConversation,
   QualifiedOTRRecipients,
   QualifiedUserClients,
@@ -171,17 +171,17 @@ export class ProteusService {
     }
 
     return this.apiClient.api.conversation.postConversation(payload).catch(async (error: unknown) => {
-      const conversationError = error as ConversationCreationUnreachableBackends;
+      const backendError = error as UnreachableBackendsError;
       if (typeof conversationData !== 'string') {
         // switch (conversationError.label) {
         // case BackendErrorLabel.UNREACHABLE_BACKENDS: {
-        const {unreachableBackends} = conversationError;
+        const {backends} = backendError;
         const users: QualifiedId[] | undefined = conversationData.qualified_users;
         if (users !== undefined) {
           const availableUsers: QualifiedId[] = [];
           const unreachableUsers: QualifiedId[] = [];
           users.forEach(user =>
-            unreachableBackends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
+            backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
           );
           conversationData.qualified_users = availableUsers;
           const refetchedConversation = await this.apiClient.api.conversation
