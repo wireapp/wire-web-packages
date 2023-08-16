@@ -15,9 +15,9 @@
     "react-transition-group": "4.4.5"
   },
   "devDependencies": {
-    "@babel/cli": "7.22.9",
-    "@babel/core": "7.22.9",
-    "@babel/preset-env": "7.22.9",
+    "@babel/cli": "7.22.10",
+    "@babel/core": "7.22.10",
+    "@babel/preset-env": "7.22.10",
     "@babel/preset-react": "7.22.5",
     "@babel/preset-typescript": "7.22.5",
     "@emotion/babel-preset-css-prop": "^11.10.0",
@@ -70,5 +70,5 @@
     "test:watch": "jest --watch",
     "test:update": "jest --updateSnapshot"
   },
-  "version": "9.7.8"
+  "version": "9.8.1"
 }
