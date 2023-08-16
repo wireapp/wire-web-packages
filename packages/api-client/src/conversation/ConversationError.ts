@@ -86,3 +86,16 @@ export class ConversationFullError extends ConversationError {
     this.name = 'ConversationFullError';
   }
 }
+
+export class ConversationCreationUnreachableBackends extends ConversationError {
+  constructor(
+    message: string,
+    public readonly unreachableBackends: string[],
+    label: BackendErrorLabel = BackendErrorLabel.UNREACHABLE_BACKENDS,
+    code: StatusCode = StatusCode.SERVICE_UNAVAILABLE,
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'ConversationCreationUnreachableBackends';
+  }
+}

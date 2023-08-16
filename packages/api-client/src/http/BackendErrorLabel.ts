@@ -68,6 +68,7 @@ export enum BackendErrorLabel {
   NO_CONVERSATION_CODE = 'no-conversation-code',
   NOT_CONNECTED = 'not-connected',
   INVALID_CONVERSATION_PASSWORD = 'invalid-conversation-password',
+  UNREACHABLE_BACKENDS = 'unreachable-backends',
 
   // Handle errors
   HANDLE_EXISTS = 'handle-exists',
