@@ -440,8 +440,8 @@ export class ConversationService {
    * If it fails and the conversation is already established, it will try joining via external commit instead.
    *
    * @param mlsConversation - mls 1:1 conversation
+   * @param selfUser - user and client ids of the self user
    * @param otherUserId - id of the other user
-   * @param proteusConversation - (optional) proteus 1:1 conversation
    */
   public readonly establishMLS1to1Conversation = async (
     groupId: string,
