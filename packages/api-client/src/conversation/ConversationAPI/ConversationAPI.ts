@@ -55,6 +55,7 @@ import {
   ConversationFullError,
   ConversationCodeNotFoundError,
   ConversationLegalholdMissingConsentError,
+  ConversationCreationUnreachableBackends,
 } from '../ConversationError';
 import {
   ConversationAccessUpdateData,
@@ -571,6 +572,13 @@ export class ConversationAPI {
       switch (backendError.label) {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
           throw new ConversationLegalholdMissingConsentError(backendError.message);
+        }
+      }
+      if (isAxiosError(error)) {
+        switch (error.response?.status) {
+          case 533: {
+            throw new ConversationCreationUnreachableBackends(error.message, error.response.data.unreachable_backends);
+          }
         }
       }
       throw error;
