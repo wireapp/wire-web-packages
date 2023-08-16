@@ -173,27 +173,25 @@ export class ProteusService {
 
     return this.apiClient.api.conversation.postConversation(payload).catch(async (error: unknown) => {
       const backendError = error as FederatedBackendsError;
-      if (typeof conversationData !== 'string') {
-        switch (backendError.label) {
-          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
-            const {backends} = backendError;
-            const users: QualifiedId[] | undefined = conversationData.qualified_users;
-            if (users !== undefined) {
-              const availableUsers: QualifiedId[] = [];
-              const unreachableUsers: QualifiedId[] = [];
-              users.forEach(user =>
-                backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
-              );
-              conversationData.qualified_users = availableUsers;
-              const refetchedConversation = await this.apiClient.api.conversation
-                .postConversation(conversationData)
-                .catch((error: unknown) => {
-                  throw error;
-                });
+      switch (backendError.label) {
+        case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+          const {backends} = backendError;
+          const users = payload.qualified_users;
+          if (users !== undefined) {
+            const availableUsers: QualifiedId[] = [];
+            const unreachableUsers: QualifiedId[] = [];
+            users.forEach(user =>
+              backends.includes(user.domain) ? unreachableUsers.push(user) : availableUsers.push(user),
+            );
+            payload = {...payload, qualified_users: availableUsers};
+            const refetchedConversation = await this.apiClient.api.conversation
+              .postConversation(payload)
+              .catch((error: unknown) => {
+                throw error;
+              });
 
-              refetchedConversation.failed_to_add = unreachableUsers;
-              return refetchedConversation;
-            }
+            refetchedConversation.failed_to_add = unreachableUsers;
+            return refetchedConversation;
           }
         }
       }

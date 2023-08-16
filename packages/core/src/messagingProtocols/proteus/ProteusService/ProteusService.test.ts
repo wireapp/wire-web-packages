@@ -620,12 +620,12 @@ describe('ProteusService', () => {
     it('partially add users if some backends are unreachable', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
 
-      jest
+      const postConversationSpy = jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
           new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [userDomain1.domain]),
         )
-        .mockResolvedValueOnce({} as any);
+        .mockResolvedValueOnce(newConversation);
 
       const result = await proteusService.createConversation({
         conversationData: {
@@ -634,13 +634,19 @@ describe('ProteusService', () => {
         },
       });
 
+      expect(postConversationSpy).toHaveBeenCalledTimes(2);
+      expect(postConversationSpy).toHaveBeenCalledWith(
+        expect.objectContaining({qualified_users: [userDomain1, user2Domain1, userDomain2]}),
+      );
+      expect(postConversationSpy).toHaveBeenCalledWith(expect.objectContaining({qualified_users: [userDomain2]}));
+
       expect(result.failed_to_add).toEqual([userDomain1, user2Domain1]);
     });
 
     it('creates an empty conversation if no backend is reachable', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
 
-      jest
+      const postConversationSpy = jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
           new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [
@@ -656,6 +662,12 @@ describe('ProteusService', () => {
           qualified_users: [userDomain1, user2Domain1, userDomain2],
         },
       });
+
+      expect(postConversationSpy).toHaveBeenCalledTimes(2);
+      expect(postConversationSpy).toHaveBeenCalledWith(
+        expect.objectContaining({qualified_users: [userDomain1, user2Domain1, userDomain2]}),
+      );
+      expect(postConversationSpy).toHaveBeenCalledWith(expect.objectContaining({qualified_users: []}));
 
       expect(result.failed_to_add).toEqual([userDomain1, user2Domain1, userDomain2]);
     });
