@@ -585,9 +585,11 @@ describe('ProteusService', () => {
     } satisfies Awaited<ReturnType<typeof ProteusService.prototype.addUsersToConversation>>;
 
     const conversationId = {id: 'conv1', domain: 'domain1'};
+
     const userDomain1 = {id: 'user-1-1', domain: 'domain1'};
     const user2Domain1 = {id: 'user-2-1', domain: 'domain1'};
-    const userDomain2 = {id: 'user-2-2', domain: 'domain2'};
+    const userDomain2 = {id: 'user-1-2', domain: 'domain2'};
+    const userDomain3 = {id: 'user-1-3', domain: 'domain3'};
 
     it('adds all requested users to an existing conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
@@ -625,6 +627,34 @@ describe('ProteusService', () => {
       expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain2]));
 
       expect(result.failedToAdd).toEqual([userDomain1, user2Domain1]);
+    });
+
+    it('partially add users if some users are part of not-connected backends', async () => {
+      const [proteusService, {apiClient}] = await buildProteusService();
+
+      const postMembersSpy = jest
+        .spyOn(apiClient.api.conversation, 'postMembers')
+        .mockRejectedValueOnce(
+          new FederatedBackendsError(FederatedBackendsErrorLabel.NOT_CONNECTED_BACKENDS, [
+            userDomain2.domain,
+            userDomain3.domain,
+          ]),
+        )
+        .mockResolvedValueOnce(baseResponse.event);
+
+      const result = await proteusService.addUsersToConversation({
+        conversationId,
+        qualifiedUsers: [userDomain1, user2Domain1, userDomain2, userDomain3],
+      });
+
+      expect(postMembersSpy).toHaveBeenCalledTimes(2);
+      expect(postMembersSpy).toHaveBeenCalledWith(
+        conversationId,
+        expect.arrayContaining([userDomain1, user2Domain1, userDomain2]),
+      );
+      expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain1, user2Domain1]));
+
+      expect(result.failedToAdd).toEqual([userDomain2, userDomain3]);
     });
   });
 

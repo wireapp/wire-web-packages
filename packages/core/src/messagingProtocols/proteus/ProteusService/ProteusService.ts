@@ -214,6 +214,7 @@ export class ProteusService {
     } catch (error) {
       if (isFederatedBackendsError(error)) {
         switch (error.label) {
+          case FederatedBackendsErrorLabel.NOT_CONNECTED_BACKENDS:
           case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
             const {backends} = error;
             const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
