@@ -48,7 +48,7 @@ import {filterUsersFromDomains} from './userDomainFilters';
 
 import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import {NonFederatingBackendError} from '../../../errors';
+import {NonFederatingBackendsError} from '../../../errors';
 import type {EventHandlerResult} from '../../common.types';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
@@ -164,7 +164,7 @@ export class ProteusService {
         switch (error.label) {
           case FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS: {
             // In case we are trying to create a conversation with users from 2 backends that are not connected, we should stop the procedure and throw an error
-            throw new NonFederatingBackendError(error.backends);
+            throw new NonFederatingBackendsError(error.backends);
           }
           case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
             const {backends} = error;

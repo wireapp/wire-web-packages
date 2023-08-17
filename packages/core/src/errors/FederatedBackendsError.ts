@@ -20,9 +20,13 @@
 /**
  * This error means we are trying to add users that are parts of 2 backends that are not connected to a new conversation.
  */
-export class NonFederatingBackendError extends Error {
+export class NonFederatingBackendsError extends Error {
   constructor(public readonly backends: string[]) {
     super('2 backends are not connected');
-    this.name = 'BackendsNotConnectedError';
+    this.name = 'NonFederatingBackendError';
   }
+}
+
+export function isNonFederatingBackendsError(error: unknown): error is NonFederatingBackendsError {
+  return !!error && typeof error === 'object' && 'name' in error && error.name === 'NonFederatingBackendError';
 }

@@ -39,7 +39,7 @@ import {NotificationSource} from '../../../notification';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ProteusService} from './ProteusService';
-import {NonFederatingBackendError} from '../../../errors';
+import {NonFederatingBackendsError} from '../../../errors';
 
 jest.mock('./CryptoClient/CoreCryptoWrapper/PrekeysTracker', () => {
   return {
@@ -770,7 +770,7 @@ describe('ProteusService', () => {
           receipt_mode: null,
           qualified_users: [userDomain1, user2Domain1, userDomain2],
         }),
-      ).rejects.toThrow(NonFederatingBackendError);
+      ).rejects.toThrow(NonFederatingBackendsError);
     });
   });
 });
