@@ -21,10 +21,14 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {randomUUID} from 'crypto';
 
+export function generateQualifiedId(domain: string) {
+  return {id: randomUUID(), domain};
+}
+
 export function generateQualifiedIds(nbUsers: number, domain: string) {
   const users: QualifiedId[] = [];
   for (let i = 0; i < nbUsers; i++) {
-    users.push({id: randomUUID(), domain});
+    users.push(generateQualifiedId(domain));
   }
   return users;
 }

@@ -40,7 +40,7 @@ import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ProteusService} from './ProteusService';
 import {NonFederatingBackendsError} from '../../../errors';
-import {generateQualifiedIds} from '../../../testUtils';
+import {generateQualifiedId, generateQualifiedIds} from '../../../testUtils';
 
 jest.mock('./CryptoClient/CoreCryptoWrapper/PrekeysTracker', () => {
   return {
@@ -126,12 +126,19 @@ const prepareDataForEncryption = async () => {
 };
 
 describe('ProteusService', () => {
+  const domain1 = 'domain1';
+  const domain2 = 'domain2';
+  const domain3 = 'domain3';
+
+  const usersDomain1 = generateQualifiedIds(3, domain1);
+  const usersDomain2 = generateQualifiedIds(3, domain2);
+  const usersDomain3 = generateQualifiedIds(3, domain3);
   describe('getRemoteFingerprint', () => {
     it('create a session if session does not exists', async () => {
       const [proteusService, {apiClient, cryptoClient}] = await buildProteusService();
       const expectedFingerprint = 'fingerprint-client1';
 
-      const userId = {id: 'user1', domain: 'domain.com'};
+      const userId = generateQualifiedId('domain');
       const clientId = 'client1';
 
       jest.spyOn(apiClient.api.user, 'postMultiPreKeyBundles').mockResolvedValue({
@@ -166,7 +173,7 @@ describe('ProteusService', () => {
       jest.spyOn(cryptoClient, 'saveSession').mockResolvedValue(undefined);
       jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(false);
 
-      const userId = {id: 'user1', domain: 'domain.com'};
+      const userId = generateQualifiedId('domain');
       const clientId = 'client1';
 
       const result = await proteusService.getRemoteFingerprint(userId, clientId, {
@@ -188,7 +195,7 @@ describe('ProteusService', () => {
       jest.spyOn(cryptoClient, 'getRemoteFingerprint').mockResolvedValue(expectedFingerprint);
       jest.spyOn(cryptoClient, 'sessionExists').mockResolvedValue(true);
 
-      const userId = {id: 'user1', domain: 'domain.com'};
+      const userId = generateQualifiedId('domain');
       const clientId = 'client1';
 
       const result = await proteusService.getRemoteFingerprint(userId, clientId);
@@ -203,7 +210,7 @@ describe('ProteusService', () => {
     const eventPayload = {
       event: {
         type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
-        qualified_from: {id: 'user1', domain: 'domain'},
+        qualified_from: generateQualifiedId('domain'),
         data: {sender: 'client1', text: ''},
       },
       source: NotificationSource.WEBSOCKET,
@@ -401,7 +408,7 @@ describe('ProteusService', () => {
         let errorMessage;
 
         const params: SendProteusMessageParams = {
-          conversationId: {id: 'conv1', domain: ''},
+          conversationId: generateQualifiedId('domain'),
           payload: message,
           protocol: ConversationProtocol.PROTEUS,
           targetMode: MessageTargetMode.USERS,
@@ -563,7 +570,7 @@ describe('ProteusService', () => {
 
         const result = await proteusService.sendMessage({
           protocol: ConversationProtocol.PROTEUS,
-          conversationId: {id: 'conv1', domain: 'domain1'},
+          conversationId: generateQualifiedId('domain'),
           payload: message,
           targetMode: MessageTargetMode.USERS_CLIENTS,
           userIds: recipients,
@@ -586,12 +593,7 @@ describe('ProteusService', () => {
       },
     } satisfies Awaited<ReturnType<typeof ProteusService.prototype.addUsersToConversation>>;
 
-    const conversationId = {id: 'conv1', domain: 'domain1'};
-
-    const userDomain1 = {id: 'user-1-1', domain: 'domain1'};
-    const user2Domain1 = {id: 'user-2-1', domain: 'domain1'};
-    const userDomain2 = {id: 'user-1-2', domain: 'domain2'};
-    const userDomain3 = {id: 'user-1-3', domain: 'domain3'};
+    const conversationId = generateQualifiedId('domain');
 
     it('adds all requested users to an existing conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
@@ -600,7 +602,7 @@ describe('ProteusService', () => {
 
       const event = await proteusService.addUsersToConversation({
         conversationId,
-        qualifiedUsers: [userDomain1, user2Domain1, userDomain2],
+        qualifiedUsers: [...usersDomain1, ...usersDomain2],
       });
 
       expect(event).toEqual(baseResponse);
@@ -611,25 +613,23 @@ describe('ProteusService', () => {
 
       const postMembersSpy = jest
         .spyOn(apiClient.api.conversation, 'postMembers')
-        .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [userDomain1.domain]),
-        )
+        .mockRejectedValueOnce(new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [domain1]))
         .mockResolvedValueOnce(baseResponse.event);
 
       const result = await proteusService.addUsersToConversation({
         conversationId,
-        qualifiedUsers: [userDomain1, user2Domain1, userDomain2],
+        qualifiedUsers: [...usersDomain1, ...usersDomain2],
       });
 
       expect(postMembersSpy).toHaveBeenCalledTimes(2);
       expect(postMembersSpy).toHaveBeenCalledWith(
         conversationId,
-        expect.arrayContaining([userDomain1, user2Domain1, userDomain2]),
+        expect.arrayContaining([...usersDomain1, ...usersDomain2]),
       );
-      expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain2]));
+      expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining(usersDomain2));
 
       expect(result.failedToAdd?.reason).toBe(AddUsersFailureReasons.UNREACHABLE_BACKENDS);
-      expect(result.failedToAdd?.users).toEqual([userDomain1, user2Domain1]);
+      expect(result.failedToAdd?.users).toEqual([...usersDomain1]);
     });
 
     it('partially add users if some users are part of not-connected backends', async () => {
@@ -638,27 +638,24 @@ describe('ProteusService', () => {
       const postMembersSpy = jest
         .spyOn(apiClient.api.conversation, 'postMembers')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [
-            userDomain2.domain,
-            userDomain3.domain,
-          ]),
+          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [domain2, domain3]),
         )
         .mockResolvedValueOnce(baseResponse.event);
 
       const result = await proteusService.addUsersToConversation({
         conversationId,
-        qualifiedUsers: [userDomain1, user2Domain1, userDomain2, userDomain3],
+        qualifiedUsers: [...usersDomain1, ...usersDomain2, ...usersDomain3],
       });
 
       expect(postMembersSpy).toHaveBeenCalledTimes(2);
       expect(postMembersSpy).toHaveBeenCalledWith(
         conversationId,
-        expect.arrayContaining([userDomain1, user2Domain1, userDomain2]),
+        expect.arrayContaining([...usersDomain1, ...usersDomain2]),
       );
-      expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain1, user2Domain1]));
+      expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining(usersDomain1));
 
       expect(result.failedToAdd?.reason).toBe(AddUsersFailureReasons.NON_FEDERATING_BACKENDS);
-      expect(result.failedToAdd?.users).toEqual([userDomain2, userDomain3]);
+      expect(result.failedToAdd?.users).toEqual([...usersDomain2, ...usersDomain3]);
     });
   });
 
@@ -686,14 +683,6 @@ describe('ProteusService', () => {
       },
       protocol: ConversationProtocol.PROTEUS,
     };
-
-    const domain1 = 'domain1';
-    const domain2 = 'domain2';
-    const domain3 = 'domain3';
-
-    const usersDomain1 = generateQualifiedIds(3, domain1);
-    const usersDomain2 = generateQualifiedIds(3, domain2);
-    const usersDomain3 = generateQualifiedIds(3, domain3);
 
     it('adds all requested users to a new conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
