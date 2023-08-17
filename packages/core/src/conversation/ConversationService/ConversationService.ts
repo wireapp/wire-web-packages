@@ -53,6 +53,11 @@ import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/ful
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
+export enum AddUsersFailureReasons {
+  NON_FEDERATING_BACKENDS = 'NON_FEDERATING_BACKENDS',
+  UNREACHABLE_BACKENDS = 'UNREACHABLE_BACKENDS',
+}
+
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
   private readonly logger = logdown('@wireapp/core/ConversationService');

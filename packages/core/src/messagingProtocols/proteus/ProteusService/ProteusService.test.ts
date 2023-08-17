@@ -30,7 +30,7 @@ import {
   QualifiedUserClients,
 } from '@wireapp/api-client/lib/conversation';
 
-import {MessageSendingState, MessageTargetMode} from '../../../conversation';
+import {AddUsersFailureReasons, MessageSendingState, MessageTargetMode} from '../../../conversation';
 import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {buildProteusService} from './ProteusService.mocks';
@@ -627,7 +627,8 @@ describe('ProteusService', () => {
       );
       expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain2]));
 
-      expect(result.failedToAdd).toEqual([userDomain1, user2Domain1]);
+      expect(result.failedToAdd?.reason).toBe(AddUsersFailureReasons.UNREACHABLE_BACKENDS);
+      expect(result.failedToAdd?.users).toEqual([userDomain1, user2Domain1]);
     });
 
     it('partially add users if some users are part of not-connected backends', async () => {
@@ -655,7 +656,8 @@ describe('ProteusService', () => {
       );
       expect(postMembersSpy).toHaveBeenCalledWith(conversationId, expect.arrayContaining([userDomain1, user2Domain1]));
 
-      expect(result.failedToAdd).toEqual([userDomain2, userDomain3]);
+      expect(result.failedToAdd?.reason).toBe(AddUsersFailureReasons.NON_FEDERATING_BACKENDS);
+      expect(result.failedToAdd?.users).toEqual([userDomain2, userDomain3]);
     });
   });
 

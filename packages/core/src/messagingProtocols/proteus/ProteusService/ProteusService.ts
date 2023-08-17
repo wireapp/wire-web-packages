@@ -46,7 +46,7 @@ import type {
 import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 import {filterUsersFromDomains} from './userDomainFilters';
 
-import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
+import {AddUsersFailureReasons, GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {NonFederatingBackendsError} from '../../../errors';
 import type {EventHandlerResult} from '../../common.types';
@@ -195,11 +195,16 @@ export class ProteusService {
    */
   public async addUsersToConversation({conversationId, qualifiedUsers}: AddUsersToProteusConversationParams): Promise<{
     event?: ConversationMemberJoinEvent;
-    failedToAdd?: QualifiedId[];
+    failedToAdd?: {reason: AddUsersFailureReasons; users: QualifiedId[]};
   }> {
     try {
       return {event: await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers)};
     } catch (error) {
+      const failureReasonsMap = {
+        [FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS]: AddUsersFailureReasons.NON_FEDERATING_BACKENDS,
+        [FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS]: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
+      };
+
       if (isFederatedBackendsError(error)) {
         switch (error.label) {
           case FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS:
@@ -210,13 +215,16 @@ export class ProteusService {
               backends,
             );
             if (availableUsers.length === 0) {
-              return {failedToAdd: unreachableUsers};
+              return {failedToAdd: {reason: failureReasonsMap[error.label], users: unreachableUsers}};
             }
             // In case the request to add users failed with a `UNREACHABLE_BACKENDS` or `NOT_CONNECTED_BACKENDS` errors, we try again with the users from available backends
             const response = await this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
             return {
               event: response,
-              failedToAdd: unreachableUsers,
+              failedToAdd:
+                unreachableUsers.length > 0
+                  ? {reason: failureReasonsMap[error.label], users: unreachableUsers}
+                  : undefined,
             };
           }
         }
