@@ -172,7 +172,9 @@ export class ProteusService {
     conversationData: NewConversation,
   ): Promise<{conversation: Conversation; failedToAdd?: CreateConversationFailureToAddUsers}> {
     try {
-      return {conversation: await this.apiClient.api.conversation.postConversation(conversationData)};
+     const conversation = await this.apiClient.api.conversation.postConversation(conversationData);
+     
+      return {conversation};
     } catch (error: unknown) {
       if (isFederatedBackendsError(error)) {
         switch (error.label) {
