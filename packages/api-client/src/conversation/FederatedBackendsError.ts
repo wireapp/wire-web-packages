@@ -21,7 +21,7 @@ import {AxiosError} from 'axios';
 
 export enum FederatedBackendsErrorLabel {
   UNREACHABLE_BACKENDS = 'UnreachableBackendsError',
-  NON_FEDERATING_BACKENDS = 'NotConnectedBackendsError',
+  NON_FEDERATING_BACKENDS = 'NonFederatingBackendsError',
 }
 
 enum FederatedBackendsErrorCode {

@@ -39,7 +39,7 @@ import {NotificationSource} from '../../../notification';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ProteusService} from './ProteusService';
-import {BackendsNotConnectedError} from '../../../errors';
+import {NonFederatingBackendError} from '../../../errors';
 
 jest.mock('./CryptoClient/CoreCryptoWrapper/PrekeysTracker', () => {
   return {
@@ -636,7 +636,7 @@ describe('ProteusService', () => {
       const postMembersSpy = jest
         .spyOn(apiClient.api.conversation, 'postMembers')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.NOT_CONNECTED_BACKENDS, [
+          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [
             userDomain2.domain,
             userDomain3.domain,
           ]),
@@ -759,7 +759,7 @@ describe('ProteusService', () => {
       jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.NOT_CONNECTED_BACKENDS, [
+          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [
             userDomain1.domain,
             userDomain2.domain,
           ]),
@@ -770,7 +770,7 @@ describe('ProteusService', () => {
           receipt_mode: null,
           qualified_users: [userDomain1, user2Domain1, userDomain2],
         }),
-      ).rejects.toThrow(BackendsNotConnectedError);
+      ).rejects.toThrow(NonFederatingBackendError);
     });
   });
 });
