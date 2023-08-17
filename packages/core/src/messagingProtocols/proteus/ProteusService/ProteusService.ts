@@ -70,6 +70,18 @@ export type EncryptionResult = {
   failed?: QualifiedId[];
 };
 
+/**
+ * List of users that were originaly requested to be in the conversation
+ * but could not be added due to their backend not being available
+ * @note Added since version 4: https://staging-nginz-https.z
+ ra.io/v4/api/swagger-ui/#/default/post_conversations
+ * @note Federation only
+ */
+type CreateConversationFailureToAddUsers = {
+  reason: AddUsersFailureReasons;
+  users: QualifiedId[];
+};
+
 export class ProteusService {
   private readonly messageService: MessageService;
   private readonly logger = logdown('@wireapp/core/ProteusService');
@@ -156,9 +168,11 @@ export class ProteusService {
     return this.cryptoClient.getRemoteFingerprint(sessionId);
   }
 
-  public async createConversation(conversationData: NewConversation): Promise<Conversation> {
+  public async createConversation(
+    conversationData: NewConversation,
+  ): Promise<{conversation: Conversation; failedToAdd?: CreateConversationFailureToAddUsers}> {
     try {
-      return await this.apiClient.api.conversation.postConversation(conversationData);
+      return {conversation: await this.apiClient.api.conversation.postConversation(conversationData)};
     } catch (error: unknown) {
       if (isFederatedBackendsError(error)) {
         switch (error.label) {
@@ -177,10 +191,15 @@ export class ProteusService {
             // we try creating the conversation again with users from available backends
             const response = await this.apiClient.api.conversation.postConversation(conversationData);
 
-            // on a succesfull conversation creation with the available users,
-            // we append the users from an unreachable backend to the response
-            response.failed_to_add = unreachableUsers;
-            return response;
+            return {
+              conversation: response,
+              failedToAdd:
+                // on a succesfull conversation creation with the available users,
+                // we append the users from an unreachable backend to the response
+                unreachableUsers.length > 0
+                  ? {reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS, users: unreachableUsers}
+                  : undefined,
+            };
           }
         }
       }

@@ -112,7 +112,7 @@ export class ConversationService {
    * @param conversationData Payload object for group creation
    * @returns Resolves when the conversation was created
    */
-  public async createProteusConversation(conversationData: NewConversation): Promise<Conversation> {
+  public async createProteusConversation(conversationData: NewConversation) {
     return this.proteusService.createConversation(conversationData);
   }
 
@@ -264,14 +264,10 @@ export class ConversationService {
     // We fetch the fresh version of the conversation created on backend with the newly added users
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
-    /**
-     * @note Add users whom we could not fetch their keypackages to list of failed to add users.
-     */
-    conversation.failed_to_add = response.failed || [];
-
     return {
       events: response.events,
       conversation,
+      failedToAdd: response.failed ?? undefined,
     };
   }
 
@@ -327,13 +323,12 @@ export class ConversationService {
     const response = await this.mlsService.addUsersToExistingConversation(groupId, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
 
-    conversation.failed_to_add = failedToFetchKeyPackages;
-
     //We store the info when user was added (and key material was created), so we will know when to renew it
     this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
       events: response.events,
       conversation,
+      failedToAdd: failedToFetchKeyPackages.length > 0 ? failedToFetchKeyPackages : undefined,
     };
   }
 

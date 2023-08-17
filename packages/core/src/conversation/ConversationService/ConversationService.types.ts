@@ -114,7 +114,7 @@ export type RemoveUsersParams = {
   groupId: string;
 };
 
-export type MLSReturnType = {events: ConversationEvent[]; conversation: Conversation};
+export type MLSReturnType = {events: ConversationEvent[]; conversation: Conversation; failedToAdd?: QualifiedId[]};
 
 export type SendResult = {
   /** The id of the message sent */

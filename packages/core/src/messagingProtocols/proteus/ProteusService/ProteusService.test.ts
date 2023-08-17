@@ -40,6 +40,7 @@ import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ProteusService} from './ProteusService';
 import {NonFederatingBackendsError} from '../../../errors';
+import {generateQualifiedIds} from '../../../testUtils';
 
 jest.mock('./CryptoClient/CoreCryptoWrapper/PrekeysTracker', () => {
   return {
@@ -683,13 +684,16 @@ describe('ProteusService', () => {
           status_time: '',
         },
       },
-      failed_to_add: [],
       protocol: ConversationProtocol.PROTEUS,
     };
 
-    const userDomain1 = {id: 'user-1-1', domain: 'domain1'};
-    const user2Domain1 = {id: 'user-2-1', domain: 'domain1'};
-    const userDomain2 = {id: 'user-2-2', domain: 'domain2'};
+    const domain1 = 'domain1';
+    const domain2 = 'domain2';
+    const domain3 = 'domain3';
+
+    const usersDomain1 = generateQualifiedIds(3, domain1);
+    const usersDomain2 = generateQualifiedIds(3, domain2);
+    const usersDomain3 = generateQualifiedIds(3, domain3);
 
     it('adds all requested users to a new conversation', async () => {
       const [proteusService, {apiClient}] = await buildProteusService();
@@ -698,10 +702,11 @@ describe('ProteusService', () => {
 
       const result = await proteusService.createConversation({
         receipt_mode: null,
-        qualified_users: [userDomain1, user2Domain1, userDomain2],
+        qualified_users: [...usersDomain1, ...usersDomain2, ...usersDomain3],
       });
 
-      expect(result).toEqual(newConversation);
+      expect(result.conversation).toEqual(newConversation);
+      expect(result.failedToAdd).toBeUndefined();
     });
 
     it('partially add users if some backends are unreachable', async () => {
@@ -709,23 +714,24 @@ describe('ProteusService', () => {
 
       const postConversationSpy = jest
         .spyOn(apiClient.api.conversation, 'postConversation')
-        .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [userDomain1.domain]),
-        )
+        .mockRejectedValueOnce(new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [domain1]))
         .mockResolvedValueOnce(newConversation);
 
-      const result = await proteusService.createConversation({
+      const {failedToAdd} = await proteusService.createConversation({
         receipt_mode: null,
-        qualified_users: [userDomain1, user2Domain1, userDomain2],
+        qualified_users: [...usersDomain1, ...usersDomain2],
       });
 
       expect(postConversationSpy).toHaveBeenCalledTimes(2);
       expect(postConversationSpy).toHaveBeenCalledWith(
-        expect.objectContaining({qualified_users: [userDomain1, user2Domain1, userDomain2]}),
+        expect.objectContaining({qualified_users: [...usersDomain1, ...usersDomain2]}),
       );
-      expect(postConversationSpy).toHaveBeenCalledWith(expect.objectContaining({qualified_users: [userDomain2]}));
+      expect(postConversationSpy).toHaveBeenCalledWith(expect.objectContaining({qualified_users: usersDomain2}));
 
-      expect(result.failed_to_add).toEqual([userDomain1, user2Domain1]);
+      expect(failedToAdd).toEqual({
+        reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
+        users: expect.arrayContaining([...usersDomain1, ...usersDomain1]),
+      });
     });
 
     it('creates an empty conversation if no backend is reachable', async () => {
@@ -734,25 +740,25 @@ describe('ProteusService', () => {
       const postConversationSpy = jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [
-            userDomain1.domain,
-            userDomain2.domain,
-          ]),
+          new FederatedBackendsError(FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS, [domain1, domain2]),
         )
         .mockResolvedValueOnce({} as any);
 
-      const result = await proteusService.createConversation({
+      const {failedToAdd} = await proteusService.createConversation({
         receipt_mode: null,
-        qualified_users: [userDomain1, user2Domain1, userDomain2],
+        qualified_users: [...usersDomain1, ...usersDomain2],
       });
 
       expect(postConversationSpy).toHaveBeenCalledTimes(2);
       expect(postConversationSpy).toHaveBeenCalledWith(
-        expect.objectContaining({qualified_users: [userDomain1, user2Domain1, userDomain2]}),
+        expect.objectContaining({qualified_users: [...usersDomain1, ...usersDomain2]}),
       );
       expect(postConversationSpy).toHaveBeenCalledWith(expect.objectContaining({qualified_users: []}));
 
-      expect(result.failed_to_add).toEqual([userDomain1, user2Domain1, userDomain2]);
+      expect(failedToAdd).toEqual({
+        reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
+        users: expect.arrayContaining([...usersDomain1, ...usersDomain1]),
+      });
     });
 
     it('fails to create a conversation if there are users from non-connected backends', async () => {
@@ -761,16 +767,13 @@ describe('ProteusService', () => {
       jest
         .spyOn(apiClient.api.conversation, 'postConversation')
         .mockRejectedValueOnce(
-          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [
-            userDomain1.domain,
-            userDomain2.domain,
-          ]),
+          new FederatedBackendsError(FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS, [domain1, domain2]),
         );
 
       await expect(() =>
         proteusService.createConversation({
           receipt_mode: null,
-          qualified_users: [userDomain1, user2Domain1, userDomain2],
+          qualified_users: [...usersDomain1, ...usersDomain2],
         }),
       ).rejects.toThrow(NonFederatingBackendsError);
     });
