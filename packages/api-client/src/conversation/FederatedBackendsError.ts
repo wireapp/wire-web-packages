@@ -25,8 +25,8 @@ export enum FederatedBackendsErrorLabel {
 }
 
 enum FederatedBackendsErrorCode {
-  UNREACHABLE = 533, // When a backend is not reachable for the current user
   NON_FEDERATING = 409, // When 2 users' backend are not connected to each others
+  UNREACHABLE = 533, // When a backend is not reachable for the current user
 }
 
 export class FederatedBackendsError extends Error {

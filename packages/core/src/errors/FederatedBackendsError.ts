@@ -18,7 +18,7 @@
  */
 
 /**
- * This error means we are trying to add users that are parts of 2 backends that are not connected to a new conversation.
+ * This error means we are trying to add users that are parts of 2 backends that are not federating with each other to a new conversation.
  */
 export class NonFederatingBackendsError extends Error {
   constructor(public readonly backends: string[]) {
