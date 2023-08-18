@@ -32,10 +32,7 @@ const isMLSMessageAddEvent = (event: BackendEvent): event is ConversationMLSMess
 interface HandleMLSMessageAddParams extends EventHandlerParams {
   event: ConversationMLSMessageAddEvent;
 }
-const handleMLSMessageAdd = async (
-  {mlsService, event}: HandleMLSMessageAddParams,
-  onEpochChanged: (groupId: string) => Promise<void>,
-): EventHandlerResult => {
+const handleMLSMessageAdd = async ({mlsService, event}: HandleMLSMessageAddParams): EventHandlerResult => {
   const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
   const qualifiedConversationId = event.qualified_conversation ?? {id: event.conversation, domain: ''};
@@ -77,7 +74,8 @@ const handleMLSMessageAdd = async (
   }
 
   if (hasEpochChanged) {
-    await onEpochChanged(groupId);
+    const newEpoch = await mlsService.getEpoch(groupId);
+    mlsService.emit('newEpoch', {groupId, epoch: newEpoch});
   }
 
   return message ? {event, decryptedData: GenericMessage.decode(message)} : undefined;

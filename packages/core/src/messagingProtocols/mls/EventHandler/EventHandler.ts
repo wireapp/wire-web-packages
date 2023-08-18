@@ -22,16 +22,13 @@ import {handleMLSMessageAdd, handleWelcomeMessage, isMLSMessageAddEvent, isWelco
 
 import {EventHandlerResult} from '../../common.types';
 
-const handleBackendEvent = async (
-  params: EventHandlerParams,
-  onEpochChanged: (groupId: string) => Promise<void>,
-): EventHandlerResult => {
+const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => {
   const {event} = params;
   if (isWelcomeMessageEvent(event)) {
     return handleWelcomeMessage({...params, event});
   }
   if (isMLSMessageAddEvent(event)) {
-    return handleMLSMessageAdd({...params, event}, onEpochChanged);
+    return handleMLSMessageAdd({...params, event});
   }
 };
 

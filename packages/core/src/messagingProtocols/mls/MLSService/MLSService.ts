@@ -632,14 +632,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
-    return handleBackendEvent({...params, mlsService: this}, async groupId => {
-      const conversationExists = await this.conversationExists(groupId);
-      if (!conversationExists) {
-        return;
-      }
-      const newEpoch = await this.getEpoch(groupId);
-      this.emit('newEpoch', {groupId, epoch: newEpoch});
-    });
+    return handleBackendEvent({...params, mlsService: this});
   }
 
   /**
