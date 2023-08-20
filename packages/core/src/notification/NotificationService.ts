@@ -33,6 +33,7 @@ import {NotificationSource} from './Notifications.types';
 import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
 import {MLSService} from '../messagingProtocols/mls';
+import {handleMLSMessageAdd, handleWelcomeMessage} from '../messagingProtocols/mls/EventHandler/events';
 import {ProteusService} from '../messagingProtocols/proteus';
 import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
@@ -73,12 +74,19 @@ export class NotificationService extends TypedEventEmitter<Events> {
     apiClient: APIClient,
     private readonly proteusService: ProteusService,
     storeEngine: CRUDEngine,
-    private readonly mlsService?: MLSService,
+    private readonly _mlsService?: MLSService,
   ) {
     super();
     this.apiClient = apiClient;
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(storeEngine);
+  }
+
+  private get mlsService(): MLSService {
+    if (!this._mlsService) {
+      throw new Error('MLS Service is not available!');
+    }
+    return this._mlsService;
   }
 
   private async getAllNotifications(since: string) {
@@ -240,12 +248,6 @@ export class NotificationService extends TypedEventEmitter<Events> {
     source: NotificationSource,
     dryRun: boolean = false,
   ): Promise<HandledEventPayload | undefined> {
-    // Handle MLS Events
-    const mlsResult = await this.mlsService?.handleEvent({event, source, dryRun});
-    if (mlsResult) {
-      return mlsResult;
-    }
-
     const proteusResult = await this.proteusService.handleEvent({
       event,
       source,
@@ -255,18 +257,12 @@ export class NotificationService extends TypedEventEmitter<Events> {
       return proteusResult;
     }
 
-    // Fallback to other events
     switch (event.type) {
-      // Meta events
-      case CONVERSATION_EVENT.MEMBER_JOIN:
-        // As of today (07/07/2022) the backend sends `WELCOME` message to the user's own conversation (not the actual conversation that the welcome should be part of)
-        // So in order to map conversation Ids and groupId together, we need to first fetch the conversation and get the groupId linked to it.
-        const conversation = await this.apiClient.api.conversation.getConversation(
-          event.qualified_conversation ?? {id: event.conversation, domain: ''},
-        );
-        if (!conversation) {
-          throw new Error('no conv');
-        }
+      case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
+        return handleMLSMessageAdd({mlsService: this.mlsService, event, source, dryRun});
+
+      case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
+        return handleWelcomeMessage({mlsService: this.mlsService, event, source, dryRun});
     }
     return {event};
   }

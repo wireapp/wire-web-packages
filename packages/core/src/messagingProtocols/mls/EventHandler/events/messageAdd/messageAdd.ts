@@ -22,7 +22,7 @@ import {Decoder} from 'bazinga64';
 
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {EventHandlerResult} from '../../../../common.types';
+import {HandledEventPayload} from '../../../../../notification';
 import {optionalToUint8Array} from '../../../MLSService/MLSService';
 import {EventHandlerParams} from '../../EventHandler.types';
 
@@ -32,7 +32,10 @@ const isMLSMessageAddEvent = (event: BackendEvent): event is ConversationMLSMess
 interface HandleMLSMessageAddParams extends EventHandlerParams {
   event: ConversationMLSMessageAddEvent;
 }
-const handleMLSMessageAdd = async ({mlsService, event}: HandleMLSMessageAddParams): EventHandlerResult => {
+const handleMLSMessageAdd = async ({
+  mlsService,
+  event,
+}: HandleMLSMessageAddParams): Promise<HandledEventPayload | undefined> => {
   const encryptedData = Decoder.fromBase64(event.data).asBytes;
 
   const qualifiedConversationId = event.qualified_conversation ?? {id: event.conversation, domain: ''};

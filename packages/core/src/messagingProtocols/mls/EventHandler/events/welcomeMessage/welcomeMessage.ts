@@ -20,7 +20,7 @@
 import {BackendEvent, ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Decoder, Encoder} from 'bazinga64';
 
-import {EventHandlerResult} from '../../../../common.types';
+import {HandledEventPayload} from '../../../../../notification';
 import {EventHandlerParams} from '../../EventHandler.types';
 
 const isWelcomeMessageEvent = (event: BackendEvent): event is ConversationMLSWelcomeEvent =>
@@ -29,7 +29,7 @@ const isWelcomeMessageEvent = (event: BackendEvent): event is ConversationMLSWel
 interface HandleWelcomeMessageParams extends EventHandlerParams {
   event: ConversationMLSWelcomeEvent;
 }
-const handleWelcomeMessage = async ({mlsService, event}: HandleWelcomeMessageParams): EventHandlerResult => {
+const handleWelcomeMessage = async ({mlsService, event}: HandleWelcomeMessageParams): Promise<HandledEventPayload> => {
   const data = Decoder.fromBase64(event.data).asBytes;
   // We extract the groupId from the welcome message and let coreCrypto store this group
   const newGroupId = await mlsService.processWelcomeMessage(data);
