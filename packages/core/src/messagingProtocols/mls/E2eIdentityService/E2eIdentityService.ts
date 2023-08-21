@@ -22,6 +22,7 @@ import {
   AcmeDirectory,
   Ciphersuite,
   CoreCrypto,
+  RotateBundle,
   WireE2eIdentity,
 } from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
@@ -30,7 +31,7 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {InitParams, User} from './E2eIdentityService.types';
+import {InitParams} from './E2eIdentityService.types';
 import {getE2eClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
@@ -45,21 +46,18 @@ import {OIDCService} from '../../../oauth';
 class E2eIdentityService {
   private static instance: E2eIdentityService;
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
-  private readonly expiryDays = 2;
-  private readonly expirySecs = 30;
   private readonly coreCryptoClient: CoreCrypto;
   private readonly apiClient: APIClient;
+  private readonly keyPackagesAmount;
   private identity?: WireE2eIdentity;
   private acmeService?: AcmeService;
-  private user?: User;
-  private clientId?: string;
-  private e2eClientId?: string;
   private isInitialized = false;
   private isInProgress = false;
 
-  private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient) {
+  private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient, keyPackagesAmount: number = 100) {
     this.coreCryptoClient = coreCryptClient;
     this.apiClient = apiClient;
+    this.keyPackagesAmount = keyPackagesAmount;
   }
 
   // ############ Public Functions ############
@@ -69,8 +67,8 @@ class E2eIdentityService {
       if (!params) {
         throw new Error('GracePeriodTimer is not initialized. Please call getInstance with params.');
       }
-      const {skipInit = false, coreCryptClient, apiClient} = params;
-      E2eIdentityService.instance = new E2eIdentityService(coreCryptClient, apiClient);
+      const {skipInit = false, coreCryptClient, apiClient, keyPackagesAmount} = params;
+      E2eIdentityService.instance = new E2eIdentityService(coreCryptClient, apiClient, keyPackagesAmount);
       if (!skipInit) {
         const {discoveryUrl, user, clientId} = params;
         if (!discoveryUrl || !user || !clientId) {
@@ -83,20 +81,20 @@ class E2eIdentityService {
     return E2eIdentityService.instance;
   }
 
-  public async getNewCertificate(): Promise<boolean> {
+  public async getNewCertificate(): Promise<RotateBundle | undefined> {
     // Step 0: Check if we have a handle in local storage
     // If we don't have a handle, we need to start a new OAuth flow
     this.isInProgress = AcmeStorage.hasHandle();
 
     if (this.isInProgress) {
       try {
-        return await this.continueOAuthFlow();
+        return this.continueOAuthFlow();
       } catch (error) {
         return this.exitWithError('Error while trying to continue OAuth flow with error:', error);
       }
     } else {
       try {
-        return await this.startNewOAuthFlow();
+        return this.startNewOAuthFlow();
       } catch (error) {
         return this.exitWithError('Error while trying to start OAuth flow with error:', error);
       }
@@ -107,27 +105,29 @@ class E2eIdentityService {
 
   private exitWithError(message: string, error?: unknown) {
     this.logger.error(message, error);
-    return false;
+    return undefined;
   }
 
   private async init(params: Required<Pick<InitParams, 'user' | 'clientId' | 'discoveryUrl'>>): Promise<void> {
-    const {user, clientId, discoveryUrl} = params;
-    if (!user || !clientId) {
-      this.logger.error('user and clientId are required to initialize E2eIdentityService');
-      throw new Error();
+    try {
+      const {user, clientId, discoveryUrl} = params;
+      if (!user || !clientId) {
+        this.logger.error('user and clientId are required to initialize E2eIdentityService');
+        throw new Error();
+      }
+      this.acmeService = new AcmeService(discoveryUrl);
+      this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
+        getE2eClientId(user, clientId),
+        user.displayName,
+        user.handle,
+        2,
+        Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+      );
+      this.isInitialized = true;
+    } catch (error) {
+      this.logger.error('Error while trying to initialize E2eIdentityService', error);
+      throw error;
     }
-    this.acmeService = new AcmeService(discoveryUrl);
-    this.user = user;
-    this.clientId = clientId;
-    this.e2eClientId = getE2eClientId(this.user, this.clientId);
-    this.identity = await this.coreCryptoClient.e2eiNewEnrollment(
-      this.e2eClientId,
-      this.user.displayName,
-      this.user.handle,
-      this.expiryDays,
-      Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
-    );
-    this.isInitialized = true;
   }
 
   private async getDirectory(identity: WireE2eIdentity, connection: AcmeService): Promise<AcmeDirectory | undefined> {
@@ -160,7 +160,7 @@ class E2eIdentityService {
     const oidcService = new OIDCService({
       audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
       authorityUrl: 'https://accounts.google.com' || challenge.target,
-      redirectUri: 'https://local.anta.wire.link:8081/',
+      redirectUri: 'https://local.elna.wire.link:8081/',
       clientSecret: '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',
     });
     return oidcService;
@@ -226,7 +226,7 @@ class E2eIdentityService {
       const oidcService = this.getOidcService(wireOidcChallenge);
       await oidcService.authenticate();
     }
-    return true;
+    return undefined;
   }
 
   private async continueOAuthFlow() {
@@ -276,7 +276,7 @@ class E2eIdentityService {
         identity: this.identity,
         userDomain: wireUser.domain,
         apiClient: this.apiClient,
-        expirySecs: this.expirySecs,
+        expirySecs: 30,
         nonce: oidcData.nonce,
       });
       this.logger.log('acme dpopData', JSON.stringify(dpopData));
@@ -309,12 +309,11 @@ class E2eIdentityService {
       AcmeStorage.storeCertificate(certificate);
       // Step 10: Initialize MLS with the certificate
       // TODO: This is not working yet (since we initialize mls beforehand) and will be replaced by a new core-crypto function later on
-      //await this.coreCryptoClient.e2eiMlsInit(this.identity, certificate);
+      return await this.coreCryptoClient.e2eiRotateAll(this.identity, certificate, this.keyPackagesAmount);
     } catch (error) {
       this.logger.error('Error while trying to continue OAuth flow', error);
       throw error;
     }
-    return true;
   }
 }
 

@@ -48,4 +48,5 @@ export interface InitParams {
   // If a entrollment is in progress, the init function will not start a new enrollment
   skipInit?: boolean;
   discoveryUrl?: string;
+  keyPackagesAmount: number;
 }

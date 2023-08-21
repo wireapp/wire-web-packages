@@ -161,6 +161,28 @@ export class ClientAPI {
   }
 
   /**
+   * Will upload keypackages for an MLS capable client
+   * @see https://nginz-https.elna.wire.link/v4/api/swagger-ui/#/default/delete_mls_key_packages_self__client_
+   * @param {string} clientId The client to upload the key packages for
+   * @param {string[]} keyPackages The key packages to upload
+   */
+  public async deleteMLSKeyPackages(clientId: string, keyPackageRefs: string[]) {
+    const maxKeyPackages = 1000;
+    if (keyPackageRefs.length > maxKeyPackages) {
+      throw new Error(
+        `Too many key packages, max is ${maxKeyPackages}. Please split the request into multiple requests.`,
+      );
+    }
+    const config: AxiosRequestConfig = {
+      data: {key_packages: keyPackageRefs},
+      method: 'DELETE',
+      url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/self/${clientId}`,
+    };
+
+    await this.client.sendJSON<PreKeyBundle>(config, true);
+  }
+
+  /**
    * Claim one key package for each client of the given user
    * @param  {string} userId The user to claim the key packages for
    * @param {string} userDomain The domain of the user
@@ -233,16 +255,6 @@ export class ClientAPI {
       token: z.string().min(1),
       type: z.literal('DPoP'),
     });
-
-    console.log(
-      'acme send Dpop Token request',
-      JSON.stringify({
-        dpopToken,
-        clientId,
-        decodedDpopToken: new TextDecoder().decode(dpopToken),
-        url: this.getAccessTokenPath(clientId),
-      }),
-    );
 
     const config: AxiosRequestConfig = {
       method: 'post',

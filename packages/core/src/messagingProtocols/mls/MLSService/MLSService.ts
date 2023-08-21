@@ -56,6 +56,7 @@ import {cancelRecurringTask, registerRecurringTask} from '../../../util/Recurrin
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {EventHandlerResult} from '../../common.types';
+import {AcmeStorage} from '../E2eIdentityService/Storage/AcmeStorage';
 import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -86,7 +87,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
   private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
-  private readonly defaultCredentialType = CredentialType.Basic;
+  private isE2EIEnabled = false;
+  private readonly defaultCredentialType = () => (this.isE2EIEnabled ? CredentialType.X509 : CredentialType.Basic);
 
   constructor(
     private readonly apiClient: APIClient,
@@ -101,6 +103,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,
     };
+    this.isE2EIEnabled = AcmeStorage.hasCertificateData();
   }
 
   public async initClient(userId: QualifiedId, clientId: ClientId) {
@@ -114,7 +117,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const publicKey = await this.coreCryptoClient.clientPublicKey(this.defaultCiphersuite);
     const keyPackages = await this.coreCryptoClient.clientKeypackages(
       this.defaultCiphersuite,
-      this.defaultCredentialType,
+      this.defaultCredentialType(),
       this.config.nbKeyPackages,
     );
     await this.uploadMLSPublicKeys(publicKey, clientId);
@@ -243,7 +246,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupInfo = await getGroupInfo();
       const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
         groupInfo,
-        this.defaultCredentialType,
+        this.defaultCredentialType(),
       );
       return {groupId: conversationId, commitBundle};
     };
@@ -420,7 +423,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       ciphersuite: this.defaultCiphersuite,
     };
 
-    await this.coreCryptoClient.createConversation(groupIdBytes, this.defaultCredentialType, configuration);
+    await this.coreCryptoClient.createConversation(groupIdBytes, this.defaultCredentialType(), configuration);
 
     const {coreCryptoKeyPackagesPayload: keyPackages, failedToFetchKeyPackages} = await this.getKeyPackagesPayload(
       users.map(user => {
@@ -479,13 +482,13 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite, this.defaultCredentialType);
+    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite, this.defaultCredentialType());
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
     return this.coreCryptoClient.clientKeypackages(
       this.defaultCiphersuite,
-      this.defaultCredentialType,
+      this.defaultCredentialType(),
       amountRequested,
     );
   }
@@ -601,7 +604,14 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  private async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: ClientId) {
+  public async deleteMLSKeyPackages(keyPackagRefs: Uint8Array[], clientId: ClientId) {
+    return this.apiClient.api.client.deleteMLSKeyPackages(
+      clientId,
+      keyPackagRefs.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
+    );
+  }
+
+  public async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: ClientId) {
     return this.apiClient.api.client.uploadMLSKeyPackages(
       clientId,
       keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),

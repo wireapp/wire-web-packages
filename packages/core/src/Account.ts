@@ -160,7 +160,7 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 2, cryptoProtocolConfig}: AccountOptions = {},
+    {createStore = () => undefined, nbPrekeys = 100, cryptoProtocolConfig}: AccountOptions = {},
   ) {
     super();
     this.apiClient = apiClient;
@@ -222,7 +222,7 @@ export class Account extends TypedEventEmitter<Events> {
     return undefined;
   }
 
-  public async startE2EIEnrollment(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
+  public async enrollE2EI(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
     const client = this.getCoreCryptoClient();
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
@@ -245,26 +245,19 @@ export class Account extends TypedEventEmitter<Events> {
         user,
         clientId: this.clientId,
         discoveryUrl,
+        keyPackagesAmount: this.nbPrekeys,
       });
-      return await instance.getNewCertificate();
+      const data = await instance.getNewCertificate();
+      if (data !== undefined) {
+        await this.service?.mls?.deleteMLSKeyPackages(data.keyPackageRefsToRemove, this.clientId);
+        await this.service?.mls?.uploadMLSKeyPackages(data.newKeyPackages, this.clientId);
+        return true;
+      }
+      return false;
     } catch (error) {
-      this.logger.error('Failed to enroll user', error);
-      return false;
+      this.logger.error('E2EI - Failed to enroll', error);
+      throw error;
     }
-  }
-
-  public async continueE2EIEnrollment(): Promise<boolean> {
-    const client = this.getCoreCryptoClient();
-    if (!client) {
-      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.isMlsEnabled());
-      return false;
-    }
-    const instance = await E2eIdentityService.getInstance({
-      skipInit: true,
-      coreCryptClient: client,
-      apiClient: this.apiClient,
-    });
-    return instance.getNewCertificate();
   }
 
   get clientId(): string {
