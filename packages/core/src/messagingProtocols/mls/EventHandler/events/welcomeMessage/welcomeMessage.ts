@@ -17,21 +17,18 @@
  *
  */
 
-import {BackendEvent, ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {Decoder, Encoder} from 'bazinga64';
 
 import {HandledEventPayload} from '../../../../../notification';
 import {MLSService} from '../../../MLSService';
-
-const isWelcomeMessageEvent = (event: BackendEvent): event is ConversationMLSWelcomeEvent =>
-  event.type === CONVERSATION_EVENT.MLS_WELCOME_MESSAGE;
 
 interface HandleWelcomeMessageParams {
   event: ConversationMLSWelcomeEvent;
   mlsService: MLSService;
 }
 
-const handleMLSWelcomeMessage = async ({
+export const handleMLSWelcomeMessage = async ({
   mlsService,
   event,
 }: HandleWelcomeMessageParams): Promise<HandledEventPayload> => {
@@ -48,5 +45,3 @@ const handleMLSWelcomeMessage = async ({
     event: {...event, data: groupIdStr},
   };
 };
-
-export {isWelcomeMessageEvent, handleMLSWelcomeMessage};

@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendEvent, ConversationMLSMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {ConversationMLSMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {Decoder} from 'bazinga64';
 
 import {GenericMessage} from '@wireapp/protocol-messaging';
@@ -25,15 +25,12 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {HandledEventPayload} from '../../../../../notification';
 import {MLSService, optionalToUint8Array} from '../../../MLSService/MLSService';
 
-const isMLSMessageAddEvent = (event: BackendEvent): event is ConversationMLSMessageAddEvent =>
-  event.type === CONVERSATION_EVENT.MLS_MESSAGE_ADD;
-
 interface HandleMLSMessageAddParams {
   event: ConversationMLSMessageAddEvent;
   mlsService: MLSService;
 }
 
-const handleMLSMessageAdd = async ({
+export const handleMLSMessageAdd = async ({
   event,
   mlsService,
 }: HandleMLSMessageAddParams): Promise<HandledEventPayload | undefined> => {
@@ -84,5 +81,3 @@ const handleMLSMessageAdd = async ({
 
   return message ? {event, decryptedData: GenericMessage.decode(message)} : undefined;
 };
-
-export {isMLSMessageAddEvent, handleMLSMessageAdd};

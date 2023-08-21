@@ -17,9 +17,9 @@
  *
  */
 
-import {BackendEvent, ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 
-import {handleMLSWelcomeMessage, isWelcomeMessageEvent} from './welcomeMessage';
+import {handleMLSWelcomeMessage} from './welcomeMessage';
 
 import {MLSService} from '../../..';
 import {NotificationSource} from '../../../../../notification';
@@ -51,22 +51,6 @@ const mockParams = {
 };
 
 describe('MLS welcomeMessage eventHandler', () => {
-  describe('isWelcomeMessageEvent', () => {
-    it('returns true for a welcome message event', () => {
-      const event = {
-        type: CONVERSATION_EVENT.MLS_WELCOME_MESSAGE,
-      } as BackendEvent;
-      expect(isWelcomeMessageEvent(event)).toBe(true);
-    });
-
-    it('returns false for a non-welcome message event', () => {
-      const event = {
-        type: CONVERSATION_EVENT.MEMBER_JOIN,
-      } as BackendEvent;
-      expect(isWelcomeMessageEvent(event)).toBe(false);
-    });
-  });
-
   describe('handleWelcomeMessage', () => {
     it('calls processWelcomeMessage and schedules periodic key material updates', async () => {
       await handleMLSWelcomeMessage(mockParams);

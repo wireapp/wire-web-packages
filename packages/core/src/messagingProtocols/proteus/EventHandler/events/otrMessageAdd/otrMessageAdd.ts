@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendEvent, ConversationOtrMessageAddEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {Decoder} from 'bazinga64';
 
 import {ClientAction, GenericMessage} from '@wireapp/protocol-messaging';
@@ -27,15 +27,12 @@ import {DecryptionError} from '../../../../../errors/DecryptionError';
 import {HandledEventPayload} from '../../../../../notification';
 import {ProteusService} from '../../../ProteusService';
 
-const isOtrMessageAddEvent = (event: BackendEvent): event is ConversationOtrMessageAddEvent =>
-  event.type === CONVERSATION_EVENT.OTR_MESSAGE_ADD;
-
 interface HandleOtrMessageAddParams {
   event: ConversationOtrMessageAddEvent;
   proteusService: ProteusService;
 }
 
-const handleOtrMessageAdd = async ({
+export const handleOtrMessageAdd = async ({
   event,
   proteusService,
 }: HandleOtrMessageAddParams): Promise<HandledEventPayload> => {
@@ -68,5 +65,3 @@ const handleOtrMessageAdd = async ({
     throw error;
   }
 };
-
-export {isOtrMessageAddEvent, handleOtrMessageAdd};
