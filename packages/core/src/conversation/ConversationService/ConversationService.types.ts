@@ -114,7 +114,28 @@ export type RemoveUsersParams = {
   groupId: string;
 };
 
-export type MLSReturnType = {events: ConversationEvent[]; conversation: Conversation; failedToAdd?: QualifiedId[]};
+/**
+ * List of users that were originaly requested to be in the conversation
+ * but could not be added due to their backend not being available
+ * @note Added since version 4: https://staging-nginz-https.z
+ ra.io/v4/api/swagger-ui/#/default/post_conversations
+ * @note Federation only
+ */
+export enum AddUsersFailureReasons {
+  NON_FEDERATING_BACKENDS = 'NON_FEDERATING_BACKENDS',
+  UNREACHABLE_BACKENDS = 'UNREACHABLE_BACKENDS',
+}
+
+export type AddUsersFailure = {
+  users: QualifiedId[];
+  reason: AddUsersFailureReasons;
+};
+
+export type MLSReturnType = {
+  events: ConversationEvent[];
+  conversation: Conversation;
+  failedToAdd?: AddUsersFailure;
+};
 
 export type SendResult = {
   /** The id of the message sent */

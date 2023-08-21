@@ -46,7 +46,13 @@ import type {
 import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 import {filterUsersFromDomains} from './userDomainFilters';
 
-import {AddUsersFailureReasons, GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
+import {
+  AddUsersFailure,
+  AddUsersFailureReasons,
+  GenericMessageType,
+  MessageSendingState,
+  SendResult,
+} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {NonFederatingBackendsError} from '../../../errors';
 import type {EventHandlerResult} from '../../common.types';
@@ -68,18 +74,6 @@ export type EncryptionResult = {
   unknowns?: QualifiedUserClients;
   /** users for whom we could retrieve a prekey and, thus, for which we could not encrypt the message */
   failed?: QualifiedId[];
-};
-
-/**
- * List of users that were originaly requested to be in the conversation
- * but could not be added due to their backend not being available
- * @note Added since version 4: https://staging-nginz-https.z
- ra.io/v4/api/swagger-ui/#/default/post_conversations
- * @note Federation only
- */
-type CreateConversationFailureToAddUsers = {
-  reason: AddUsersFailureReasons;
-  users: QualifiedId[];
 };
 
 export class ProteusService {
@@ -170,7 +164,7 @@ export class ProteusService {
 
   public async createConversation(
     conversationData: NewConversation,
-  ): Promise<{conversation: Conversation; failedToAdd?: CreateConversationFailureToAddUsers}> {
+  ): Promise<{conversation: Conversation; failedToAdd?: AddUsersFailure}> {
     try {
       const conversation = await this.apiClient.api.conversation.postConversation(conversationData);
 

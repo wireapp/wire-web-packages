@@ -38,7 +38,13 @@ import {APIClient} from '@wireapp/api-client';
 import {Ciphersuite, CredentialType, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
+import {
+  AddUsersFailureReasons,
+  AddUsersParams,
+  MLSReturnType,
+  SendMlsMessageParams,
+  SendResult,
+} from './ConversationService.types';
 
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
@@ -52,11 +58,6 @@ import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
-
-export enum AddUsersFailureReasons {
-  NON_FEDERATING_BACKENDS = 'NON_FEDERATING_BACKENDS',
-  UNREACHABLE_BACKENDS = 'UNREACHABLE_BACKENDS',
-}
 
 export class ConversationService {
   public readonly messageTimer: MessageTimer;
@@ -267,7 +268,9 @@ export class ConversationService {
     return {
       events: response.events,
       conversation,
-      failedToAdd: response.failed ?? undefined,
+      failedToAdd: response.failed
+        ? {users: response.failed, reason: AddUsersFailureReasons.NON_FEDERATING_BACKENDS}
+        : undefined,
     };
   }
 
@@ -328,7 +331,10 @@ export class ConversationService {
     return {
       events: response.events,
       conversation,
-      failedToAdd: failedToFetchKeyPackages.length > 0 ? failedToFetchKeyPackages : undefined,
+      failedToAdd:
+        failedToFetchKeyPackages.length > 0
+          ? {users: failedToFetchKeyPackages, reason: AddUsersFailureReasons.NON_FEDERATING_BACKENDS}
+          : undefined,
     };
   }
 
