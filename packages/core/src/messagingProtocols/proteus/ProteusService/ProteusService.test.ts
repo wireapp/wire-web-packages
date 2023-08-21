@@ -205,7 +205,7 @@ describe('ProteusService', () => {
     });
   });
 
-  describe('handleEvent', () => {
+  describe('handleOtrMessageAddEvent', () => {
     const eventPayload: ConversationOtrMessageAddEvent = {
       type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
       qualified_from: generateQualifiedId('domain'),
@@ -223,7 +223,7 @@ describe('ProteusService', () => {
       jest.spyOn(cryptoClient, 'decrypt').mockResolvedValue(new Uint8Array());
       jest.spyOn(GenericMessage, 'decode').mockReturnValue(decryptedMessage);
 
-      const result = await proteusService.handleEvent(eventPayload);
+      const result = await proteusService.handleOtrMessageAddEvent(eventPayload);
 
       expect(result).toBeDefined();
       expect(createSessionSpy).not.toHaveBeenCalled();
@@ -238,7 +238,7 @@ describe('ProteusService', () => {
       const decryptSpy = jest.spyOn(cryptoClient, 'decrypt');
       jest.spyOn(GenericMessage, 'decode').mockReturnValue(decryptedMessage);
 
-      const result = await proteusService.handleEvent(eventPayload);
+      const result = await proteusService.handleOtrMessageAddEvent(eventPayload);
 
       expect(result).toBeDefined();
       expect(createSessionSpy).toHaveBeenCalled();

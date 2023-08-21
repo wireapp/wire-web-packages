@@ -86,7 +86,7 @@ export class ProteusService {
     this.messageService = new MessageService(this.apiClient, this);
   }
 
-  public async handleEvent(event: ConversationOtrMessageAddEvent): Promise<HandledEventPayload> {
+  public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent): Promise<HandledEventPayload> {
     return handleOtrMessageAdd({
       event,
       proteusService: this,

@@ -494,6 +494,6 @@ export class ConversationService {
   }
 
   public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
-    return this.proteusService.handleEvent(event);
+    return this.proteusService.handleOtrMessageAddEvent(event);
   }
 }
