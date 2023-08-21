@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,5 @@
  *
  */
 
-import {jsx as JSX} from '@emotion/react';
-import {create} from 'react-test-renderer';
-
-import {StyledApp, THEME_ID} from '../Layout';
-
-/* eslint-disable no-unsanitized/method */
-export const matchComponent = (component: JSX.Element, themeId = THEME_ID.LIGHT) =>
-  (expect as any)(create(<StyledApp themeId={themeId}>{component}</StyledApp>).toJSON()).toMatchSnapshot();
+export * from './DecryptionError';
+export * from './FederatedBackendsError';

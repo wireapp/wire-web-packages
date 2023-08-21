@@ -28,7 +28,14 @@ import {
   PostMlsMessageResponse,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
-import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
+import {
+  BackendEvent,
+  CONVERSATION_EVENT,
+  ConversationMLSMessageAddEvent,
+  ConversationMLSWelcomeEvent,
+  ConversationMemberLeaveEvent,
+  ConversationOtrMessageAddEvent,
+} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
@@ -38,16 +45,24 @@ import {APIClient} from '@wireapp/api-client';
 import {Ciphersuite, CredentialType, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
-import {AddUsersParams, MLSReturnType, SendMlsMessageParams, SendResult} from './ConversationService.types';
+import {
+  AddUsersFailureReasons,
+  AddUsersParams,
+  MLSCreateConversationResponse,
+  SendMlsMessageParams,
+  SendResult,
+} from './ConversationService.types';
 
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../../messagingProtocols/mls/EventHandler/events';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
+import {HandledEventPayload} from '../../notification';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
@@ -99,18 +114,16 @@ export class ConversationService {
   /**
    * Create a group conversation.
    *
+   * This method might fail with a `BackendsNotConnectedError` if there are users from not connected backends that are part of the payload
+   *
    * @note Do not include yourself as the requestor
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/createGroupConversation
    *
    * @param conversationData Payload object for group creation
    * @returns Resolves when the conversation was created
    */
-  public async createProteusConversation(conversationData: NewConversation): Promise<Conversation>;
-  public async createProteusConversation(
-    conversationData: NewConversation | string,
-    otherUserIds?: string | string[],
-  ): Promise<Conversation> {
-    return this.proteusService.createConversation({conversationData, otherUserIds});
+  public async createProteusConversation(conversationData: NewConversation) {
+    return this.proteusService.createConversation(conversationData);
   }
 
   public async getConversation(conversationId: QualifiedId): Promise<Conversation> {
@@ -235,7 +248,7 @@ export class ConversationService {
     conversationData: NewConversation,
     selfUserId: QualifiedId,
     selfClientId: string,
-  ): Promise<MLSReturnType> {
+  ): Promise<MLSCreateConversationResponse> {
     const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
@@ -261,14 +274,12 @@ export class ConversationService {
     // We fetch the fresh version of the conversation created on backend with the newly added users
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
-    /**
-     * @note Add users whom we could not fetch their keypackages to list of failed to add users.
-     */
-    conversation.failed_to_add = response.failed || [];
-
     return {
       events: response.events,
       conversation,
+      failedToAdd: response.failed
+        ? {users: response.failed, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
+        : undefined,
     };
   }
 
@@ -316,22 +327,23 @@ export class ConversationService {
     qualifiedUsers,
     groupId,
     conversationId,
-  }: Required<AddUsersParams>): Promise<MLSReturnType> {
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+  }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
     const {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages} = await this.mlsService.getKeyPackagesPayload(
       qualifiedUsers,
     );
 
-    const response = await this.mlsService.addUsersToExistingConversation(groupIdBytes, coreCryptoKeyPackagesPayload);
+    const response = await this.mlsService.addUsersToExistingConversation(groupId, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
-
-    conversation.failed_to_add = failedToFetchKeyPackages;
 
     //We store the info when user was added (and key material was created), so we will know when to renew it
     this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
       events: response.events,
       conversation,
+      failedToAdd:
+        failedToFetchKeyPackages.length > 0
+          ? {users: failedToFetchKeyPackages, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
+          : undefined,
     };
   }
 
@@ -339,7 +351,7 @@ export class ConversationService {
     groupId,
     conversationId,
     qualifiedUserIds,
-  }: RemoveUsersParams): Promise<MLSReturnType> {
+  }: RemoveUsersParams): Promise<MLSCreateConversationResponse> {
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
     const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
@@ -434,5 +446,70 @@ export class ConversationService {
         );
       }
     }
+  }
+
+  /**
+   * Will try registering mls 1:1 conversation adding the other user.
+   * If it fails and the conversation is already established, it will try joining via external commit instead.
+   *
+   * @param mlsConversation - mls 1:1 conversation
+   * @param selfUser - user and client ids of the self user
+   * @param otherUserId - id of the other user
+   */
+  public readonly establishMLS1to1Conversation = async (
+    groupId: string,
+    selfUser: {user: QualifiedId; client: string},
+    otherUserId: QualifiedId,
+  ): Promise<void> => {
+    try {
+      await this.mlsService.registerConversation(groupId, [otherUserId, selfUser.user], selfUser);
+    } catch (error) {
+      this.logger.info(`Could not register MLS group with id ${groupId}.`);
+
+      const mlsConversation = await this.apiClient.api.conversation.getMLS1to1Conversation(otherUserId);
+
+      if (mlsConversation.epoch > 0) {
+        this.logger.info(
+          `Conversation (id ${mlsConversation.qualified_id.id}) is already established, joining via external commit`,
+        );
+
+        // If its already established, we join with external commit
+        await this.joinByExternalCommit(mlsConversation.qualified_id);
+        return;
+      }
+
+      this.logger.info(
+        `Conversation (id ${mlsConversation.qualified_id.id}) is not established, retrying to establish it`,
+      );
+
+      // If conversation is not established, we can wipe it and try to establish it again
+      await this.wipeMLSConversation(groupId);
+      return this.establishMLS1to1Conversation(groupId, selfUser, otherUserId);
+    }
+  };
+
+  private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
+    return handleMLSMessageAdd({event, mlsService: this.mlsService});
+  }
+
+  private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+    return handleMLSWelcomeMessage({event, mlsService: this.mlsService});
+  }
+
+  private async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
+    return this.proteusService.handleOtrMessageAddEvent(event);
+  }
+
+  public async handleEvent(event: BackendEvent): Promise<HandledEventPayload | undefined> {
+    switch (event.type) {
+      case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
+        return this.handleMLSMessageAddEvent(event);
+      case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
+        return this.handleMLSWelcomeMessageEvent(event);
+      case CONVERSATION_EVENT.OTR_MESSAGE_ADD:
+        return this.handleOtrMessageAddEvent(event);
+    }
+
+    return undefined;
   }
 }

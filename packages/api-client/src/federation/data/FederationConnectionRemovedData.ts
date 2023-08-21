@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2022 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,6 @@
  *
  */
 
-import {BackendEvent} from '@wireapp/api-client/lib/event';
-
-import {NotificationSource} from '../../../notification';
-import {MLSService} from '../MLSService/MLSService';
-
-export {BackendEvent};
-
-export type EventHandlerParams = {
-  mlsService: MLSService;
-  event: BackendEvent;
-  source: NotificationSource;
-  dryRun?: boolean;
-};
+export interface FederationConnectionRemovedData {
+  domains: string[];
+}

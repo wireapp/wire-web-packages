@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [25.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.1...@wireapp/api-client@25.2.2) (2023-08-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [25.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.0...@wireapp/api-client@25.2.1) (2023-08-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [25.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.1.0...@wireapp/api-client@25.2.0) (2023-08-17)
+
+### Features
+
+* Handle backend non federating errors ([#5397](https://github.com/wireapp/wire-web-packages/issues/5397)) ([f00c2bf](https://github.com/wireapp/wire-web-packages/commit/f00c2bf84f03ffe98e311661e88624074fbb4425))
+
+# [25.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.0.0...@wireapp/api-client@25.1.0) (2023-08-17)
+
+### Features
+
+* **core:** establish mls 1to1 ([#5393](https://github.com/wireapp/wire-web-packages/issues/5393)) ([8ee8c83](https://github.com/wireapp/wire-web-packages/commit/8ee8c8349fe2b21ef6574b494cb394e3045a52d4))
+
+# [25.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.21.2...@wireapp/api-client@25.0.0) (2023-08-16)
+
+### Features
+
+* Handle adding users that are on an unreachable backend ([#5396](https://github.com/wireapp/wire-web-packages/issues/5396)) ([38e66e9](https://github.com/wireapp/wire-web-packages/commit/38e66e99fa2f83e74b059b74e90ba50eae4a99ba))
+
+### BREAKING CHANGES
+
+* the `addUserToProteusConversation` doesn't just return a `MemberJoinEvent` now. It also returns potential `failToAdd` users. The `MemberJoinEvent` can now be accessed with the `event` property returned by the method
+
+## [24.21.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.21.1...@wireapp/api-client@24.21.2) (2023-08-16)
+
+### Bug Fixes
+
+* Handle unreachable backends when creating new conversations (WPB-3272) ([#5395](https://github.com/wireapp/wire-web-packages/issues/5395)) ([ce90086](https://github.com/wireapp/wire-web-packages/commit/ce900869a79c6f22a2490a2f9234113de9b1f7a6)), closes [#5394](https://github.com/wireapp/wire-web-packages/issues/5394)
+
+## [24.21.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.21.0...@wireapp/api-client@24.21.1) (2023-08-15)
+
+### Bug Fixes
+
+* change data shape of federation events (WPB-203) ([#5392](https://github.com/wireapp/wire-web-packages/issues/5392)) ([62fac19](https://github.com/wireapp/wire-web-packages/commit/62fac1956c350ba4a06197562d9be31adacbb425))
+
+# [24.21.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.20.3...@wireapp/api-client@24.21.0) (2023-08-14)
+
+### Features
+
+* **api-client, webapp-events:** add federation delete & connection remove events (WPB-203) ([#5340](https://github.com/wireapp/wire-web-packages/issues/5340)) ([64df685](https://github.com/wireapp/wire-web-packages/commit/64df68520865fb70fc952a0db1ca631ba4799149))
+
+## [24.20.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.20.2...@wireapp/api-client@24.20.3) (2023-08-10)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [24.20.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.20.1...@wireapp/api-client@24.20.2) (2023-08-03)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [24.20.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.20.0...@wireapp/api-client@24.20.1) (2023-08-02)
+
+**Note:** Version bump only for package @wireapp/api-client
+
 # [24.20.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@24.19.0...@wireapp/api-client@24.20.0) (2023-07-24)
 
 ### Features

@@ -19,16 +19,17 @@
 
 import type {APIClient} from '@wireapp/api-client/lib/APIClient';
 import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
-import type {
-  Conversation,
+import {
+  isFederatedBackendsError,
+  FederatedBackendsErrorLabel,
   NewConversation,
   QualifiedOTRRecipients,
   QualifiedUserClients,
 } from '@wireapp/api-client/lib/conversation';
+import type {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
-import {ClientAction} from '@wireapp/protocol-messaging';
 import {CRUDEngine} from '@wireapp/store-engine';
 
 import {CryptoClient} from './CryptoClient';
@@ -37,16 +38,23 @@ import {generateDecryptionError} from './DecryptionErrorGenerator';
 import {deleteIdentity} from './identityClearer';
 import type {
   AddUsersToProteusConversationParams,
-  CreateProteusConversationParams,
   ProteusServiceConfig,
   SendProteusMessageParams,
 } from './ProteusService.types';
 import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
+import {filterUsersFromDomains} from './userDomainFilters';
 
-import {GenericMessageType, MessageSendingState, SendResult} from '../../../conversation';
+import {
+  AddUsersFailureReasons,
+  ProteusCreateConversationResponse,
+  MessageSendingState,
+  SendResult,
+  ProteusAddUsersResponse,
+} from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
-import type {EventHandlerResult} from '../../common.types';
-import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
+import {NonFederatingBackendsError} from '../../../errors';
+import {HandledEventPayload} from '../../../notification';
+import {handleOtrMessageAdd} from '../EventHandler/events';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 import {
@@ -78,21 +86,11 @@ export class ProteusService {
     this.messageService = new MessageService(this.apiClient, this);
   }
 
-  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
-    const handledEvent = await handleBackendEvent({
-      ...params,
-      decryptMessage: (payload, userId, clientId) => this.decrypt(payload, userId, clientId),
+  public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent): Promise<HandledEventPayload> {
+    return handleOtrMessageAdd({
+      event,
+      proteusService: this,
     });
-    if (handledEvent?.decryptedData) {
-      const isSessionReset =
-        handledEvent.decryptedData[GenericMessageType.CLIENT_ACTION] === ClientAction.RESET_SESSION;
-      if (isSessionReset) {
-        this.logger.debug('A session was reset from a remote device');
-        // If a session reset message was received, we need to count a consumed prekey (because the sender has created a new session from a new prekey)
-        await this.cryptoClient.consumePrekey();
-      }
-    }
-    return handledEvent;
   }
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {
@@ -152,28 +150,88 @@ export class ProteusService {
     return this.cryptoClient.getRemoteFingerprint(sessionId);
   }
 
-  public async createConversation({
-    conversationData,
-    otherUserIds,
-  }: CreateProteusConversationParams): Promise<Conversation> {
-    let payload: NewConversation;
-    if (typeof conversationData === 'string') {
-      const ids = typeof otherUserIds === 'string' ? [otherUserIds] : otherUserIds;
+  public async createConversation(conversationData: NewConversation): Promise<ProteusCreateConversationResponse> {
+    try {
+      const conversation = await this.apiClient.api.conversation.postConversation(conversationData);
 
-      payload = {
-        name: conversationData,
-        receipt_mode: null,
-        users: ids ?? [],
-      };
-    } else {
-      payload = conversationData;
+      return {conversation};
+    } catch (error: unknown) {
+      if (isFederatedBackendsError(error)) {
+        switch (error.label) {
+          case FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS: {
+            // In case we are trying to create a conversation with users from 2 backends that are not connected, we should stop the procedure and throw an error
+            throw new NonFederatingBackendsError(error.backends);
+          }
+          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+            const {backends} = error;
+            const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
+              conversationData.qualified_users ?? [],
+              backends,
+            );
+            conversationData = {...conversationData, qualified_users: availableUsers};
+            // If conversation creation returns an error because a backend is offline,
+            // we try creating the conversation again with users from available backends
+            const response = await this.apiClient.api.conversation.postConversation(conversationData);
+
+            return {
+              conversation: response,
+              failedToAdd:
+                // on a succesfull conversation creation with the available users,
+                // we append the users from an unreachable backend to the response
+                unreachableUsers.length > 0
+                  ? {reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS, users: unreachableUsers}
+                  : undefined,
+            };
+          }
+        }
+      }
+
+      throw error;
     }
-
-    return this.apiClient.api.conversation.postConversation(payload);
   }
 
-  public async addUsersToConversation({conversationId, qualifiedUsers}: AddUsersToProteusConversationParams) {
-    return this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers);
+  /**
+   * Tries to add all the given users to the given conversation.
+   * If some users are not reachable, it will try to add the remaining users and list them in the `failedToAdd` property of the response.
+   */
+  public async addUsersToConversation({
+    conversationId,
+    qualifiedUsers,
+  }: AddUsersToProteusConversationParams): Promise<ProteusAddUsersResponse> {
+    try {
+      return {event: await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers)};
+    } catch (error) {
+      const failureReasonsMap = {
+        [FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS]: AddUsersFailureReasons.NON_FEDERATING_BACKENDS,
+        [FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS]: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
+      };
+
+      if (isFederatedBackendsError(error)) {
+        switch (error.label) {
+          case FederatedBackendsErrorLabel.NON_FEDERATING_BACKENDS:
+          case FederatedBackendsErrorLabel.UNREACHABLE_BACKENDS: {
+            const {backends} = error;
+            const {excludedUsers: unreachableUsers, includedUsers: availableUsers} = filterUsersFromDomains(
+              qualifiedUsers,
+              backends,
+            );
+            if (availableUsers.length === 0) {
+              return {failedToAdd: {reason: failureReasonsMap[error.label], users: unreachableUsers}};
+            }
+            // In case the request to add users failed with a `UNREACHABLE_BACKENDS` or `NOT_CONNECTED_BACKENDS` errors, we try again with the users from available backends
+            const response = await this.apiClient.api.conversation.postMembers(conversationId, availableUsers);
+            return {
+              event: response,
+              failedToAdd:
+                unreachableUsers.length > 0
+                  ? {reason: failureReasonsMap[error.label], users: unreachableUsers}
+                  : undefined,
+            };
+          }
+        }
+      }
+      throw error;
+    }
   }
 
   public async sendMessage({
@@ -213,9 +271,9 @@ export class ProteusService {
     const sendingState = response.canceled ? MessageSendingState.CANCELED : MessageSendingState.OUTGOING_SENT;
 
     const failedToSend =
-      response.failed || Object.keys(response.failed_to_send ?? {}).length > 0
+      response.failed || Object.keys(response.failed_to_confirm_clients ?? {}).length > 0
         ? {
-            queued: response.failed_to_send,
+            queued: response.failed_to_confirm_clients,
             failed: response.failed,
           }
         : undefined;
@@ -228,7 +286,7 @@ export class ProteusService {
     };
   }
 
-  private async decrypt(encryptedText: Uint8Array, userId: QualifiedId, clientId: string) {
+  public async decrypt(encryptedText: Uint8Array, userId: QualifiedId, clientId: string) {
     const sessionId = this.constructSessionId(userId, clientId);
     const sessionExists = await this.cryptoClient.sessionExists(sessionId);
 
@@ -249,6 +307,10 @@ export class ProteusService {
     } catch (error) {
       throw generateDecryptionError({userId, clientId}, error);
     }
+  }
+
+  public consumePrekey(): Promise<void> {
+    return this.cryptoClient.consumePrekey();
   }
 
   public deleteSession(userId: QualifiedId, clientId: string) {

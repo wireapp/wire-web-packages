@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2022 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,20 @@
  *
  */
 
-import {BackendEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
-import {NotificationSource} from '../../../notification';
+export function filterUsersFromDomains(
+  userIds: QualifiedId[],
+  domainsToExclude: string[],
+): {excludedUsers: QualifiedId[]; includedUsers: QualifiedId[]} {
+  const excludedUsers: QualifiedId[] = [];
+  const includedUsers: QualifiedId[] = [];
+  userIds.forEach(user =>
+    domainsToExclude.includes(user.domain) ? excludedUsers.push(user) : includedUsers.push(user),
+  );
 
-export {BackendEvent};
-
-export type EventHandlerParams = {
-  dryRun?: boolean;
-  event: BackendEvent;
-  source: NotificationSource;
-  decryptMessage: (encryptedPayload: Uint8Array, userId: QualifiedId, clientId: string) => Promise<Uint8Array>;
-};
+  return {
+    excludedUsers,
+    includedUsers,
+  };
+}

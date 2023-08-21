@@ -19,7 +19,7 @@
 
 import {chunk} from '@wireapp/commons/lib/util/ArrayUtil';
 import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
-import {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig, isAxiosError} from 'axios';
 
 import {
   Conversation,
@@ -32,6 +32,7 @@ import {
   JoinConversationByCodePayload,
   Member,
   MessageSendingStatus,
+  MLSConversation,
   NewConversation,
   QualifiedConversationIds,
   RemoteConversations,
@@ -66,6 +67,7 @@ import {
   ConversationReceiptModeUpdateData,
   ConversationTypingData,
 } from '../data';
+import {handleFederationErrors} from '../FederatedBackendsError';
 import {Subconversation, SUBCONVERSATION_ID} from '../Subconversation';
 
 export type PostMlsMessageResponse = {
@@ -107,7 +109,10 @@ export class ConversationAPI {
     ONE_2_ONE: 'one2one',
   };
 
-  constructor(protected readonly client: HttpClient, protected readonly backendFeatures: BackendFeatures) {}
+  constructor(
+    protected readonly client: HttpClient,
+    protected readonly backendFeatures: BackendFeatures,
+  ) {}
 
   private generateBaseConversationUrl(conversationId: QualifiedId, supportsQualifiedEndpoint: boolean = true): string {
     return supportsQualifiedEndpoint && conversationId.domain
@@ -481,13 +486,13 @@ export class ConversationAPI {
    * Get a MLS 1:1-conversation with a given user.
    * @param userId - qualified user id
    */
-  public async getMLS1to1Conversation({domain, id}: QualifiedId): Promise<Conversation> {
+  public async getMLS1to1Conversation({domain, id}: QualifiedId): Promise<MLSConversation> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.ONE_2_ONE}/${domain}/${id}`,
     };
 
-    const response = await this.client.sendJSON<Conversation>(config);
+    const response = await this.client.sendJSON<MLSConversation>(config);
     return response.data;
   }
 
@@ -569,6 +574,9 @@ export class ConversationAPI {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
           throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
+      }
+      if (isAxiosError(error)) {
+        handleFederationErrors(error);
       }
       throw error;
     }
@@ -907,6 +915,9 @@ export class ConversationAPI {
         case BackendErrorLabel.LEGAL_HOLD_MISSING_CONSENT: {
           throw new ConversationLegalholdMissingConsentError(backendError.message);
         }
+      }
+      if (isAxiosError(error)) {
+        handleFederationErrors(error);
       }
       throw error;
     }

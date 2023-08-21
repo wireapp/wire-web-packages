@@ -25,3 +25,4 @@ export * as cryptography from './cryptography/';
 export * as util from './util';
 export * as MessageBuilder from './conversation/message/MessageBuilder';
 export {AcmeStorage} from './messagingProtocols/mls/E2eIdentityService/Storage/AcmeStorage';
+export * as errors from './errors';

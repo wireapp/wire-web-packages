@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [41.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.2.3...@wireapp/core@41.2.4) (2023-08-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.2.2...@wireapp/core@41.2.3) (2023-08-21)
+
+### Bug Fixes
+
+* Improve type imports ([#5411](https://github.com/wireapp/wire-web-packages/issues/5411)) ([596b0d5](https://github.com/wireapp/wire-web-packages/commit/596b0d5003d8a51a4d5bae47d5af7563811b17cb))
+
+## [41.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.2.1...@wireapp/core@41.2.2) (2023-08-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.2.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.2.0...@wireapp/core@41.2.1) (2023-08-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [41.2.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.1.0...@wireapp/core@41.2.0) (2023-08-17)
+
+### Features
+
+* Handle backend non federating errors ([#5397](https://github.com/wireapp/wire-web-packages/issues/5397)) ([f00c2bf](https://github.com/wireapp/wire-web-packages/commit/f00c2bf84f03ffe98e311661e88624074fbb4425))
+
+# [41.1.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.0.0...@wireapp/core@41.1.0) (2023-08-17)
+
+### Features
+
+* **core:** establish mls 1to1 ([#5393](https://github.com/wireapp/wire-web-packages/issues/5393)) ([8ee8c83](https://github.com/wireapp/wire-web-packages/commit/8ee8c8349fe2b21ef6574b494cb394e3045a52d4))
+
+# [41.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.9.3...@wireapp/core@41.0.0) (2023-08-16)
+
+### Features
+
+* Handle adding users that are on an unreachable backend ([#5396](https://github.com/wireapp/wire-web-packages/issues/5396)) ([38e66e9](https://github.com/wireapp/wire-web-packages/commit/38e66e99fa2f83e74b059b74e90ba50eae4a99ba))
+
+### BREAKING CHANGES
+
+* the `addUserToProteusConversation` doesn't just return a `MemberJoinEvent` now. It also returns potential `failToAdd` users. The `MemberJoinEvent` can now be accessed with the `event` property returned by the method
+
+## [40.9.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.9.2...@wireapp/core@40.9.3) (2023-08-16)
+
+### Bug Fixes
+
+* Handle unreachable backends when creating new conversations (WPB-3272) ([#5395](https://github.com/wireapp/wire-web-packages/issues/5395)) ([ce90086](https://github.com/wireapp/wire-web-packages/commit/ce900869a79c6f22a2490a2f9234113de9b1f7a6)), closes [#5394](https://github.com/wireapp/wire-web-packages/issues/5394)
+
+## [40.9.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.9.1...@wireapp/core@40.9.2) (2023-08-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.9.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.9.0...@wireapp/core@40.9.1) (2023-08-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.9.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.5...@wireapp/core@40.9.0) (2023-08-10)
+
+### Features
+
+* bump corecrypto version ([#5376](https://github.com/wireapp/wire-web-packages/issues/5376)) ([a489692](https://github.com/wireapp/wire-web-packages/commit/a489692d9fc9005c9113381cef544541e9659c8f))
+
+## [40.8.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.4...@wireapp/core@40.8.5) (2023-08-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.8.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.3...@wireapp/core@40.8.4) (2023-08-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.8.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.2...@wireapp/core@40.8.3) (2023-08-02)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.8.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.1...@wireapp/core@40.8.2) (2023-07-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [40.8.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.8.0...@wireapp/core@40.8.1) (2023-07-27)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [40.8.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.7.1...@wireapp/core@40.8.0) (2023-07-24)
+
+### Features
+
+* update CC ([#5337](https://github.com/wireapp/wire-web-packages/issues/5337)) ([d97c116](https://github.com/wireapp/wire-web-packages/commit/d97c116c1b45d338faaf4ea03bb9cc4493e7f627))
+
 ## [40.7.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@40.7.0...@wireapp/core@40.7.1) (2023-07-24)
 
 **Note:** Version bump only for package @wireapp/core

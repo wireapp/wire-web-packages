@@ -55,9 +55,7 @@ import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../..
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {EventHandlerResult} from '../../common.types';
 import {AcmeStorage} from '../E2eIdentityService/Storage/AcmeStorage';
-import {EventHandlerParams, handleBackendEvent} from '../EventHandler';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -170,11 +168,15 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId - the group id of the MLS group
    * @param invitee - the list of keys of clients to add to the MLS group
    */
-  public addUsersToExistingConversation(groupId: Uint8Array, invitee: Invitee[]) {
+  public addUsersToExistingConversation(groupId: string, invitee: Invitee[]) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+
     if (invitee.length < 1) {
       throw new Error('Empty list of keys provided to addUsersToExistingConversation');
     }
-    return this.processCommitAction(groupId, () => this.coreCryptoClient.addClientsToConversation(groupId, invitee));
+    return this.processCommitAction(groupIdBytes, () =>
+      this.coreCryptoClient.addClientsToConversation(groupIdBytes, invitee),
+    );
   }
 
   public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
@@ -399,21 +401,16 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  public updateKeyingMaterial(conversationId: ConversationId) {
-    return this.processCommitAction(conversationId, () => this.coreCryptoClient.updateKeyingMaterial(conversationId));
+  private updateKeyingMaterial(groupId: string) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    return this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
   }
 
   /**
-   * Will create a conversation inside of coreCrypto.
+   * Will create an empty conversation inside of coreCrypto.
    * @param groupId the id of the group to create inside of coreCrypto
-   * @param users the list of users that will be members of the conversation (including the self user)
-   * @param creator the creator of the list. Most of the time will be the self user (or empty if the conversation was created by backend first)
    */
-  public async registerConversation(
-    groupId: string,
-    users: QualifiedId[],
-    creator?: {user: QualifiedId; client?: string},
-  ): Promise<PostMlsMessageResponse> {
+  public async registerEmptyConversation(groupId: string): Promise<void> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
@@ -423,7 +420,21 @@ export class MLSService extends TypedEventEmitter<Events> {
       ciphersuite: this.defaultCiphersuite,
     };
 
-    await this.coreCryptoClient.createConversation(groupIdBytes, this.defaultCredentialType(), configuration);
+    return this.coreCryptoClient.createConversation(groupIdBytes, this.defaultCredentialType(), configuration);
+  }
+
+  /**
+   * Will create a conversation inside of coreCrypto, add users to it or update the keying material if empty key packages list is provided.
+   * @param groupId the id of the group to create inside of coreCrypto
+   * @param users the list of users that will be members of the conversation (including the self user)
+   * @param creator the creator of the list. Most of the time will be the self user (or empty if the conversation was created by backend first)
+   */
+  public async registerConversation(
+    groupId: string,
+    users: QualifiedId[],
+    creator?: {user: QualifiedId; client?: string},
+  ): Promise<PostMlsMessageResponse> {
+    await this.registerEmptyConversation(groupId);
 
     const {coreCryptoKeyPackagesPayload: keyPackages, failedToFetchKeyPackages} = await this.getKeyPackagesPayload(
       users.map(user => {
@@ -440,9 +451,9 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     const response =
       keyPackages.length > 0
-        ? await this.addUsersToExistingConversation(groupIdBytes, keyPackages)
+        ? await this.addUsersToExistingConversation(groupId, keyPackages)
         : // If there are no clients to add, just update the keying material
-          await this.processCommitAction(groupIdBytes, () => this.coreCryptoClient.updateKeyingMaterial(groupIdBytes));
+          await this.updateKeyingMaterial(groupId);
 
     // We schedule a periodic key material renewal
     this.scheduleKeyMaterialRenewal(groupId);
@@ -494,7 +505,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Renew key material for a given groupId
+   * Will send an empty commit into a group (renew key material)
    *
    * @param groupId groupId of the conversation
    */
@@ -503,12 +514,10 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupConversationExists = await this.conversationExists(groupId);
 
       if (!groupConversationExists) {
-        this.cancelKeyMaterialRenewal(groupId);
-        return;
+        return this.cancelKeyMaterialRenewal(groupId);
       }
 
-      const groupIdDecodedFromBase64 = Decoder.fromBase64(groupId).asBytes;
-      await this.updateKeyingMaterial(groupIdDecodedFromBase64);
+      await this.updateKeyingMaterial(groupId);
     } catch (error) {
       this.logger.error(`Error while renewing key material for groupId ${groupId}`, error);
     }
@@ -628,17 +637,6 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
-  }
-
-  public async handleEvent(params: Omit<EventHandlerParams, 'mlsService'>): EventHandlerResult {
-    return handleBackendEvent({...params, mlsService: this}, async groupId => {
-      const conversationExists = await this.conversationExists(groupId);
-      if (!conversationExists) {
-        return;
-      }
-      const newEpoch = await this.getEpoch(groupId);
-      this.emit('newEpoch', {groupId, epoch: newEpoch});
-    });
   }
 
   /**

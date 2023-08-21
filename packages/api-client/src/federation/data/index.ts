@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2022 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,5 @@
  *
  */
 
-import {EventHandlerParams} from './EventHandler.types';
-import {handleOtrMessageAdd, isOtrMessageAddEvent} from './events';
-
-import {EventHandlerResult} from '../../common.types';
-
-const handleBackendEvent = async (params: EventHandlerParams): EventHandlerResult => {
-  const {event} = params;
-  if (isOtrMessageAddEvent(event)) {
-    return handleOtrMessageAdd({...params, event});
-  }
-};
-
-export {handleBackendEvent};
+export * from './FederationDeleteData';
+export * from './FederationConnectionRemovedData';
