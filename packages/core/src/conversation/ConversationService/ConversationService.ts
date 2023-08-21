@@ -41,7 +41,7 @@ import {GenericMessage} from '@wireapp/protocol-messaging';
 import {
   AddUsersFailureReasons,
   AddUsersParams,
-  MLSReturnType,
+  MLSCreateConversationResponse,
   SendMlsMessageParams,
   SendResult,
 } from './ConversationService.types';
@@ -239,7 +239,7 @@ export class ConversationService {
     conversationData: NewConversation,
     selfUserId: QualifiedId,
     selfClientId: string,
-  ): Promise<MLSReturnType> {
+  ): Promise<MLSCreateConversationResponse> {
     const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
@@ -269,7 +269,7 @@ export class ConversationService {
       events: response.events,
       conversation,
       failedToAdd: response.failed
-        ? {users: response.failed, reason: AddUsersFailureReasons.NON_FEDERATING_BACKENDS}
+        ? {users: response.failed, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
         : undefined,
     };
   }
@@ -318,7 +318,7 @@ export class ConversationService {
     qualifiedUsers,
     groupId,
     conversationId,
-  }: Required<AddUsersParams>): Promise<MLSReturnType> {
+  }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
     const {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages} = await this.mlsService.getKeyPackagesPayload(
       qualifiedUsers,
     );
@@ -333,7 +333,7 @@ export class ConversationService {
       conversation,
       failedToAdd:
         failedToFetchKeyPackages.length > 0
-          ? {users: failedToFetchKeyPackages, reason: AddUsersFailureReasons.NON_FEDERATING_BACKENDS}
+          ? {users: failedToFetchKeyPackages, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
           : undefined,
     };
   }
@@ -342,7 +342,7 @@ export class ConversationService {
     groupId,
     conversationId,
     qualifiedUserIds,
-  }: RemoveUsersParams): Promise<MLSReturnType> {
+  }: RemoveUsersParams): Promise<MLSCreateConversationResponse> {
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
     const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(

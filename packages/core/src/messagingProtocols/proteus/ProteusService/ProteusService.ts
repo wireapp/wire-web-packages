@@ -20,14 +20,12 @@
 import type {APIClient} from '@wireapp/api-client/lib/APIClient';
 import type {PreKey, Context} from '@wireapp/api-client/lib/auth';
 import {
-  Conversation,
   isFederatedBackendsError,
   FederatedBackendsErrorLabel,
   NewConversation,
   QualifiedOTRRecipients,
   QualifiedUserClients,
 } from '@wireapp/api-client/lib/conversation';
-import type {ConversationMemberJoinEvent} from '@wireapp/api-client/lib/event';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
@@ -47,11 +45,12 @@ import {migrateToQualifiedSessionIds} from './sessionIdMigrator';
 import {filterUsersFromDomains} from './userDomainFilters';
 
 import {
-  AddUsersFailure,
   AddUsersFailureReasons,
+  ProteusCreateConversationResponse,
   GenericMessageType,
   MessageSendingState,
   SendResult,
+  ProteusAddUsersResponse,
 } from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {NonFederatingBackendsError} from '../../../errors';
@@ -162,9 +161,7 @@ export class ProteusService {
     return this.cryptoClient.getRemoteFingerprint(sessionId);
   }
 
-  public async createConversation(
-    conversationData: NewConversation,
-  ): Promise<{conversation: Conversation; failedToAdd?: AddUsersFailure}> {
+  public async createConversation(conversationData: NewConversation): Promise<ProteusCreateConversationResponse> {
     try {
       const conversation = await this.apiClient.api.conversation.postConversation(conversationData);
 
@@ -208,10 +205,10 @@ export class ProteusService {
    * Tries to add all the given users to the given conversation.
    * If some users are not reachable, it will try to add the remaining users and list them in the `failedToAdd` property of the response.
    */
-  public async addUsersToConversation({conversationId, qualifiedUsers}: AddUsersToProteusConversationParams): Promise<{
-    event?: ConversationMemberJoinEvent;
-    failedToAdd?: {reason: AddUsersFailureReasons; users: QualifiedId[]};
-  }> {
+  public async addUsersToConversation({
+    conversationId,
+    qualifiedUsers,
+  }: AddUsersToProteusConversationParams): Promise<ProteusAddUsersResponse> {
     try {
       return {event: await this.apiClient.api.conversation.postMembers(conversationId, qualifiedUsers)};
     } catch (error) {
