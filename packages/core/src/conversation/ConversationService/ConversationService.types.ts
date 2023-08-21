@@ -135,14 +135,14 @@ export type AddUsersFailure = {
 /**
  * The backend response of any method that will create (or add users to) a conversation
  */
-interface BaseCreateConversationResponse {
+export interface BaseCreateConversationResponse {
   conversation: Conversation;
   failedToAdd?: AddUsersFailure;
 }
 
 export type ProteusCreateConversationResponse = BaseCreateConversationResponse;
 export type ProteusAddUsersResponse = {
-  events?: ConversationMemberJoinEvent[];
+  event?: ConversationMemberJoinEvent;
   failedToAdd?: AddUsersFailure;
 };
 
