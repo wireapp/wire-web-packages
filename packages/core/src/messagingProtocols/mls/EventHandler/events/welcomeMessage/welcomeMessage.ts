@@ -21,17 +21,23 @@ import {BackendEvent, ConversationMLSWelcomeEvent, CONVERSATION_EVENT} from '@wi
 import {Decoder, Encoder} from 'bazinga64';
 
 import {HandledEventPayload} from '../../../../../notification';
-import {EventHandlerParams} from '../../EventHandler.types';
+import {MLSService} from '../../../MLSService';
 
 const isWelcomeMessageEvent = (event: BackendEvent): event is ConversationMLSWelcomeEvent =>
   event.type === CONVERSATION_EVENT.MLS_WELCOME_MESSAGE;
 
-interface HandleWelcomeMessageParams extends EventHandlerParams {
+interface HandleWelcomeMessageParams {
   event: ConversationMLSWelcomeEvent;
+  mlsService: MLSService;
 }
-const handleWelcomeMessage = async ({mlsService, event}: HandleWelcomeMessageParams): Promise<HandledEventPayload> => {
+
+const handleMLSWelcomeMessage = async ({
+  mlsService,
+  event,
+}: HandleWelcomeMessageParams): Promise<HandledEventPayload> => {
   const data = Decoder.fromBase64(event.data).asBytes;
   // We extract the groupId from the welcome message and let coreCrypto store this group
+
   const newGroupId = await mlsService.processWelcomeMessage(data);
   const groupIdStr = Encoder.toBase64(newGroupId).asString;
   // The groupId can then be sent back to the consumer
@@ -43,4 +49,4 @@ const handleWelcomeMessage = async ({mlsService, event}: HandleWelcomeMessagePar
   };
 };
 
-export {isWelcomeMessageEvent, handleWelcomeMessage};
+export {isWelcomeMessageEvent, handleMLSWelcomeMessage};

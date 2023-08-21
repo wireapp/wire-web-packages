@@ -30,10 +30,9 @@ import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
 import {NotificationSource} from './Notifications.types';
 
+import {ConversationService} from '../conversation';
 import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
-import {MLSService} from '../messagingProtocols/mls';
-import {handleMLSMessageAdd, handleWelcomeMessage} from '../messagingProtocols/mls/EventHandler/events';
 import {ProteusService} from '../messagingProtocols/proteus';
 import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
@@ -74,19 +73,12 @@ export class NotificationService extends TypedEventEmitter<Events> {
     apiClient: APIClient,
     private readonly proteusService: ProteusService,
     storeEngine: CRUDEngine,
-    private readonly _mlsService?: MLSService,
+    private readonly conversationService: ConversationService,
   ) {
     super();
     this.apiClient = apiClient;
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(storeEngine);
-  }
-
-  private get mlsService(): MLSService {
-    if (!this._mlsService) {
-      throw new Error('MLS Service is not available!');
-    }
-    return this._mlsService;
   }
 
   private async getAllNotifications(since: string) {
@@ -263,16 +255,12 @@ export class NotificationService extends TypedEventEmitter<Events> {
       return proteusResult;
     }
 
-    if (dryRun) {
-      return {event};
-    }
-
     switch (event.type) {
       case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
-        return handleMLSMessageAdd({mlsService: this.mlsService, event, source});
+        return this.conversationService.handleMLSMessageAddEvent(event);
 
       case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
-        return handleWelcomeMessage({mlsService: this.mlsService, event, source});
+        return this.conversationService.handleMLSWelcomeMessageEvent(event);
     }
     return {event};
   }

@@ -28,7 +28,11 @@ import {
   PostMlsMessageResponse,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
-import {ConversationMemberLeaveEvent} from '@wireapp/api-client/lib/event';
+import {
+  ConversationMLSMessageAddEvent,
+  ConversationMLSWelcomeEvent,
+  ConversationMemberLeaveEvent,
+} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
@@ -49,6 +53,7 @@ import {
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../../messagingProtocols/mls/EventHandler/events';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
@@ -478,4 +483,12 @@ export class ConversationService {
       return this.establishMLS1to1Conversation(groupId, selfUser, otherUserId);
     }
   };
+
+  public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
+    return handleMLSMessageAdd({mlsService: this.mlsService, event});
+  }
+
+  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+    return handleMLSWelcomeMessage({mlsService: this.mlsService, event});
+  }
 }
