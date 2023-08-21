@@ -33,7 +33,6 @@ import {NotificationSource} from './Notifications.types';
 import {ConversationService} from '../conversation';
 import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
-import {ProteusService} from '../messagingProtocols/proteus';
 import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
 export type HandledEventPayload = {
@@ -71,7 +70,6 @@ export class NotificationService extends TypedEventEmitter<Events> {
 
   constructor(
     apiClient: APIClient,
-    private readonly proteusService: ProteusService,
     storeEngine: CRUDEngine,
     private readonly conversationService: ConversationService,
   ) {
