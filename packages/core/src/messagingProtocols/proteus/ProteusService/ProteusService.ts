@@ -26,6 +26,7 @@ import {
   QualifiedOTRRecipients,
   QualifiedUserClients,
 } from '@wireapp/api-client/lib/conversation';
+import type {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import type {QualifiedId, QualifiedUserPreKeyBundleMap} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
@@ -52,6 +53,8 @@ import {
 } from '../../../conversation';
 import {MessageService} from '../../../conversation/message/MessageService';
 import {NonFederatingBackendsError} from '../../../errors';
+import {HandledEventPayload} from '../../../notification';
+import {handleOtrMessageAdd} from '../EventHandler/events';
 import {getGenericMessageParams} from '../Utility/getGenericMessageParams';
 import {isClearFromMismatch} from '../Utility/isClearFromMismatch';
 import {
@@ -81,6 +84,13 @@ export class ProteusService {
     private readonly config: ProteusServiceConfig,
   ) {
     this.messageService = new MessageService(this.apiClient, this);
+  }
+
+  public async handleEvent(event: ConversationOtrMessageAddEvent): Promise<HandledEventPayload> {
+    return handleOtrMessageAdd({
+      event,
+      proteusService: this,
+    });
   }
 
   public async initClient(storeEngine: CRUDEngine, context: Context) {

@@ -56,7 +56,6 @@ import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../../messagingProtocols/mls/EventHandler/events';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
-import {handleOtrMessageAdd} from '../../messagingProtocols/proteus/EventHandler/events';
 import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
@@ -495,6 +494,6 @@ export class ConversationService {
   }
 
   public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
-    return handleOtrMessageAdd({event, proteusService: this.proteusService});
+    return this.proteusService.handleEvent(event);
   }
 }

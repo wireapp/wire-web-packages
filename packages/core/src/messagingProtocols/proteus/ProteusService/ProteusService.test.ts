@@ -35,8 +35,7 @@ import {buildTextMessage} from '../../../conversation/message/MessageBuilder';
 import {SendProteusMessageParams} from './ProteusService.types';
 import {buildProteusService} from './ProteusService.mocks';
 import {constructSessionId} from '../Utility/SessionHandler';
-import {NotificationSource} from '../../../notification';
-import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {CONVERSATION_EVENT, ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 import {ProteusService} from './ProteusService';
 import {NonFederatingBackendsError} from '../../../errors';
@@ -207,14 +206,14 @@ describe('ProteusService', () => {
   });
 
   describe('handleEvent', () => {
-    const eventPayload = {
-      event: {
-        type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
-        qualified_from: generateQualifiedId('domain'),
-        data: {sender: 'client1', text: ''},
-      },
-      source: NotificationSource.WEBSOCKET,
-    } as any;
+    const eventPayload: ConversationOtrMessageAddEvent = {
+      type: CONVERSATION_EVENT.OTR_MESSAGE_ADD,
+      qualified_from: generateQualifiedId('domain'),
+      data: {sender: 'client1', text: '', recipient: ''},
+      conversation: '',
+      from: '',
+      time: '',
+    };
     const decryptedMessage = {} as any;
 
     it('decrypts incoming proteus encrypted events when session already exists', async () => {
