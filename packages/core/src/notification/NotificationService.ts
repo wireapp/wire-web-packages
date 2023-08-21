@@ -248,21 +248,31 @@ export class NotificationService extends TypedEventEmitter<Events> {
     source: NotificationSource,
     dryRun: boolean = false,
   ): Promise<HandledEventPayload | undefined> {
+    if (dryRun) {
+      // In case of a dry run, we do not want to decrypt messages
+      // We just return the raw event to the caller
+      return {event};
+    }
+
     const proteusResult = await this.proteusService.handleEvent({
       event,
       source,
-      dryRun,
     });
+
     if (proteusResult) {
       return proteusResult;
     }
 
+    if (dryRun) {
+      return {event};
+    }
+
     switch (event.type) {
       case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
-        return handleMLSMessageAdd({mlsService: this.mlsService, event, source, dryRun});
+        return handleMLSMessageAdd({mlsService: this.mlsService, event, source});
 
       case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
-        return handleWelcomeMessage({mlsService: this.mlsService, event, source, dryRun});
+        return handleWelcomeMessage({mlsService: this.mlsService, event, source});
     }
     return {event};
   }

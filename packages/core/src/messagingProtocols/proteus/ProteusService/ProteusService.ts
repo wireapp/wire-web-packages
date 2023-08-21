@@ -87,7 +87,7 @@ export class ProteusService {
     this.messageService = new MessageService(this.apiClient, this);
   }
 
-  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source' | 'dryRun'>): EventHandlerResult {
+  public async handleEvent(params: Pick<EventHandlerParams, 'event' | 'source'>): EventHandlerResult {
     const handledEvent = await handleBackendEvent({
       ...params,
       decryptMessage: (payload, userId, clientId) => this.decrypt(payload, userId, clientId),

@@ -33,16 +33,7 @@ type HandleOtrMessageAddParams = Omit<EventHandlerParams, 'event'> & {
   event: ConversationOtrMessageAddEvent;
 };
 
-const handleOtrMessageAdd = async ({
-  decryptMessage,
-  event,
-  dryRun = false,
-}: HandleOtrMessageAddParams): EventHandlerResult => {
-  if (dryRun) {
-    // In case of a dry run, we do not want to decrypt messages
-    // We just return the raw event to the caller
-    return {event};
-  }
+const handleOtrMessageAdd = async ({decryptMessage, event}: HandleOtrMessageAddParams): EventHandlerResult => {
   try {
     const {
       from,
