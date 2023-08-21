@@ -32,6 +32,7 @@ import {
   ConversationMLSMessageAddEvent,
   ConversationMLSWelcomeEvent,
   ConversationMemberLeaveEvent,
+  ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
@@ -55,6 +56,7 @@ import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../../messagingProtocols/mls/EventHandler/events';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
+import {handleOtrMessageAdd} from '../../messagingProtocols/proteus/EventHandler/events';
 import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
@@ -485,10 +487,14 @@ export class ConversationService {
   };
 
   public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
-    return handleMLSMessageAdd({mlsService: this.mlsService, event});
+    return handleMLSMessageAdd({event, mlsService: this.mlsService});
   }
 
   public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
-    return handleMLSWelcomeMessage({mlsService: this.mlsService, event});
+    return handleMLSWelcomeMessage({event, mlsService: this.mlsService});
+  }
+
+  public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
+    return handleOtrMessageAdd({event, proteusService: this.proteusService});
   }
 }

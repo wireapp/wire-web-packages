@@ -205,7 +205,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
         continue;
       }
       try {
-        const data = await this.handleEvent(event, source, dryRun);
+        const data = await this.handleEvent(event, dryRun);
         if (typeof data !== 'undefined') {
           yield data;
         }
@@ -231,28 +231,14 @@ export class NotificationService extends TypedEventEmitter<Events> {
   /**
    * Will process one event
    * @param event The backend event to process
-   * @param source The source of the event (websocket or notication stream)
    * @param dryRun Will not try to decrypt if true
    * @return the decrypted payload and the raw event. Returns `undefined` when the payload is a coreCrypto-only system message
    */
-  private async handleEvent(
-    event: BackendEvent,
-    source: NotificationSource,
-    dryRun: boolean = false,
-  ): Promise<HandledEventPayload | undefined> {
+  private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventPayload | undefined> {
     if (dryRun) {
       // In case of a dry run, we do not want to decrypt messages
       // We just return the raw event to the caller
       return {event};
-    }
-
-    const proteusResult = await this.proteusService.handleEvent({
-      event,
-      source,
-    });
-
-    if (proteusResult) {
-      return proteusResult;
     }
 
     switch (event.type) {
@@ -261,6 +247,9 @@ export class NotificationService extends TypedEventEmitter<Events> {
 
       case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
         return this.conversationService.handleMLSWelcomeMessageEvent(event);
+
+      case CONVERSATION_EVENT.OTR_MESSAGE_ADD:
+        return this.conversationService.handleOtrMessageAddEvent(event);
     }
     return {event};
   }
