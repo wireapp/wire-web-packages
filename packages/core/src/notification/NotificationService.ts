@@ -17,7 +17,7 @@
  *
  */
 
-import {BackendEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {BackendEvent} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler} from '@wireapp/api-client/lib/tcp';
 import logdown from 'logdown';
@@ -239,16 +239,11 @@ export class NotificationService extends TypedEventEmitter<Events> {
       return {event};
     }
 
-    switch (event.type) {
-      case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
-        return this.conversationService.handleMLSMessageAddEvent(event);
-
-      case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
-        return this.conversationService.handleMLSWelcomeMessageEvent(event);
-
-      case CONVERSATION_EVENT.OTR_MESSAGE_ADD:
-        return this.conversationService.handleOtrMessageAddEvent(event);
+    const conversationEventResult = await this.conversationService.handleEvent(event);
+    if (conversationEventResult) {
+      return conversationEventResult;
     }
+
     return {event};
   }
 }

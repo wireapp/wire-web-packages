@@ -29,6 +29,8 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
+  BackendEvent,
+  CONVERSATION_EVENT,
   ConversationMLSMessageAddEvent,
   ConversationMLSWelcomeEvent,
   ConversationMemberLeaveEvent,
@@ -60,6 +62,7 @@ import {
   AddUsersToProteusConversationParams,
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
+import {HandledEventPayload} from '../../notification';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
@@ -485,15 +488,28 @@ export class ConversationService {
     }
   };
 
-  public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
+  private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
     return handleMLSMessageAdd({event, mlsService: this.mlsService});
   }
 
-  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+  private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
     return handleMLSWelcomeMessage({event, mlsService: this.mlsService});
   }
 
-  public async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
+  private async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
     return this.proteusService.handleOtrMessageAddEvent(event);
+  }
+
+  public async handleEvent(event: BackendEvent): Promise<HandledEventPayload | undefined> {
+    switch (event.type) {
+      case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
+        return this.handleMLSMessageAddEvent(event);
+      case CONVERSATION_EVENT.MLS_WELCOME_MESSAGE:
+        return this.handleMLSWelcomeMessageEvent(event);
+      case CONVERSATION_EVENT.OTR_MESSAGE_ADD:
+        return this.handleOtrMessageAddEvent(event);
+    }
+
+    return undefined;
   }
 }
