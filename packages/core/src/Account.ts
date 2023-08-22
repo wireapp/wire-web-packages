@@ -135,9 +135,11 @@ export class Account extends TypedEventEmitter<Events> {
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
   private cryptoClientDef?: CryptoClientDef;
+  private protectedServices?: {
+    mls?: MLSService;
+  };
 
   public service?: {
-    mls?: MLSService;
     proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
@@ -249,8 +251,8 @@ export class Account extends TypedEventEmitter<Events> {
       });
       const data = await instance.getNewCertificate();
       if (data !== undefined) {
-        await this.service?.mls?.deleteMLSKeyPackages(data.keyPackageRefsToRemove, this.clientId);
-        await this.service?.mls?.uploadMLSKeyPackages(data.newKeyPackages, this.clientId);
+        await this.protectedServices?.mls?.deleteMLSKeyPackages(data.keyPackageRefsToRemove, this.clientId);
+        await this.protectedServices?.mls?.uploadMLSKeyPackages(data.newKeyPackages, this.clientId);
         return true;
       }
       return false;
@@ -324,11 +326,11 @@ export class Account extends TypedEventEmitter<Events> {
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
-    if (this.service.mls) {
+    if (this.protectedServices?.mls) {
       const {userId, domain = ''} = this.apiClient.context;
-      await this.service.mls.createClient({id: userId, domain}, client.id);
+      await this.protectedServices.mls.createClient({id: userId, domain}, client.id);
     }
-    this.logger.info(`Created new client {mls: ${!!this.service.mls}, id: ${client.id}}`);
+    this.logger.info(`Created new client {mls: ${!!this.protectedServices?.mls}, id: ${client.id}}`);
 
     await this.service.notification.initializeNotificationStream();
     await this.service.client.synchronizeClients(client.id);
@@ -357,20 +359,20 @@ export class Account extends TypedEventEmitter<Events> {
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
-    if (this.service.mls) {
+    if (this.protectedServices?.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       if (!client) {
         // If the client has been passed to the method, it means it also has been initialized
-        await this.service.mls.initClient({id: userId, domain}, validClient.id);
+        await this.protectedServices.mls.initClient({id: userId, domain}, validClient.id);
       }
       // initialize schedulers for pending mls proposals once client is initialized
-      await this.service.mls.checkExistingPendingProposals();
+      await this.protectedServices.mls.checkExistingPendingProposals();
 
       // initialize scheduler for syncing key packages with backend
-      this.service.mls.checkForKeyPackagesBackendSync();
+      this.protectedServices.mls.checkForKeyPackagesBackendSync();
 
       // leave stale conference subconversations (e.g after a crash)
-      await this.service.mls.leaveStaleConferenceSubconversations();
+      await this.protectedServices.mls.leaveStaleConferenceSubconversations();
     }
 
     return validClient;
@@ -411,7 +413,7 @@ export class Account extends TypedEventEmitter<Events> {
    * @param mlsCallbacks
    */
   configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
+    this.protectedServices?.mls?.configureMLSCallbacks(mlsCallbacks);
   }
 
   public async initServices(context: Context): Promise<void> {
@@ -449,8 +451,11 @@ export class Account extends TypedEventEmitter<Events> {
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
     const userService = new UserService(this.apiClient);
 
-    this.service = {
+    this.protectedServices = {
       mls: mlsService,
+    };
+
+    this.service = {
       proteus: proteusService,
       account: accountService,
       asset: assetService,
