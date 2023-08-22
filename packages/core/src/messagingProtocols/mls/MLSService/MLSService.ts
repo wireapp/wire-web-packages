@@ -49,12 +49,14 @@ import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
+import {E2eIdentityService} from '..';
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
+import {User} from '../E2eIdentityService/E2eIdentityService.types';
 import {AcmeStorage} from '../E2eIdentityService/Storage/AcmeStorage';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -740,5 +742,30 @@ export class MLSService extends TypedEventEmitter<Events> {
       return {userId: user, clientId: client, domain};
     });
     return clientIds;
+  }
+
+  // E2E Identity Service related methods below
+
+  public async enrollE2EI(discoveryUrl: string, user: User, clientId: ClientId, nbPrekeys: number): Promise<boolean> {
+    try {
+      const instance = await E2eIdentityService.getInstance({
+        apiClient: this.apiClient,
+        coreCryptClient: this.coreCryptoClient,
+        user,
+        clientId,
+        discoveryUrl,
+        keyPackagesAmount: nbPrekeys,
+      });
+      const data = await instance.getNewCertificate();
+      if (data !== undefined) {
+        await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
+        await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      this.logger.error('E2EI - Failed to enroll', error);
+      throw error;
+    }
   }
 }

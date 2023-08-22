@@ -35,8 +35,6 @@ import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket
 import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
-import {CoreCrypto} from '@wireapp/core-crypto';
-import {Cryptobox} from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -49,15 +47,10 @@ import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conve
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
-import {E2eIdentityService} from './messagingProtocols/mls/E2eIdentityService';
 import {User} from './messagingProtocols/mls/E2eIdentityService/E2eIdentityService.types';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
-import {
-  buildCryptoClient,
-  CryptoClientDef,
-  CryptoClientType,
-} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {SelfService} from './self/';
@@ -134,7 +127,6 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly isMlsEnabled: () => boolean;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
-  private cryptoClientDef?: CryptoClientDef;
   private protectedServices?: {
     mls?: MLSService;
   };
@@ -211,26 +203,12 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  private getCoreCryptoClient(): CoreCrypto | undefined {
-    if (this.cryptoClientDef) {
-      const [, cryptoClient] = this.cryptoClientDef;
-      const isCoreCrypto = (client: CoreCrypto | Cryptobox): client is CoreCrypto => client instanceof CoreCrypto;
-      const client = cryptoClient.getNativeClient();
-
-      if (isCoreCrypto(client)) {
-        return client;
-      }
-    }
-    return undefined;
-  }
-
   public async enrollE2EI(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
-    const client = this.getCoreCryptoClient();
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
 
-    if (!client) {
-      this.logger.info('Not a core crypto client, skipping E2EI enrollment', this.isMlsEnabled());
+    if (!this.protectedServices?.mls) {
+      this.logger.info('MLS not active, skipping E2EI enrollment', this.isMlsEnabled());
       return false;
     }
 
@@ -240,26 +218,8 @@ export class Account extends TypedEventEmitter<Events> {
       domain,
       id: this.userId,
     };
-    try {
-      const instance = await E2eIdentityService.getInstance({
-        apiClient: this.apiClient,
-        coreCryptClient: client,
-        user,
-        clientId: this.clientId,
-        discoveryUrl,
-        keyPackagesAmount: this.nbPrekeys,
-      });
-      const data = await instance.getNewCertificate();
-      if (data !== undefined) {
-        await this.protectedServices?.mls?.deleteMLSKeyPackages(data.keyPackageRefsToRemove, this.clientId);
-        await this.protectedServices?.mls?.uploadMLSKeyPackages(data.newKeyPackages, this.clientId);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      this.logger.error('E2EI - Failed to enroll', error);
-      throw error;
-    }
+
+    return this.protectedServices.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys);
   }
 
   get clientId(): string {
@@ -422,8 +382,7 @@ export class Account extends TypedEventEmitter<Events> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    this.cryptoClientDef = await this.buildCryptoClient(context, this.storeEngine);
-    const [clientType, cryptoClient] = this.cryptoClientDef;
+    const [clientType, cryptoClient] = await this.buildCryptoClient(context, this.storeEngine);
 
     const mlsService =
       clientType === CryptoClientType.CORE_CRYPTO && this.isMlsEnabled()
