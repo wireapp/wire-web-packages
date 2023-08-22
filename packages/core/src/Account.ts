@@ -127,11 +127,9 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly isMlsEnabled: () => boolean;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
-  private protectedServices?: {
-    mls?: MLSService;
-  };
 
   public service?: {
+    mls?: MLSService;
     proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
@@ -207,8 +205,8 @@ export class Account extends TypedEventEmitter<Events> {
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
 
-    if (!this.protectedServices?.mls) {
-      this.logger.info('MLS not active, skipping E2EI enrollment', this.isMlsEnabled());
+    if (!this.isMlsEnabled() || !this.service?.mls) {
+      this.logger.info('MLS not initialized, unable to enroll E2EI');
       return false;
     }
 
@@ -219,7 +217,7 @@ export class Account extends TypedEventEmitter<Events> {
       id: this.userId,
     };
 
-    return this.protectedServices.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys);
+    return this.service.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys);
   }
 
   get clientId(): string {
@@ -286,11 +284,11 @@ export class Account extends TypedEventEmitter<Events> {
 
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
 
-    if (this.protectedServices?.mls) {
+    if (this.service.mls) {
       const {userId, domain = ''} = this.apiClient.context;
-      await this.protectedServices.mls.createClient({id: userId, domain}, client.id);
+      await this.service.mls.createClient({id: userId, domain}, client.id);
     }
-    this.logger.info(`Created new client {mls: ${!!this.protectedServices?.mls}, id: ${client.id}}`);
+    this.logger.info(`Created new client {mls: ${!!this.service.mls}, id: ${client.id}}`);
 
     await this.service.notification.initializeNotificationStream();
     await this.service.client.synchronizeClients(client.id);
@@ -319,20 +317,20 @@ export class Account extends TypedEventEmitter<Events> {
     await this.apiClient.transport.http.associateClientWithSession(validClient.id);
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
-    if (this.protectedServices?.mls) {
+    if (this.service.mls) {
       const {userId, domain = ''} = this.apiClient.context;
       if (!client) {
         // If the client has been passed to the method, it means it also has been initialized
-        await this.protectedServices.mls.initClient({id: userId, domain}, validClient.id);
+        await this.service.mls.initClient({id: userId, domain}, validClient.id);
       }
       // initialize schedulers for pending mls proposals once client is initialized
-      await this.protectedServices.mls.checkExistingPendingProposals();
+      await this.service.mls.checkExistingPendingProposals();
 
       // initialize scheduler for syncing key packages with backend
-      this.protectedServices.mls.checkForKeyPackagesBackendSync();
+      this.service.mls.checkForKeyPackagesBackendSync();
 
       // leave stale conference subconversations (e.g after a crash)
-      await this.protectedServices.mls.leaveStaleConferenceSubconversations();
+      await this.service.mls.leaveStaleConferenceSubconversations();
     }
 
     return validClient;
@@ -373,7 +371,7 @@ export class Account extends TypedEventEmitter<Events> {
    * @param mlsCallbacks
    */
   configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.protectedServices?.mls?.configureMLSCallbacks(mlsCallbacks);
+    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
   }
 
   public async initServices(context: Context): Promise<void> {
@@ -410,11 +408,8 @@ export class Account extends TypedEventEmitter<Events> {
     const broadcastService = new BroadcastService(this.apiClient, proteusService);
     const userService = new UserService(this.apiClient);
 
-    this.protectedServices = {
-      mls: mlsService,
-    };
-
     this.service = {
+      mls: mlsService,
       proteus: proteusService,
       account: accountService,
       asset: assetService,
