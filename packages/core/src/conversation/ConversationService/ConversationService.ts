@@ -56,7 +56,6 @@ import {
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
-import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../../messagingProtocols/mls/EventHandler/events';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
@@ -489,11 +488,11 @@ export class ConversationService {
   };
 
   private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
-    return handleMLSMessageAdd({event, mlsService: this.mlsService});
+    return this.mlsService.handleMLSMessageAddEvent(event);
   }
 
   private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
-    return handleMLSWelcomeMessage({event, mlsService: this.mlsService});
+    return this.mlsService.handleMLSWelcomeMessageEvent(event);
   }
 
   private async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {
