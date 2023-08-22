@@ -66,10 +66,15 @@ import {
 import {HandledEventPayload} from '../../notification';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
+import {TypedEventEmitter} from '../../util/TypedEventEmitter';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
-export class ConversationService {
+type Events = {
+  MLSConversationRecovered: {conversationId: QualifiedId};
+};
+
+export class ConversationService extends TypedEventEmitter<Events> {
   public readonly messageTimer: MessageTimer;
   private readonly logger = logdown('@wireapp/core/ConversationService');
 
@@ -78,6 +83,7 @@ export class ConversationService {
     private readonly proteusService: ProteusService,
     private readonly _mlsService?: MLSService,
   ) {
+    super();
     this.messageTimer = new MessageTimer();
   }
 
@@ -442,7 +448,10 @@ export class ConversationService {
    * If the epochs do not match, it will try to rejoin the conversation via external commit.
    * @param mlsConversation - mls conversation
    */
-  private async handleEpochMismatchOfMLSConversation(remoteMlsConversation: MLSConversation) {
+  private async handleEpochMismatchOfMLSConversation(
+    remoteMlsConversation: MLSConversation,
+    onSuccessfulRejoin?: () => void,
+  ) {
     const {qualified_id: qualifiedId, group_id: groupId, epoch} = remoteMlsConversation;
     try {
       //if conversation is not established or epoch does not match -> try to rejoin
@@ -451,6 +460,10 @@ export class ConversationService {
           `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
         );
         await this.joinByExternalCommit(qualifiedId);
+
+        if (onSuccessfulRejoin) {
+          onSuccessfulRejoin();
+        }
       }
     } catch (error) {
       this.logger.error(
@@ -521,9 +534,9 @@ export class ConversationService {
           throw new Error('Conversation is not an MLS conversation');
         }
 
-        await this.handleEpochMismatchOfMLSConversation(mlsConversation);
-
-        //TODO: insert system message about epoch mismatch
+        await this.handleEpochMismatchOfMLSConversation(mlsConversation, () =>
+          this.emit('MLSConversationRecovered', {conversationId}),
+        );
         return;
       }
       throw error;
