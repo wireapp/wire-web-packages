@@ -500,11 +500,16 @@ export class ConversationService {
     }
   };
 
-  private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
+  private async handleMLSMessageAddEvent(
+    event: ConversationMLSMessageAddEvent,
+  ): Promise<HandledEventPayload | undefined> {
     try {
-      return this.mlsService.handleMLSMessageAddEvent(event);
+      return await this.mlsService.handleMLSMessageAddEvent(event);
     } catch (error) {
       if (isCoreCryptoMLSWrongEpochError(error)) {
+        this.logger.info(
+          `Received message for the wrong epoch in conversation ${event.conversation}, handling epoch mismatch...`,
+        );
         const conversationId = event.qualified_conversation;
         if (!conversationId) {
           throw new Error('Qualified conversation id is missing in the event');
@@ -517,6 +522,9 @@ export class ConversationService {
         }
 
         await this.handleEpochMismatchOfMLSConversation(mlsConversation);
+
+        //TODO: insert system message about epoch mismatch
+        return;
       }
       throw error;
     }
