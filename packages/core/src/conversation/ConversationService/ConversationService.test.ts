@@ -177,7 +177,7 @@ describe('ConversationService', () => {
 
       jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValue(false);
 
-      await conversationService.handleEpochMismatch();
+      await conversationService.handleEpochMismatchOfMLSConversations();
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
     });
@@ -194,7 +194,7 @@ describe('ConversationService', () => {
       jest.spyOn(conversationService, 'isMLSConversationEstablished').mockResolvedValue(true);
       jest.spyOn(mlsService, 'getEpoch').mockResolvedValue(2);
 
-      await conversationService.handleEpochMismatch();
+      await conversationService.handleEpochMismatchOfMLSConversations();
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
     });
@@ -211,7 +211,7 @@ describe('ConversationService', () => {
 
       jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(1);
 
-      await conversationService.handleEpochMismatch();
+      await conversationService.handleEpochMismatchOfMLSConversations();
       expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
     });
   });

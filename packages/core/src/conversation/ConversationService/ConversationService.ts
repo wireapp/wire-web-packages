@@ -26,6 +26,7 @@ import {
   ConversationProtocol,
   RemoteConversations,
   PostMlsMessageResponse,
+  MLSConversation,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
@@ -56,6 +57,7 @@ import {
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
+import {isCoreCryptoMLSWrongEpochError} from '../../messagingProtocols/mls/MLSService/CoreCryptoMLSErrors';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
@@ -419,7 +421,7 @@ export class ConversationService {
     return BigInt(localEpoch) === BigInt(backendEpoch);
   }
 
-  public async handleEpochMismatch() {
+  public async handleEpochMismatchOfMLSConversations() {
     this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
 
     //fetch all the mls conversations from backend
@@ -429,21 +431,32 @@ export class ConversationService {
     const mlsConversations = foundConversations.filter(isMLSConversation);
 
     //check all the established conversations' epoch with the core-crypto epoch
-    for (const {qualified_id: qualifiedId, group_id: groupId, epoch} of mlsConversations) {
-      try {
-        //if conversation is not established or epoch does not match -> try to rejoin
-        if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
-          this.logger.log(
-            `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
-          );
-          await this.joinByExternalCommit(qualifiedId);
-        }
-      } catch (error) {
-        this.logger.error(
-          `There was an error while handling epoch mismatch in MLS conversation (id: ${qualifiedId.id}):`,
-          error,
+    await Promise.allSettled(
+      mlsConversations.map(mlsConversation => this.handleEpochMismatchOfMLSConversation(mlsConversation)),
+    );
+  }
+
+  /**
+   * Handles epoch mismatch in a single MLS conversation.
+   * Compares the epoch of the local conversation with the epoch of the remote conversation.
+   * If the epochs do not match, it will try to rejoin the conversation via external commit.
+   * @param mlsConversation - mls conversation
+   */
+  private async handleEpochMismatchOfMLSConversation(remoteMlsConversation: MLSConversation) {
+    const {qualified_id: qualifiedId, group_id: groupId, epoch} = remoteMlsConversation;
+    try {
+      //if conversation is not established or epoch does not match -> try to rejoin
+      if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
+        this.logger.log(
+          `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
         );
+        await this.joinByExternalCommit(qualifiedId);
       }
+    } catch (error) {
+      this.logger.error(
+        `There was an error while handling epoch mismatch in MLS conversation (id: ${qualifiedId.id}):`,
+        error,
+      );
     }
   }
 
@@ -488,7 +501,25 @@ export class ConversationService {
   };
 
   private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
-    return this.mlsService.handleMLSMessageAddEvent(event);
+    try {
+      return this.mlsService.handleMLSMessageAddEvent(event);
+    } catch (error) {
+      if (isCoreCryptoMLSWrongEpochError(error)) {
+        const conversationId = event.qualified_conversation;
+        if (!conversationId) {
+          throw new Error('Qualified conversation id is missing in the event');
+        }
+
+        const mlsConversation = await this.apiClient.api.conversation.getConversation(conversationId);
+
+        if (!isMLSConversation(mlsConversation)) {
+          throw new Error('Conversation is not an MLS conversation');
+        }
+
+        await this.handleEpochMismatchOfMLSConversation(mlsConversation);
+      }
+      throw error;
+    }
   }
 
   private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
