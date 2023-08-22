@@ -17,4 +17,5 @@
  *
  */
 
-export * from './E2eIdentityService';
+export * from './E2EIdentityService';
+export * from './E2EIdentityUtils';

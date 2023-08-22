@@ -49,15 +49,14 @@ import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
-import {E2eIdentityService} from '..';
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {User} from '../E2eIdentityService/E2eIdentityService.types';
-import {AcmeStorage} from '../E2eIdentityService/Storage/AcmeStorage';
+import {E2eIdentityService, E2EIUtils} from '../E2EIdentityService';
+import {User} from '../E2EIdentityService/E2EIdentityService.types';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -87,8 +86,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
   private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
-  private isE2EIEnabled = false;
-  private readonly defaultCredentialType = () => (this.isE2EIEnabled ? CredentialType.X509 : CredentialType.Basic);
+  private readonly defaultCredentialType = () =>
+    E2EIUtils.hasActiveCertificate() ? CredentialType.X509 : CredentialType.Basic;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -103,7 +102,6 @@ export class MLSService extends TypedEventEmitter<Events> {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,
     };
-    this.isE2EIEnabled = AcmeStorage.hasCertificateData();
   }
 
   public async initClient(userId: QualifiedId, clientId: ClientId) {
@@ -756,7 +754,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         discoveryUrl,
         keyPackagesAmount: nbPrekeys,
       });
-      const data = await instance.getNewCertificate();
+      const data = await instance.issueNewCertificate();
       if (data !== undefined) {
         await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
         await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);

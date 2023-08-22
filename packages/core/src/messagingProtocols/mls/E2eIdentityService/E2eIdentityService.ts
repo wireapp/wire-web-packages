@@ -31,7 +31,8 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {InitParams} from './E2eIdentityService.types';
+import {InitParams} from './E2EIdentityService.types';
+import {E2EIUtils} from './E2EIdentityUtils';
 import {getE2eClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
@@ -39,7 +40,7 @@ import {getCertificate} from './Steps/Certificate';
 import {doWireDpopChallenge} from './Steps/DpopChallenge';
 import {doWireOidcChallenge} from './Steps/OidcChallenge';
 import {createNewOrder, finalizeOrder} from './Steps/Order';
-import {AcmeStorage} from './Storage/AcmeStorage';
+import {E2EIStorage} from './Storage/E2EIStorage';
 
 import {OIDCService} from '../../../oauth';
 
@@ -52,7 +53,6 @@ class E2eIdentityService {
   private identity?: WireE2eIdentity;
   private acmeService?: AcmeService;
   private isInitialized = false;
-  private isInProgress = false;
 
   private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient, keyPackagesAmount: number = 100) {
     this.coreCryptoClient = coreCryptClient;
@@ -74,19 +74,18 @@ class E2eIdentityService {
         if (!discoveryUrl || !user || !clientId) {
           throw new Error('discoveryUrl, user and clientId are required to initialize E2eIdentityService');
         }
-        AcmeStorage.storeInitialData({discoveryUrl, user, clientId});
+        E2EIStorage.store.initialData({discoveryUrl, user, clientId});
         await E2eIdentityService.instance.init({clientId, discoveryUrl, user});
       }
     }
     return E2eIdentityService.instance;
   }
 
-  public async getNewCertificate(): Promise<RotateBundle | undefined> {
+  public async issueNewCertificate(): Promise<RotateBundle | undefined> {
     // Step 0: Check if we have a handle in local storage
     // If we don't have a handle, we need to start a new OAuth flow
-    this.isInProgress = AcmeStorage.hasHandle();
 
-    if (this.isInProgress) {
+    if (E2EIUtils.isEnrollmentInProgress()) {
       try {
         return this.continueOAuthFlow();
       } catch (error) {
@@ -167,7 +166,7 @@ class E2eIdentityService {
   }
 
   private async startNewOAuthFlow() {
-    if (this.isInProgress) {
+    if (E2EIUtils.isEnrollmentInProgress()) {
       return this.exitWithError('Error while trying to start OAuth flow. There is already a flow in progress');
     }
     if (!this.isInitialized || !this.identity || !this.acmeService) {
@@ -219,9 +218,9 @@ class E2eIdentityService {
       // stash the identity for later use
       const handle = await this.coreCryptoClient.e2eiEnrollmentStash(this.identity);
       // stash the handle in local storage
-      AcmeStorage.storeHandle(Encoder.toBase64(handle).asString);
-      AcmeStorage.storeAuthData(authData);
-      AcmeStorage.storeOrderData({orderUrl: orderData.orderUrl});
+      E2EIStorage.store.handle(Encoder.toBase64(handle).asString);
+      E2EIStorage.store.authData(authData);
+      E2EIStorage.store.orderData({orderUrl: orderData.orderUrl});
       // this will cause a redirect to the OIDC provider
       const oidcService = this.getOidcService(wireOidcChallenge);
       await oidcService.authenticate();
@@ -236,8 +235,8 @@ class E2eIdentityService {
         return this.exitWithError('Error while trying to continue OAuth flow. AcmeService is not initialized');
       }
 
-      const handle = AcmeStorage.getAndVerifyHandle();
-      const authData = AcmeStorage.getAndVerifyAuthData();
+      const handle = E2EIStorage.get.handle();
+      const authData = E2EIStorage.get.authData();
 
       if (!authData.authorization.wireOidcChallenge) {
         return this.exitWithError('Error while trying to continue OAuth flow. No wireOidcChallenge received');
@@ -267,7 +266,7 @@ class E2eIdentityService {
         return this.exitWithError('Error while trying to continue OAuth flow. OIDC challenge not validated');
       }
 
-      const {user: wireUser, clientId} = AcmeStorage.getInitialData();
+      const {user: wireUser, clientId} = E2EIStorage.get.initialData();
       //Step 8: Do DPOP Challenge
       const dpopData = await doWireDpopChallenge({
         authData,
@@ -285,7 +284,7 @@ class E2eIdentityService {
       }
 
       //Step 9: Finalize Order
-      const orderData = AcmeStorage.getAndVerifyOrderData();
+      const orderData = E2EIStorage.get.orderData();
       const finalizeOrderData = await finalizeOrder({
         connection: this.acmeService,
         identity: this.identity,
@@ -306,7 +305,7 @@ class E2eIdentityService {
       if (!certificate) {
         return this.exitWithError('Error while trying to continue OAuth flow. No certificate received');
       }
-      AcmeStorage.storeCertificate(certificate);
+      E2EIStorage.store.certificate(certificate);
       // Step 10: Initialize MLS with the certificate
       // TODO: This is not working yet (since we initialize mls beforehand) and will be replaced by a new core-crypto function later on
       return await this.coreCryptoClient.e2eiRotateAll(this.identity, certificate, this.keyPackagesAmount);

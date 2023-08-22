@@ -17,7 +17,7 @@
  *
  */
 
-import {AuthData, AuthDataSchema, InitialData, InitialDataSchema, OrderData} from './AcmeStorage.schema';
+import {AuthData, AuthDataSchema, InitialData, InitialDataSchema, OrderData} from './E2EIStorage.schema';
 
 import {LocalStorageStore} from '../../../../util/LocalStorageStore';
 
@@ -27,60 +27,60 @@ const OderDataKey = 'OrderData';
 const InitialDataKey = 'InitialData';
 const CertificateDataKey = 'CertificateData';
 
-const AcmeStore = LocalStorageStore<string>('AcmeStorage');
+const storage = LocalStorageStore<string>('E2EStorage');
 
-const storeHandle = (handle: string) => AcmeStore.add(HandleKey, window.btoa(handle));
-const storeOrderData = (data: OrderData) => AcmeStore.add(OderDataKey, window.btoa(JSON.stringify(data)));
-const storeAuthData = (data: AuthData) => AcmeStore.add(AuthDataKey, window.btoa(JSON.stringify(data)));
-const storeInitialData = (data: InitialData) => AcmeStore.add(InitialDataKey, window.btoa(JSON.stringify(data)));
-const storeCertificate = (data: string) => AcmeStore.add(CertificateDataKey, window.btoa(data));
+const storeHandle = (handle: string) => storage.add(HandleKey, window.btoa(handle));
+const storeOrderData = (data: OrderData) => storage.add(OderDataKey, window.btoa(JSON.stringify(data)));
+const storeAuthData = (data: AuthData) => storage.add(AuthDataKey, window.btoa(JSON.stringify(data)));
+const storeInitialData = (data: InitialData) => storage.add(InitialDataKey, window.btoa(JSON.stringify(data)));
+const storeCertificate = (data: string) => storage.add(CertificateDataKey, window.btoa(data));
 
-const hasHandle = () => AcmeStore.has(HandleKey);
-const hasInitialData = () => AcmeStore.has(InitialDataKey);
-const hasCertificateData = () => AcmeStore.has(CertificateDataKey);
+const hasHandle = () => storage.has(HandleKey);
+const hasInitialData = () => storage.has(InitialDataKey);
+const hasCertificateData = () => storage.has(CertificateDataKey);
 
 const getAndVerifyHandle = () => {
-  const handle = AcmeStore.get(HandleKey);
+  const handle = storage.get(HandleKey);
   if (!handle) {
     throw new Error('ACME: No handle found');
   }
-  AcmeStore.remove(HandleKey);
+  storage.remove(HandleKey);
   const atob = window.atob(handle);
   return atob;
 };
 
 const getAndVerifyAuthData = (): AuthData => {
-  const data = AcmeStore.get(AuthDataKey);
+  const data = storage.get(AuthDataKey);
   if (!data) {
     throw new Error('ACME: AuthData not found');
   }
-  AcmeStore.remove(AuthDataKey);
+  storage.remove(AuthDataKey);
   const atob = window.atob(data);
   return AuthDataSchema.parse(JSON.parse(atob));
 };
 
 const getInitialData = (): InitialData => {
-  const data = AcmeStore.get(InitialDataKey);
+  const data = storage.get(InitialDataKey);
   if (!data) {
     throw new Error('ACME: InitialData not found');
   }
-  AcmeStore.remove(InitialDataKey);
+  storage.remove(InitialDataKey);
   const atob = window.atob(data);
   return InitialDataSchema.parse(JSON.parse(atob));
 };
 
 const getAndVerifyOrderData = (): OrderData => {
-  const data = AcmeStore.get(OderDataKey);
+  const data = storage.get(OderDataKey);
   if (!data) {
     throw new Error('ACME: OrderData not found');
   }
-  AcmeStore.remove(OderDataKey);
+  storage.remove(OderDataKey);
   const atob = window.atob(data);
   return JSON.parse(atob);
 };
 
 const getCertificateData = (): string => {
-  const data = AcmeStore.get(CertificateDataKey);
+  const data = storage.get(CertificateDataKey);
   if (!data) {
     throw new Error('ACME: CertificateData not found');
   }
@@ -88,18 +88,24 @@ const getCertificateData = (): string => {
   return atob;
 };
 
-export const AcmeStorage = {
-  storeHandle,
-  storeAuthData,
-  storeOrderData,
-  storeInitialData,
-  storeCertificate,
-  hasHandle,
-  hasInitialData,
-  hasCertificateData,
-  getAndVerifyHandle,
-  getAndVerifyAuthData,
-  getAndVerifyOrderData,
-  getInitialData,
-  getCertificateData,
+export const E2EIStorage = {
+  store: {
+    handle: storeHandle,
+    authData: storeAuthData,
+    orderData: storeOrderData,
+    initialData: storeInitialData,
+    certificate: storeCertificate,
+  },
+  get: {
+    initialData: getInitialData,
+    certificateData: getCertificateData,
+    handle: getAndVerifyHandle,
+    authData: getAndVerifyAuthData,
+    orderData: getAndVerifyOrderData,
+  },
+  has: {
+    handle: hasHandle,
+    initialData: hasInitialData,
+    certificateData: hasCertificateData,
+  },
 };

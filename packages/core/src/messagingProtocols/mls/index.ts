@@ -18,4 +18,3 @@
  */
 
 export * from './MLSService/';
-export * from './E2eIdentityService/';

@@ -23,7 +23,7 @@ import {APIClient} from '@wireapp/api-client';
 
 import {ClientId} from '../../../types';
 import {AcmeService} from '../../Connection/AcmeServer';
-import {Nonce, User} from '../../E2eIdentityService.types';
+import {Nonce, User} from '../../E2EIdentityService.types';
 import {GetAuthorizationReturnValue} from '../Authorization';
 
 export interface DoWireDpopChallengeParams {

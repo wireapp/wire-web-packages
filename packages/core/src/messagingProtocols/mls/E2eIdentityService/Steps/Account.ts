@@ -20,7 +20,7 @@
 import {WireE2eIdentity, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection/AcmeServer';
-import {Nonce} from '../E2eIdentityService.types';
+import {Nonce} from '../E2EIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
 type CreateNewAccountParams = {
@@ -41,7 +41,6 @@ export const createNewAccount = async ({
   const response = await connection.createNewAccount(directory.newAccount, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
-    console.log('acme Account response data: ', JSON.stringify(response.data), jsonToByteArray(response.data));
     identity.newAccountResponse(jsonToByteArray(response.data));
     return response.nonce;
   }

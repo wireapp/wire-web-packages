@@ -20,7 +20,7 @@
 import {WireE2eIdentity} from '@wireapp/core-crypto';
 
 import {AcmeService} from '../Connection';
-import {Nonce} from '../E2eIdentityService.types';
+import {Nonce} from '../E2EIdentityService.types';
 
 interface GetCertificateParams {
   identity: WireE2eIdentity;

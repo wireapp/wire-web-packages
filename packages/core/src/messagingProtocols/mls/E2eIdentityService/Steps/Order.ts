@@ -20,7 +20,7 @@
 import {AcmeDirectory, NewAcmeOrder, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection';
-import {Nonce} from '../E2eIdentityService.types';
+import {Nonce} from '../E2EIdentityService.types';
 import {jsonToByteArray} from '../Helper';
 
 type OrderUrl = string;
