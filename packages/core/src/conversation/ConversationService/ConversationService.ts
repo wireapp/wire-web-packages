@@ -455,8 +455,11 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const {qualified_id: qualifiedId, group_id: groupId, epoch} = remoteMlsConversation;
 
     try {
+      const isEstablished = await this.isMLSConversationEstablished(groupId);
+      const doesEpochMatch = await this.matchesEpoch(groupId, epoch);
+
       //if conversation is not established or epoch does not match -> try to rejoin
-      if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
+      if (!isEstablished || !doesEpochMatch) {
         this.logger.log(
           `Conversation (id ${qualifiedId.id}) was not established or it's epoch number was out of date, joining via external commit`,
         );
