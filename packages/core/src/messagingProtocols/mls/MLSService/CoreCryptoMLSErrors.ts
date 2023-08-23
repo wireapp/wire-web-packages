@@ -17,7 +17,7 @@
  *
  */
 
-enum CoreCryptoMLSErrors {
+export enum CoreCryptoMLSErrors {
   WRONG_EPOCH = 'Incoming message is for the wrong epoch',
 }
 

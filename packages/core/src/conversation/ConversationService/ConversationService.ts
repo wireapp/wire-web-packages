@@ -453,6 +453,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     onSuccessfulRejoin?: () => void,
   ) {
     const {qualified_id: qualifiedId, group_id: groupId, epoch} = remoteMlsConversation;
+
     try {
       //if conversation is not established or epoch does not match -> try to rejoin
       if (!(await this.isMLSConversationEstablished(groupId)) || !(await this.matchesEpoch(groupId, epoch))) {
