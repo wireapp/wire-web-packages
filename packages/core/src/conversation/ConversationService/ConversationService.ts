@@ -437,9 +437,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const mlsConversations = foundConversations.filter(isMLSConversation);
 
     //check all the established conversations' epoch with the core-crypto epoch
-    await Promise.allSettled(
-      mlsConversations.map(mlsConversation => this.handleConversationEpochMismatch(mlsConversation)),
-    );
+    await Promise.all(mlsConversations.map(mlsConversation => this.handleConversationEpochMismatch(mlsConversation)));
   }
 
   /**
