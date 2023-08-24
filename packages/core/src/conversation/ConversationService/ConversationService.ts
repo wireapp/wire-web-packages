@@ -427,7 +427,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return BigInt(localEpoch) === BigInt(backendEpoch);
   }
 
-  public async handleEpochMismatchOfMLSConversations() {
+  public async handleConversationsEpochMismatch() {
     this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
 
     //fetch all the mls conversations from backend
@@ -438,7 +438,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
     //check all the established conversations' epoch with the core-crypto epoch
     await Promise.allSettled(
-      mlsConversations.map(mlsConversation => this.handleEpochMismatchOfMLSConversation(mlsConversation)),
+      mlsConversations.map(mlsConversation => this.handleConversationEpochMismatch(mlsConversation)),
     );
   }
 
@@ -448,7 +448,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * If the epochs do not match, it will try to rejoin the conversation via external commit.
    * @param mlsConversation - mls conversation
    */
-  private async handleEpochMismatchOfMLSConversation(
+  private async handleConversationEpochMismatch(
     remoteMlsConversation: MLSConversation,
     onSuccessfulRejoin?: () => void,
   ) {
@@ -538,7 +538,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
           throw new Error('Conversation is not an MLS conversation');
         }
 
-        await this.handleEpochMismatchOfMLSConversation(mlsConversation, () =>
+        await this.handleConversationEpochMismatch(mlsConversation, () =>
           this.emit('MLSConversationRecovered', {conversationId}),
         );
         return;
