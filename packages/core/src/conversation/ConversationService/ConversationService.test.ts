@@ -168,7 +168,7 @@ describe('ConversationService', () => {
     });
   });
 
-  describe('"handleConversationsEpochMismatch"', () => {
+  describe('handleConversationsEpochMismatch', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
