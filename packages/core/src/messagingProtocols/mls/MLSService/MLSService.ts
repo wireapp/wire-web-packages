@@ -189,6 +189,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
+  private ciphersuiteToHex(ciphersuite: Ciphersuite): string {
+    return `0x${ciphersuite.toString(16)}`;
+  }
+
   public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
     /**
      * @note We need to fetch key packages for all the users
@@ -199,7 +203,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const keyPackagesSettledResult = await Promise.allSettled(
       qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
         this.apiClient.api.client
-          .claimMLSKeyPackages(id, domain, this.defaultCiphersuite.toString(16), skipOwnClientId)
+          .claimMLSKeyPackages(id, domain, this.ciphersuiteToHex(this.defaultCiphersuite), skipOwnClientId)
           .catch(error => {
             failedToFetchKeyPackages.push({id, domain});
             // Throw the error so we don't get {status: 'fulfilled', value: undefined}
@@ -593,7 +597,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       //check numbers of keys on backend
       const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(
         clientId,
-        this.defaultCiphersuite.toString(16),
+        this.ciphersuiteToHex(this.defaultCiphersuite),
       );
 
       if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
