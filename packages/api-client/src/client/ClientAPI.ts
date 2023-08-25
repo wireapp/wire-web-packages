@@ -180,6 +180,7 @@ export class ClientAPI {
         ciphersuite,
       },
     };
+
     const response = await this.client.sendJSON<ClaimedKeyPackages>(config, true);
     return response.data;
   }
