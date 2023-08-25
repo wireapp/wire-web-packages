@@ -198,11 +198,13 @@ export class MLSService extends TypedEventEmitter<Events> {
     const failedToFetchKeyPackages: QualifiedId[] = [];
     const keyPackagesSettledResult = await Promise.allSettled(
       qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId).catch(error => {
-          failedToFetchKeyPackages.push({id, domain});
-          // Throw the error so we don't get {status: 'fulfilled', value: undefined}
-          throw error;
-        }),
+        this.apiClient.api.client
+          .claimMLSKeyPackages(id, domain, this.defaultCiphersuite.toString(16), skipOwnClientId)
+          .catch(error => {
+            failedToFetchKeyPackages.push({id, domain});
+            // Throw the error so we don't get {status: 'fulfilled', value: undefined}
+            throw error;
+          }),
       ),
     );
 
@@ -589,7 +591,10 @@ export class MLSService extends TypedEventEmitter<Events> {
       const clientId = this.apiClient.validatedClientId;
 
       //check numbers of keys on backend
-      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(clientId);
+      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(
+        clientId,
+        this.defaultCiphersuite.toString(16),
+      );
 
       if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
         //upload new keys
@@ -616,6 +621,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.client.uploadMLSKeyPackages(
       clientId,
       keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
+      this.defaultCiphersuite.toString(16),
     );
   }
 
