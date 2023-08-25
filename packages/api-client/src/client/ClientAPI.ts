@@ -147,11 +147,14 @@ export class ClientAPI {
    * @param {string} clientId The client to upload the key packages for
    * @param {string[]} keyPackages The key packages to upload
    */
-  public async uploadMLSKeyPackages(clientId: string, keyPackages: string[]) {
+  public async uploadMLSKeyPackages(clientId: string, keyPackages: string[], ciphersuite: string) {
     const config: AxiosRequestConfig = {
       data: {key_packages: keyPackages},
       method: 'POST',
       url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/self/${clientId}`,
+      params: {
+        ciphersuite,
+      },
     };
 
     await this.client.sendJSON<PreKeyBundle>(config, true);
@@ -164,12 +167,20 @@ export class ClientAPI {
    * @param  {string} skipOwn Do not claim a key package for the given own client id
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_claim__user_domain___user_
    */
-  public async claimMLSKeyPackages(userId: string, userDomain: string, skipOwn?: string): Promise<ClaimedKeyPackages> {
+  public async claimMLSKeyPackages(
+    userId: string,
+    userDomain: string,
+    ciphersuite: string,
+    skipOwn?: string,
+  ): Promise<ClaimedKeyPackages> {
     const config: AxiosRequestConfig = {
       method: 'POST',
       url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/claim/${userDomain}/${userId}${
         skipOwn ? `?skip_own=${skipOwn}` : ''
       }`,
+      params: {
+        ciphersuite,
+      },
     };
     const response = await this.client.sendJSON<ClaimedKeyPackages>(config, true);
     return response.data;
@@ -180,10 +191,13 @@ export class ClientAPI {
    * @param {string} clientId
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/get_mls_key_packages_self__client__count
    */
-  public async getMLSKeyPackageCount(clientId: string): Promise<number> {
+  public async getMLSKeyPackageCount(clientId: string, ciphersuite: string): Promise<number> {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/self/${clientId}/count`,
+      params: {
+        ciphersuite,
+      },
     };
 
     const response = await this.client.sendJSON<{count: number}>(config, true);
