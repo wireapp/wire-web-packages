@@ -86,7 +86,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
-  private readonly defaultCiphersuite = Ciphersuite.MLS_128_X25519KYBER768DRAFT00_AES128GCM_SHA256_Ed25519;
+  private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
   private readonly defaultCredentialType = CredentialType.Basic;
 
   constructor(
