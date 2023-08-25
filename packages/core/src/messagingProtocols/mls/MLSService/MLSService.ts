@@ -53,6 +53,7 @@ import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
+import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
@@ -189,10 +190,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
-  private ciphersuiteToHex(ciphersuite: Ciphersuite): string {
-    return `0x${ciphersuite.toString(16)}`;
-  }
-
   public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
     /**
      * @note We need to fetch key packages for all the users
@@ -203,7 +200,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const keyPackagesSettledResult = await Promise.allSettled(
       qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
         this.apiClient.api.client
-          .claimMLSKeyPackages(id, domain, this.ciphersuiteToHex(this.defaultCiphersuite), skipOwnClientId)
+          .claimMLSKeyPackages(id, domain, numberToHex(this.defaultCiphersuite), skipOwnClientId)
           .catch(error => {
             failedToFetchKeyPackages.push({id, domain});
             // Throw the error so we don't get {status: 'fulfilled', value: undefined}
@@ -597,7 +594,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       //check numbers of keys on backend
       const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(
         clientId,
-        this.ciphersuiteToHex(this.defaultCiphersuite),
+        numberToHex(this.defaultCiphersuite),
       );
 
       if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
