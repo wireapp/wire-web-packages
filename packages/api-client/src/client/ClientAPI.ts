@@ -146,6 +146,7 @@ export class ClientAPI {
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_self__client_
    * @param {string} clientId The client to upload the key packages for
    * @param {string[]} keyPackages The key packages to upload
+   * @param {string} ciphersuite Ciphersuite in hex format (e.g. 0xf031)
    */
   public async uploadMLSKeyPackages(clientId: string, keyPackages: string[], ciphersuite: string) {
     const config: AxiosRequestConfig = {
@@ -164,6 +165,7 @@ export class ClientAPI {
    * Claim one key package for each client of the given user
    * @param  {string} userId The user to claim the key packages for
    * @param {string} userDomain The domain of the user
+   * @param  {string} ciphersuite Ciphersuite in hex format (e.g. 0xf031)
    * @param  {string} skipOwn Do not claim a key package for the given own client id
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_claim__user_domain___user_
    */
@@ -189,6 +191,7 @@ export class ClientAPI {
   /**
    * Get the number of unused key packages for the given client
    * @param {string} clientId
+   * @param {string} ciphersuite Ciphersuite in hex format (e.g. 0xf031)
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/get_mls_key_packages_self__client__count
    */
   public async getMLSKeyPackageCount(clientId: string, ciphersuite: string): Promise<number> {
