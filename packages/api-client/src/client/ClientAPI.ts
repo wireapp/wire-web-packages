@@ -146,16 +146,12 @@ export class ClientAPI {
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_mls_key_packages_self__client_
    * @param {string} clientId The client to upload the key packages for
    * @param {string[]} keyPackages The key packages to upload
-   * @param {string} ciphersuite Ciphersuite in hex format (e.g. 0xf031)
    */
-  public async uploadMLSKeyPackages(clientId: string, keyPackages: string[], ciphersuite: string) {
+  public async uploadMLSKeyPackages(clientId: string, keyPackages: string[]) {
     const config: AxiosRequestConfig = {
       data: {key_packages: keyPackages},
       method: 'POST',
       url: `/${ClientAPI.URL.MLS_CLIENTS}/${ClientAPI.URL.MLS_KEY_PACKAGES}/self/${clientId}`,
-      params: {
-        ciphersuite,
-      },
     };
 
     await this.client.sendJSON<PreKeyBundle>(config, true);
