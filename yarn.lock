@@ -8387,15 +8387,18 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-jest-dom@npm:^5, eslint-plugin-jest-dom@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "eslint-plugin-jest-dom@npm:5.0.2"
+  version: 5.1.0
+  resolution: "eslint-plugin-jest-dom@npm:5.1.0"
   dependencies:
     "@babel/runtime": ^7.16.3
     requireindex: ^1.2.0
   peerDependencies:
     "@testing-library/dom": ^8.0.0 || ^9.0.0
     eslint: ^6.8.0 || ^7.0.0 || ^8.0.0
-  checksum: 83bda8d1f86edfaf4b8e3039f15b73ad8ec035b6afc2403828cea70d4ed792e015406aa58c3dab91235d230f4561f33d26a80064cf7b298fd6edc72a1c27273a
+  peerDependenciesMeta:
+    "@testing-library/dom":
+      optional: true
+  checksum: bd190a5501b9f5bb6ac9057fbee124d54d3854f992e13a7415aba5d34ecedd0c7362263d6b8e956549d76c40008b70232da84476200b5762c4162021e3af052c
   languageName: node
   linkType: hard
 
