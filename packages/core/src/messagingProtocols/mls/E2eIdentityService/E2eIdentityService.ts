@@ -159,7 +159,7 @@ class E2eIdentityService {
     const oidcService = new OIDCService({
       audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
       authorityUrl: 'https://accounts.google.com' || challenge.target,
-      redirectUri: 'https://local.elna.wire.link:8081/',
+      redirectUri: 'https://local.elna.wire.link:8081/oidc',
       clientSecret: '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',
     });
     return oidcService;

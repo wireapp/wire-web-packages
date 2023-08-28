@@ -66,6 +66,9 @@ export const doWireDpopChallenge = async ({
 
   const clientNonce = await getClientNonce({clientId, apiClient});
 
+  // We need to wait for the server to be ready to accept the token, there are some issues with the timing
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   const clientAccessTokenData = await getClientAccessToken({
     apiClient,
     clientId,

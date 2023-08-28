@@ -20,41 +20,12 @@
 import {FIFTEEN_MINUTES, FOUR_HOURS, ONE_HOUR, ONE_MINUTE} from './delay';
 import {DelayTimerService} from './DelayTimer'; // Update this with your module's actual path
 
-jest.mock('Util/Logger', () => ({
-  getLogger: () => ({
-    info: jest.fn(),
-    // eslint-disable-next-line no-console
-    log: console.log,
-  }),
-}));
-
 describe('createGracePeriodTimer', () => {
   let timer: DelayTimerService | undefined;
-  beforeEach(() => {
-    // Mock the localStorage
-    const localStorageMock = (function () {
-      let store: {[key: string]: string} = {};
-      return {
-        getItem: function (key: string) {
-          return store[key];
-        },
-        setItem: function (key: string, value: string) {
-          store[key] = value.toString();
-        },
-        clear: function () {
-          store = {};
-        },
-        removeItem: function (key: string) {
-          delete store[key];
-        },
-      };
-    })();
-    Object.defineProperty(window, 'localStorage', {value: localStorageMock});
-  });
 
   beforeEach(() => {
     jest.useFakeTimers();
-    window.localStorage.clear();
+    global.localStorage.clear();
     timer = DelayTimerService?.getInstance({
       gracePeriodInMS: 0,
       gracePeriodExpiredCallback: jest.fn(),

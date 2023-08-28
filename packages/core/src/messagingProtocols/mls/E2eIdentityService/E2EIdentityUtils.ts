@@ -49,10 +49,15 @@ function getDelayTimerInstance(gracePeriodInMS: number): DelayTimerService {
   });
 }
 
+function clearAllProgress(): void {
+  E2EIStorage.remove.temporaryData();
+}
+
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
 export const E2EIUtils = {
   hasActiveCertificate,
   getCertificateData,
   isEnrollmentInProgress,
   getDelayTimerInstance,
+  clearAllProgress,
 };
