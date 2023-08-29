@@ -3919,6 +3919,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pako@npm:2":
+  version: 2.0.0
+  resolution: "@types/pako@npm:2.0.0"
+  checksum: 50240a036b5e6acabbf36ac4dca93ec9e619241f0404da8d401cdb427bec3029833324b8a04c4b1ae2ecbc33422fdec31dbf9f43653d9d07cafb82ace78dfccd
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -4634,6 +4641,7 @@ __metadata:
     "@types/axios": ^0.14.0
     "@types/jest": ^29.2.0
     "@types/node": ^20.1.0
+    "@types/pako": 2
     "@types/spark-md5": 3.0.2
     "@types/tough-cookie": 4.0.2
     "@types/ws": 8.5.5
@@ -4652,6 +4660,7 @@ __metadata:
     jest: ^29.2.1
     logdown: 3.3.1
     nock: 13.3.3
+    pako: 2.1.0
     react: 18.2.0
     react-dom: 18.2.0
     reconnecting-websocket: 4.4.0
@@ -14576,6 +14585,13 @@ __metadata:
   bin:
     pacote: lib/bin.js
   checksum: c731572be2bf226b117eba076d242bd4cd8be7aa01e004af3374a304ad7ab330539e22644bc33de12d2a7d45228ccbcbf4d710f59c84414f3d09a1a95ee6f0bf
+  languageName: node
+  linkType: hard
+
+"pako@npm:2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 71666548644c9a4d056bcaba849ca6fd7242c6cf1af0646d3346f3079a1c7f4a66ffec6f7369ee0dc88f61926c10d6ab05da3e1fca44b83551839e89edd75a3e
   languageName: node
   linkType: hard
 
