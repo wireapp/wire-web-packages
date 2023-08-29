@@ -17,7 +17,7 @@
  *
  */
 
-import {WireE2eIdentity, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {E2eiEnrollment, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection/AcmeServer';
 import {Nonce} from '../E2EIdentityService.types';
@@ -25,7 +25,7 @@ import {jsonToByteArray} from '../Helper';
 
 type CreateNewAccountParams = {
   nonce: Nonce;
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   connection: AcmeService;
   directory: AcmeDirectory;
 };

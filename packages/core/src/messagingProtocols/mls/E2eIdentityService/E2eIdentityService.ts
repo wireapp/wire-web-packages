@@ -23,7 +23,7 @@ import {
   Ciphersuite,
   CoreCrypto,
   RotateBundle,
-  WireE2eIdentity,
+  E2eiEnrollment,
 } from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -50,7 +50,7 @@ class E2eIdentityService {
   private readonly coreCryptoClient: CoreCrypto;
   private readonly apiClient: APIClient;
   private readonly keyPackagesAmount;
-  private identity?: WireE2eIdentity;
+  private identity?: E2eiEnrollment;
   private acmeService?: AcmeService;
   private isInitialized = false;
 
@@ -129,7 +129,7 @@ class E2eIdentityService {
     }
   }
 
-  private async getDirectory(identity: WireE2eIdentity, connection: AcmeService): Promise<AcmeDirectory | undefined> {
+  private async getDirectory(identity: E2eiEnrollment, connection: AcmeService): Promise<AcmeDirectory | undefined> {
     try {
       const directory = await connection.getDirectory();
 

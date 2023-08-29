@@ -17,7 +17,7 @@
  *
  */
 
-import {AcmeDirectory, NewAcmeOrder, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {AcmeDirectory, NewAcmeOrder, E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection';
 import {Nonce} from '../E2EIdentityService.types';
@@ -26,7 +26,7 @@ import {jsonToByteArray} from '../Helper';
 type OrderUrl = string;
 
 export interface CreateNewOrderParams {
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   nonce: Nonce;
   directory: AcmeDirectory;
   connection: AcmeService;
@@ -60,7 +60,7 @@ export const createNewOrder = async ({
 
 export interface FinalizeOrderParams {
   connection: AcmeService;
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   nonce: Nonce;
   orderUrl: OrderUrl;
 }

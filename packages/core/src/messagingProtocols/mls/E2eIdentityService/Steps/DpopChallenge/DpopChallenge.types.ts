@@ -17,7 +17,7 @@
  *
  */
 
-import {WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {APIClient} from '@wireapp/api-client';
 
@@ -31,7 +31,7 @@ export interface DoWireDpopChallengeParams {
   clientId: ClientId;
   userDomain: User['domain'];
   authData: GetAuthorizationReturnValue;
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   connection: AcmeService;
   nonce: Nonce;
   expirySecs: number;

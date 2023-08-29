@@ -17,13 +17,13 @@
  *
  */
 
-import {WireE2eIdentity} from '@wireapp/core-crypto';
+import {E2eiEnrollment} from '@wireapp/core-crypto';
 
 import {AcmeService} from '../Connection';
 import {Nonce} from '../E2EIdentityService.types';
 
 interface GetCertificateParams {
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   connection: AcmeService;
   nonce: Nonce;
   certificateUrl: string;

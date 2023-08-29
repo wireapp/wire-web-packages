@@ -17,7 +17,7 @@
  *
  */
 
-import {NewAcmeAuthz, WireE2eIdentity} from '@wireapp/core-crypto/platforms/web/corecrypto';
+import {NewAcmeAuthz, E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection';
 import {Nonce} from '../E2EIdentityService.types';
@@ -26,7 +26,7 @@ import {jsonToByteArray} from '../Helper';
 interface GetAuthorizationParams {
   nonce: Nonce;
   authzUrl: string;
-  identity: WireE2eIdentity;
+  identity: E2eiEnrollment;
   connection: AcmeService;
 }
 export type GetAuthorizationReturnValue = {authorization: NewAcmeAuthz; nonce: Nonce};
