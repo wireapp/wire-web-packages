@@ -27,6 +27,7 @@ import {AuthAPI} from './auth/AuthAPI';
 import {ClientType} from './client';
 import {BackendErrorLabel, StatusCode} from './http';
 import {Self, SelfAPI} from './self';
+import {withGzippedBody} from './testUtils';
 import {UserAPI} from './user/UserAPI';
 
 describe('APIClient', () => {
@@ -220,10 +221,13 @@ describe('APIClient', () => {
 
     beforeEach(() => {
       nock(baseUrl)
-        .post(`${AuthAPI.URL.LOGIN}`, {
-          email: loginData.email,
-          password: loginData.password,
-        })
+        .post(
+          `${AuthAPI.URL.LOGIN}`,
+          withGzippedBody({
+            email: loginData.email,
+            password: loginData.password,
+          }),
+        )
         .query({persist: loginData.clientType === 'permanent'})
         .reply(StatusCode.OK, accessTokenData);
 
@@ -320,7 +324,7 @@ describe('APIClient', () => {
     };
 
     beforeEach(() => {
-      nock(baseUrl).post(AuthAPI.URL.REGISTER, registerData).reply(StatusCode.OK, registerData);
+      nock(baseUrl).post(AuthAPI.URL.REGISTER, withGzippedBody(registerData)).reply(StatusCode.OK, registerData);
       nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(StatusCode.OK, accessTokenData);
       nock(baseUrl).get(SelfAPI.URL.SELF).reply(StatusCode.OK, selfExample);
     });
