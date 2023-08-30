@@ -274,7 +274,11 @@ export class HttpClient extends EventEmitter {
   }
 
   public sendJSON<T>(config: AxiosRequestConfig, isSynchronousRequest: boolean = false): Promise<AxiosResponse<T>> {
-    const shouldGzipData = !!config.data && ['post', 'put', 'patch'].includes(config.method?.toLowerCase() ?? '');
+    const shouldGzipData =
+      process.env.NODE_ENV !== 'test' &&
+      !!config.data &&
+      ['post', 'put', 'patch'].includes(config.method?.toLowerCase() ?? '');
+
     if (shouldGzipData) {
       config.data = gzip(JSON.stringify(config.data));
     }
