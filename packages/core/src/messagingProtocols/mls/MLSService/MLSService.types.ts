@@ -17,7 +17,7 @@
  *
  */
 
-import type {CommitBundle} from '@wireapp/core-crypto';
+import type {Ciphersuite, CommitBundle, CredentialType} from '@wireapp/core-crypto';
 
 export interface UploadCommitOptions {
   /**
@@ -34,4 +34,6 @@ export interface UploadCommitOptions {
 export interface MLSServiceConfig {
   keyingMaterialUpdateThreshold: number;
   nbKeyPackages: number;
+  defaultCiphersuite: Ciphersuite;
+  defaultCredentialType: CredentialType;
 }
