@@ -32,8 +32,20 @@ export interface UploadCommitOptions {
 }
 
 export interface MLSServiceConfig {
+  /**
+   * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
+   */
   keyingMaterialUpdateThreshold: number;
+  /**
+   * number of key packages client should upload to the server (100 by default)
+   */
   nbKeyPackages: number;
+  /**
+   * default ciphersuite to use for MLS (MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519 = 1 by default)
+   */
   defaultCiphersuite: Ciphersuite;
+  /**
+   * default credential type to use for MLS (Basic = 1 by default)
+   */
   defaultCredentialType: CredentialType;
 }
