@@ -510,10 +510,22 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
       if (mlsConversation.epoch > 0) {
         this.logger.info(
-          `Conversation (id ${mlsConversation.qualified_id.id}) is already established, joining via external commit`,
+          `Conversation (id ${mlsConversation.qualified_id.id}) is already established on backend, checking the local epoch...`,
         );
 
-        // If its already established, we join with external commit
+        // If its already established, on backend, we check the local epoch,
+        // it's possible that we've received a welcome message already
+        const localEpoch = await this.mlsService.getEpoch(groupId);
+        if (localEpoch > 0) {
+          this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) is already established locally.`);
+          return;
+        }
+
+        // If local epoch is 0 it means that we've not received a welcome message
+        // We try joining via external commit.
+        this.logger.info(
+          `Conversation (id ${mlsConversation.qualified_id.id}) is not yet established, joining via external commit...`,
+        );
         await this.joinByExternalCommit(mlsConversation.qualified_id);
         return;
       }
