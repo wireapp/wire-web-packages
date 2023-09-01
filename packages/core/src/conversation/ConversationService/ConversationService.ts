@@ -514,8 +514,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
         );
 
         // If its already established, on backend, we check the local epoch,
-        // it's possible that we've received a welcome message already
-        const localEpoch = await this.mlsService.getEpoch(groupId);
+        // it's possible that we've received a welcome message in the meantime
+        const isEstablished = await this.isMLSConversationEstablished(groupId);
+        const localEpoch = isEstablished ? await this.mlsService.getEpoch(groupId) : -1;
         if (localEpoch > 0) {
           this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) is already established locally.`);
           return;
