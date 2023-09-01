@@ -203,7 +203,12 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  public async enrollE2EI(displayName: string, handle: string, discoveryUrl: string): Promise<AcmeChallenge | boolean> {
+  public async enrollE2EI(
+    displayName: string,
+    handle: string,
+    discoveryUrl: string,
+    oAuthIdToken?: string,
+  ): Promise<AcmeChallenge | boolean> {
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
 
@@ -219,7 +224,7 @@ export class Account extends TypedEventEmitter<Events> {
       id: this.userId,
     };
 
-    return this.service.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys);
+    return this.service.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys, oAuthIdToken);
   }
 
   get clientId(): string {
