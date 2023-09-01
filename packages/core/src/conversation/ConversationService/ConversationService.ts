@@ -524,7 +524,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
       // If conversation is not established, we can wipe it and try to establish it again
       await this.wipeMLSConversation(groupId);
-      return this.establishMLS1to1Conversation(groupId, selfUser, otherUserId);
+      await this.mlsService.registerConversation(groupId, [otherUserId, selfUser.user], selfUser);
     }
   };
 
