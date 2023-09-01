@@ -5,5 +5,5 @@
     "outDir": "lib"
   },
   "exclude": ["node_modules", "src/test", "**.test.ts", "src/demo"],
-  "include": ["src", "../../../wire-webapp/src/script/E2EIdentity/DelayTimer/DelayTimerStorage.ts", "../../../wire-webapp/src/script/E2EIdentity/OIDCService/OIDCService.ts"]
+  "include": ["src"]
 }
