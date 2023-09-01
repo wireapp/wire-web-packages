@@ -19,7 +19,7 @@
 
 import {ZodSchema} from 'zod';
 
-import {Nonce} from '../../E2EIdentityService.types';
+import {Nonce} from '../../E2EIService.types';
 
 export type GetDirectoryReturnValue = Promise<Uint8Array | undefined>;
 

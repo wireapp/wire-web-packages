@@ -17,7 +17,6 @@
  *
  */
 
-import {DelayTimerService} from './DelayTimer/DelayTimer';
 import {E2EIStorage} from './Storage/E2EIStorage';
 
 // Checks if there is a certificate stored in the local storage
@@ -40,24 +39,14 @@ function isEnrollmentInProgress(): boolean {
   return E2EIStorage.has.handle();
 }
 
-// Returns a DelayTimerService instance with the given grace period
-function getDelayTimerInstance(gracePeriodInMS: number): DelayTimerService {
-  return DelayTimerService.getInstance({
-    delayPeriodExpiredCallback: () => null,
-    gracePeriodExpiredCallback: () => null,
-    gracePeriodInMS,
-  });
-}
-
 function clearAllProgress(): void {
   E2EIStorage.remove.temporaryData();
 }
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
-export const E2EIUtils = {
+export const E2EIServiceExternal = {
   hasActiveCertificate,
   getCertificateData,
   isEnrollmentInProgress,
-  getDelayTimerInstance,
   clearAllProgress,
 };

@@ -22,7 +22,7 @@ import {E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {GetAuthorizationReturnValue} from './Authorization';
 
 import {AcmeService} from '../Connection/AcmeServer';
-import {Nonce} from '../E2EIdentityService.types';
+import {Nonce} from '../E2EIService.types';
 
 interface DoWireOidcChallengeParams {
   authData: GetAuthorizationReturnValue;

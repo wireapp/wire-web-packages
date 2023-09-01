@@ -18,12 +18,12 @@
  */
 
 import {
-  AcmeChallenge,
   AcmeDirectory,
   Ciphersuite,
   CoreCrypto,
   RotateBundle,
   E2eiEnrollment,
+  AcmeChallenge,
 } from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -31,8 +31,8 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {InitParams} from './E2EIdentityService.types';
-import {E2EIUtils} from './E2EIdentityUtils';
+import {InitParams} from './E2EIService.types';
+import {E2EIServiceExternal} from './E2EIServiceExternal';
 import {getE2eClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
@@ -42,10 +42,8 @@ import {doWireOidcChallenge} from './Steps/OidcChallenge';
 import {createNewOrder, finalizeOrder} from './Steps/Order';
 import {E2EIStorage} from './Storage/E2EIStorage';
 
-import {OIDCService} from '../../../oauth';
-
-class E2eIdentityService {
-  private static instance: E2eIdentityService;
+class E2EIServiceInternal {
+  private static instance: E2EIServiceInternal;
   private readonly logger = logdown('@wireapp/core/E2EIdentityService');
   private readonly coreCryptoClient: CoreCrypto;
   private readonly apiClient: APIClient;
@@ -62,42 +60,46 @@ class E2eIdentityService {
 
   // ############ Public Functions ############
 
-  public static async getInstance(params?: InitParams): Promise<E2eIdentityService> {
-    if (!E2eIdentityService.instance) {
+  public static async getInstance(params?: InitParams): Promise<E2EIServiceInternal> {
+    if (!E2EIServiceInternal.instance) {
       if (!params) {
         throw new Error('GracePeriodTimer is not initialized. Please call getInstance with params.');
       }
       const {skipInit = false, coreCryptClient, apiClient, keyPackagesAmount} = params;
-      E2eIdentityService.instance = new E2eIdentityService(coreCryptClient, apiClient, keyPackagesAmount);
+      E2EIServiceInternal.instance = new E2EIServiceInternal(coreCryptClient, apiClient, keyPackagesAmount);
       if (!skipInit) {
         const {discoveryUrl, user, clientId} = params;
         if (!discoveryUrl || !user || !clientId) {
-          throw new Error('discoveryUrl, user and clientId are required to initialize E2eIdentityService');
+          throw new Error('discoveryUrl, user and clientId are required to initialize E2EIServiceInternal');
         }
         E2EIStorage.store.initialData({discoveryUrl, user, clientId});
-        await E2eIdentityService.instance.init({clientId, discoveryUrl, user});
+        await E2EIServiceInternal.instance.init({clientId, discoveryUrl, user});
       }
     }
-    return E2eIdentityService.instance;
+    return E2EIServiceInternal.instance;
   }
 
-  public async issueNewCertificate(): Promise<RotateBundle | undefined> {
+  public async startCertificateProcess() {
     // Step 0: Check if we have a handle in local storage
     // If we don't have a handle, we need to start a new OAuth flow
+    try {
+      return this.startNewOAuthFlow();
+    } catch (error) {
+      return this.exitWithError('Error while trying to start OAuth flow with error:', error);
+    }
+  }
 
-    if (E2EIUtils.isEnrollmentInProgress()) {
+  public async continueCertificateProcess(oAuthIdToken: string): Promise<RotateBundle | undefined> {
+    // If we don't have a handle, we need to start a new OAuth flow
+    if (E2EIServiceExternal.isEnrollmentInProgress()) {
       try {
-        return this.continueOAuthFlow();
+        return this.continueOAuthFlow(oAuthIdToken);
       } catch (error) {
         return this.exitWithError('Error while trying to continue OAuth flow with error:', error);
       }
-    } else {
-      try {
-        return this.startNewOAuthFlow();
-      } catch (error) {
-        return this.exitWithError('Error while trying to start OAuth flow with error:', error);
-      }
     }
+    this.logger.error('Error while trying to continue OAuth flow. No handle found in local storage');
+    return undefined;
   }
 
   // ############ Internal Functions ############
@@ -155,18 +157,8 @@ class E2eIdentityService {
     }
   }
 
-  private getOidcService(challenge: AcmeChallenge): OIDCService {
-    const oidcService = new OIDCService({
-      audience: '338888153072-ktbh66pv3mr0ua0dn64sphgimeo0p7ss.apps.googleusercontent.com',
-      authorityUrl: 'https://accounts.google.com' || challenge.target,
-      redirectUri: 'https://local.elna.wire.link:8081/oidc',
-      clientSecret: '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',
-    });
-    return oidcService;
-  }
-
-  private async startNewOAuthFlow() {
-    if (E2EIUtils.isEnrollmentInProgress()) {
+  private async startNewOAuthFlow(): Promise<AcmeChallenge | undefined> {
+    if (E2EIServiceExternal.isEnrollmentInProgress()) {
       return this.exitWithError('Error while trying to start OAuth flow. There is already a flow in progress');
     }
     if (!this.isInitialized || !this.identity || !this.acmeService) {
@@ -221,14 +213,13 @@ class E2eIdentityService {
       E2EIStorage.store.handle(Encoder.toBase64(handle).asString);
       E2EIStorage.store.authData(authData);
       E2EIStorage.store.orderData({orderUrl: orderData.orderUrl});
-      // this will cause a redirect to the OIDC provider
-      const oidcService = this.getOidcService(wireOidcChallenge);
-      await oidcService.authenticate();
+      // we need to pass back the aquired wireOidcChallenge to the UI
+      return wireOidcChallenge;
     }
     return undefined;
   }
 
-  private async continueOAuthFlow() {
+  private async continueOAuthFlow(oAuthIdToken: string) {
     // If we have a handle, the user has already started the process to authenticate with the OIDC provider. We can continue the flow.
     try {
       if (!this.acmeService) {
@@ -244,17 +235,10 @@ class E2eIdentityService {
 
       this.identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
       this.logger.log('retrieved identity from stash');
-      const service = this.getOidcService(authData.authorization.wireOidcChallenge);
-      const oauthUser = await service.handleAuthentication();
-      this.logger.log('received user data', oauthUser);
-
-      if (!oauthUser || !oauthUser.id_token) {
-        return this.exitWithError('Error while trying to continue OAuth flow. No user or id_token received');
-      }
 
       // Step 7: Do OIDC client challenge
       const oidcData = await doWireOidcChallenge({
-        oAuthIdToken: oauthUser.id_token,
+        oAuthIdToken,
         authData,
         connection: this.acmeService,
         identity: this.identity,
@@ -316,4 +300,4 @@ class E2eIdentityService {
   }
 }
 
-export {E2eIdentityService};
+export {E2EIServiceInternal};

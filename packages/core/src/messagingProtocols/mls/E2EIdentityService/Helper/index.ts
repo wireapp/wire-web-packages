@@ -19,7 +19,7 @@
 
 import {Encoder} from 'bazinga64';
 
-import {User} from '../E2EIdentityService.types';
+import {User} from '../E2EIService.types';
 
 export const jsonToByteArray = (data: any): Uint8Array => {
   const encoder = new TextEncoder();

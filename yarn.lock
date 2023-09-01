@@ -4702,7 +4702,6 @@ __metadata:
     logdown: 3.3.1
     long: ^5.2.0
     nock: 13.3.3
-    oidc-client-ts: ^2.2.2
     rimraf: ^3.0.2
     typescript: ^5.0.4
     uuidjs: 4.2.13
@@ -7287,13 +7286,6 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
-  languageName: node
-  linkType: hard
-
-"crypto-js@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "crypto-js@npm:4.1.1"
-  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
   languageName: node
   linkType: hard
 
@@ -12283,13 +12275,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jwt-decode@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "jwt-decode@npm:3.1.2"
-  checksum: 20a4b072d44ce3479f42d0d2c8d3dabeb353081ba4982e40b83a779f2459a70be26441be6c160bfc8c3c6eadf9f6380a036fbb06ac5406b5674e35d8c4205eeb
-  languageName: node
-  linkType: hard
-
 "kind-of@npm:^3.0.2":
   version: 3.2.2
   resolution: "kind-of@npm:3.2.2"
@@ -14029,16 +14014,6 @@ __metadata:
   version: 1.1.2
   resolution: "obuf@npm:1.1.2"
   checksum: 41a2ba310e7b6f6c3b905af82c275bf8854896e2e4c5752966d64cbcd2f599cfffd5932006bcf3b8b419dfdacebb3a3912d5d94e10f1d0acab59876c8757f27f
-  languageName: node
-  linkType: hard
-
-"oidc-client-ts@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "oidc-client-ts@npm:2.2.2"
-  dependencies:
-    crypto-js: ^4.1.1
-    jwt-decode: ^3.1.2
-  checksum: 67c41df42694ad30cbfdaa7831647e6678adf34ec195df96f3eaa209155951d7171301d0a79244436e8767543fa87b12bd07eb778e8c2964c70db03b8c3f44c4
   languageName: node
   linkType: hard
 

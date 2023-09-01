@@ -29,6 +29,7 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 import {TimeUtil} from '@wireapp/commons';
 import {
+  AcmeChallenge,
   AddProposalArgs,
   Ciphersuite,
   CommitBundle,
@@ -55,8 +56,7 @@ import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../..
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {E2eIdentityService, E2EIUtils} from '../E2EIdentityService';
-import {User} from '../E2EIdentityService/E2EIdentityService.types';
+import {E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -87,7 +87,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   private readonly textDecoder = new TextDecoder();
   private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
   private readonly defaultCredentialType = () =>
-    E2EIUtils.hasActiveCertificate() ? CredentialType.X509 : CredentialType.Basic;
+    E2EIServiceExternal.hasActiveCertificate() ? CredentialType.X509 : CredentialType.Basic;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -744,9 +744,15 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   // E2E Identity Service related methods below
 
-  public async enrollE2EI(discoveryUrl: string, user: User, clientId: ClientId, nbPrekeys: number): Promise<boolean> {
+  public async enrollE2EI(
+    discoveryUrl: string,
+    user: User,
+    clientId: ClientId,
+    nbPrekeys: number,
+    oAuthIdToken?: string,
+  ): Promise<AcmeChallenge | boolean> {
     try {
-      const instance = await E2eIdentityService.getInstance({
+      const instance = await E2EIServiceInternal.getInstance({
         apiClient: this.apiClient,
         coreCryptClient: this.coreCryptoClient,
         user,
@@ -754,11 +760,18 @@ export class MLSService extends TypedEventEmitter<Events> {
         discoveryUrl,
         keyPackagesAmount: nbPrekeys,
       });
-      const data = await instance.issueNewCertificate();
-      if (data !== undefined) {
-        await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
-        await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);
-        return true;
+      if (!oAuthIdToken) {
+        const challengeData = await instance.startCertificateProcess();
+        if (challengeData) {
+          return challengeData;
+        }
+      } else {
+        const data = await instance.continueCertificateProcess(oAuthIdToken);
+        if (data !== undefined) {
+          await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
+          await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);
+          return true;
+        }
       }
       return false;
     } catch (error) {

@@ -20,7 +20,7 @@
 import {E2eiEnrollment, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 
 import {AcmeService} from '../Connection/AcmeServer';
-import {Nonce} from '../E2EIdentityService.types';
+import {Nonce} from '../E2EIService.types';
 import {jsonToByteArray} from '../Helper';
 
 type CreateNewAccountParams = {

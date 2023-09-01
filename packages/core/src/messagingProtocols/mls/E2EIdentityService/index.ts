@@ -17,5 +17,6 @@
  *
  */
 
-export * from './E2EIdentityService';
-export * from './E2EIdentityUtils';
+export * from './E2EIService.types';
+export * from './E2EIServiceInternal';
+export * from './E2EIServiceExternal';

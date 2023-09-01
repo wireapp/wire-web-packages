@@ -35,6 +35,7 @@ import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket
 import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
+import {AcmeChallenge} from '@wireapp/core-crypto';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -47,8 +48,7 @@ import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conve
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
-import {E2EIUtils} from './messagingProtocols/mls/E2EIdentityService';
-import {User} from './messagingProtocols/mls/E2EIdentityService/E2EIdentityService.types';
+import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
 import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
@@ -131,6 +131,7 @@ export class Account extends TypedEventEmitter<Events> {
 
   public service?: {
     mls?: MLSService;
+    e2eIdentity?: typeof E2EIServiceExternal;
     proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
@@ -146,7 +147,6 @@ export class Account extends TypedEventEmitter<Events> {
     user: UserService;
   };
   public backendFeatures: BackendFeatures;
-  public e2eiUtils: typeof E2EIUtils;
 
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
@@ -157,7 +157,6 @@ export class Account extends TypedEventEmitter<Events> {
     {createStore = () => undefined, nbPrekeys = 100, cryptoProtocolConfig}: AccountOptions = {},
   ) {
     super();
-    this.e2eiUtils = E2EIUtils;
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
     this.cryptoProtocolConfig = cryptoProtocolConfig;
@@ -204,7 +203,7 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  public async enrollE2EI(displayName: string, handle: string, discoveryUrl: string): Promise<boolean> {
+  public async enrollE2EI(displayName: string, handle: string, discoveryUrl: string): Promise<AcmeChallenge | boolean> {
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
 
