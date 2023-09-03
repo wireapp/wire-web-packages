@@ -4671,7 +4671,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.5.0
-    axios-retry: 3.6.1
+    axios-retry: 3.7.0
     browser-sync: 2.29.3
     concurrently: 8.2.1
     cross-env: 7.0.3
@@ -5778,13 +5778,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios-retry@npm:3.6.1":
-  version: 3.6.1
-  resolution: "axios-retry@npm:3.6.1"
+"axios-retry@npm:3.7.0":
+  version: 3.7.0
+  resolution: "axios-retry@npm:3.7.0"
   dependencies:
     "@babel/runtime": ^7.15.4
     is-retry-allowed: ^2.2.0
-  checksum: 881b9d7fbb0126213cc0f80605cd053492010ea3e65ab081f8f01a2ba273729a811346b99085de54baf9abe87e4eb422f30dbea78dda2d32d80414a153263db5
+  checksum: ef34b50a86b5cd65ce2bf933aaed422ffb1a17b8fe11a53e444437fb42be400b48271d1ff9fd23a051627b7f3b33bebdeb1d66556aae04d5d6bfbe57fecdfb64
   languageName: node
   linkType: hard
 
