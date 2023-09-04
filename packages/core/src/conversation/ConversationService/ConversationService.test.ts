@@ -236,22 +236,7 @@ describe('ConversationService', () => {
   });
 
   describe('establishMLS1to1Conversation', () => {
-    it('successfully registers an MLS group if it did not exist before', async () => {
-      const [conversationService, {mlsService}] = buildConversationService();
-
-      const mockGroupId = 'mock-group-id';
-      const selfUser = {user: {id: 'self-user-id', domain: 'staging.zinfra.io'}, client: 'self-user-client-id'};
-      const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
-
-      await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
-
-      expect(mlsService.registerConversation).toHaveBeenCalledTimes(1);
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
-      expect(mlsService.joinByExternalCommit).not.toHaveBeenCalled();
-      expect(mlsService.wipeConversation).not.toHaveBeenCalled();
-    });
-
-    it('when failed, does nothing if epoch is higher than 0 on both remote and local group', async () => {
+    it('only returns a conversation if a group is already established on backend and locally', async () => {
       const [conversationService, {apiClient, mlsService}] = buildConversationService();
 
       const mockConversationId = {id: 'mock-conversation-id', domain: 'staging.zinfra.io'};
@@ -260,25 +245,26 @@ describe('ConversationService', () => {
       const selfUser = {user: {id: 'self-user-id', domain: 'staging.zinfra.io'}, client: 'self-user-client-id'};
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
-      jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
+      const remoteEpoch = 1;
+      const localEpoch = 1;
+
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
         protocol: ConversationProtocol.MLS,
-        epoch: 1,
+        epoch: remoteEpoch,
         group_id: mockGroupId,
       } as unknown as MLSConversation);
       jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(1);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
 
       await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
 
-      expect(mlsService.registerConversation).toHaveBeenCalledTimes(1);
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
+      expect(mlsService.registerConversation).not.toHaveBeenCalled();
 
       expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
     });
 
-    it('when failed, joins via external commit if remote epoch is higher than 0 but local epoch is equal 0', async () => {
+    it('joins with an external commit if a group is already established on backend but not established locally', async () => {
       const [conversationService, {apiClient, mlsService}] = buildConversationService();
 
       const mockConversationId = {id: 'mock-conversation-id', domain: 'staging.zinfra.io'};
@@ -287,25 +273,41 @@ describe('ConversationService', () => {
       const selfUser = {user: {id: 'self-user-id', domain: 'staging.zinfra.io'}, client: 'self-user-client-id'};
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
-      jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
+      const remoteEpoch = 1;
+      const localEpoch = 0;
+      const updatedEpoch = 2;
+
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
         protocol: ConversationProtocol.MLS,
-        epoch: 1,
+        epoch: remoteEpoch,
         group_id: mockGroupId,
       } as unknown as MLSConversation);
+
+      // The 2nd request we make after joining the conversation with external commit
+      jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: updatedEpoch,
+        group_id: mockGroupId,
+      } as unknown as MLSConversation);
+
       jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(0);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
+      jest.spyOn(mlsService, 'joinByExternalCommit').mockResolvedValueOnce({events: [], time: ''});
 
-      await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
+      const establishedConversation = await conversationService.establishMLS1to1Conversation(
+        mockGroupId,
+        selfUser,
+        otherUserId,
+      );
 
-      expect(mlsService.registerConversation).toHaveBeenCalledTimes(1);
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
-
+      expect(mlsService.registerConversation).not.toHaveBeenCalled();
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mockConversationId);
+      expect(establishedConversation.epoch).toEqual(updatedEpoch);
     });
 
-    it('when failed, joins via external commit if group is not established locally', async () => {
+    it('wipes the conversation and registers it if a group is not yet established on backend', async () => {
       const [conversationService, {apiClient, mlsService}] = buildConversationService();
 
       const mockConversationId = {id: 'mock-conversation-id', domain: 'staging.zinfra.io'};
@@ -314,24 +316,43 @@ describe('ConversationService', () => {
       const selfUser = {user: {id: 'self-user-id', domain: 'staging.zinfra.io'}, client: 'self-user-client-id'};
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
-      jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
+      const remoteEpoch = 0;
+      const localEpoch = 0;
+      const updatedEpoch = 1;
+
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
         protocol: ConversationProtocol.MLS,
-        epoch: 1,
+        epoch: remoteEpoch,
         group_id: mockGroupId,
       } as unknown as MLSConversation);
-      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
 
-      await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
+      // The 2nd request we make after successfully registering a group
+      jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: updatedEpoch,
+        group_id: mockGroupId,
+      } as unknown as MLSConversation);
 
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
+      jest.spyOn(mlsService, 'wipeConversation');
+
+      const establishedConversation = await conversationService.establishMLS1to1Conversation(
+        mockGroupId,
+        selfUser,
+        otherUserId,
+      );
+
+      expect(mlsService.wipeConversation).toHaveBeenCalledWith(mockGroupId);
       expect(mlsService.registerConversation).toHaveBeenCalledTimes(1);
       expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
-
-      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mockConversationId);
+      expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
+      expect(establishedConversation.epoch).toEqual(updatedEpoch);
     });
 
-    it('retries to register mls group if remote epoch number is equal 0', async () => {
+    it('retries to register the conversation after it has failed for the first time', async () => {
       const [conversationService, {apiClient, mlsService}] = buildConversationService();
 
       const mockConversationId = {id: 'mock-conversation-id', domain: 'staging.zinfra.io'};
@@ -340,19 +361,49 @@ describe('ConversationService', () => {
       const selfUser = {user: {id: 'self-user-id', domain: 'staging.zinfra.io'}, client: 'self-user-client-id'};
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
-      jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
+      const remoteEpoch = 0;
+      const localEpoch = 0;
+      const updatedEpoch = 1;
+
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
         protocol: ConversationProtocol.MLS,
-        epoch: 0,
+        epoch: remoteEpoch,
         group_id: mockGroupId,
       } as unknown as MLSConversation);
 
-      await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
+      // The 2nd request we make when retrying to register the conversation
+      jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: remoteEpoch,
+        group_id: mockGroupId,
+      } as unknown as MLSConversation);
 
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
+      // The 3rd request we make after successfully registering a group
+      jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: updatedEpoch,
+        group_id: mockGroupId,
+      } as unknown as MLSConversation);
+
+      jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
+      jest.spyOn(mlsService, 'wipeConversation');
+
+      const establishedConversation = await conversationService.establishMLS1to1Conversation(
+        mockGroupId,
+        selfUser,
+        otherUserId,
+      );
+
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(mockGroupId);
       expect(mlsService.registerConversation).toHaveBeenCalledTimes(2);
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, [otherUserId, selfUser.user], selfUser);
+      expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
+      expect(establishedConversation.epoch).toEqual(updatedEpoch);
     });
   });
 
