@@ -539,6 +539,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
     try {
       await this.mlsService.registerConversation(groupId, [otherUserId, selfUser.user], selfUser);
+      this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) established successfully.`);
+
       return this.apiClient.api.conversation.getMLS1to1Conversation(otherUserId);
     } catch (error) {
       this.logger.info(`Could not register MLS group with id ${groupId}: `, error);
