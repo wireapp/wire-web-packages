@@ -514,11 +514,10 @@ export class ConversationService extends TypedEventEmitter<Events> {
         `Conversation (id ${mlsConversation.qualified_id.id}) is already established on backend, checking the local epoch...`,
       );
 
-      const doesExistLocally = await this.isMLSConversationEstablished(groupId);
-      const localEpoch = doesExistLocally ? await this.mlsService.getEpoch(groupId) : -1;
+      const isMLSGroupEstablishedLocally = await this.isMLSGroupEstablishedLocally(groupId);
 
       // If group is already established locally, there's nothing more to do
-      if (localEpoch > 0) {
+      if (isMLSGroupEstablishedLocally) {
         this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) is already established locally.`);
         return mlsConversation;
       }
