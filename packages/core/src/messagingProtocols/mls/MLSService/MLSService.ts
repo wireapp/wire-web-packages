@@ -647,8 +647,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
-    const isMLSConversationEstablished = await this.conversationExists(groupId);
-    if (!isMLSConversationEstablished) {
+    const doesConversationExists = await this.conversationExists(groupId);
+    if (!doesConversationExists) {
       //if the mls group does not exist, we don't need to wipe it
       return;
     }
