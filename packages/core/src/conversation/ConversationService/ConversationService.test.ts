@@ -105,6 +105,7 @@ describe('ConversationService', () => {
       wipeConversation: jest.fn(),
       handleMLSMessageAddEvent: jest.fn(),
       conversationExists: jest.fn(),
+      isConversationEstablished: jest.fn(),
     } as unknown as MLSService;
 
     const conversationService = new ConversationService(client, mockedProteusService, mockedMLSService);
@@ -246,7 +247,6 @@ describe('ConversationService', () => {
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
       const remoteEpoch = 1;
-      const localEpoch = 1;
 
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
@@ -254,8 +254,7 @@ describe('ConversationService', () => {
         epoch: remoteEpoch,
         group_id: mockGroupId,
       } as unknown as MLSConversation);
-      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
+      jest.spyOn(mlsService, 'isConversationEstablished').mockResolvedValueOnce(true);
 
       await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
 
@@ -274,7 +273,6 @@ describe('ConversationService', () => {
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
       const remoteEpoch = 1;
-      const localEpoch = 0;
       const updatedEpoch = 2;
 
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -292,8 +290,7 @@ describe('ConversationService', () => {
         group_id: mockGroupId,
       } as unknown as MLSConversation);
 
-      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
+      jest.spyOn(mlsService, 'isConversationEstablished').mockResolvedValueOnce(false);
       jest.spyOn(mlsService, 'joinByExternalCommit').mockResolvedValueOnce({events: [], time: ''});
 
       const establishedConversation = await conversationService.establishMLS1to1Conversation(
@@ -317,7 +314,6 @@ describe('ConversationService', () => {
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
       const remoteEpoch = 0;
-      const localEpoch = 0;
       const updatedEpoch = 1;
 
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -335,8 +331,6 @@ describe('ConversationService', () => {
         group_id: mockGroupId,
       } as unknown as MLSConversation);
 
-      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
       jest.spyOn(mlsService, 'wipeConversation');
 
       const establishedConversation = await conversationService.establishMLS1to1Conversation(
@@ -362,7 +356,6 @@ describe('ConversationService', () => {
       const otherUserId = {id: 'other-user-id', domain: 'staging.zinfra.io'};
 
       const remoteEpoch = 0;
-      const localEpoch = 0;
       const updatedEpoch = 1;
 
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -389,8 +382,6 @@ describe('ConversationService', () => {
       } as unknown as MLSConversation);
 
       jest.spyOn(mlsService, 'registerConversation').mockRejectedValueOnce(undefined);
-      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
-      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(localEpoch);
       jest.spyOn(mlsService, 'wipeConversation');
 
       const establishedConversation = await conversationService.establishMLS1to1Conversation(
