@@ -416,6 +416,7 @@ export class Account extends TypedEventEmitter<Events> {
     const userService = new UserService(this.apiClient);
 
     this.service = {
+      e2eIdentity: E2EIServiceExternal,
       mls: mlsService,
       proteus: proteusService,
       account: accountService,
