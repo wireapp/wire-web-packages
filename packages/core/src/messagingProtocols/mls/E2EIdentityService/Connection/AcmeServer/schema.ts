@@ -36,6 +36,8 @@ export const DirectoryResponseSchema = z.object({
   newAccount: nonOptionalUrl,
   newNonce: nonOptionalUrl,
   newOrder: nonOptionalUrl,
+  revokeCert: nonOptionalUrl,
+  keyChange: nonOptionalUrl,
 });
 export type DirectoryResponseData = z.infer<typeof DirectoryResponseSchema>;
 

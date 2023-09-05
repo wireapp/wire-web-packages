@@ -139,8 +139,9 @@ class E2EIServiceInternal {
         const parsedDirectory = identity.directoryResponse(directory);
         return parsedDirectory;
       }
-    } catch (e) {
-      throw new Error('Error while trying to receive a directory', {cause: e});
+    } catch (error) {
+      this.logger.error('Error while trying to receive a directory', error);
+      throw error;
     }
     return undefined;
   }
@@ -152,8 +153,9 @@ class E2EIServiceInternal {
         return nonce;
       }
       throw new Error('No initial-nonce received');
-    } catch (e) {
-      throw new Error('Error while trying to receive a nonce', {cause: e});
+    } catch (error) {
+      this.logger.error('Error while trying to receive a nonce', error);
+      throw error;
     }
   }
 
