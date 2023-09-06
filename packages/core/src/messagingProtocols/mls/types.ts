@@ -17,10 +17,11 @@
  *
  */
 
-import {Conversation, ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {CoreCryptoCallbacks} from '@wireapp/core-crypto';
+
+import {MLSServiceConfig} from './MLSService/MLSService.types';
 
 export type ClientId = string;
 
@@ -76,23 +77,10 @@ export interface CryptoProtocolConfig {
   coreCrypoWasmFilePath: string;
 
   /** If set will create an MLS capable device from the current device */
-  mls?: {
-    /**
-     * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
-     */
-    keyingMaterialUpdateThreshold?: number;
-    /**
-     * signals if the E2E - Identity process should be used
-     */
-    useE2EI: boolean;
-  };
+  mls?: Partial<MLSServiceConfig>;
 
   /** if set to true, will use experimental proteus encryption/decryption library (core-crypto). If not set will fallback to the legacy proteus library (cryptobox) */
   proteus?: boolean;
 }
 
-export type MLSConversation = Conversation & {
-  protocol: ConversationProtocol.MLS;
-  epoch: number;
-  group_id: string;
-};
+export {Ciphersuite, CredentialType} from '@wireapp/core-crypto';

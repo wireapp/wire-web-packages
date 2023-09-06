@@ -20,6 +20,7 @@
 import type {ClaimedKeyPackages} from '@wireapp/api-client/lib/client';
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
+import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
@@ -53,10 +54,12 @@ import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
+import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
+import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
@@ -68,6 +71,8 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 const defaultConfig: MLSServiceConfig = {
   keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, //30 days
   nbKeyPackages: 100,
+  defaultCiphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+  defaultCredentialType: CredentialType.Basic,
 };
 
 export interface SubconversationEpochInfoMember {
@@ -95,27 +100,31 @@ export class MLSService extends TypedEventEmitter<Events> {
     {
       keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
       nbKeyPackages = defaultConfig.nbKeyPackages,
+      defaultCiphersuite = defaultConfig.defaultCiphersuite,
+      defaultCredentialType = defaultConfig.defaultCredentialType,
     }: Partial<MLSServiceConfig>,
   ) {
     super();
     this.config = {
       keyingMaterialUpdateThreshold,
       nbKeyPackages,
+      defaultCiphersuite,
+      defaultCredentialType,
     };
   }
 
   public async initClient(userId: QualifiedId, clientId: ClientId) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
-    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.defaultCiphersuite]);
+    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.config.defaultCiphersuite]);
   }
 
   public async createClient(userId: QualifiedId, clientId: ClientId) {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
-    const publicKey = await this.coreCryptoClient.clientPublicKey(this.defaultCiphersuite);
+    const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite);
     const keyPackages = await this.coreCryptoClient.clientKeypackages(
-      this.defaultCiphersuite,
-      this.defaultCredentialType(),
+      this.config.defaultCiphersuite,
+      this.config.defaultCredentialType,
       this.config.nbKeyPackages,
     );
     await this.uploadMLSPublicKeys(publicKey, clientId);
@@ -199,11 +208,13 @@ export class MLSService extends TypedEventEmitter<Events> {
     const failedToFetchKeyPackages: QualifiedId[] = [];
     const keyPackagesSettledResult = await Promise.allSettled(
       qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
-        this.apiClient.api.client.claimMLSKeyPackages(id, domain, skipOwnClientId).catch(error => {
-          failedToFetchKeyPackages.push({id, domain});
-          // Throw the error so we don't get {status: 'fulfilled', value: undefined}
-          throw error;
-        }),
+        this.apiClient.api.client
+          .claimMLSKeyPackages(id, domain, numberToHex(this.config.defaultCiphersuite), skipOwnClientId)
+          .catch(error => {
+            failedToFetchKeyPackages.push({id, domain});
+            // Throw the error so we don't get {status: 'fulfilled', value: undefined}
+            throw error;
+          }),
       ),
     );
 
@@ -248,7 +259,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const groupInfo = await getGroupInfo();
       const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
         groupInfo,
-        this.defaultCredentialType(),
+        this.config.defaultCredentialType,
       );
       return {groupId: conversationId, commitBundle};
     };
@@ -417,10 +428,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     const mlsKeyBytes = Object.values(mlsKeys).map((key: string) => Decoder.fromBase64(key).asBytes);
     const configuration: ConversationConfiguration = {
       externalSenders: mlsKeyBytes,
-      ciphersuite: this.defaultCiphersuite,
+      ciphersuite: this.config.defaultCiphersuite,
     };
 
-    return this.coreCryptoClient.createConversation(groupIdBytes, this.defaultCredentialType(), configuration);
+    return this.coreCryptoClient.createConversation(groupIdBytes, this.config.defaultCredentialType, configuration);
   }
 
   /**
@@ -487,19 +498,36 @@ export class MLSService extends TypedEventEmitter<Events> {
     return commitBundle ? void (await this.uploadCommitBundle(groupId, commitBundle)) : undefined;
   }
 
+  /**
+   * Will check if mls group exists in corecrypto.
+   * @param groupId groupId of the conversation
+   */
   public async conversationExists(groupId: string): Promise<boolean> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.conversationExists(groupIdBytes);
   }
 
+  /**
+   * Will check if mls group is established in coreCrypto.
+   * Group is established after the first commit was sent in the group and epoch number is at least 1.
+   * @param groupId groupId of the conversation
+   */
+  public async isConversationEstablished(groupId: string): Promise<boolean> {
+    const doesConversationExist = await this.conversationExists(groupId);
+    return doesConversationExist && (await this.getEpoch(groupId)) > 0;
+  }
+
   public async clientValidKeypackagesCount(): Promise<number> {
-    return this.coreCryptoClient.clientValidKeypackagesCount(this.defaultCiphersuite, this.defaultCredentialType());
+    return this.coreCryptoClient.clientValidKeypackagesCount(
+      this.config.defaultCiphersuite,
+      this.config.defaultCredentialType,
+    );
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
     return this.coreCryptoClient.clientKeypackages(
-      this.defaultCiphersuite,
-      this.defaultCredentialType(),
+      this.config.defaultCiphersuite,
+      this.config.defaultCredentialType,
       amountRequested,
     );
   }
@@ -590,7 +618,10 @@ export class MLSService extends TypedEventEmitter<Events> {
       const clientId = this.apiClient.validatedClientId;
 
       //check numbers of keys on backend
-      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(clientId);
+      const backendKeyPackagesCount = await this.apiClient.api.client.getMLSKeyPackageCount(
+        clientId,
+        numberToHex(this.config.defaultCiphersuite),
+      );
 
       if (backendKeyPackagesCount <= minAllowedNumberOfKeyPackages) {
         //upload new keys
@@ -628,8 +659,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
-    const isMLSConversationEstablished = await this.conversationExists(groupId);
-    if (!isMLSConversationEstablished) {
+    const doesConversationExist = await this.conversationExists(groupId);
+    if (!doesConversationExist) {
       //if the mls group does not exist, we don't need to wipe it
       return;
     }
@@ -742,8 +773,25 @@ export class MLSService extends TypedEventEmitter<Events> {
     return clientIds;
   }
 
-  // E2E Identity Service related methods below
+  public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
+    return handleMLSMessageAdd({event, mlsService: this});
+  }
 
+  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+    return handleMLSWelcomeMessage({event, mlsService: this});
+  }
+
+  // E2E Identity Service related methods below this line
+
+  /**
+   *
+   * @param discoveryUrl URL of the acme server
+   * @param user User object
+   * @param clientId The client id of the current device
+   * @param nbPrekeys Amount of prekeys to generate
+   * @param oAuthIdToken The OAuth id token if the user is already authenticated
+   * @returns AcmeChallenge if the user is not authenticated, true if the user is authenticated
+   */
   public async enrollE2EI(
     discoveryUrl: string,
     user: User,

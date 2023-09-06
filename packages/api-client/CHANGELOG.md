@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [26.0.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@26.0.1...@wireapp/api-client@26.0.2) (2023-09-06)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [26.0.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@26.0.0...@wireapp/api-client@26.0.1) (2023-09-06)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [26.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.4.2...@wireapp/api-client@26.0.0) (2023-09-06)
+
+### Features
+
+* make /self and /receipt-mode endpoint federation ready ([#5467](https://github.com/wireapp/wire-web-packages/issues/5467)) ([d9250e8](https://github.com/wireapp/wire-web-packages/commit/d9250e8f8e345e2acfc93d01c05e66a4b90daeec))
+
+### BREAKING CHANGES
+
+* the self and receipt-mode endpoint not take a fully qualified id
+
+## [25.4.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.4.1...@wireapp/api-client@25.4.2) (2023-09-06)
+
+### Bug Fixes
+
+* Finalize backend api v4 ([#5466](https://github.com/wireapp/wire-web-packages/issues/5466)) ([a0b7b7a](https://github.com/wireapp/wire-web-packages/commit/a0b7b7a9cd35ddc76b697bc0600eab9060240224))
+
+## [25.4.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.4.0...@wireapp/api-client@25.4.1) (2023-09-04)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [25.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.3.1...@wireapp/api-client@25.4.0) (2023-08-30)
+
+### Features
+
+* gzip json requests ([#5445](https://github.com/wireapp/wire-web-packages/issues/5445)) ([bab79ec](https://github.com/wireapp/wire-web-packages/commit/bab79ec78f877c28105c4003bf8678aab4ac25d4))
+
+## [25.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.3.0...@wireapp/api-client@25.3.1) (2023-08-29)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [25.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.4...@wireapp/api-client@25.3.0) (2023-08-28)
+
+### Features
+
+* key packages ciphersuite query param ([#5420](https://github.com/wireapp/wire-web-packages/issues/5420)) ([4cf3b96](https://github.com/wireapp/wire-web-packages/commit/4cf3b96a99b4367b7b9999dc89a570b7c1b57f3a))
+
+## [25.2.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.3...@wireapp/api-client@25.2.4) (2023-08-24)
+
+### Bug Fixes
+
+* re-enable mls on api v4 ([#5417](https://github.com/wireapp/wire-web-packages/issues/5417)) ([d05d86b](https://github.com/wireapp/wire-web-packages/commit/d05d86ba2a826e2f12b0c1f54b60219b98ba04a9))
+
+## [25.2.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.2...@wireapp/api-client@25.2.3) (2023-08-23)
+
+### Bug Fixes
+
+* Finalize backend api v4 ([#5416](https://github.com/wireapp/wire-web-packages/issues/5416)) ([ebcb333](https://github.com/wireapp/wire-web-packages/commit/ebcb3330bada90fb6eae36ce1649e5a6d09db915))
+
 ## [25.2.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@25.2.1...@wireapp/api-client@25.2.2) (2023-08-21)
 
 **Note:** Version bump only for package @wireapp/api-client

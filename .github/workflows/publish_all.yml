@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v3.6.0
         with:
           fetch-depth: 0
 
@@ -65,6 +65,9 @@ jobs:
 
       - name: Install JS dependencies
         run: yarn --immutable
+
+      - name: Build
+        run: yarn dist
 
       - name: Test
         if: ${{ inputs.test }}

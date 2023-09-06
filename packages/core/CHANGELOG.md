@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [42.0.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.0.1...@wireapp/core@42.0.2) (2023-09-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [42.0.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.0.0...@wireapp/core@42.0.1) (2023-09-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [42.0.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.7.4...@wireapp/core@42.0.0) (2023-09-06)
+
+### Features
+
+* make /self and /receipt-mode endpoint federation ready ([#5467](https://github.com/wireapp/wire-web-packages/issues/5467)) ([d9250e8](https://github.com/wireapp/wire-web-packages/commit/d9250e8f8e345e2acfc93d01c05e66a4b90daeec))
+
+### BREAKING CHANGES
+
+* the self and receipt-mode endpoint not take a fully qualified id
+
+## [41.7.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.7.3...@wireapp/core@41.7.4) (2023-09-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.7.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.7.2...@wireapp/core@41.7.3) (2023-09-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.7.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.7.1...@wireapp/core@41.7.2) (2023-09-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.7.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.7.0...@wireapp/core@41.7.1) (2023-09-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [41.7.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.6.0...@wireapp/core@41.7.0) (2023-08-31)
+
+### Features
+
+* reexport types from corecrypto ([#5448](https://github.com/wireapp/wire-web-packages/issues/5448)) ([1c27f38](https://github.com/wireapp/wire-web-packages/commit/1c27f3807305860d164a04f9bfbae87d5cd767f8))
+
+# [41.6.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.5.2...@wireapp/core@41.6.0) (2023-08-30)
+
+### Features
+
+* specify default ciphersuite ([#5446](https://github.com/wireapp/wire-web-packages/issues/5446)) ([ff0aaf3](https://github.com/wireapp/wire-web-packages/commit/ff0aaf383b20e22c737378ca4ec1318913d7ccf0))
+
+## [41.5.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.5.1...@wireapp/core@41.5.2) (2023-08-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.5.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.5.0...@wireapp/core@41.5.1) (2023-08-29)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [41.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.4.2...@wireapp/core@41.5.0) (2023-08-28)
+
+### Features
+
+* key packages ciphersuite query param ([#5420](https://github.com/wireapp/wire-web-packages/issues/5420)) ([4cf3b96](https://github.com/wireapp/wire-web-packages/commit/4cf3b96a99b4367b7b9999dc89a570b7c1b57f3a))
+
+## [41.4.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.4.1...@wireapp/core@41.4.2) (2023-08-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.4.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.4.0...@wireapp/core@41.4.1) (2023-08-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [41.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.3.2...@wireapp/core@41.4.0) (2023-08-24)
+
+### Features
+
+* mls decrypt error recovery [WPB-523] ([#5412](https://github.com/wireapp/wire-web-packages/issues/5412)) ([a9e0dc7](https://github.com/wireapp/wire-web-packages/commit/a9e0dc7d59977f5ec86603caca03d533253022b9))
+
+## [41.3.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.3.1...@wireapp/core@41.3.2) (2023-08-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [41.3.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.3.0...@wireapp/core@41.3.1) (2023-08-22)
+
+### Reverts
+
+* Revert "feat: stop leaking the MLS service to the outside (#5414)" (#5415) ([90cf996](https://github.com/wireapp/wire-web-packages/commit/90cf996a8a4a07828238332934161ea6d7cf9825)), closes [#5414](https://github.com/wireapp/wire-web-packages/issues/5414) [#5415](https://github.com/wireapp/wire-web-packages/issues/5415)
+
 # [41.3.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@41.2.5...@wireapp/core@41.3.0) (2023-08-22)
 
 ### Features
