@@ -66,6 +66,9 @@ jobs:
       - name: Install JS dependencies
         run: yarn --immutable
 
+      - name: Build
+        run: yarn dist
+
       - name: Test
         if: ${{ inputs.test }}
         run: yarn test:all

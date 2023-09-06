@@ -76,7 +76,7 @@
     "new-publish-beta": "lerna publish from-package --dist-tag beta --preid ${0}",
     "beta-release": "yarn new-version-beta ${0} && yarn new-publish-beta ${0}",
     "test": "lerna run build --include-dependencies --since && lerna run test --since --parallel",
-    "test:all": "lerna run build && lerna run test",
+    "test:all": "lerna run test",
     "test:coverage": "lerna run test:coverage",
     "prepare": "husky install"
   },
