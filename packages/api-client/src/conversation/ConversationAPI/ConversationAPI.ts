@@ -215,9 +215,9 @@ export class ConversationAPI {
     conversationId: QualifiedId,
     subconversationId: SUBCONVERSATION_ID,
   ): Promise<Subconversation> {
-    const url = `${this.generateBaseConversationUrl(conversationId)}/${
-      ConversationAPI.URL.SUBCONVERSATIONS
-    }/${subconversationId}`;
+    const baseUrl = this.generateBaseConversationUrl(conversationId);
+    const url = `${baseUrl}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}`;
+
     const config: AxiosRequestConfig = {
       method: 'get',
       url,
@@ -231,9 +231,8 @@ export class ConversationAPI {
     subconversationId: SUBCONVERSATION_ID,
     {groupId, epoch}: {groupId: string; epoch: number},
   ): Promise<void> {
-    const url = `${this.generateBaseConversationUrl(conversationId)}/${
-      ConversationAPI.URL.SUBCONVERSATIONS
-    }/${subconversationId}`;
+    const baseUrl = this.generateBaseConversationUrl(conversationId);
+    const url = `${baseUrl}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}`;
 
     const config: AxiosRequestConfig = {
       method: 'delete',
@@ -248,9 +247,8 @@ export class ConversationAPI {
     conversationId: QualifiedId,
     subconversationId: SUBCONVERSATION_ID,
   ): Promise<void> {
-    const url = `${this.generateBaseConversationUrl(conversationId)}/${
-      ConversationAPI.URL.SUBCONVERSATIONS
-    }/${subconversationId}/${ConversationAPI.URL.SELF}`;
+    const baseUrl = this.generateBaseConversationUrl(conversationId);
+    const url = `${baseUrl}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}/${ConversationAPI.URL.SELF}`;
 
     const config: AxiosRequestConfig = {
       method: 'delete',
@@ -261,9 +259,8 @@ export class ConversationAPI {
   }
 
   public async getSubconversationGroupInfo(conversationId: QualifiedId, subconversationId: SUBCONVERSATION_ID) {
-    const url = `${this.generateBaseConversationUrl(conversationId)}/${
-      ConversationAPI.URL.SUBCONVERSATIONS
-    }/${subconversationId}/${ConversationAPI.URL.GROUP_INFO}`;
+    const baseUrl = this.generateBaseConversationUrl(conversationId);
+    const url = `${baseUrl}/${ConversationAPI.URL.SUBCONVERSATIONS}/${subconversationId}/${ConversationAPI.URL.GROUP_INFO}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
