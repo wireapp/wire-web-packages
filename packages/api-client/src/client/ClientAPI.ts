@@ -161,10 +161,10 @@ export class ClientAPI {
   }
 
   /**
-   * Will upload keypackages for an MLS capable client
+   * Will delete keypackages for an MLS capable client
    * @see https://nginz-https.elna.wire.link/v4/api/swagger-ui/#/default/delete_mls_key_packages_self__client_
-   * @param {string} clientId The client to upload the key packages for
-   * @param {string[]} keyPackages The key packages to upload
+   * @param {string} clientId The client to delete the key packages for
+   * @param {string[]} keyPackageRefs The key package references to delete
    */
   public async deleteMLSKeyPackages(clientId: string, keyPackageRefs: string[]) {
     const maxKeyPackages = 1000;

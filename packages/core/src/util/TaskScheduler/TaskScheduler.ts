@@ -28,7 +28,7 @@ const logger = logdown('@wireapp/core/TaskScheduler', {
 
 type ScheduleTaskParams = {
   task: () => void;
-  firingDate: number | string;
+  firingDate: number;
   key: string;
   persist?: boolean;
 };
@@ -67,7 +67,7 @@ const addTask = ({task, firingDate, key, persist = false}: ScheduleTaskParams) =
   // add the task to the list of active tasks
   activeTimeouts[key] = timeout;
   if (persist) {
-    TaskSchedulerStore.add(key, Number(firingDate));
+    TaskSchedulerStore.add(key, firingDate);
   }
 
   logger.info(`New scheduled task to be executed at "${execute}" with key "${key}"`);
