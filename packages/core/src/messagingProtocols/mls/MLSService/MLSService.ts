@@ -58,7 +58,7 @@ import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
+import {E2EIServiceInternal, User} from '../E2EIdentityService';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -90,9 +90,6 @@ export class MLSService extends TypedEventEmitter<Events> {
   groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
-  private readonly defaultCiphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
-  private readonly defaultCredentialType = () =>
-    E2EIServiceExternal.hasActiveCertificate() ? CredentialType.X509 : CredentialType.Basic;
 
   constructor(
     private readonly apiClient: APIClient,
