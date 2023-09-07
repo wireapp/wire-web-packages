@@ -27,7 +27,7 @@ const OderDataKey = 'OrderData';
 const InitialDataKey = 'InitialData';
 const CertificateDataKey = 'CertificateData';
 
-const storage = LocalStorageStore<string>('E2EStorage');
+const storage = LocalStorageStore<string>('E2EIStorage');
 
 const storeHandle = (handle: string) => storage.add(HandleKey, window.btoa(handle));
 const storeOrderData = (data: OrderData) => storage.add(OderDataKey, window.btoa(JSON.stringify(data)));
