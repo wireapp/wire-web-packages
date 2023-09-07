@@ -51,5 +51,5 @@ export interface MLSServiceConfig {
   /**
    * signals if the E2E - Identity process should be used
    */
-  useE2EI: boolean;
+  useE2EI?: boolean;
 }
