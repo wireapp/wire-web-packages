@@ -41,8 +41,6 @@ export const getAuthorization = async ({
   const response = await connection.getAuthorization(authzUrl, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
-    // eslint-disable-next-line no-console
-    console.log('acme Authorization response data: ', JSON.stringify(response.data), jsonToByteArray(response.data));
     const wasmData = identity.newAuthzResponse(jsonToByteArray(response.data));
     // manual copy of the wasm data because of a problem while cloning it
     const authorization: NewAcmeAuthz = {

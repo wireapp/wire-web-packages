@@ -38,9 +38,6 @@ const getClientAccessToken = async ({
   clientId,
   expirySecs,
 }: GetClientAccessTokenParams) => {
-  // The access token URL needs to be the same URL we call to get the Access Token
-  //const accessTokenUrl = 'https://' + `${userDomain}${apiClient.api.client.getAccessTokenPath(clientId)}`;
-
   const dpopToken = identity.createDpopToken(expirySecs, clientNonce);
 
   // Remove this when the server is ready to accept the token

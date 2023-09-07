@@ -67,7 +67,6 @@ export type NewOrderResponseData = z.infer<typeof NewOrderResponseSchema>;
 export const AuthorizationResponseSchema = z.object({
   status: nonOptionalString,
   expires: nonOptionalString,
-  //wildcard: z.boolean(),
   identifier: z.object({
     type: nonOptionalString,
     value: nonOptionalString,

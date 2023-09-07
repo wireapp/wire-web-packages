@@ -260,9 +260,6 @@ export class ClientAPI {
     return NonceSchema.parse(headers)[NonceKey];
   }
 
-  public getAccessTokenPath = (clientId: string): string =>
-    `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`;
-
   public async getAccessToken(clientId: string, dpopToken: Uint8Array) {
     const ResponseSchema = z.object({
       expires_in: z.number().min(1),
@@ -272,7 +269,7 @@ export class ClientAPI {
 
     const config: AxiosRequestConfig = {
       method: 'post',
-      url: this.getAccessTokenPath(clientId),
+      url: `${ClientAPI.URL.CLIENTS}/${clientId}/${ClientAPI.URL.ACCESS_TOKEN}`,
       headers: {
         DPoP: new TextDecoder().decode(dpopToken),
       },
