@@ -33,7 +33,7 @@ import {APIClient} from '@wireapp/api-client';
 import {AcmeService} from './Connection/AcmeServer';
 import {InitParams} from './E2EIService.types';
 import {E2EIServiceExternal} from './E2EIServiceExternal';
-import {getE2eClientId, isResponseStatusValid} from './Helper';
+import {getE2EIClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
 import {getCertificate} from './Steps/Certificate';
@@ -118,7 +118,7 @@ class E2EIServiceInternal {
       }
       this.acmeService = new AcmeService(discoveryUrl);
       this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
-        getE2eClientId(user, clientId),
+        getE2EIClientId(user, clientId),
         user.displayName,
         user.handle,
         2,

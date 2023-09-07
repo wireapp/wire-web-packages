@@ -26,8 +26,8 @@ export const jsonToByteArray = (data: any): Uint8Array => {
   return encoder.encode(JSON.stringify(data, null, 0));
 };
 
-export type E2eClientId = `${string}:${string}@${string}`;
-export const getE2eClientId = (user: User, clientId: string): E2eClientId => {
+export type E2EIClientId = `${string}:${string}@${string}`;
+export const getE2EIClientId = (user: User, clientId: string): E2EIClientId => {
   return `${Encoder.toBase64(user.id).asString}:${clientId}@${user.domain}`;
 };
 
