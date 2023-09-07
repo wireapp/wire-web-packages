@@ -33,7 +33,7 @@ export const getCertificate = async ({certificateUrl, connection, identity, nonc
 
   const certificateResponse = await connection.getCertificate(certificateUrl, reqBody);
 
-  if (certificateResponse && certificateResponse.data && certificateResponse.data) {
+  if (certificateResponse?.data) {
     return {
       certificate: certificateResponse.data,
       nonce: certificateResponse.nonce,
