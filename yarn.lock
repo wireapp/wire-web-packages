@@ -4694,7 +4694,7 @@ __metadata:
     "@types/rimraf": ^3.0.2
     axios: 1.5.0
     copy: 0.3.2
-    cosmiconfig: 8.3.2
+    cosmiconfig: 8.3.5
     fs-extra: 11.1.0
     jest: ^29.2.1
     jszip: 3.10.1
@@ -7270,9 +7270,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cosmiconfig@npm:8.3.2":
-  version: 8.3.2
-  resolution: "cosmiconfig@npm:8.3.2"
+"cosmiconfig@npm:8.3.5":
+  version: 8.3.5
+  resolution: "cosmiconfig@npm:8.3.5"
   dependencies:
     import-fresh: ^3.3.0
     js-yaml: ^4.1.0
@@ -7283,7 +7283,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 24fb9ac74d7e4ef99e05f47a576d67b85cd6ab2c54ae7e0cd431e3bfccea38af715244fac2faee155a5e712fd3e665859b240c5f0013ba83ab040440fd54bc0d
+  checksum: c6e44bb3cabf268b70049e7bd4ee8ecf00068854e53cbc32f9104794927ef406817f9e64e1c4949bd10776b604c01f7b50674336fcd2d5b9efc4cf8277fdf025
   languageName: node
   linkType: hard
 
