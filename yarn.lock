@@ -5036,7 +5036,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:*"
     "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.5.0
-    bazinga64: 6.2.0
+    bazinga64: "workspace:^"
     commander: 11.0.0
     cross-env: 7.0.3
     deepmerge-ts: 5.1.0
@@ -6301,7 +6301,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bazinga64@6.2.0, bazinga64@workspace:packages/bazinga64":
+"bazinga64@npm:5.10.0":
+  version: 5.10.0
+  resolution: "bazinga64@npm:5.10.0"
+  checksum: 26444dfd5e6abdb62ab7b6fd7fb7155651e5fd0884a30008b33693593c5838b4f5d213101751c55a6646e146d802f0783aa2b92d41f2165f1cd30568c6f6ac75
+  languageName: node
+  linkType: hard
+
+"bazinga64@workspace:^, bazinga64@workspace:packages/bazinga64":
   version: 0.0.0-use.local
   resolution: "bazinga64@workspace:packages/bazinga64"
   dependencies:
@@ -6319,13 +6326,6 @@ __metadata:
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
-
-"bazinga64@npm:5.10.0":
-  version: 5.10.0
-  resolution: "bazinga64@npm:5.10.0"
-  checksum: 26444dfd5e6abdb62ab7b6fd7fb7155651e5fd0884a30008b33693593c5838b4f5d213101751c55a6646e146d802f0783aa2b92d41f2165f1cd30568c6f6ac75
-  languageName: node
-  linkType: hard
 
 "before-after-hook@npm:^2.2.0":
   version: 2.2.3
