@@ -24,7 +24,7 @@
     "reconnecting-websocket": "4.4.0",
     "spark-md5": "3.0.2",
     "tough-cookie": "4.1.3",
-    "ws": "8.13.0",
+    "ws": "8.14.1",
     "zod": "3.21.4"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
     "webpack": "^5.74.0",
-    "ws": "8.13.0"
+    "ws": "8.14.1"
   },
   "scripts": {
     "build": "yarn clean && tsc",
@@ -66,6 +66,6 @@
     "watch": "webpack serve --config webpack.browser.js",
     "prepare": "yarn dist"
   },
-  "version": "26.0.3",
+  "version": "26.0.4",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }
