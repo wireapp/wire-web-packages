@@ -117,11 +117,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     await this.initClient(userId, clientId);
     // If the device is new, we need to upload keypackages and public key to the backend
     const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite);
-    const keyPackages = await this.coreCryptoClient.clientKeypackages(
-      this.config.defaultCiphersuite,
-      this.config.defaultCredentialType,
-      this.config.nbKeyPackages,
-    );
+    const keyPackages = await this.clientKeypackages(this.config.nbKeyPackages);
     await this.uploadMLSPublicKeys(publicKey, clientId);
     await this.uploadMLSKeyPackages(keyPackages, clientId);
   }
