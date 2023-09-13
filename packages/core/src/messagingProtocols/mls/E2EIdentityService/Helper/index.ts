@@ -17,7 +17,7 @@
  *
  */
 
-import {Encoder} from 'bazinga64';
+import {Converter, EncodedData, Encoder} from 'bazinga64';
 
 import {User} from '../E2EIService.types';
 
@@ -26,9 +26,18 @@ export const jsonToByteArray = (data: any): Uint8Array => {
   return encoder.encode(JSON.stringify(data, null, 0));
 };
 
+export const uuidTobase64url = (uuid: string): EncodedData => {
+  const noDashes = uuid.replace(/-/g, '');
+  if (noDashes.length !== 32) {
+    throw new Error('Invalid UUID');
+  }
+
+  return Encoder.toBase64Url(Converter.hexStringToArrayBufferView(noDashes));
+};
+
 export type E2EIClientId = `${string}:${string}@${string}`;
 export const getE2EIClientId = (user: User, clientId: string): E2EIClientId => {
-  return `${Encoder.toBase64(user.id).asString}:${clientId}@${user.domain}`;
+  return `${uuidTobase64url(user.id).asString}:${clientId}@${user.domain}`;
 };
 
 export const isResponseStatusValid = (status: string | undefined) => status && status === 'valid';

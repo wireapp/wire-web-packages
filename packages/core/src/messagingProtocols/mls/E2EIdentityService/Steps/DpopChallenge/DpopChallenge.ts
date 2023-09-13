@@ -27,7 +27,7 @@ const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
     }
     throw new Error('No client-nonce received');
   } catch (e) {
-    throw new Error('Error while trying to receive a nonce', {cause: e});
+    throw new Error(`Error while trying to receive a nonce with cause: ${e}`);
   }
 };
 
