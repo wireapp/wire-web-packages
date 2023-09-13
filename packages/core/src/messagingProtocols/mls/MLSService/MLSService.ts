@@ -618,7 +618,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Will update current client on backend with its public key.
+   * Will update the given client on backend with its public key.
    *
    * @param mlsClient Intance of the coreCrypto that represents the mls client
    * @param clientId The id of the client
