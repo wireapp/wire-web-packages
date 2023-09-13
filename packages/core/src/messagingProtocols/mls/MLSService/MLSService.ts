@@ -125,10 +125,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     await this.uploadMLSKeyPackages(clientId);
   }
 
-  public async createClient(userId: QualifiedId, clientId: string) {
-    await this.initClient(userId, clientId);
-  }
-
   private async uploadCommitBundle(
     groupId: Uint8Array,
     commitBundle: CommitBundle,

@@ -264,7 +264,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     if (this.service.mls) {
       const {userId, domain = ''} = this.apiClient.context;
-      await this.service.mls.createClient({id: userId, domain}, client.id);
+      await this.service.mls.initClient({id: userId, domain}, client.id);
     }
     this.logger.info(`Created new client {mls: ${!!this.service.mls}, id: ${client.id}}`);
 
