@@ -17,7 +17,7 @@
  *
  */
 
-import type {ClaimedKeyPackages} from '@wireapp/api-client/lib/client';
+import type {ClaimedKeyPackages, RegisteredClient} from '@wireapp/api-client/lib/client';
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
@@ -116,13 +116,13 @@ export class MLSService extends TypedEventEmitter<Events> {
     };
   }
 
-  public async initClient(userId: QualifiedId, clientId: string) {
-    const qualifiedClientId = constructFullyQualifiedClientId(userId.id, clientId, userId.domain);
+  public async initClient(userId: QualifiedId, client: RegisteredClient) {
+    const qualifiedClientId = constructFullyQualifiedClientId(userId.id, client.id, userId.domain);
     await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.config.defaultCiphersuite]);
 
     // We need to make sure keypackages and public key are uploaded to the backend
-    await this.uploadMLSPublicKeys(clientId);
-    await this.uploadMLSKeyPackages(clientId);
+    await this.uploadMLSPublicKeys(client);
+    await this.uploadMLSKeyPackages(client.id);
   }
 
   private async uploadCommitBundle(
@@ -621,18 +621,16 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Will update the given client on backend with its public key.
    *
    * @param mlsClient Intance of the coreCrypto that represents the mls client
-   * @param clientId The id of the client
+   * @param client Backend client data
    */
-  private async uploadMLSPublicKeys(clientId: string) {
-    const existingPublicKey = await this.apiClient.api.client.getClient(clientId);
-
+  private async uploadMLSPublicKeys(client: RegisteredClient) {
     // If we've already updated a client with its public key, there's no need to do it again.
-    if (existingPublicKey.mls_public_keys?.ed25519) {
+    if (client.mls_public_keys?.ed25519) {
       return;
     }
 
     const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite);
-    return this.apiClient.api.client.putClient(clientId, {
+    return this.apiClient.api.client.putClient(client.id, {
       mls_public_keys: {ed25519: btoa(Converter.arrayBufferViewToBaselineString(publicKey))},
     });
   }
