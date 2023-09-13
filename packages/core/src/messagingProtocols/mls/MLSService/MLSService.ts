@@ -626,6 +626,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   private async uploadMLSPublicKeys(clientId: string) {
     const existingPublicKey = await this.apiClient.api.client.getClient(clientId);
 
+    // If we've already updated a client with its public key, there's no need to do it again.
     if (existingPublicKey.mls_public_keys?.ed25519) {
       return;
     }
@@ -639,6 +640,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   private async uploadMLSKeyPackages(clientId: string) {
     const backendKeyPackagesCount = await this.getRemoteMLSKeyPackageCount(clientId);
 
+    // If we have enough keys uploaded on backend, there's no need to upload more.
     if (backendKeyPackagesCount > this.config.minRequiredNumberOfAvailableKeyPackages) {
       return;
     }
