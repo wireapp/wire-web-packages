@@ -37,6 +37,8 @@ import {
   ConversationMemberLeaveEvent,
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
+import {BackendError} from '@wireapp/api-client/lib/http';
+import {BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
@@ -290,7 +292,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
     };
   }
 
-  private async sendMLSMessage({payload, groupId}: SendMlsMessageParams): Promise<SendResult> {
+  private async sendMLSMessage(params: SendMlsMessageParams): Promise<SendResult> {
+    const {payload, groupId, conversationId} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     // immediately execute pending commits before sending the message
@@ -304,6 +307,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
       response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
       sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
     } catch (error) {
+      const isMLSStaleMessageError =
+        error instanceof BackendError && error.label === BackendErrorLabel.MLS_STALE_MESSAGE;
+      if (isMLSStaleMessageError) {
+        await this.recoverMLSConversationFromEpochMismatch(conversationId);
+        return this.sendMLSMessage(params);
+      }
       throw error;
     }
 
@@ -570,19 +579,23 @@ export class ConversationService extends TypedEventEmitter<Events> {
           throw new Error('Qualified conversation id is missing in the event');
         }
 
-        const mlsConversation = await this.apiClient.api.conversation.getConversation(conversationId);
-
-        if (!isMLSConversation(mlsConversation)) {
-          throw new Error('Conversation is not an MLS conversation');
-        }
-
-        await this.handleConversationEpochMismatch(mlsConversation, () =>
-          this.emit('MLSConversationRecovered', {conversationId}),
-        );
+        await this.recoverMLSConversationFromEpochMismatch(conversationId);
         return;
       }
       throw error;
     }
+  }
+
+  private async recoverMLSConversationFromEpochMismatch(conversationId: QualifiedId) {
+    const mlsConversation = await this.apiClient.api.conversation.getConversation(conversationId);
+
+    if (!isMLSConversation(mlsConversation)) {
+      throw new Error('Conversation is not an MLS conversation');
+    }
+
+    return this.handleConversationEpochMismatch(mlsConversation, () =>
+      this.emit('MLSConversationRecovered', {conversationId: mlsConversation.qualified_id}),
+    );
   }
 
   private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {

@@ -161,6 +161,7 @@ describe('ConversationService', () => {
           protocol: ConversationProtocol.MLS,
           groupId,
           payload: message,
+          conversationId: {id: '', domain: ''},
         });
 
         const result = await promise;
