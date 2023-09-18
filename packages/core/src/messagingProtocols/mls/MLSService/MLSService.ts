@@ -124,7 +124,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     // We need to make sure keypackages and public key are uploaded to the backend
     await this.uploadMLSPublicKeys(client);
-    await this.uploadMLSKeyPackages(client.id);
+    await this.uploadMLSKeyPackagesForClient(client.id);
   }
 
   private async uploadCommitBundle(
@@ -611,7 +611,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     if (validKeyPackagesCount <= this.config.minRequiredNumberOfAvailableKeyPackages) {
       const clientId = this.apiClient.validatedClientId;
-      await this.uploadMLSKeyPackages(clientId);
+      await this.uploadMLSKeyPackagesForClient(clientId);
     }
   }
 
@@ -637,7 +637,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  private async uploadMLSKeyPackages(clientId: string) {
+  private async uploadMLSKeyPackagesForClient(clientId: string) {
     const backendKeyPackagesCount = await this.getRemoteMLSKeyPackageCount(clientId);
 
     // If we have enough keys uploaded on backend, there's no need to upload more.
@@ -646,10 +646,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     }
 
     const keyPackages = await this.clientKeypackages(this.config.nbKeyPackages);
-    return this.apiClient.api.client.uploadMLSKeyPackages(
-      clientId,
-      keyPackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
-    );
+    return this.uploadMLSKeyPackages(keyPackages, clientId);
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
@@ -775,6 +772,20 @@ export class MLSService extends TypedEventEmitter<Events> {
     return handleMLSWelcomeMessage({event, mlsService: this});
   }
 
+  public async deleteMLSKeyPackages(keyPackagRefs: Uint8Array[], clientId: ClientId) {
+    return this.apiClient.api.client.deleteMLSKeyPackages(
+      clientId,
+      keyPackagRefs.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
+    );
+  }
+
+  private async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: ClientId) {
+    return this.apiClient.api.client.uploadMLSKeyPackages(
+      clientId,
+      keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
+    );
+  }
+
   // E2E Identity Service related methods below this line
 
   /**
@@ -811,10 +822,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         const data = await instance.continueCertificateProcess(oAuthIdToken);
         if (data !== undefined) {
           await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
-          await this.apiClient.api.client.uploadMLSKeyPackages(
-            clientId,
-            data.newKeyPackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
-          );
+          await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);
           return true;
         }
       }
