@@ -652,10 +652,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  private async uploadMLSKeyPackages(clientId: string, keypackages: Uint8Array[]) {
+  private async uploadMLSKeyPackages(clientId: string, keyPackages: Uint8Array[]) {
     return this.apiClient.api.client.uploadMLSKeyPackages(
       clientId,
-      keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
+      keyPackages.map(keyPackage => btoa(Converter.arrayBufferViewToBaselineString(keyPackage))),
     );
   }
 
@@ -781,6 +781,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent, clientId: string) {
     // Every time we've received a welcome message, it means that our key package was consumed,
     // we need to verify if we need to upload new ones.
+    // Note that this has to be done before we even process the welcome message (even if it fails),
+    // receiving a welcome message means that one of our key packages on backend was claimed.
     await this.verifyLocalMLSKeyPackagesAmount(clientId);
 
     return handleMLSWelcomeMessage({event, mlsService: this});
