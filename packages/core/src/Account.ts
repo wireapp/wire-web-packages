@@ -131,7 +131,7 @@ export class Account extends TypedEventEmitter<Events> {
 
   public service?: {
     mls?: MLSService;
-    e2eIdentity?: typeof E2EIServiceExternal;
+    e2eIdentity?: E2EIServiceExternal;
     proteus: ProteusService;
     account: AccountService;
     asset: AssetService;
@@ -212,7 +212,7 @@ export class Account extends TypedEventEmitter<Events> {
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
 
-    if (!this.isMlsEnabled() || !this.service?.mls) {
+    if (!this.isMlsEnabled() || !this.service?.mls || !this.service?.e2eIdentity) {
       this.logger.info('MLS not initialized, unable to enroll E2EI');
       return false;
     }
@@ -224,7 +224,14 @@ export class Account extends TypedEventEmitter<Events> {
       id: this.userId,
     };
 
-    return this.service.mls.enrollE2EI(discoveryUrl, user, this.clientId, this.nbPrekeys, oAuthIdToken);
+    return this.service.mls.enrollE2EI(
+      discoveryUrl,
+      this.service.e2eIdentity,
+      user,
+      this.clientId,
+      this.nbPrekeys,
+      oAuthIdToken,
+    );
   }
 
   get clientId(): string {
@@ -389,12 +396,15 @@ export class Account extends TypedEventEmitter<Events> {
 
     const [clientType, cryptoClient] = await this.buildCryptoClient(context, this.storeEngine);
 
-    const mlsService =
-      clientType === CryptoClientType.CORE_CRYPTO && this.isMlsEnabled()
-        ? new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
-            ...this.cryptoProtocolConfig?.mls,
-          })
-        : undefined;
+    let mlsService: MLSService | undefined;
+    let e2eIdentityService: E2EIServiceExternal | undefined;
+
+    if (clientType === CryptoClientType.CORE_CRYPTO && this.isMlsEnabled()) {
+      e2eIdentityService = await E2EIServiceExternal.getInstance(cryptoClient.getNativeClient());
+      mlsService = new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
+        ...this.cryptoProtocolConfig?.mls,
+      });
+    }
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
@@ -415,7 +425,7 @@ export class Account extends TypedEventEmitter<Events> {
     const userService = new UserService(this.apiClient);
 
     this.service = {
-      e2eIdentity: E2EIServiceExternal,
+      e2eIdentity: e2eIdentityService,
       mls: mlsService,
       proteus: proteusService,
       account: accountService,

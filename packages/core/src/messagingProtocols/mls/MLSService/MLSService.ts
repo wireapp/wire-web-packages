@@ -58,7 +58,7 @@ import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {E2EIServiceInternal, User} from '../E2EIdentityService';
+import {E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -799,6 +799,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async enrollE2EI(
     discoveryUrl: string,
+    e2eiServiceExternal: E2EIServiceExternal,
     user: User,
     clientId: ClientId,
     nbPrekeys: number,
@@ -808,6 +809,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const instance = await E2EIServiceInternal.getInstance({
         apiClient: this.apiClient,
         coreCryptClient: this.coreCryptoClient,
+        e2eiServiceExternal,
         user,
         clientId,
         discoveryUrl,

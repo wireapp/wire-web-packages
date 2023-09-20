@@ -44,18 +44,26 @@ import {E2EIStorage} from './Storage/E2EIStorage';
 
 class E2EIServiceInternal {
   private static instance: E2EIServiceInternal;
-  private readonly logger = logdown('@wireapp/core/E2EIdentityService');
+  private readonly logger = logdown('@wireapp/core/E2EIdentityServiceInternal');
   private readonly coreCryptoClient: CoreCrypto;
   private readonly apiClient: APIClient;
+  private readonly e2eServiceExternal: E2EIServiceExternal;
   private readonly keyPackagesAmount;
   private identity?: E2eiEnrollment;
   private acmeService?: AcmeService;
   private isInitialized = false;
 
-  private constructor(coreCryptClient: CoreCrypto, apiClient: APIClient, keyPackagesAmount: number = 100) {
+  private constructor(
+    coreCryptClient: CoreCrypto,
+    apiClient: APIClient,
+    e2eiServiceExternal: E2EIServiceExternal,
+    keyPackagesAmount: number = 100,
+  ) {
     this.coreCryptoClient = coreCryptClient;
     this.apiClient = apiClient;
+    this.e2eServiceExternal = e2eiServiceExternal;
     this.keyPackagesAmount = keyPackagesAmount;
+    this.logger.log('Instance of E2EIServiceInternal created');
   }
 
   // ############ Public Functions ############
@@ -65,8 +73,13 @@ class E2EIServiceInternal {
       if (!params) {
         throw new Error('GracePeriodTimer is not initialized. Please call getInstance with params.');
       }
-      const {skipInit = false, coreCryptClient, apiClient, keyPackagesAmount} = params;
-      E2EIServiceInternal.instance = new E2EIServiceInternal(coreCryptClient, apiClient, keyPackagesAmount);
+      const {skipInit = false, coreCryptClient, apiClient, e2eiServiceExternal, keyPackagesAmount} = params;
+      E2EIServiceInternal.instance = new E2EIServiceInternal(
+        coreCryptClient,
+        apiClient,
+        e2eiServiceExternal,
+        keyPackagesAmount,
+      );
       if (!skipInit) {
         const {discoveryUrl, user, clientId} = params;
         if (!discoveryUrl || !user || !clientId) {
@@ -91,7 +104,7 @@ class E2EIServiceInternal {
 
   public async continueCertificateProcess(oAuthIdToken: string): Promise<RotateBundle | undefined> {
     // If we don't have a handle, we need to start a new OAuth flow
-    if (E2EIServiceExternal.isEnrollmentInProgress()) {
+    if (this.e2eServiceExternal.isEnrollmentInProgress()) {
       try {
         return this.continueOAuthFlow(oAuthIdToken);
       } catch (error) {
@@ -160,7 +173,7 @@ class E2EIServiceInternal {
   }
 
   private async startNewOAuthFlow(): Promise<AcmeChallenge | undefined> {
-    if (E2EIServiceExternal.isEnrollmentInProgress()) {
+    if (this.e2eServiceExternal.isEnrollmentInProgress()) {
       return this.exitWithError('Error while trying to start OAuth flow. There is already a flow in progress');
     }
     if (!this.isInitialized || !this.identity || !this.acmeService) {

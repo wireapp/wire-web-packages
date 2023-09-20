@@ -17,36 +17,66 @@
  *
  */
 
+import logdown from 'logdown';
+
+import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity} from '@wireapp/core-crypto';
+
 import {E2EIStorage} from './Storage/E2EIStorage';
 
-// Checks if there is a certificate stored in the local storage
-function hasActiveCertificate(): boolean {
-  return E2EIStorage.has.certificateData();
-}
+// This export is meant to be accessible from the outside (e.g the Webapp / UI)
+export class E2EIServiceExternal {
+  private static instance: E2EIServiceExternal;
+  private readonly logger = logdown('@wireapp/core/E2EIdentityServiceExternal');
+  private readonly coreCryptoClient: CoreCrypto;
 
-// Returns the certificate data stored in the local storage
-function getCertificateData(): string | undefined {
-  try {
-    return E2EIStorage.get.certificateData();
-  } catch (error) {
-    console.error('ACME: Failed to get stored certificate', error);
-    return undefined;
+  private constructor(coreCryptClient: CoreCrypto) {
+    this.coreCryptoClient = coreCryptClient;
+    this.logger.log('Instance of E2EIdentityServiceExternal created');
+  }
+
+  public static async getInstance(coreCryptoClient: CoreCrypto): Promise<E2EIServiceExternal> {
+    if (!E2EIServiceExternal.instance) {
+      if (!coreCryptoClient) {
+        throw new Error('E2EIServiceExternal is not initialized. Please call getInstance with params.');
+      }
+      E2EIServiceExternal.instance = new E2EIServiceExternal(coreCryptoClient);
+    }
+    return E2EIServiceExternal.instance;
+  }
+
+  // Checks if there is a certificate stored in the local storage
+  public hasActiveCertificate(): boolean {
+    return E2EIStorage.has.certificateData();
+  }
+
+  // Returns the certificate data stored in the local storage
+  public getCertificateData(): string | undefined {
+    try {
+      return E2EIStorage.get.certificateData();
+    } catch (error) {
+      console.error('ACME: Failed to get stored certificate', error);
+      return undefined;
+    }
+  }
+
+  // If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
+  public isEnrollmentInProgress(): boolean {
+    return E2EIStorage.has.handle();
+  }
+
+  public clearAllProgress(): void {
+    E2EIStorage.remove.temporaryData();
+  }
+
+  public getConversationState(conversationId: Uint8Array): Promise<E2eiConversationState> {
+    return this.coreCryptoClient.e2eiConversationState(conversationId);
+  }
+
+  public getUserIdentities(conversationId: Uint8Array, clientIds: Uint8Array[]): Promise<WireIdentity[]> {
+    return this.coreCryptoClient.getUserIdentities(conversationId, clientIds);
+  }
+
+  public isE2EIEnabled(ciphersuite: Ciphersuite): Promise<boolean> {
+    return this.coreCryptoClient.e2eiIsEnabled(ciphersuite);
   }
 }
-
-// If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
-function isEnrollmentInProgress(): boolean {
-  return E2EIStorage.has.handle();
-}
-
-function clearAllProgress(): void {
-  E2EIStorage.remove.temporaryData();
-}
-
-// This export is meant to be accessible from the outside (e.g the Webapp / UI)
-export const E2EIServiceExternal = {
-  hasActiveCertificate,
-  getCertificateData,
-  isEnrollmentInProgress,
-  clearAllProgress,
-};

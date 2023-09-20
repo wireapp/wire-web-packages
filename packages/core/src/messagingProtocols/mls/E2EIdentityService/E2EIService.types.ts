@@ -21,6 +21,8 @@ import {AcmeChallenge, CoreCrypto} from '@wireapp/core-crypto/platforms/web/core
 
 import {APIClient} from '@wireapp/api-client';
 
+import {E2EIServiceExternal} from './E2EIServiceExternal';
+
 export type User = {
   id: string;
   domain: string;
@@ -43,6 +45,7 @@ export interface GetNewCertificateParams {
 export interface InitParams {
   apiClient: APIClient;
   coreCryptClient: CoreCrypto;
+  e2eiServiceExternal: E2EIServiceExternal;
   user?: User;
   clientId?: string;
   // If a entrollment is in progress, the init function will not start a new enrollment
