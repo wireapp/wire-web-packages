@@ -605,6 +605,18 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
+  /**
+   * Checks if there are enough key packages locally and if not, generates new ones and uploads them to backend.
+   * @param clientId id of the client
+   */
+  private async verifyMLSKeyPackagesLocalAmount(clientId: string) {
+    const keyPackagesCount = await this.clientValidKeypackagesCount();
+
+    if (keyPackagesCount <= this.config.minRequiredNumberOfAvailableKeyPackages) {
+      await this.uploadMLSKeyPackages(clientId);
+    }
+  }
+
   private async getRemoteMLSKeyPackageCount(clientId: string) {
     return this.apiClient.api.client.getMLSKeyPackageCount(clientId, numberToHex(this.config.defaultCiphersuite));
   }
@@ -761,7 +773,11 @@ export class MLSService extends TypedEventEmitter<Events> {
     return handleMLSMessageAdd({event, mlsService: this});
   }
 
-  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent, clientId: string) {
+    // Every time we've received a welcome message, it means that our key package was consumed,
+    // we need to verify if we need to upload new ones.
+    await this.verifyMLSKeyPackagesLocalAmount(clientId);
+
     return handleMLSWelcomeMessage({event, mlsService: this});
   }
 }
