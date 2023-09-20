@@ -593,24 +593,16 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Get date of last key packages count query and schedule a task to sync it with backend
+   * Schedules a task to periodically (every 24h) check if new key packages should be generated and uploaded to backend.
    * Function must only be called once, after application start
+   * @param clientId id of the client
    */
-  public checkForKeyPackagesBackendSync() {
+  public schedulePeriodicKeyPackagesBackendSync(clientId: string) {
     registerRecurringTask({
       every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
-      task: () => this.syncKeyPackages(),
+      task: () => this.uploadMLSKeyPackages(clientId),
     });
-  }
-
-  private async syncKeyPackages() {
-    const validKeyPackagesCount = await this.clientValidKeypackagesCount();
-
-    if (validKeyPackagesCount <= this.config.minRequiredNumberOfAvailableKeyPackages) {
-      const clientId = this.apiClient.validatedClientId;
-      await this.uploadMLSKeyPackages(clientId);
-    }
   }
 
   private async getRemoteMLSKeyPackageCount(clientId: string) {
