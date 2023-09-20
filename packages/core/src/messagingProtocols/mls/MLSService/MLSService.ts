@@ -783,7 +783,11 @@ export class MLSService extends TypedEventEmitter<Events> {
     // we need to verify if we need to upload new ones.
     // Note that this has to be done before we even process the welcome message (even if it fails),
     // receiving a welcome message means that one of our key packages on backend was claimed.
-    await this.verifyLocalMLSKeyPackagesAmount(clientId);
+    try {
+      await this.verifyLocalMLSKeyPackagesAmount(clientId);
+    } catch {
+      this.logger.error('Failed to verify the amount of MLS key packages');
+    }
 
     return handleMLSWelcomeMessage({event, mlsService: this});
   }
