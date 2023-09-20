@@ -224,6 +224,8 @@ describe('MLSService', () => {
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
       jest.spyOn(mockCoreCrypto, 'processWelcomeMessage').mockResolvedValueOnce(new Uint8Array());
 
+      jest.spyOn(mlsService, 'scheduleKeyMaterialRenewal').mockImplementation(jest.fn());
+
       const mockedMLSWelcomeEvent: ConversationMLSWelcomeEvent = {
         type: CONVERSATION_EVENT.MLS_WELCOME_MESSAGE,
         conversation: '',
@@ -255,6 +257,8 @@ describe('MLSService', () => {
 
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
       jest.spyOn(mockCoreCrypto, 'processWelcomeMessage').mockResolvedValueOnce(new Uint8Array());
+
+      jest.spyOn(mlsService, 'scheduleKeyMaterialRenewal').mockImplementation(jest.fn());
 
       const mockedMLSWelcomeEvent: ConversationMLSWelcomeEvent = {
         type: CONVERSATION_EVENT.MLS_WELCOME_MESSAGE,
@@ -289,6 +293,8 @@ describe('MLSService', () => {
 
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
       jest.spyOn(mockCoreCrypto, 'processWelcomeMessage').mockResolvedValueOnce(new Uint8Array());
+
+      jest.spyOn(mlsService, 'scheduleKeyMaterialRenewal').mockImplementation(jest.fn());
 
       const mockedMLSWelcomeEvent: ConversationMLSWelcomeEvent = {
         type: CONVERSATION_EVENT.MLS_WELCOME_MESSAGE,
