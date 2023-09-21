@@ -311,7 +311,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
         error instanceof BackendError && error.label === BackendErrorLabel.MLS_STALE_MESSAGE;
       if (isMLSStaleMessageError) {
         await this.recoverMLSConversationFromEpochMismatch(conversationId);
-        return this.sendMLSMessage(params);
       }
       throw error;
     }
