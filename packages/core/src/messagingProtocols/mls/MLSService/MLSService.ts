@@ -124,7 +124,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     // We need to make sure keypackages and public key are uploaded to the backend
     await this.uploadMLSPublicKeys(client);
-    await this.uploadMLSKeyPackagesForClient(client.id);
+    await this.verifyRemoteMLSKeyPackagesAmount(client.id);
   }
 
   private async uploadCommitBundle(
@@ -595,24 +595,41 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * Get date of last key packages count query and schedule a task to sync it with backend
+   * Schedules a task to periodically (every 24h) check if new key packages should be generated and uploaded to backend.
    * Function must only be called once, after application start
+   * @param clientId id of the client
    */
-  public checkForKeyPackagesBackendSync() {
+  public schedulePeriodicKeyPackagesBackendSync(clientId: string) {
     registerRecurringTask({
       every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
-      task: () => this.syncKeyPackages(),
+      task: () => this.verifyRemoteMLSKeyPackagesAmount(clientId),
     });
   }
 
-  private async syncKeyPackages() {
-    const validKeyPackagesCount = await this.clientValidKeypackagesCount();
+  /**
+   * Checks if there are enough key packages locally and if not,
+   * checks the number of keys available on backend and (if needed) generates new keys and uploads them.
+   * @param clientId id of the client
+   */
+  private async verifyLocalMLSKeyPackagesAmount(clientId: string) {
+    const keyPackagesCount = await this.clientValidKeypackagesCount();
 
-    if (validKeyPackagesCount <= this.config.minRequiredNumberOfAvailableKeyPackages) {
-      const clientId = this.apiClient.validatedClientId;
-      await this.uploadMLSKeyPackagesForClient(clientId);
+    if (keyPackagesCount <= this.config.minRequiredNumberOfAvailableKeyPackages) {
+      return this.verifyRemoteMLSKeyPackagesAmount(clientId);
     }
+  }
+
+  private async verifyRemoteMLSKeyPackagesAmount(clientId: string) {
+    const backendKeyPackagesCount = await this.getRemoteMLSKeyPackageCount(clientId);
+
+    // If we have enough keys uploaded on backend, there's no need to upload more.
+    if (backendKeyPackagesCount > this.config.minRequiredNumberOfAvailableKeyPackages) {
+      return;
+    }
+
+    const keyPackages = await this.clientKeypackages(this.config.nbKeyPackages);
+    return this.uploadMLSKeyPackages(clientId, keyPackages);
   }
 
   private async getRemoteMLSKeyPackageCount(clientId: string) {
@@ -637,16 +654,11 @@ export class MLSService extends TypedEventEmitter<Events> {
     });
   }
 
-  private async uploadMLSKeyPackagesForClient(clientId: string) {
-    const backendKeyPackagesCount = await this.getRemoteMLSKeyPackageCount(clientId);
-
-    // If we have enough keys uploaded on backend, there's no need to upload more.
-    if (backendKeyPackagesCount > this.config.minRequiredNumberOfAvailableKeyPackages) {
-      return;
-    }
-
-    const keyPackages = await this.clientKeypackages(this.config.nbKeyPackages);
-    return this.uploadMLSKeyPackages(keyPackages, clientId);
+  private async uploadMLSKeyPackages(clientId: string, keyPackages: Uint8Array[]) {
+    return this.apiClient.api.client.uploadMLSKeyPackages(
+      clientId,
+      keyPackages.map(keyPackage => btoa(Converter.arrayBufferViewToBaselineString(keyPackage))),
+    );
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
@@ -768,21 +780,24 @@ export class MLSService extends TypedEventEmitter<Events> {
     return handleMLSMessageAdd({event, mlsService: this});
   }
 
-  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
+  public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent, clientId: string) {
+    // Every time we've received a welcome message, it means that our key package was consumed,
+    // we need to verify if we need to upload new ones.
+    // Note that this has to be done before we even process the welcome message (even if it fails),
+    // receiving a welcome message means that one of our key packages on backend was claimed.
+    try {
+      await this.verifyLocalMLSKeyPackagesAmount(clientId);
+    } catch {
+      this.logger.error('Failed to verify the amount of MLS key packages');
+    }
+
     return handleMLSWelcomeMessage({event, mlsService: this});
   }
 
-  public async deleteMLSKeyPackages(keyPackagRefs: Uint8Array[], clientId: ClientId) {
+  public async deleteMLSKeyPackages(clientId: ClientId, keyPackagRefs: Uint8Array[]) {
     return this.apiClient.api.client.deleteMLSKeyPackages(
       clientId,
       keyPackagRefs.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
-    );
-  }
-
-  private async uploadMLSKeyPackages(keypackages: Uint8Array[], clientId: ClientId) {
-    return this.apiClient.api.client.uploadMLSKeyPackages(
-      clientId,
-      keypackages.map(keypackage => btoa(Converter.arrayBufferViewToBaselineString(keypackage))),
     );
   }
 
@@ -823,8 +838,10 @@ export class MLSService extends TypedEventEmitter<Events> {
       } else {
         const data = await instance.continueCertificateProcess(oAuthIdToken);
         if (data !== undefined) {
-          await this.deleteMLSKeyPackages(data.keyPackageRefsToRemove, clientId);
-          await this.uploadMLSKeyPackages(data.newKeyPackages, clientId);
+          // Remove old key packages
+          await this.deleteMLSKeyPackages(clientId, data.keyPackageRefsToRemove);
+          // Upload new key packages with x509 certificate
+          await this.uploadMLSKeyPackages(clientId, data.newKeyPackages);
           return true;
         }
       }

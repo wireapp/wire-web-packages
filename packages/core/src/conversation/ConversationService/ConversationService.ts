@@ -285,7 +285,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       events: response.events,
       conversation,
       failedToAdd: response.failed
-        ? {users: response.failed, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
+        ? {users: response.failed, backends: [], reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
         : undefined,
     };
   }
@@ -349,7 +349,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       conversation,
       failedToAdd:
         failedToFetchKeyPackages.length > 0
-          ? {users: failedToFetchKeyPackages, reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
+          ? {users: failedToFetchKeyPackages, backends: [], reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS}
           : undefined,
     };
   }
@@ -586,7 +586,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
   }
 
   private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent) {
-    return this.mlsService.handleMLSWelcomeMessageEvent(event);
+    return this.mlsService.handleMLSWelcomeMessageEvent(event, this.apiClient.validatedClientId);
   }
 
   private async handleOtrMessageAddEvent(event: ConversationOtrMessageAddEvent) {

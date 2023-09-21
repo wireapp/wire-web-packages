@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [42.5.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.4.0...@wireapp/core@42.5.0) (2023-09-20)
+
+### Features
+
+* Add backends that caused user adding error ([#5518](https://github.com/wireapp/wire-web-packages/issues/5518)) ([7951ab9](https://github.com/wireapp/wire-web-packages/commit/7951ab97d01e19f47f91331b85f53c7d23ec7f18))
+
+# [42.4.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.3.4...@wireapp/core@42.4.0) (2023-09-20)
+
+### Features
+
+* refill check on welcome message [WPB-4773] ([#5517](https://github.com/wireapp/wire-web-packages/issues/5517)) ([8f654b5](https://github.com/wireapp/wire-web-packages/commit/8f654b578013c658a47520b93a705b4a56321c1e))
+
 ## [42.3.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.3.3...@wireapp/core@42.3.4) (2023-09-18)
 
 **Note:** Version bump only for package @wireapp/core
