@@ -71,7 +71,7 @@ class E2EIServiceInternal {
   public static async getInstance(params?: InitParams): Promise<E2EIServiceInternal> {
     if (!E2EIServiceInternal.instance) {
       if (!params) {
-        throw new Error('GracePeriodTimer is not initialized. Please call getInstance with params.');
+        throw new Error('E2EIServiceInternal is not initialized. Please call getInstance with params.');
       }
       const {skipInit = false, coreCryptClient, apiClient, e2eiServiceExternal, keyPackagesAmount} = params;
       E2EIServiceInternal.instance = new E2EIServiceInternal(

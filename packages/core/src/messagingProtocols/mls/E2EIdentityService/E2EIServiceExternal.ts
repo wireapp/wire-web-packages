@@ -17,10 +17,13 @@
  *
  */
 
+import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity} from '@wireapp/core-crypto';
 
+import {User} from './E2EIService.types';
+import {getE2EIClientId} from './Helper';
 import {E2EIStorage} from './Storage/E2EIStorage';
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
@@ -28,6 +31,7 @@ export class E2EIServiceExternal {
   private static instance: E2EIServiceExternal;
   private readonly logger = logdown('@wireapp/core/E2EIdentityServiceExternal');
   private readonly coreCryptoClient: CoreCrypto;
+  private readonly textEncoder = new TextEncoder();
 
   private constructor(coreCryptClient: CoreCrypto) {
     this.coreCryptoClient = coreCryptClient;
@@ -72,11 +76,18 @@ export class E2EIServiceExternal {
     return this.coreCryptoClient.e2eiConversationState(conversationId);
   }
 
-  public getUserIdentities(conversationId: Uint8Array, clientIds: Uint8Array[]): Promise<WireIdentity[]> {
-    return this.coreCryptoClient.getUserIdentities(conversationId, clientIds);
-  }
-
   public isE2EIEnabled(ciphersuite: Ciphersuite): Promise<boolean> {
     return this.coreCryptoClient.e2eiIsEnabled(ciphersuite);
+  }
+
+  // Returns devices e2ei certificates
+  public async getDeviceIdentities(gropuId: string, clientIds: string[], user: User): Promise<WireIdentity[]> {
+    const gropuIdBytes = Decoder.fromBase64(gropuId).asBytes;
+    const clientIdsBytes = clientIds.map(clientId => {
+      const qualifiedClientId = getE2EIClientId(user, clientId);
+      return this.textEncoder.encode(qualifiedClientId);
+    });
+
+    return this.coreCryptoClient.getUserIdentities(gropuIdBytes, clientIdsBytes);
   }
 }
