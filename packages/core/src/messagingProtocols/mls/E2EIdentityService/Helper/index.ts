@@ -35,9 +35,19 @@ export const uuidTobase64url = (uuid: string): EncodedData => {
   return Encoder.toBase64Url(Converter.hexStringToArrayBufferView(noDashes));
 };
 
-export type E2EIClientId = `${string}:${string}@${string}`;
-export const getE2EIClientId = (user: User, clientId: string): E2EIClientId => {
-  return `${uuidTobase64url(user.id).asString}:${clientId}@${user.domain}`;
+type E2EIClientId = `${string}:${string}@${string}`;
+type GetE2EIClientIdReturnType = {
+  asString: E2EIClientId;
+  asBytes: Uint8Array;
 };
+export const getE2EIClientId = (user: User, clientId: string): GetE2EIClientIdReturnType => {
+  const asString: E2EIClientId = `${uuidTobase64url(user.id).asString}:${clientId}@${user.domain}`;
+  const asBytes: Uint8Array = new TextEncoder().encode(asString);
+  return {
+    asString,
+    asBytes,
+  };
+};
+
 
 export const isResponseStatusValid = (status: string | undefined) => status && status === 'valid';

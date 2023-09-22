@@ -836,12 +836,17 @@ export class MLSService extends TypedEventEmitter<Events> {
           return challengeData;
         }
       } else {
-        const data = await instance.continueCertificateProcess(oAuthIdToken);
-        if (data !== undefined) {
+        const rotateBundle = await instance.continueCertificateProcess(oAuthIdToken);
+        if (rotateBundle !== undefined) {
           // Remove old key packages
-          await this.deleteMLSKeyPackages(clientId, data.keyPackageRefsToRemove);
+          await this.deleteMLSKeyPackages(clientId, rotateBundle.keyPackageRefsToRemove);
           // Upload new key packages with x509 certificate
-          await this.uploadMLSKeyPackages(clientId, data.newKeyPackages);
+          await this.uploadMLSKeyPackages(clientId, rotateBundle.newKeyPackages);
+          // Update keying material
+          for (const [groupId, commitBundle] of rotateBundle.commits) {
+            console.log(groupId, commitBundle);
+            //await this.uploadCommitBundle(groupId, commitBundle);
+          }
           return true;
         }
       }

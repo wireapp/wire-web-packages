@@ -31,7 +31,6 @@ export class E2EIServiceExternal {
   private static instance: E2EIServiceExternal;
   private readonly logger = logdown('@wireapp/core/E2EIdentityServiceExternal');
   private readonly coreCryptoClient: CoreCrypto;
-  private readonly textEncoder = new TextEncoder();
 
   private constructor(coreCryptClient: CoreCrypto) {
     this.coreCryptoClient = coreCryptClient;
@@ -81,13 +80,21 @@ export class E2EIServiceExternal {
   }
 
   // Returns devices e2ei certificates
-  public async getDeviceIdentities(gropuId: string, clientIds: string[], user: User): Promise<WireIdentity[]> {
-    const gropuIdBytes = Decoder.fromBase64(gropuId).asBytes;
-    const clientIdsBytes = clientIds.map(clientId => {
-      const qualifiedClientId = getE2EIClientId(user, clientId);
-      return this.textEncoder.encode(qualifiedClientId);
+  public async getUserDeviceEntities(
+    groupId: string | Uint8Array,
+    clientIdsWithUser: Record<string, User>,
+  ): Promise<WireIdentity[]> {
+    let groupIdByteArray = groupId;
+    if (typeof groupIdByteArray === 'string') {
+      groupIdByteArray = Decoder.fromBase64(groupIdByteArray).asBytes;
+    }
+
+    const clientIds = Object.keys(clientIdsWithUser);
+    const e2eClientIdByteArrays = clientIds.map(clientId => {
+      const user = clientIdsWithUser[clientId];
+      return getE2EIClientId(user, clientId).asBytes;
     });
 
-    return this.coreCryptoClient.getUserIdentities(gropuIdBytes, clientIdsBytes);
+    return this.coreCryptoClient.getUserIdentities(groupIdByteArray, e2eClientIdByteArrays);
   }
 }

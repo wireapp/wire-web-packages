@@ -131,7 +131,7 @@ class E2EIServiceInternal {
       }
       this.acmeService = new AcmeService(discoveryUrl);
       this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
-        getE2EIClientId(user, clientId),
+        getE2EIClientId(user, clientId).asString,
         user.displayName,
         user.handle,
         2,
