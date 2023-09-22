@@ -125,16 +125,16 @@ export class MLSService extends TypedEventEmitter<Events> {
     await this.verifyRemoteMLSKeyPackagesAmount(client.id);
   }
 
-  private async uploadCommitBundle(
-    groupId: Uint8Array,
-    commitBundle: CommitBundle,
-    {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
-  ): Promise<PostMlsMessageResponse> {
-    const {commit, groupInfo, welcome} = commitBundle;
-    const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
-    // We need to lock the websocket while commit bundle is being processed by backend,
-    // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
-    return this.apiClient.withLockedWebSocket(async () => {
+  private readonly uploadCommitBundle = this.apiClient.withLockedWebSocket(
+    async (
+      groupId: Uint8Array,
+      commitBundle: CommitBundle,
+      {regenerateCommitBundle, isExternalCommit}: UploadCommitOptions = {},
+    ): Promise<PostMlsMessageResponse> => {
+      const {commit, groupInfo, welcome} = commitBundle;
+      const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
+      // We need to lock the websocket while commit bundle is being processed by backend,
+      // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
       try {
         const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
         if (isExternalCommit) {
@@ -165,8 +165,8 @@ export class MLSService extends TypedEventEmitter<Events> {
         }
         throw error;
       }
-    });
-  }
+    },
+  );
 
   /**
    * Will add users to an existing MLS group and send a commit bundle to backend.
