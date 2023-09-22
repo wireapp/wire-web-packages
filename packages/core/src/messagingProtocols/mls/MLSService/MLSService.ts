@@ -133,8 +133,9 @@ export class MLSService extends TypedEventEmitter<Events> {
     const {commit, groupInfo, welcome} = commitBundle;
     const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
+      // We need to lock the websocket while commit bundle is being processed by backend,
+      // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
       return this.apiClient.withLockedWebSocket(async () => {
-        throw new Error('Not implemented');
         const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
         if (isExternalCommit) {
           await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
