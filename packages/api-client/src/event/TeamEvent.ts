@@ -17,9 +17,8 @@
  *
  */
 
-import {FEATURE_KEY} from '../team';
+import {FeatureList} from '../team';
 import {
-  TeamFeatureConfigurationUpdateEventData,
   TeamConversationCreateData,
   TeamConversationDeleteData,
   TeamMemberJoinData,
@@ -40,15 +39,6 @@ export enum TEAM_EVENT {
   FEATURE_CONFIG_UPDATE = 'feature-config.update',
 }
 
-export type TeamEventData =
-  | TeamConversationCreateData
-  | TeamConversationDeleteData
-  | TeamMemberLeaveData
-  | TeamMemberUpdateData
-  | TeamUpdateData
-  | TeamFeatureConfigurationUpdateEventData
-  | null;
-
 export type TeamEvent =
   | TeamConversationCreateEvent
   | TeamConversationDeleteEvent
@@ -61,7 +51,6 @@ export type TeamEvent =
   | TeamUpdateEvent;
 
 export interface BaseTeamEvent {
-  data: TeamEventData;
   team: string;
   time: string;
   type: TEAM_EVENT;
@@ -107,8 +96,11 @@ export interface TeamUpdateEvent extends BaseTeamEvent {
   type: TEAM_EVENT.UPDATE;
 }
 
-export interface TeamFeatureConfigurationUpdateEvent extends BaseTeamEvent {
-  data: TeamFeatureConfigurationUpdateEventData;
-  name: FEATURE_KEY;
-  type: TEAM_EVENT.FEATURE_CONFIG_UPDATE;
-}
+export type TeamFeatureConfigurationUpdateEvent = BaseTeamEvent &
+  {
+    [FeatureKey in keyof FeatureList]: {
+      name: FeatureKey;
+      data: FeatureList[FeatureKey];
+      type: TEAM_EVENT.FEATURE_CONFIG_UPDATE;
+    };
+  }[keyof FeatureList];
