@@ -132,10 +132,10 @@ export class MLSService extends TypedEventEmitter<Events> {
   ): Promise<PostMlsMessageResponse> {
     const {commit, groupInfo, welcome} = commitBundle;
     const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
-    try {
-      // We need to lock the websocket while commit bundle is being processed by backend,
-      // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
-      return this.apiClient.withLockedWebSocket(async () => {
+    // We need to lock the websocket while commit bundle is being processed by backend,
+    // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
+    return this.apiClient.withLockedWebSocket(async () => {
+      try {
         const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
         if (isExternalCommit) {
           await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
@@ -147,25 +147,25 @@ export class MLSService extends TypedEventEmitter<Events> {
 
         this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
         return response;
-      });
-    } catch (error) {
-      if (isExternalCommit) {
-        await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
-      } else {
-        await this.coreCryptoClient.clearPendingCommit(groupId);
-      }
+      } catch (error) {
+        if (isExternalCommit) {
+          await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
+        } else {
+          await this.coreCryptoClient.clearPendingCommit(groupId);
+        }
 
-      const shouldRetry = error instanceof BackendError && error.code === StatusCode.CONFLICT;
-      if (shouldRetry && regenerateCommitBundle) {
-        // in case of a 409, we want to retry to generate the commit and resend it
-        // could be that we are trying to upload a commit to a conversation that has a different epoch on backend
-        // in this case we will most likely receive a commit from backend that will increase our local epoch
-        this.logger.warn(`Uploading commitBundle failed. Will retry generating a new bundle`);
-        const updatedCommitBundle = await regenerateCommitBundle();
-        return this.uploadCommitBundle(groupId, updatedCommitBundle, {isExternalCommit});
+        const shouldRetry = error instanceof BackendError && error.code === StatusCode.CONFLICT;
+        if (shouldRetry && regenerateCommitBundle) {
+          // in case of a 409, we want to retry to generate the commit and resend it
+          // could be that we are trying to upload a commit to a conversation that has a different epoch on backend
+          // in this case we will most likely receive a commit from backend that will increase our local epoch
+          this.logger.warn(`Uploading commitBundle failed. Will retry generating a new bundle`);
+          const updatedCommitBundle = await regenerateCommitBundle();
+          return this.uploadCommitBundle(groupId, updatedCommitBundle, {isExternalCommit});
+        }
+        throw error;
       }
-      throw error;
-    }
+    });
   }
 
   /**
