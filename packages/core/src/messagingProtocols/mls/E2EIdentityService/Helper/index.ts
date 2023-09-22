@@ -19,7 +19,6 @@
 
 import {Converter, EncodedData, Encoder} from 'bazinga64';
 
-import {User} from '../E2EIService.types';
 
 export const jsonToByteArray = (data: any): Uint8Array => {
   const encoder = new TextEncoder();
@@ -40,8 +39,8 @@ type GetE2EIClientIdReturnType = {
   asString: E2EIClientId;
   asBytes: Uint8Array;
 };
-export const getE2EIClientId = (user: User, clientId: string): GetE2EIClientIdReturnType => {
-  const asString: E2EIClientId = `${uuidTobase64url(user.id).asString}:${clientId}@${user.domain}`;
+export const getE2EIClientId = (clientId: string, userId: string, userDomain: string): GetE2EIClientIdReturnType => {
+  const asString: E2EIClientId = `${uuidTobase64url(userId).asString}:${clientId}@${userDomain}`;
   const asBytes: Uint8Array = new TextEncoder().encode(asString);
   return {
     asString,

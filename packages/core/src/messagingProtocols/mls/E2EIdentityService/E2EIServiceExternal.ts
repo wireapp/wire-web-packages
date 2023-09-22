@@ -22,9 +22,9 @@ import logdown from 'logdown';
 
 import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity} from '@wireapp/core-crypto';
 
-import {User} from './E2EIService.types';
 import {getE2EIClientId} from './Helper';
 import {E2EIStorage} from './Storage/E2EIStorage';
+import { QualifiedId } from '@wireapp/api-client/lib/user';
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
 export class E2EIServiceExternal {
@@ -82,7 +82,7 @@ export class E2EIServiceExternal {
   // Returns devices e2ei certificates
   public async getUserDeviceEntities(
     groupId: string | Uint8Array,
-    clientIdsWithUser: Record<string, User>,
+    clientIdsWithUser: Record<string, QualifiedId>,
   ): Promise<WireIdentity[]> {
     let groupIdByteArray = groupId;
     if (typeof groupIdByteArray === 'string') {
@@ -92,7 +92,7 @@ export class E2EIServiceExternal {
     const clientIds = Object.keys(clientIdsWithUser);
     const e2eClientIdByteArrays = clientIds.map(clientId => {
       const user = clientIdsWithUser[clientId];
-      return getE2EIClientId(user, clientId).asBytes;
+      return getE2EIClientId(clientId, user.id, user.domain).asBytes;
     });
 
     return this.coreCryptoClient.getUserIdentities(groupIdByteArray, e2eClientIdByteArrays);
