@@ -100,7 +100,7 @@ export type TeamFeatureConfigurationUpdateEvent = BaseTeamEvent &
   {
     [FeatureKey in keyof FeatureList]: {
       name: FeatureKey;
-      data: FeatureList[FeatureKey];
+      data: Required<FeatureList>[FeatureKey];
       type: TEAM_EVENT.FEATURE_CONFIG_UPDATE;
     };
   }[keyof FeatureList];
