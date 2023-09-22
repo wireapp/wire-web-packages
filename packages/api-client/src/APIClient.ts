@@ -408,4 +408,17 @@ export class APIClient extends EventEmitter {
     }
     throw new Error('No valid client ID.');
   }
+
+  /**
+   * Will lock the websocket before executing the callback and unlock it after
+   * @param callback The callback to execute
+   */
+  public withLockedWebSocket<T>(callback: () => T): T {
+    this.transport.ws.lock();
+    try {
+      return callback();
+    } finally {
+      this.transport.ws.unlock();
+    }
+  }
 }

@@ -133,17 +133,20 @@ export class MLSService extends TypedEventEmitter<Events> {
     const {commit, groupInfo, welcome} = commitBundle;
     const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
-      const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
-      if (isExternalCommit) {
-        await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
-      } else {
-        await this.coreCryptoClient.commitAccepted(groupId);
-      }
-      const newEpoch = await this.getEpoch(groupId);
-      const groupIdStr = Encoder.toBase64(groupId).asString;
+      return this.apiClient.withLockedWebSocket(async () => {
+        throw new Error('Not implemented');
+        const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
+        if (isExternalCommit) {
+          await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
+        } else {
+          await this.coreCryptoClient.commitAccepted(groupId);
+        }
+        const newEpoch = await this.getEpoch(groupId);
+        const groupIdStr = Encoder.toBase64(groupId).asString;
 
-      this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
-      return response;
+        this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
+        return response;
+      });
     } catch (error) {
       if (isExternalCommit) {
         await this.coreCryptoClient.clearPendingGroupFromExternalCommit(groupId);
