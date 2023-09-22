@@ -125,6 +125,8 @@ export class MLSService extends TypedEventEmitter<Events> {
     await this.verifyRemoteMLSKeyPackagesAmount(client.id);
   }
 
+  // We need to lock the websocket while commit bundle is being processed by backend,
+  // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
   private readonly uploadCommitBundle = this.apiClient.withLockedWebSocket(
     async (
       groupId: Uint8Array,
@@ -133,8 +135,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     ): Promise<PostMlsMessageResponse> => {
       const {commit, groupInfo, welcome} = commitBundle;
       const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
-      // We need to lock the websocket while commit bundle is being processed by backend,
-      // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
       try {
         const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
         if (isExternalCommit) {
