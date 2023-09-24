@@ -4122,10 +4122,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/npm-registry-package-info@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@types/npm-registry-package-info@npm:1.0.1"
-  checksum: 24bc6f56424463e48513111fe642c5e974c17df4e9c73c09e049f5bcd26c85117360c7f03c0fa940db20a7281c07fcdb69236f1d3930cc4297890668ca6ae3e6
+"@types/npm-registry-package-info@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@types/npm-registry-package-info@npm:1.0.2"
+  checksum: 77b19811956e0ad842b556370399272b06595335b375c12510722b25015f3852c7509b2758e0fa95a2f28840801ce1aa3a2c8601f778ec0325a92ab237f9f422
   languageName: node
   linkType: hard
 
@@ -5062,7 +5062,7 @@ __metadata:
   dependencies:
     "@types/fs-extra": 9.0.13
     "@types/license-checker": ^25
-    "@types/npm-registry-package-info": 1.0.1
+    "@types/npm-registry-package-info": 1.0.2
     "@types/rimraf": ^3.0.2
     fs-extra: 11.1.0
     license-checker: ^25.0.1
