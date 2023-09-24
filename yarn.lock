@@ -4873,7 +4873,7 @@ __metadata:
     concurrently: 8.2.1
     cross-env: 7.0.3
     dotenv: 16.3.1
-    http-status-codes: 2.2.0
+    http-status-codes: 2.3.0
     jest: ^29.2.1
     logdown: 3.3.1
     nock: 13.3.3
@@ -4995,7 +4995,7 @@ __metadata:
     dotenv-defaults: 5.0.2
     fake-indexeddb: ^4.0.0
     hash.js: 1.1.7
-    http-status-codes: 2.2.0
+    http-status-codes: 2.3.0
     idb: 7.1.1
     jest: ^29.2.1
     jest-websocket-mock: 2.5.0
@@ -10715,10 +10715,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-status-codes@npm:2.2.0":
-  version: 2.2.0
-  resolution: "http-status-codes@npm:2.2.0"
-  checksum: 31e1d730856210445da0907d9b484629e69e4fe92ac032478a7aa4d89e5b215e2b4e75d7ebce40d0537b6850bd281b2f65c7cc36cc2677e5de056d6cea1045ce
+"http-status-codes@npm:2.3.0":
+  version: 2.3.0
+  resolution: "http-status-codes@npm:2.3.0"
+  checksum: dae3b99e0155441b6df28e8265ff27c56a45f82c6092f736414233e9ccf063d5ea93c1e1279e8b499c4642e2538b37995c76b1640ed3f615d0e2883d3a1dcfd5
   languageName: node
   linkType: hard
 
