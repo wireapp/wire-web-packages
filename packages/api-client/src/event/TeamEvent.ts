@@ -61,7 +61,6 @@ export type TeamEvent =
   | TeamUpdateEvent;
 
 export interface BaseTeamEvent {
-  data: TeamEventData;
   team: string;
   time: string;
   type: TEAM_EVENT;
