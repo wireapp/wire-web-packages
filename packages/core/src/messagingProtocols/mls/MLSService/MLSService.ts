@@ -848,8 +848,16 @@ export class MLSService extends TypedEventEmitter<Events> {
           await this.uploadMLSKeyPackages(clientId, rotateBundle.newKeyPackages);
           // Update keying material
           for (const [groupId, commitBundle] of rotateBundle.commits) {
-            console.log(groupId, commitBundle);
-            //await this.uploadCommitBundle(groupId, commitBundle);
+            const groupIdAsBytes = Converter.hexStringToArrayBufferView(groupId);
+            // manual copy of the commit bundle data because of a problem while cloning it
+            const newCommitBundle = {
+              commit: commitBundle.commit,
+              // @ts-ignore
+              groupInfo: commitBundle?.group_info || commitBundle.groupInfo,
+              welcome: commitBundle?.welcome,
+            };
+
+            await this.uploadCommitBundle(groupIdAsBytes, newCommitBundle);
           }
           return true;
         }
