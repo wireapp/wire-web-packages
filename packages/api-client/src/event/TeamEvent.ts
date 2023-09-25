@@ -61,6 +61,7 @@ export type TeamEvent =
   | TeamUpdateEvent;
 
 export interface BaseTeamEvent {
+  data: TeamEventData;
   team: string;
   time: string;
   type: TEAM_EVENT;
@@ -106,7 +107,7 @@ export interface TeamUpdateEvent extends BaseTeamEvent {
   type: TEAM_EVENT.UPDATE;
 }
 
-export type TeamFeatureConfigurationUpdateEvent = BaseTeamEvent &
+export type TeamFeatureConfigurationUpdateEvent = Omit<BaseTeamEvent, 'data'> &
   {
     [FeatureKey in keyof FeatureList]: {
       name: FeatureKey;
