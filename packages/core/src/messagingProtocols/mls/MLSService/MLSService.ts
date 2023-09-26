@@ -23,6 +23,7 @@ import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversat
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {TypedEventEmitter} from '@wireapp/commons/lib/TypedEventEmitter';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -57,7 +58,6 @@ import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../..
 import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
-import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 

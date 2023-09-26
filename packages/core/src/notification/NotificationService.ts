@@ -20,6 +20,7 @@
 import {BackendEvent} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler} from '@wireapp/api-client/lib/tcp';
+import {TypedEventEmitter} from '@wireapp/commons/lib/TypedEventEmitter';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
@@ -33,7 +34,6 @@ import {NotificationSource} from './Notifications.types';
 import {ConversationService} from '../conversation';
 import {CoreError, NotificationError} from '../CoreError';
 import {DecryptionError} from '../errors/DecryptionError';
-import {TypedEventEmitter} from '../util/TypedEventEmitter';
 
 export type HandledEventPayload = {
   /** the raw event received from backend */

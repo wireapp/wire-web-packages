@@ -38,6 +38,7 @@ import {
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {TypedEventEmitter} from '@wireapp/commons/lib/TypedEventEmitter';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -66,7 +67,6 @@ import {
 import {HandledEventPayload} from '../../notification';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
-import {TypedEventEmitter} from '../../util/TypedEventEmitter';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
