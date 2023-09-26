@@ -38,12 +38,12 @@ import {
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {TypedEventEmitter} from '@wireapp/commons/lib/TypedEventEmitter';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
+import {TypedEventEmitter} from '@wireapp/commons';
 import {Ciphersuite, CredentialType, ExternalProposalType} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 

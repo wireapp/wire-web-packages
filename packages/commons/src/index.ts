@@ -21,3 +21,4 @@ export * as CommonConfig from './config/CommonConfig';
 
 export * from './LogFactory';
 export * from './util/';
+export * from './TypedEventEmitter';
