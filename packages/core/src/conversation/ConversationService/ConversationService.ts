@@ -292,7 +292,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     };
   }
 
-  private async sendMLSMessage(params: SendMlsMessageParams): Promise<SendResult> {
+  private async sendMLSMessage(params: SendMlsMessageParams, shouldRetry = true): Promise<SendResult> {
     const {payload, groupId, conversationId} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
@@ -311,7 +311,11 @@ export class ConversationService extends TypedEventEmitter<Events> {
         error instanceof BackendError && error.label === BackendErrorLabel.MLS_STALE_MESSAGE;
       if (isMLSStaleMessageError) {
         await this.recoverMLSConversationFromEpochMismatch(conversationId);
+        if (shouldRetry) {
+          return this.sendMLSMessage(params, false);
+        }
       }
+
       throw error;
     }
 
