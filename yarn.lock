@@ -2240,6 +2240,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@isaacs/cliui@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "@isaacs/cliui@npm:8.0.2"
+  dependencies:
+    string-width: ^5.1.2
+    string-width-cjs: "npm:string-width@^4.2.0"
+    strip-ansi: ^7.0.1
+    strip-ansi-cjs: "npm:strip-ansi@^6.0.1"
+    wrap-ansi: ^8.1.0
+    wrap-ansi-cjs: "npm:wrap-ansi@^7.0.0"
+  checksum: 4a473b9b32a7d4d3cfb7a614226e555091ff0c5a29a1734c28c72a182c2f6699b26fc6b5c2131dfd841e86b185aea714c72201d7c98c2fba5f17709333a67aeb
+  languageName: node
+  linkType: hard
+
 "@isaacs/string-locale-compare@npm:^1.1.0":
   version: 1.1.0
   resolution: "@isaacs/string-locale-compare@npm:1.1.0"
@@ -4932,7 +4946,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     reconnecting-websocket: 4.4.0
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     spark-md5: 3.0.2
     tough-cookie: 4.1.3
     ts-node: ^10.9.1
@@ -4961,7 +4975,7 @@ __metadata:
     "@types/rimraf": ^3.0.2
     jest: ^29.2.1
     jsrsasign: 10.8.6
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: ^10.9.1
     typescript: ^5.0.4
   languageName: unknown
@@ -4982,7 +4996,7 @@ __metadata:
     jest: ^29.2.1
     logdown: 3.3.1
     platform: 1.3.6
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
@@ -5005,7 +5019,7 @@ __metadata:
     jest: ^29.2.1
     jszip: 3.10.1
     logdown: 3.3.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
   bin:
     copy-config: lib/cli.js
@@ -5053,7 +5067,7 @@ __metadata:
     logdown: 3.3.1
     long: ^5.2.0
     nock: 13.3.3
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
     uuidjs: 4.2.13
   languageName: unknown
@@ -5120,7 +5134,7 @@ __metadata:
     logdown: 3.3.1
     npm-license-crawler: 0.2.1
     npm-registry-package-info: 1.0.5
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
   bin:
     collect-licenses: src/cli.js
@@ -5161,7 +5175,7 @@ __metadata:
     "@types/node": ^20.1.0
     "@types/rimraf": ^3.0.2
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: ^10.9.1
     typescript: ^5.0.4
   languageName: unknown
@@ -5177,7 +5191,7 @@ __metadata:
     "@types/rimraf": ^3.0.2
     "@wireapp/commons": "workspace:^"
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
@@ -5244,7 +5258,7 @@ __metadata:
     react-styleguidist: 13.1.1
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
     webpack: ^5.74.0
   peerDependencies:
@@ -5272,7 +5286,7 @@ __metadata:
     fake-indexeddb: ^4.0.0
     jest: ^29.2.1
     logdown: 3.3.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: ^10.9.1
     typescript: ^5.0.4
     uuidjs: 4.2.13
@@ -5294,7 +5308,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:^"
     fs-extra: 11.1.0
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: 10.9.1
     typescript: ^5.0.4
   peerDependencies:
@@ -5321,7 +5335,7 @@ __metadata:
     "@types/node": ^20.1.0
     "@types/rimraf": ^3.0.2
     jest: ^29.2.1
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: 10.9.1
     typescript: ^5.0.4
   languageName: unknown
@@ -5332,7 +5346,7 @@ __metadata:
   resolution: "@wireapp/webapp-events@workspace:packages/webapp-events"
   dependencies:
     "@types/rimraf": ^3.0.2
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
@@ -6324,7 +6338,7 @@ __metadata:
     cross-env: 7.0.3
     jest: ^29.2.1
     libsodium-wrappers-sumo: 0.7.13
-    rimraf: ^3.0.2
+    rimraf: ^5.0.4
     ts-node: 10.9.1
     typescript: ^5.0.4
   languageName: unknown
@@ -10179,6 +10193,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:^10.3.7":
+  version: 10.3.9
+  resolution: "glob@npm:10.3.9"
+  dependencies:
+    foreground-child: ^3.1.0
+    jackspeak: ^2.3.5
+    minimatch: ^9.0.1
+    minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
+    path-scurry: ^1.10.1
+  bin:
+    glob: dist/esm/bin.mjs
+  checksum: 806a4ef5710beb15577cb0e27a103b39805e009e45e9e63455c385a5db7c4fb793d7399740f21bd133ca58ae6e4e5d56493f0a36bf2985e91eab51d12532f040
+  languageName: node
+  linkType: hard
+
 "glob@npm:^7.0.3, glob@npm:^7.0.5, glob@npm:^7.1.1, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.5, glob@npm:^7.1.6, glob@npm:^7.2.0":
   version: 7.2.3
   resolution: "glob@npm:7.2.3"
@@ -11835,6 +11864,19 @@ __metadata:
     "@pkgjs/parseargs":
       optional: true
   checksum: 63edf74e0ba916bc80568d04bd3985bff2dab26382627bb0a7011c43af4a5bc6bd536871a98655fffd1b740354c4d6e87dbd2d626b84cb94bc4cef45ade2abbd
+  languageName: node
+  linkType: hard
+
+"jackspeak@npm:^2.3.5":
+  version: 2.3.5
+  resolution: "jackspeak@npm:2.3.5"
+  dependencies:
+    "@isaacs/cliui": ^8.0.2
+    "@pkgjs/parseargs": ^0.11.0
+  dependenciesMeta:
+    "@pkgjs/parseargs":
+      optional: true
+  checksum: c2c211f13ceffa05f6c2a2fe82667303c81af6f9f53619b9e4fd403207ffe666428a017f61cd43b3478759188917eda14a81f8823b6dd40a8627e46d973a37df
   languageName: node
   linkType: hard
 
@@ -16621,14 +16663,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:3.0.2, rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "rimraf@npm:3.0.2"
+"rimraf@npm:5.0.4, rimraf@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "rimraf@npm:5.0.4"
   dependencies:
-    glob: ^7.1.3
+    glob: ^10.3.7
   bin:
-    rimraf: bin.js
-  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
+    rimraf: dist/esm/bin.mjs
+  checksum: 44230119678153dc46f8e634947123e2a516689818cb1ca4b03c470cb8eece0f6a29135b9c8f785d30e50c34175a58927b8033a9eef0e154a9fab81b80712112
   languageName: node
   linkType: hard
 
@@ -16640,6 +16682,17 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: cdc7f6eacb17927f2a075117a823e1c5951792c6498ebcce81ca8203454a811d4cf8900314154d3259bb8f0b42ab17f67396a8694a54cae3283326e57ad250cd
+  languageName: node
+  linkType: hard
+
+"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "rimraf@npm:3.0.2"
+  dependencies:
+    glob: ^7.1.3
+  bin:
+    rimraf: bin.js
+  checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
   languageName: node
   linkType: hard
 
@@ -16688,7 +16741,7 @@ __metadata:
     jest-environment-jsdom: ^29.2.1
     lint-staged: 14.0.1
     prettier: 3.0.1
-    rimraf: 3.0.2
+    rimraf: 5.0.4
     tsconfig-paths: 4.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -17566,6 +17619,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
+  version: 4.2.3
+  resolution: "string-width@npm:4.2.3"
+  dependencies:
+    emoji-regex: ^8.0.0
+    is-fullwidth-code-point: ^3.0.0
+    strip-ansi: ^6.0.1
+  checksum: e52c10dc3fbfcd6c3a15f159f54a90024241d0f149cf8aed2982a2d801d2e64df0bf1dc351cf8e95c3319323f9f220c16e740b06faecd53e2462df1d2b5443fb
+  languageName: node
+  linkType: hard
+
 "string-width@npm:^1.0.1":
   version: 1.0.2
   resolution: "string-width@npm:1.0.2"
@@ -17577,18 +17641,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
-  version: 4.2.3
-  resolution: "string-width@npm:4.2.3"
-  dependencies:
-    emoji-regex: ^8.0.0
-    is-fullwidth-code-point: ^3.0.0
-    strip-ansi: ^6.0.1
-  checksum: e52c10dc3fbfcd6c3a15f159f54a90024241d0f149cf8aed2982a2d801d2e64df0bf1dc351cf8e95c3319323f9f220c16e740b06faecd53e2462df1d2b5443fb
-  languageName: node
-  linkType: hard
-
-"string-width@npm:^5.0.0, string-width@npm:^5.0.1":
+"string-width@npm:^5.0.0, string-width@npm:^5.0.1, string-width@npm:^5.1.2":
   version: 5.1.2
   resolution: "string-width@npm:5.1.2"
   dependencies:
@@ -17677,21 +17730,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1, strip-ansi@npm:^6.0.0, strip-ansi@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "strip-ansi@npm:6.0.1"
+  dependencies:
+    ansi-regex: ^5.0.1
+  checksum: f3cd25890aef3ba6e1a74e20896c21a46f482e93df4a06567cebf2b57edabb15133f1f94e57434e0a958d61186087b1008e89c94875d019910a213181a14fc8c
+  languageName: node
+  linkType: hard
+
 "strip-ansi@npm:^3.0.0":
   version: 3.0.1
   resolution: "strip-ansi@npm:3.0.1"
   dependencies:
     ansi-regex: ^2.0.0
   checksum: 9b974de611ce5075c70629c00fa98c46144043db92ae17748fb780f706f7a789e9989fd10597b7c2053ae8d1513fd707816a91f1879b2f71e6ac0b6a863db465
-  languageName: node
-  linkType: hard
-
-"strip-ansi@npm:^6.0.0, strip-ansi@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "strip-ansi@npm:6.0.1"
-  dependencies:
-    ansi-regex: ^5.0.1
-  checksum: f3cd25890aef3ba6e1a74e20896c21a46f482e93df4a06567cebf2b57edabb15133f1f94e57434e0a958d61186087b1008e89c94875d019910a213181a14fc8c
   languageName: node
   linkType: hard
 
@@ -19579,6 +19632,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0, wrap-ansi@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "wrap-ansi@npm:7.0.0"
+  dependencies:
+    ansi-styles: ^4.0.0
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+  checksum: a790b846fd4505de962ba728a21aaeda189b8ee1c7568ca5e817d85930e06ef8d1689d49dbf0e881e8ef84436af3a88bc49115c2e2788d841ff1b8b5b51a608b
+  languageName: node
+  linkType: hard
+
 "wrap-ansi@npm:^6.2.0":
   version: 6.2.0
   resolution: "wrap-ansi@npm:6.2.0"
@@ -19587,17 +19651,6 @@ __metadata:
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
   checksum: 6cd96a410161ff617b63581a08376f0cb9162375adeb7956e10c8cd397821f7eb2a6de24eb22a0b28401300bf228c86e50617cd568209b5f6775b93c97d2fe3a
-  languageName: node
-  linkType: hard
-
-"wrap-ansi@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "wrap-ansi@npm:7.0.0"
-  dependencies:
-    ansi-styles: ^4.0.0
-    string-width: ^4.1.0
-    strip-ansi: ^6.0.0
-  checksum: a790b846fd4505de962ba728a21aaeda189b8ee1c7568ca5e817d85930e06ef8d1689d49dbf0e881e8ef84436af3a88bc49115c2e2788d841ff1b8b5b51a608b
   languageName: node
   linkType: hard
 
