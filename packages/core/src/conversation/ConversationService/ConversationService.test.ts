@@ -157,7 +157,7 @@ describe('ConversationService', () => {
       {type: 'image', message: MessageBuilder.buildImageMessage(generateImage())},
     ];
     messages.forEach(({type, message}) => {
-      it.skip(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
+      it(`calls callbacks when sending '${type}' message is starting and successful`, async () => {
         const [conversationService] = buildConversationService();
         const promise = conversationService.send({
           protocol: ConversationProtocol.MLS,
