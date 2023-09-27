@@ -582,7 +582,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
         }
 
         await this.recoverMLSConversationFromEpochMismatch(conversationId);
-        return;
       }
       throw error;
     }
