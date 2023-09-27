@@ -566,9 +566,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     }
   };
 
-  private async handleMLSMessageAddEvent(
-    event: ConversationMLSMessageAddEvent,
-  ): Promise<HandledEventPayload | undefined> {
+  private async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent): Promise<HandledEventPayload | null> {
     try {
       return await this.mlsService.handleMLSMessageAddEvent(event);
     } catch (error) {
@@ -582,7 +580,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
         }
 
         await this.recoverMLSConversationFromEpochMismatch(conversationId);
-        return undefined;
+        return null;
       }
       throw error;
     }
@@ -608,7 +606,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return this.proteusService.handleOtrMessageAddEvent(event);
   }
 
-  public async handleEvent(event: BackendEvent): Promise<HandledEventPayload | undefined> {
+  public async handleEvent(event: BackendEvent): Promise<HandledEventPayload | null> {
     switch (event.type) {
       case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
         return this.handleMLSMessageAddEvent(event);
@@ -618,6 +616,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
         return this.handleOtrMessageAddEvent(event);
     }
 
-    return undefined;
+    return null;
   }
 }
