@@ -32,3 +32,10 @@ export function generateQualifiedIds(nbUsers: number, domain: string) {
   }
   return users;
 }
+
+export const flushPromises = () => new Promise(jest.requireActual('timers').setImmediate);
+
+export const advanceJestTimersWithPromise = async (time: number) => {
+  jest.advanceTimersByTime(time);
+  return flushPromises();
+};
