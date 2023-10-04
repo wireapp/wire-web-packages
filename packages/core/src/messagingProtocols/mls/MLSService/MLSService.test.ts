@@ -18,12 +18,16 @@
  */
 
 import {ClientType, RegisteredClient} from '@wireapp/api-client/lib/client';
-import {CONVERSATION_EVENT, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
+import {
+  CONVERSATION_EVENT,
+  ConversationMLSMessageAddEvent,
+  ConversationMLSWelcomeEvent,
+} from '@wireapp/api-client/lib/event';
 
 import {randomUUID} from 'crypto';
 
 import {APIClient} from '@wireapp/api-client';
-import {CoreCrypto} from '@wireapp/core-crypto';
+import {CoreCrypto, DecryptedMessage} from '@wireapp/core-crypto';
 
 import {MLSService} from './MLSService';
 
@@ -46,6 +50,9 @@ const createMLSService = async () => {
     mlsInit: jest.fn(),
     clientPublicKey: jest.fn(),
     processWelcomeMessage: jest.fn(),
+    decryptMessage: jest.fn(),
+    conversationEpoch: jest.fn(),
+    commitPendingProposals: jest.fn(),
   } as unknown as CoreCrypto;
 
   const mockedDb = await openDB('core-test-db');
@@ -219,6 +226,80 @@ describe('MLSService', () => {
       expect(coreCrypto.mlsInit).toHaveBeenCalled();
       expect(apiClient.api.client.uploadMLSKeyPackages).not.toHaveBeenCalled();
       expect(apiClient.api.client.putClient).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('handleMLSMessageAddEvent', () => {
+    it('decrypts a message and emits new epoch event if epoch has changed', async () => {
+      const [mlsService, {coreCrypto: mockCoreCrypto}] = await createMLSService();
+
+      const mockGroupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc=';
+      const mockedNewEpoch = 3;
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValueOnce(mockGroupId);
+
+      const mockedDecryptoedMessage: DecryptedMessage = {
+        hasEpochChanged: true,
+        isActive: false,
+        proposals: [],
+      };
+
+      jest.spyOn(mockCoreCrypto, 'decryptMessage').mockResolvedValueOnce(mockedDecryptoedMessage);
+      jest.spyOn(mockCoreCrypto, 'conversationEpoch').mockResolvedValueOnce(mockedNewEpoch);
+      jest.spyOn(mlsService, 'emit').mockImplementation(jest.fn());
+
+      const mockedMLSWelcomeEvent: ConversationMLSMessageAddEvent = {
+        type: CONVERSATION_EVENT.MLS_MESSAGE_ADD,
+        senderClientId: '',
+        conversation: '',
+        data: '',
+        from: '',
+        time: '',
+      };
+
+      await mlsService.handleMLSMessageAddEvent(mockedMLSWelcomeEvent);
+      expect(mockCoreCrypto.decryptMessage).toHaveBeenCalled();
+      expect(mlsService.emit).toHaveBeenCalledWith('newEpoch', {epoch: mockedNewEpoch, groupId: mockGroupId});
+    });
+
+    it('handles pending propoals with a delay after decrypting a message', async () => {
+      const [mlsService, {coreCrypto: mockCoreCrypto}] = await createMLSService();
+      jest.useFakeTimers();
+
+      const mockGroupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc=';
+      const mockedNewEpoch = 3;
+      const commitDelay = 1000;
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValueOnce(mockGroupId);
+
+      const mockedDecryptoedMessage: DecryptedMessage = {
+        hasEpochChanged: true,
+        isActive: false,
+        proposals: [],
+        commitDelay,
+      };
+
+      jest.spyOn(mockCoreCrypto, 'decryptMessage').mockResolvedValueOnce(mockedDecryptoedMessage);
+      jest.spyOn(mockCoreCrypto, 'conversationEpoch').mockResolvedValueOnce(mockedNewEpoch);
+
+      jest.spyOn(mlsService, 'commitPendingProposals');
+
+      const mockedMLSWelcomeEvent: ConversationMLSMessageAddEvent = {
+        type: CONVERSATION_EVENT.MLS_MESSAGE_ADD,
+        senderClientId: '',
+        conversation: '',
+        data: '',
+        from: '',
+        time: new Date().toISOString(),
+      };
+
+      await mlsService.handleMLSMessageAddEvent(mockedMLSWelcomeEvent);
+
+      expect(mockCoreCrypto.commitPendingProposals).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(commitDelay);
+      expect(mockCoreCrypto.decryptMessage).toHaveBeenCalled();
+      expect(mockCoreCrypto.commitPendingProposals).toHaveBeenCalled();
     });
   });
 
