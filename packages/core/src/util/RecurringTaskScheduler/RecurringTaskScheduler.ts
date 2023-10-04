@@ -46,8 +46,11 @@ export class RecurringTaskScheduler {
       key,
       task: async () => {
         await this.storage.delete(key);
-        await task();
-        await this.registerTask({every, task, key});
+        try {
+          await task();
+        } finally {
+          await this.registerTask({every, task, key});
+        }
       },
     };
 
