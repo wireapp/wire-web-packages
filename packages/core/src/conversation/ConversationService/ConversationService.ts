@@ -59,10 +59,7 @@ import {
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService, optionalToUint8Array} from '../../messagingProtocols/mls';
-import {
-  isCoreCryptoMLSConversationAlreadyExistsError,
-  isCoreCryptoMLSWrongEpochError,
-} from '../../messagingProtocols/mls/MLSService/CoreCryptoMLSError';
+import {isCoreCryptoMLSWrongEpochError} from '../../messagingProtocols/mls/MLSService/CoreCryptoMLSError';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
 import {
   AddUsersToProteusConversationParams,
@@ -566,40 +563,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
         `Conversation (id ${mlsConversation.qualified_id.id}) is not established, retrying to establish it`,
       );
       return this.establishMLS1to1Conversation(groupId, selfUser, otherUserId, false);
-    }
-  };
-
-  /**
-   * Will try to register mls group and send an empty commit to establish it.
-   *
-   * @param groupId - id of the MLS group
-   * @returns true if the client has successfully established the group, false otherwise
-   */
-  public readonly tryEstablishingMLSGroup = async (groupId: string): Promise<boolean> => {
-    this.logger.info(`Trying to establish a MLS group with id ${groupId}.`);
-
-    // Before trying to register a group, check if the group is already established locally.
-    // We could have received a welcome message in the meantime.
-    const doesMLSGroupExistLocally = await this.mlsGroupExistsLocally(groupId);
-    if (doesMLSGroupExistLocally) {
-      this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
-      return false;
-    }
-
-    try {
-      await this.mlsService.registerConversation(groupId, []);
-      return true;
-    } catch (error) {
-      // If conversation already existed, locally, nothing more to do, we've received a welcome message.
-      if (isCoreCryptoMLSConversationAlreadyExistsError(error)) {
-        this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
-        return false;
-      }
-
-      // Otherwise it's a backend error. Somebody else might have created the group in the meantime.
-      // We should wipe the group locally, wait for the welcome message or join later via external commit.
-      await this.wipeMLSConversation(groupId);
-      return false;
     }
   };
 
