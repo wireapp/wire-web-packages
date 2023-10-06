@@ -439,6 +439,85 @@ describe('ConversationService', () => {
     });
   });
 
+  describe('tryEstablishingMixedConversationMLSGroup', () => {
+    it('returns false if group did already exist locally', async () => {
+      const [conversationService, {mlsService}] = buildConversationService();
+
+      const mockGroupId = 'mock-group-id';
+      const mockConversationId = {id: 'mock-conversation-id', domain: 'staging.zinfra.io'};
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
+
+      const wasConversationEstablished = await conversationService.tryEstablishingMixedConversationMLSGroup(
+        mockConversationId,
+        mockGroupId,
+      );
+
+      expect(mlsService.registerConversation).not.toHaveBeenCalled();
+      expect(wasConversationEstablished).toBe(false);
+    });
+
+    it('returns false if corecrypto has thrown an error when trying to register group locally', async () => {
+      const [conversationService, {mlsService}] = buildConversationService();
+
+      const mockGroupId = 'mock-group-id2';
+      const mockConversationId = {id: 'mock-conversation-id2', domain: 'staging.zinfra.io'};
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
+      jest
+        .spyOn(mlsService, 'registerConversation')
+        .mockRejectedValueOnce(new Error(CoreCryptoMLSError.CONVERSATION_ALREADY_EXISTS));
+
+      const wasConversationEstablished = await conversationService.tryEstablishingMixedConversationMLSGroup(
+        mockConversationId,
+        mockGroupId,
+      );
+
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, []);
+      expect(wasConversationEstablished).toBe(false);
+    });
+
+    it('returns false and wipes group locally if any backend error was thrown', async () => {
+      const [conversationService, {mlsService}] = buildConversationService();
+
+      const mockGroupId = 'mock-group-id2';
+      const mockConversationId = {id: 'mock-conversation-id2', domain: 'staging.zinfra.io'};
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
+      jest
+        .spyOn(mlsService, 'registerConversation')
+        .mockRejectedValueOnce(new BackendError('', BackendErrorLabel.MLS_STALE_MESSAGE, HTTP_STATUS.CONFLICT));
+
+      const wasConversationEstablished = await conversationService.tryEstablishingMixedConversationMLSGroup(
+        mockConversationId,
+        mockGroupId,
+      );
+
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, []);
+      expect(mlsService.wipeConversation).toHaveBeenCalledWith(mockGroupId);
+      expect(wasConversationEstablished).toBe(false);
+    });
+
+    it('returns true after MLS group was etablished successfully', async () => {
+      const [conversationService, {mlsService}] = buildConversationService();
+
+      const mockGroupId = 'mock-group-id2';
+      const mockConversationId = {id: 'mock-conversation-id2', domain: 'staging.zinfra.io'};
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
+      jest.spyOn(mlsService, 'registerConversation').mockResolvedValueOnce({events: [], time: ''});
+
+      const wasConversationEstablished = await conversationService.tryEstablishingMixedConversationMLSGroup(
+        mockConversationId,
+        mockGroupId,
+      );
+
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(mockGroupId, []);
+      expect(mlsService.wipeConversation).not.toHaveBeenCalled();
+      expect(wasConversationEstablished).toBe(true);
+    });
+  });
+
   describe('handleEvent', () => {
     it('rejoins a MLS conversation if epoch mismatch detected when decrypting mls message', async () => {
       const [conversationService, {apiClient, mlsService}] = buildConversationService();
