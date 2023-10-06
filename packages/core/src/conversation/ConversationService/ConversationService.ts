@@ -570,24 +570,19 @@ export class ConversationService extends TypedEventEmitter<Events> {
   };
 
   /**
-   * Will try registering mls group for mixed conversation.
+   * Will try to register mls group and send an empty commit to establish it.
    *
-   * @param conversationId - id of the conversation
    * @param groupId - id of the MLS group
-   * @returns true if the group was registered, false otherwise
+   * @returns true if the client has successfully established the group, false otherwise
    */
-  public readonly tryEstablishingMixedConversationMLSGroup = async (
-    conversationId: QualifiedId,
-    groupId: string,
-  ): Promise<boolean> => {
-    this.logger.info(`Trying to establish a MLS group for mixed conversation with id ${conversationId.id}...`);
+  public readonly tryEstablishingMLSGroup = async (groupId: string): Promise<boolean> => {
+    this.logger.info(`Trying to establish a MLS group with id ${groupId}.`);
 
     // Before trying to register a group, check if the group is already established locally.
     // We could have received a welcome message in the meantime.
-
-    const doesMLSGroupExistLocally = await this.mlsGroupExistsLocally(conversationId.id);
+    const doesMLSGroupExistLocally = await this.mlsGroupExistsLocally(groupId);
     if (doesMLSGroupExistLocally) {
-      this.logger.info(`MLS Group for conversation ${conversationId.id} already exists, skipping the initialisation.`);
+      this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
       return false;
     }
 
@@ -597,9 +592,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     } catch (error) {
       // If conversation already existed, locally, nothing more to do, we've received a welcome message.
       if (isCoreCryptoMLSConversationAlreadyExistsError(error)) {
-        this.logger.info(
-          `MLS Group for conversation ${conversationId.id} already exists, skipping the initialisation.`,
-        );
+        this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
         return false;
       }
 
