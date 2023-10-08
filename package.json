@@ -15,7 +15,7 @@
     "@types/jest": "^29.2.0",
     "@types/node": "^20.1.0",
     "@types/rimraf": "3.0.2",
-    "@typescript-eslint/eslint-plugin": "6.7.3",
+    "@typescript-eslint/eslint-plugin": "6.7.4",
     "@typescript-eslint/parser": "6.7.4",
     "@wireapp/eslint-config": "workspace:^",
     "eslint": "8.49.0",
