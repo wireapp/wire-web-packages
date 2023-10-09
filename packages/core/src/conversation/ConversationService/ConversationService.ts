@@ -576,7 +576,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * @param selfUserId - id of the self user
    * @param qualifiedUsers - list of qualified users to add to the group (should not include the self user)
    */
-  public async tryEstablishingMLSGroupWithUsers({
+  public async tryEstablishingMLSGroup({
     groupId,
     conversationId,
     selfUserId,
