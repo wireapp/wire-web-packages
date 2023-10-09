@@ -108,6 +108,7 @@ describe('ConversationService', () => {
       handleMLSMessageAddEvent: jest.fn(),
       conversationExists: jest.fn(),
       isConversationEstablished: jest.fn(),
+      tryEstablishingMLSGroup: jest.fn(),
     } as unknown as MLSService;
 
     const conversationService = new ConversationService(client, mockedProteusService, mockedMLSService);
@@ -497,6 +498,60 @@ describe('ConversationService', () => {
 
       const fetchedMembers = await conversationService.fetchAllParticipantsClients({id: 'convid', domain: ''});
       expect(fetchedMembers).toEqual(members);
+    });
+  });
+
+  describe('addMixedConversationMembersToMLSGroup', () => {
+    it('should add all the users to a MLS group after group was established by the self client', async () => {
+      const [conversationService, {apiClient, mlsService}] = buildConversationService();
+      const selfUserId = {id: 'self-user-id', domain: 'local.wire.com'};
+
+      const mockConversationId = {id: PayloadHelper.getUUID(), domain: 'local.wire.com'};
+      const mockGroupId = 'groupId';
+      const otherUsersToAdd = Array(3)
+        .fill(0)
+        .map(() => ({id: PayloadHelper.getUUID(), domain: 'local.wire.com'}));
+
+      jest.spyOn(mlsService, 'tryEstablishingMLSGroup').mockResolvedValueOnce(true);
+      jest
+        .spyOn(conversationService, 'addUsersToMLSConversation')
+        .mockResolvedValueOnce({conversation: {members: {others: []}}} as any);
+
+      await conversationService.tryEstablishingMLSGroupWithUsers({
+        conversationId: mockConversationId,
+        groupId: mockGroupId,
+        qualifiedUsers: otherUsersToAdd,
+        selfUserId,
+      });
+
+      expect(conversationService.addUsersToMLSConversation).toHaveBeenCalledWith({
+        conversationId: mockConversationId,
+        groupId: mockGroupId,
+        qualifiedUsers: [...otherUsersToAdd, {...selfUserId, skipOwnClientId: apiClient.clientId}],
+      });
+    });
+
+    it('should not add any users if MLS group was not established by the self client', async () => {
+      const [conversationService, {mlsService}] = buildConversationService();
+      const selfUserId = {id: 'self-user-id', domain: 'local.wire.com'};
+
+      const mockConversationId = {id: PayloadHelper.getUUID(), domain: 'local.wire.com'};
+      const mockGroupId = 'groupId';
+      const otherUsersToAdd = Array(3)
+        .fill(0)
+        .map(() => ({id: PayloadHelper.getUUID(), domain: 'local.wire.com'}));
+
+      jest.spyOn(mlsService, 'tryEstablishingMLSGroup').mockResolvedValueOnce(false);
+      jest.spyOn(conversationService, 'addUsersToMLSConversation');
+
+      await conversationService.tryEstablishingMLSGroupWithUsers({
+        conversationId: mockConversationId,
+        groupId: mockGroupId,
+        qualifiedUsers: otherUsersToAdd,
+        selfUserId,
+      });
+
+      expect(conversationService.addUsersToMLSConversation).not.toHaveBeenCalled();
     });
   });
 });

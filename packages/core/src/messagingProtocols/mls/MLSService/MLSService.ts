@@ -521,6 +521,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         return false;
       }
 
+      this.logger.info(`MLS Group with id ${groupId} was not established succesfully, wiping the group locally...`);
       // Otherwise it's a backend error. Somebody else might have created the group in the meantime.
       // We should wipe the group locally, wait for the welcome message or join later via external commit.
       await this.wipeConversation(groupId);
