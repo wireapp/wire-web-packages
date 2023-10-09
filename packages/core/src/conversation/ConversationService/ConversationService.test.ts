@@ -18,7 +18,12 @@
  */
 
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
-import {Conversation, ConversationProtocol, MLSConversation} from '@wireapp/api-client/lib/conversation';
+import {
+  Conversation,
+  ConversationProtocol,
+  MLSConversation,
+  PostMlsMessageResponse,
+} from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_EVENT, ConversationMLSMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
@@ -109,6 +114,9 @@ describe('ConversationService', () => {
       conversationExists: jest.fn(),
       isConversationEstablished: jest.fn(),
       tryEstablishingMLSGroup: jest.fn(),
+      getKeyPackagesPayload: jest.fn(),
+      addUsersToExistingConversation: jest.fn(),
+      resetKeyMaterialRenewal: jest.fn(),
     } as unknown as MLSService;
 
     const conversationService = new ConversationService(client, mockedProteusService, mockedMLSService);
@@ -498,6 +506,46 @@ describe('ConversationService', () => {
 
       const fetchedMembers = await conversationService.fetchAllParticipantsClients({id: 'convid', domain: ''});
       expect(fetchedMembers).toEqual(members);
+    });
+  });
+
+  describe('addUsersToMLSConversation', () => {
+    it('should claim key packages for all the users and add them to the group', async () => {
+      const [conversationService, {apiClient, mlsService}] = buildConversationService();
+
+      const mockGroupId = 'groupId';
+      const mockConversationId = {id: PayloadHelper.getUUID(), domain: 'local.wire.com'};
+
+      const otherUsersToAdd = Array(3)
+        .fill(0)
+        .map(() => ({id: PayloadHelper.getUUID(), domain: 'local.wire.com'}));
+
+      const selfUserToAdd = {id: 'self-user-id', domain: 'local.wire.com', skipOwnClientId: apiClient.clientId};
+
+      const qualifiedUsers = [...otherUsersToAdd, selfUserToAdd];
+
+      jest
+        .spyOn(mlsService, 'getKeyPackagesPayload')
+        .mockResolvedValueOnce({coreCryptoKeyPackagesPayload: [], failedToFetchKeyPackages: []});
+
+      jest.spyOn(apiClient.api.conversation, 'getConversation').mockResolvedValueOnce({
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: 1,
+        group_id: mockGroupId,
+      } as unknown as Conversation);
+
+      const mlsMessage: PostMlsMessageResponse = {events: [], time: ''};
+      jest.spyOn(mlsService, 'addUsersToExistingConversation').mockResolvedValueOnce(mlsMessage);
+
+      await conversationService.addUsersToMLSConversation({
+        qualifiedUsers,
+        groupId: mockGroupId,
+        conversationId: mockConversationId,
+      });
+
+      expect(mlsService.getKeyPackagesPayload).toHaveBeenCalledWith(qualifiedUsers);
+      expect(mlsService.resetKeyMaterialRenewal).toHaveBeenCalledWith(mockGroupId);
     });
   });
 
