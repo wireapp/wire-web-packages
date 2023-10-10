@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [42.11.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.10.1...@wireapp/core@42.11.0) (2023-10-10)
+
+### Features
+
+* add getMLS1to1Conversation method to convo service ([#5597](https://github.com/wireapp/wire-web-packages/issues/5597)) ([6fb80fa](https://github.com/wireapp/wire-web-packages/commit/6fb80fac8b26c3d5dad51a7d33ae7d9cc8c15ea9))
+
+## [42.10.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.10.0...@wireapp/core@42.10.1) (2023-10-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [42.10.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.9.4...@wireapp/core@42.10.0) (2023-10-09)
+
+### Features
+
+* try establishing mls group for mixed conversation ([#5578](https://github.com/wireapp/wire-web-packages/issues/5578)) ([17b879b](https://github.com/wireapp/wire-web-packages/commit/17b879b45cfc44c6037cb45495b1fbee7a9a2669))
+
+## [42.9.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.9.3...@wireapp/core@42.9.4) (2023-10-05)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [42.9.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.9.2...@wireapp/core@42.9.3) (2023-10-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [42.9.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.9.1...@wireapp/core@42.9.2) (2023-10-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [42.9.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.9.0...@wireapp/core@42.9.1) (2023-10-04)
+
+**Note:** Version bump only for package @wireapp/core
+
 # [42.9.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.8.0...@wireapp/core@42.9.0) (2023-10-02)
 
 ### Features

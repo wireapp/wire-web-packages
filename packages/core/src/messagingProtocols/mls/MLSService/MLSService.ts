@@ -46,16 +46,16 @@ import {
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 
-import {shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
+import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
+import {CoreDatabase} from '../../../storage/CoreDB';
 import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {numberToHex} from '../../../util/numberToHex';
-import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
+import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {AcmeChallenge, E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
@@ -100,6 +100,8 @@ export class MLSService extends TypedEventEmitter<Events> {
   constructor(
     private readonly apiClient: APIClient,
     private readonly coreCryptoClient: CoreCrypto,
+    private readonly coreDatabase: CoreDatabase,
+    private readonly recurringTaskScheduler: RecurringTaskScheduler,
     {
       keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
       nbKeyPackages = defaultConfig.nbKeyPackages,
@@ -275,7 +277,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     if (mlsResponse) {
       //after we've successfully joined via external commit, we schedule periodic key material renewal
       const groupIdStr = Encoder.toBase64(groupId).asString;
-      this.scheduleKeyMaterialRenewal(groupIdStr);
+      await this.scheduleKeyMaterialRenewal(groupIdStr);
     }
 
     return mlsResponse;
@@ -483,7 +485,7 @@ export class MLSService extends TypedEventEmitter<Events> {
           await this.updateKeyingMaterial(groupId);
 
     // We schedule a periodic key material renewal
-    this.scheduleKeyMaterialRenewal(groupId);
+    await this.scheduleKeyMaterialRenewal(groupId);
 
     /**
      * @note If we can't fetch a user's key packages then we can not add them to mls conversation
@@ -492,6 +494,41 @@ export class MLSService extends TypedEventEmitter<Events> {
     response.failed = response.failed ? [...response.failed, ...failedToFetchKeyPackages] : failedToFetchKeyPackages;
     return response;
   }
+
+  /**
+   * Will try to register mls group and send an empty commit to establish it.
+   *
+   * @param groupId - id of the MLS group
+   * @returns true if the client has successfully established the group, false otherwise
+   */
+  public readonly tryEstablishingMLSGroup = async (groupId: string): Promise<boolean> => {
+    this.logger.info(`Trying to establish a MLS group with id ${groupId}.`);
+
+    // Before trying to register a group, check if the group is already established locally.
+    // We could have received a welcome message in the meantime.
+    const doesMLSGroupExistLocally = await this.conversationExists(groupId);
+    if (doesMLSGroupExistLocally) {
+      this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
+      return false;
+    }
+
+    try {
+      await this.registerConversation(groupId, []);
+      return true;
+    } catch (error) {
+      // If conversation already existed, locally, nothing more to do, we've received a welcome message.
+      if (isCoreCryptoMLSConversationAlreadyExistsError(error)) {
+        this.logger.info(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
+        return false;
+      }
+
+      this.logger.info(`MLS Group with id ${groupId} was not established succesfully, wiping the group locally...`);
+      // Otherwise it's a backend error. Somebody else might have created the group in the meantime.
+      // We should wipe the group locally, wait for the welcome message or join later via external commit.
+      await this.wipeConversation(groupId);
+      return false;
+    }
+  };
 
   /**
    * Will send a removal commit for given clients
@@ -575,9 +612,9 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Will reset the renewal to the threshold given as config
    * @param groupId The group that should have its key material updated
    */
-  public resetKeyMaterialRenewal(groupId: string) {
-    this.cancelKeyMaterialRenewal(groupId);
-    this.scheduleKeyMaterialRenewal(groupId);
+  public async resetKeyMaterialRenewal(groupId: string) {
+    await this.cancelKeyMaterialRenewal(groupId);
+    await this.scheduleKeyMaterialRenewal(groupId);
   }
 
   /**
@@ -585,7 +622,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param groupId The group that should stop having its key material updated
    */
   public cancelKeyMaterialRenewal(groupId: string) {
-    return cancelRecurringTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
+    return this.recurringTaskScheduler.cancelTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
   }
 
   /**
@@ -595,7 +632,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   public scheduleKeyMaterialRenewal(groupId: string) {
     const key = this.createKeyMaterialUpdateTaskSchedulerId(groupId);
 
-    registerRecurringTask({
+    return this.recurringTaskScheduler.registerTask({
       task: () => this.renewKeyMaterial(groupId),
       every: this.config.keyingMaterialUpdateThreshold,
       key,
@@ -620,7 +657,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param clientId id of the client
    */
   public schedulePeriodicKeyPackagesBackendSync(clientId: string) {
-    registerRecurringTask({
+    return this.recurringTaskScheduler.registerTask({
       every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
       task: () => this.verifyRemoteMLSKeyPackagesAmount(clientId),
@@ -687,7 +724,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       //if the mls group does not exist, we don't need to wipe it
       return;
     }
-    this.cancelKeyMaterialRenewal(groupId);
+    await this.cancelKeyMaterialRenewal(groupId);
 
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
@@ -723,10 +760,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const eventDate = new Date(eventTime);
       const firingDate = eventDate.setTime(eventDate.getTime() + delayInMs);
 
-      pendingProposalsStore.storeItem({
-        groupId,
-        firingDate,
-      });
+      await this.coreDatabase.put('pendingProposals', {groupId, firingDate}, groupId);
 
       TaskScheduler.addTask({
         task: () => this.commitPendingProposals({groupId}),
@@ -750,7 +784,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
       if (!skipDelete) {
         TaskScheduler.cancelTask(groupId);
-        pendingProposalsStore.deleteItem({groupId});
+        await this.coreDatabase.delete('pendingProposals', groupId);
       }
     } catch (error) {
       this.logger.error(`Error while committing pending proposals for groupId ${groupId}`, error);
@@ -764,7 +798,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   public async checkExistingPendingProposals() {
     try {
-      const pendingProposals = pendingProposalsStore.getAllItems();
+      const pendingProposals = await this.coreDatabase.getAll('pendingProposals');
       if (pendingProposals.length > 0) {
         pendingProposals.forEach(({groupId, firingDate}) =>
           TaskScheduler.addTask({

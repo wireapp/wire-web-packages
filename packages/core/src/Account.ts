@@ -58,6 +58,7 @@ import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
+import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -146,6 +147,7 @@ export class Account extends TypedEventEmitter<Events> {
     user: UserService;
   };
   public backendFeatures: BackendFeatures;
+  public recurringTaskScheduler: RecurringTaskScheduler;
 
   /**
    * @param apiClient The apiClient instance to use in the core (will create a new new one if undefined)
@@ -162,6 +164,18 @@ export class Account extends TypedEventEmitter<Events> {
     this.nbPrekeys = nbPrekeys;
     this.isMlsEnabled = () => this.backendFeatures.supportsMLS && !!this.cryptoProtocolConfig?.mls;
     this.createStore = createStore;
+    this.recurringTaskScheduler = new RecurringTaskScheduler({
+      get: async key => {
+        const task = await this.db?.get('recurringTasks', key);
+        return task?.firingDate;
+      },
+      set: async (key, timestamp) => {
+        await this.db?.put('recurringTasks', {key, firingDate: timestamp}, key);
+      },
+      delete: async key => {
+        await this.db?.delete('recurringTasks', key);
+      },
+    });
 
     apiClient.on(APIClient.TOPIC.COOKIE_REFRESH, async (cookie?: Cookie) => {
       if (cookie && this.storeEngine) {
@@ -400,9 +414,15 @@ export class Account extends TypedEventEmitter<Events> {
 
     if (clientType === CryptoClientType.CORE_CRYPTO && this.isMlsEnabled()) {
       e2eIdentityService = await E2EIServiceExternal.getInstance(cryptoClient.getNativeClient());
-      mlsService = new MLSService(this.apiClient, cryptoClient.getNativeClient(), {
-        ...this.cryptoProtocolConfig?.mls,
-      });
+      mlsService = new MLSService(
+        this.apiClient,
+        cryptoClient.getNativeClient(),
+        this.db,
+        this.recurringTaskScheduler,
+        {
+          ...this.cryptoProtocolConfig?.mls,
+        },
+      );
     }
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {

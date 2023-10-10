@@ -19,40 +19,53 @@
 
 import {TimeUtil} from '@wireapp/commons';
 
-import {saveState, loadState} from './RecurringTaskScheduler.store';
-
 import {LowPrecisionTaskScheduler} from '../LowPrecisionTaskScheduler';
 import {TaskScheduler} from '../TaskScheduler';
 
+interface RecurringTaskSchedulerStorage {
+  set: (key: string, timestamp: number) => Promise<void>;
+  get: (key: string) => Promise<number | undefined>;
+  delete: (key: string) => Promise<void>;
+}
+
 interface TaskParams {
   every: number;
-  task: () => void;
+  task: () => Promise<unknown> | unknown;
   key: string;
 }
 
-export function registerRecurringTask({every, task, key}: TaskParams) {
-  const lastFireDate = loadState(key) ?? Date.now();
+export class RecurringTaskScheduler {
+  constructor(private readonly storage: RecurringTaskSchedulerStorage) {}
 
-  const taskConfig = {
-    firingDate: lastFireDate + every,
-    key,
-    task() {
-      saveState(key, Date.now());
-      task();
-      registerRecurringTask({every, task, key});
-    },
+  public readonly registerTask = async ({every, task, key}: TaskParams): Promise<void> => {
+    const firingDate = (await this.storage.get(key)) || Date.now() + every;
+    await this.storage.set(key, firingDate);
+
+    const taskConfig = {
+      firingDate,
+      key,
+      task: async () => {
+        await this.storage.delete(key);
+        try {
+          await task();
+        } finally {
+          await this.registerTask({every, task, key});
+        }
+      },
+    };
+
+    if (every > TimeUtil.TimeInMillis.DAY * 20) {
+      // If the firing date is in more that 20 days, we could switch to a lowPrecision scheduler that will avoid hitting the limit of setTimeout
+      // (see https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#maximum_delay_value)
+      LowPrecisionTaskScheduler.addTask({...taskConfig, intervalDelay: TimeUtil.TimeInMillis.MINUTE});
+    } else {
+      TaskScheduler.addTask(taskConfig);
+    }
   };
 
-  if (every > TimeUtil.TimeInMillis.DAY * 20) {
-    // If the firing date is in more that 20 days, we could switch to a lowPrecision scheduler that will avoid hitting the limit of setTimeout
-    // (see https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#maximum_delay_value)
-    LowPrecisionTaskScheduler.addTask({...taskConfig, intervalDelay: TimeUtil.TimeInMillis.MINUTE});
-  } else {
-    TaskScheduler.addTask(taskConfig);
-  }
-}
-
-export function cancelRecurringTask(taskKey: string) {
-  TaskScheduler.cancelTask(taskKey);
-  LowPrecisionTaskScheduler.cancelTask({intervalDelay: TimeUtil.TimeInMillis.MINUTE, key: taskKey});
+  public readonly cancelTask = async (taskKey: string): Promise<void> => {
+    await this.storage.delete(taskKey);
+    TaskScheduler.cancelTask(taskKey);
+    LowPrecisionTaskScheduler.cancelTask({intervalDelay: TimeUtil.TimeInMillis.MINUTE, key: taskKey});
+  };
 }
