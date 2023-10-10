@@ -4817,6 +4817,7 @@ __metadata:
     typescript: ^5.0.4
     webpack: ^5.74.0
     ws: 8.14.2
+    zod: 3.21.4
   languageName: unknown
   linkType: soft
 
@@ -4934,6 +4935,7 @@ __metadata:
     rimraf: ^3.0.2
     typescript: ^5.0.4
     uuidjs: 4.2.13
+    zod: 3.21.4
   languageName: unknown
   linkType: soft
 
@@ -19766,6 +19768,13 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
+  languageName: node
+  linkType: hard
+
+"zod@npm:3.21.4":
+  version: 3.21.4
+  resolution: "zod@npm:3.21.4"
+  checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
   languageName: node
   linkType: hard
 
