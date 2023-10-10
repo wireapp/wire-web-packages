@@ -17,21 +17,21 @@
  *
  */
 
-import {
-  AcmeDirectory,
-  Ciphersuite,
-  CoreCrypto,
-  RotateBundle,
-  E2eiEnrollment,
-  AcmeChallenge,
-} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import {Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {InitParams} from './E2EIService.types';
+import {
+  AcmeChallenge,
+  AcmeDirectory,
+  Ciphersuite,
+  CoreCrypto,
+  E2eiEnrollment,
+  InitParams,
+  RotateBundle,
+} from './E2EIService.types';
 import {E2EIServiceExternal} from './E2EIServiceExternal';
 import {getE2EIClientId, isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';

@@ -17,10 +17,8 @@
  *
  */
 
-import {E2eiEnrollment} from '@wireapp/core-crypto';
-
 import {AcmeService} from '../Connection';
-import {Nonce} from '../E2EIService.types';
+import {E2eiEnrollment, Nonce} from '../E2EIService.types';
 
 interface GetCertificateParams {
   identity: E2eiEnrollment;

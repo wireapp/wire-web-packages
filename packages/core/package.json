@@ -13,13 +13,13 @@
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
-    "@wireapp/core-crypto": "1.0.0-rc.12",
+    "@wireapp/core-crypto": "1.0.0-rc.13",
     "@wireapp/cryptobox": "12.8.0",
     "@wireapp/promise-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.44.0",
     "@wireapp/store-engine": "workspace:*",
     "@wireapp/store-engine-dexie": "workspace:^",
-    "axios": "1.5.0",
+    "axios": "1.5.1",
     "bazinga64": "workspace:^",
     "deepmerge-ts": "5.1.0",
     "hash.js": "1.1.7",
@@ -61,6 +61,6 @@
     "test:coverage": "jest --coverage",
     "watch": "tsc --watch"
   },
-  "version": "42.6.0",
+  "version": "42.9.0",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }

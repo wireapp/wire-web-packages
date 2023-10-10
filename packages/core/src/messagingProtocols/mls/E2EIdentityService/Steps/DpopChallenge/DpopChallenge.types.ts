@@ -17,13 +17,11 @@
  *
  */
 
-import {E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
 import {APIClient} from '@wireapp/api-client';
 
 import {ClientId} from '../../../types';
 import {AcmeService} from '../../Connection/AcmeServer';
-import {Nonce, User} from '../../E2EIService.types';
+import {E2eiEnrollment, Nonce, User} from '../../E2EIService.types';
 import {GetAuthorizationReturnValue} from '../Authorization';
 
 export interface DoWireDpopChallengeParams {

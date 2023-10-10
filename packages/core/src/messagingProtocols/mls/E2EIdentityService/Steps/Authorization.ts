@@ -17,10 +17,8 @@
  *
  */
 
-import {NewAcmeAuthz, E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
 import {AcmeService} from '../Connection';
-import {Nonce} from '../E2EIService.types';
+import {E2eiEnrollment, NewAcmeAuthz, Nonce} from '../E2EIService.types';
 import {jsonToByteArray} from '../Helper';
 
 interface GetAuthorizationParams {

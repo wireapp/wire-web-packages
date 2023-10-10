@@ -17,10 +17,8 @@
  *
  */
 
-import {E2eiEnrollment, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
 import {AcmeService} from '../Connection/AcmeServer';
-import {Nonce} from '../E2EIService.types';
+import {AcmeDirectory, E2eiEnrollment, Nonce} from '../E2EIService.types';
 import {jsonToByteArray} from '../Helper';
 
 type CreateNewAccountParams = {

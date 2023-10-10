@@ -17,10 +17,8 @@
  *
  */
 
-import {AcmeDirectory, NewAcmeOrder, E2eiEnrollment} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
 import {AcmeService} from '../Connection';
-import {Nonce} from '../E2EIService.types';
+import {AcmeDirectory, E2eiEnrollment, NewAcmeOrder, Nonce} from '../E2EIService.types';
 import {jsonToByteArray} from '../Helper';
 
 type OrderUrl = string;

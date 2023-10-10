@@ -28,9 +28,8 @@ import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
 import {APIClient} from '@wireapp/api-client';
-import {TimeUtil} from '@wireapp/commons';
+import {TimeUtil, TypedEventEmitter} from '@wireapp/commons';
 import {
-  AcmeChallenge,
   AddProposalArgs,
   Ciphersuite,
   CommitBundle,
@@ -47,6 +46,7 @@ import {
   RemoveProposalArgs,
 } from '@wireapp/core-crypto';
 
+import {shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
 import {pendingProposalsStore} from './stores/pendingProposalsStore';
 import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
@@ -57,8 +57,7 @@ import {constructFullyQualifiedClientId, parseFullQualifiedClientId} from '../..
 import {numberToHex} from '../../../util/numberToHex';
 import {cancelRecurringTask, registerRecurringTask} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
-import {TypedEventEmitter} from '../../../util/TypedEventEmitter';
-import {E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
+import {AcmeChallenge, E2EIServiceExternal, E2EIServiceInternal, User} from '../E2EIdentityService';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
 
@@ -120,7 +119,11 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async initClient(userId: QualifiedId, client: RegisteredClient) {
     const qualifiedClientId = constructFullyQualifiedClientId(userId.id, client.id, userId.domain);
-    await this.coreCryptoClient.mlsInit(this.textEncoder.encode(qualifiedClientId), [this.config.defaultCiphersuite]);
+    await this.coreCryptoClient.mlsInit(
+      this.textEncoder.encode(qualifiedClientId),
+      [this.config.defaultCiphersuite],
+      this.config.nbKeyPackages,
+    );
 
     // We need to make sure keypackages and public key are uploaded to the backend
     await this.uploadMLSPublicKeys(client);
@@ -387,7 +390,20 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async decryptMessage(conversationId: ConversationId, payload: Uint8Array): Promise<DecryptedMessage> {
-    return this.coreCryptoClient.decryptMessage(conversationId, payload);
+    try {
+      const decryptedMessage = await this.coreCryptoClient.decryptMessage(conversationId, payload);
+      return decryptedMessage;
+    } catch (error) {
+      // According to CoreCrypto JS doc on .decryptMessage method, we should ignore some errors (corecrypto handle them internally)
+      if (shouldMLSDecryptionErrorBeIgnored(error)) {
+        return {
+          hasEpochChanged: false,
+          isActive: false,
+          proposals: [],
+        };
+      }
+      throw error;
+    }
   }
 
   public async encryptMessage(conversationId: ConversationId, message: Uint8Array): Promise<Uint8Array> {

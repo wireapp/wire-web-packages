@@ -17,11 +17,24 @@
  *
  */
 
-import {AcmeChallenge, CoreCrypto} from '@wireapp/core-crypto/platforms/web/corecrypto';
-
 import {APIClient} from '@wireapp/api-client';
+import {E2eiEnrollment, Ciphersuite, CoreCrypto, RotateBundle} from '@wireapp/core-crypto';
 
 import {E2EIServiceExternal} from './E2EIServiceExternal';
+
+/**
+ * Proxy types relevant to the E2EIService from CoreCrypto
+ */
+type OmitFree<T> = Omit<T, 'free'>;
+type NewAcmeAuthzOriginal = OmitFree<ReturnType<E2eiEnrollment['newAuthzResponse']>>;
+export type AcmeDirectory = OmitFree<ReturnType<E2eiEnrollment['directoryResponse']>>;
+export type AcmeChallenge = OmitFree<NonNullable<NewAcmeAuthzOriginal['wireDpopChallenge']>>;
+export type NewAcmeOrder = OmitFree<ReturnType<E2eiEnrollment['newOrderResponse']>>;
+export type NewAcmeAuthz = Pick<ReturnType<E2eiEnrollment['newAuthzResponse']>, 'identifier'> & {
+  wireDpopChallenge?: AcmeChallenge;
+  wireOidcChallenge?: AcmeChallenge;
+};
+export {E2eiEnrollment, Ciphersuite, CoreCrypto, RotateBundle};
 
 export type User = {
   id: string;

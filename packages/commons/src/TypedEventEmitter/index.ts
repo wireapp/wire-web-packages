@@ -17,10 +17,4 @@
  *
  */
 
-export enum CoreCryptoMLSErrors {
-  WRONG_EPOCH = 'Incoming message is for the wrong epoch',
-}
-
-export const isCoreCryptoMLSWrongEpochError = (error: unknown): boolean => {
-  return error instanceof Error && error.message === CoreCryptoMLSErrors.WRONG_EPOCH;
-};
+export * from './TypedEventEmitter';

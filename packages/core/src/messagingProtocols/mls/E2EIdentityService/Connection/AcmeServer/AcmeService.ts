@@ -17,7 +17,6 @@
  *
  */
 
-import {AcmeChallenge, AcmeDirectory} from '@wireapp/core-crypto/platforms/web/corecrypto';
 import axios, {AxiosInstance} from 'axios';
 import logdown from 'logdown';
 
@@ -50,6 +49,8 @@ import {
   GetCertificateResponseData,
   GetCertificateResponseSchema,
 } from './schema';
+
+import {AcmeChallenge, AcmeDirectory} from '../../E2EIService.types';
 
 export class AcmeService {
   private logger = logdown('@wireapp/core/AcmeService');
