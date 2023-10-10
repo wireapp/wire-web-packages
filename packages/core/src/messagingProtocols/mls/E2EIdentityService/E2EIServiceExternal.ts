@@ -56,7 +56,7 @@ export class E2EIServiceExternal {
     try {
       return E2EIStorage.get.certificateData();
     } catch (error) {
-      console.error('ACME: Failed to get stored certificate', error);
+      this.logger.error('ACME: Failed to get stored certificate', error);
       return undefined;
     }
   }
