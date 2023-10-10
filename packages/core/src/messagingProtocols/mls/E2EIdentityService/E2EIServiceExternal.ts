@@ -34,7 +34,6 @@ export class E2EIServiceExternal {
 
   private constructor(coreCryptClient: CoreCrypto) {
     this.coreCryptoClient = coreCryptClient;
-    this.logger.log('Instance of E2EIdentityServiceExternal created');
   }
 
   public static async getInstance(coreCryptoClient: CoreCrypto): Promise<E2EIServiceExternal> {
