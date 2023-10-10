@@ -24,7 +24,7 @@ module.exports = {
     '^.+\\.(ts|tsx|jsx)$': '@swc/jest',
     'node_modules/@wireapp/.+\\.(j|t)sx?$': '@swc/jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!@wireapp/.*)'],
+  transformIgnorePatterns: ['node_modules/'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ignoredPaths,
   coveragePathIgnorePatterns: ignoredPaths,
