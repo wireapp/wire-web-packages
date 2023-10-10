@@ -335,15 +335,14 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
-    const {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages} = await this.mlsService.getKeyPackagesPayload(
-      qualifiedUsers,
-    );
+    const {coreCryptoKeyPackagesPayload, failedToFetchKeyPackages} =
+      await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
 
     const response = await this.mlsService.addUsersToExistingConversation(groupId, coreCryptoKeyPackagesPayload);
     const conversation = await this.getConversation(conversationId);
 
     //We store the info when user was added (and key material was created), so we will know when to renew it
-    this.mlsService.resetKeyMaterialRenewal(groupId);
+    await this.mlsService.resetKeyMaterialRenewal(groupId);
     return {
       events: response.events,
       conversation,
@@ -368,7 +367,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const messageResponse = await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
 
     //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
-    this.mlsService.resetKeyMaterialRenewal(groupId);
+    await this.mlsService.resetKeyMaterialRenewal(groupId);
 
     const conversation = await this.getConversation(conversationId);
 
@@ -403,7 +402,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       );
 
       //We store the info when user was added (and key material was created), so we will know when to renew it
-      this.mlsService.resetKeyMaterialRenewal(groupId);
+      await this.mlsService.resetKeyMaterialRenewal(groupId);
     });
   }
 
