@@ -19,7 +19,6 @@
 
 import {Converter, EncodedData, Encoder} from 'bazinga64';
 
-
 export const jsonToByteArray = (data: any): Uint8Array => {
   const encoder = new TextEncoder();
   return encoder.encode(JSON.stringify(data, null, 0));
@@ -47,6 +46,5 @@ export const getE2EIClientId = (clientId: string, userId: string, userDomain: st
     asBytes,
   };
 };
-
 
 export const isResponseStatusValid = (status: string | undefined) => status && status === 'valid';

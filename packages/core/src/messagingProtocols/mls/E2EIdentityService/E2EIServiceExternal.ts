@@ -17,6 +17,7 @@
  *
  */
 
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -24,7 +25,6 @@ import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity} from '@wir
 
 import {getE2EIClientId} from './Helper';
 import {E2EIStorage} from './Storage/E2EIStorage';
-import { QualifiedId } from '@wireapp/api-client/lib/user';
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
 export class E2EIServiceExternal {
