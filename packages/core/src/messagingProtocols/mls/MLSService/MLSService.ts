@@ -620,7 +620,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    * Will cancel the renewal of the key material for a given groupId
    * @param groupId The group that should stop having its key material updated
    */
-  public cancelKeyMaterialRenewal(groupId: string) {
+  private cancelKeyMaterialRenewal(groupId: string) {
     return this.recurringTaskScheduler.cancelTask(this.createKeyMaterialUpdateTaskSchedulerId(groupId));
   }
 
@@ -718,13 +718,14 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async wipeConversation(groupId: string): Promise<void> {
+    await this.cancelKeyMaterialRenewal(groupId);
+    await this.cancelPendingProposalsTask(groupId);
+
     const doesConversationExist = await this.conversationExists(groupId);
     if (!doesConversationExist) {
       //if the mls group does not exist, we don't need to wipe it
       return;
     }
-    await this.cancelKeyMaterialRenewal(groupId);
-    await this.cancelPendingProposalsTask(groupId);
 
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     return this.coreCryptoClient.wipeConversation(groupIdBytes);
