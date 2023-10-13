@@ -18,6 +18,7 @@
  */
 
 import {inputStyle} from './Input';
+import {isGroup} from './SelectComponents';
 
 import {Theme} from '../Layout';
 
@@ -95,7 +96,7 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
     paddingBottom: 0,
     paddingTop: 0,
   }),
-  option: (provided, {isMulti, isDisabled, isFocused, isSelected}) => ({
+  option: (provided, {isMulti, isDisabled, isFocused, isSelected, options, data}) => ({
     ...provided,
     backgroundColor: theme.Input.backgroundColor,
     color: theme.general.color,
@@ -155,14 +156,25 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
         color: theme.Select.disabledColor,
       }),
     }),
-    '&:not(:last-of-type)': {
-      borderBottom: `1px solid ${theme.Select.borderColor}`,
-    },
+    ...(isGroup(options) && {
+      'div > svg': {
+        fill: theme.general.contrastColor,
+      },
+    }),
+    ...(!isGroup(options) && {
+      '&:not(:last-of-type)': {
+        borderBottom: `1px solid ${theme.Select.borderColor}`,
+      },
+    }),
     '&:first-of-type': {
       borderRadius: '12px 12px 0 0',
     },
     '&:last-of-type': {
-      borderRadius: '0 0 12px 12px',
+      ...(!isGroup(options) && {borderRadius: '0 0 12px 12px'}),
+      ...(isGroup(options) &&
+        !options[options.length - 1].options.includes(data) && {
+          borderBottom: `1px solid ${theme.Select.borderColor}`,
+        }),
     },
   }),
   valueContainer: provided => ({
