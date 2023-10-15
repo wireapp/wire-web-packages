@@ -2834,17 +2834,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/filter-packages@npm:2.5.1":
-  version: 2.5.1
-  resolution: "@lerna-lite/filter-packages@npm:2.5.1"
-  dependencies:
-    "@lerna-lite/core": 2.5.1
-    multimatch: ^6.0.0
-    npmlog: ^7.0.1
-  checksum: f92c901cdaa91cca92585e5fcda729a645da270e4ae1a06b6aaa6d3cff36267b43e4d7c3f164add1cb2da6c527ed4b93600f8d9c41f01c3eb3d9b30ad0d6945c
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/filter-packages@npm:2.6.0":
   version: 2.6.0
   resolution: "@lerna-lite/filter-packages@npm:2.6.0"
@@ -2903,15 +2892,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/profiler@npm:2.5.1":
-  version: 2.5.1
-  resolution: "@lerna-lite/profiler@npm:2.5.1"
+"@lerna-lite/profiler@npm:2.6.0":
+  version: 2.6.0
+  resolution: "@lerna-lite/profiler@npm:2.6.0"
   dependencies:
-    "@lerna-lite/core": 2.5.1
+    "@lerna-lite/core": 2.6.0
     fs-extra: ^11.1.1
     npmlog: ^7.0.1
     upath: ^2.0.1
-  checksum: c4123d0ecfad9c5c191b944103b04ff42d7e384e132147d0c7eb2050bf655ae8163aad3556d94f42bec771f8bf07ad4bb6a434bfdd30d674e6769314d13bdb59
+  checksum: 4e2fecbc70bbedde530540ceb68ddbe24b14ad09158d71d97c25edbffab03b68733a161944ac01dd82545fdb2811b3ac66eaa2b81e94d123e2605b6ab48efc5d
   languageName: node
   linkType: hard
 
@@ -2949,19 +2938,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/run@npm:2.5.1":
-  version: 2.5.1
-  resolution: "@lerna-lite/run@npm:2.5.1"
+"@lerna-lite/run@npm:2.6.0":
+  version: 2.6.0
+  resolution: "@lerna-lite/run@npm:2.6.0"
   dependencies:
-    "@lerna-lite/cli": 2.5.1
-    "@lerna-lite/core": 2.5.1
-    "@lerna-lite/filter-packages": 2.5.1
-    "@lerna-lite/profiler": 2.5.1
+    "@lerna-lite/cli": 2.6.0
+    "@lerna-lite/core": 2.6.0
+    "@lerna-lite/filter-packages": 2.6.0
+    "@lerna-lite/profiler": 2.6.0
     chalk: ^5.3.0
     fs-extra: ^11.1.1
     npmlog: ^7.0.1
     p-map: ^6.0.0
-  checksum: c56b983f4cab073ee392011b683a58bf93fbb35e5169ee4025f8e38283426e9e8f27a0b68ee9e0ae856024d3183c83397c76e97da40fa891063de4bae79699be
+  checksum: 7749b2f9f6471fb969363281f91199bb59162a0ca1e486bb5a73aae87f936d38142af88034e9ea6eb452bd6d0cb309e92eebc4cbdd9422b5fd5129bb59a2c5d4
   languageName: node
   linkType: hard
 
@@ -16881,7 +16870,7 @@ __metadata:
     "@lerna-lite/changed": 2.6.0
     "@lerna-lite/cli": 2.6.0
     "@lerna-lite/publish": 2.5.1
-    "@lerna-lite/run": 2.5.1
+    "@lerna-lite/run": 2.6.0
     "@lerna-lite/version": 2.6.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
