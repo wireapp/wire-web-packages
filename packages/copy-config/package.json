@@ -12,7 +12,7 @@
     "axios": "1.5.1",
     "copy": "0.3.2",
     "cosmiconfig": "8.3.6",
-    "fs-extra": "11.1.0",
+    "fs-extra": "11.1.1",
     "jszip": "3.10.1",
     "logdown": "3.3.1"
   },
@@ -21,7 +21,7 @@
     "@swc/jest": "^0.2.23",
     "@types/axios": "^0.14.0",
     "@types/copy": "0.3.3",
-    "@types/fs-extra": "9.0.13",
+    "@types/fs-extra": "11.0.2",
     "@types/jest": "^29.2.0",
     "@types/rimraf": "^3.0.2",
     "jest": "^29.2.1",
