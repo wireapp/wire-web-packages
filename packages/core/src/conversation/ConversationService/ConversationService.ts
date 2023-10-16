@@ -67,6 +67,7 @@ import {
   SendProteusMessageParams,
 } from '../../messagingProtocols/proteus/ProteusService/ProteusService.types';
 import {HandledEventPayload} from '../../notification';
+import {CoreDatabase} from '../../storage/CoreDB';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
 import {RemoteData} from '../content';
@@ -84,6 +85,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     private readonly apiClient: APIClient,
     private readonly proteusService: ProteusService,
     private readonly _mlsService?: MLSService,
+    private readonly coreDatabase: CoreDatabase,
   ) {
     super();
     this.messageTimer = new MessageTimer();
