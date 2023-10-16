@@ -196,6 +196,11 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
+  /**
+   * Blacklists a conversation.
+   * When conversations is blacklisted, it means that it will be completely ignored by a client, even though it does exist on backend and we're the conversation member.
+   * @param conversationId id of the conversation to blacklist
+   */
   public readonly blacklistConversation = async (conversationId: QualifiedId): Promise<void> => {
     await this.coreDatabase.put(
       'conversationBlacklist',
