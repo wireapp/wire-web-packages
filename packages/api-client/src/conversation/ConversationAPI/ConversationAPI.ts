@@ -26,7 +26,6 @@ import {
   ConversationCode,
   ConversationProtocol,
   ConversationRolesList,
-  Conversations,
   DefaultConversationRoleName,
   Invite,
   JoinConversationByCodePayload,
@@ -343,68 +342,6 @@ export class ConversationAPI {
     const allConversationIds = await this.getQualifiedConversationIds();
     const conversations = await this.getConversationsByQualifiedIds(allConversationIds);
     return conversations;
-  }
-
-  /**
-   * Get conversations.
-   * Note: At most 500 conversations are returned per request.
-   * @param conversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
-   */
-  public async getConversationsByIds(filteredConversationIds: string[]): Promise<Conversation[]> {
-    let allConversations: Conversation[] = [];
-
-    const getConversationChunk = async (chunkedConversationIds: string[]): Promise<Conversation[]> => {
-      const {conversations} = await this._getConversations(
-        undefined,
-        chunkedConversationIds,
-        ConversationAPI.MAX_CHUNK_SIZE,
-      );
-      return conversations;
-    };
-
-    for (let index = 0; index < filteredConversationIds.length; index += ConversationAPI.MAX_CHUNK_SIZE) {
-      const requestChunk = filteredConversationIds.slice(index, index + ConversationAPI.MAX_CHUNK_SIZE);
-      if (requestChunk.length) {
-        const conversationChunk = await getConversationChunk(requestChunk);
-
-        if (conversationChunk.length) {
-          allConversations = allConversations.concat(conversationChunk);
-        }
-      }
-    }
-
-    return allConversations;
-  }
-
-  /**
-   * Get conversations.
-   * Note: At most 500 conversations are returned per request.
-   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param filteredConversationIds Mutually exclusive with `startConversationId`. At most 32 IDs per request.
-   * @param limit Max. number of conversations to return
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
-   */
-  private async _getConversations(
-    startConversationId?: string,
-    filteredConversationIds?: string[],
-    limit = ConversationAPI.MAX_CHUNK_SIZE,
-  ): Promise<Conversations> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        size: limit,
-        start: startConversationId,
-      },
-      url: ConversationAPI.URL.CONVERSATIONS,
-    };
-
-    if (filteredConversationIds) {
-      config.params.ids = filteredConversationIds.join(',');
-    }
-
-    const response = await this.client.sendJSON<Conversations>(config);
-    return response.data;
   }
 
   /**
