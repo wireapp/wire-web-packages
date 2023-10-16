@@ -309,20 +309,6 @@ export class ConversationAPI {
   }
 
   /**
-   * Get conversations as chunks.
-   * Note: At most 500 conversations are returned per request.
-   * @param startConversationId Conversation ID to start from (exclusive). Mutually exclusive with `conversationIds`.
-   * @param limit Max. number of conversations to return
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/conversations
-   */
-  public getConversations(
-    startConversationId?: string,
-    limit = ConversationAPI.MAX_CHUNK_SIZE,
-  ): Promise<Conversations> {
-    return this._getConversations(startConversationId, undefined, limit);
-  }
-
-  /**
    * Get conversation metadata for a list of conversation qualified ids
    * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/post_conversations_list_v2
    */
