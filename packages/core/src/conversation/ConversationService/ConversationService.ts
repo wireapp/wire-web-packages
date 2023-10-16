@@ -196,13 +196,13 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
   }
 
-  public async blacklistConversation(conversationId: QualifiedId): Promise<void> {
+  public readonly blacklistConversation = async (conversationId: QualifiedId): Promise<void> => {
     await this.coreDatabase.put(
       'conversationBlacklist',
       {id: conversationId.id, domain: conversationId.domain},
       serializeQualifiedId(conversationId),
     );
-  }
+  };
 
   /**
    * returns the number of messages that are in the queue expecting to be sent

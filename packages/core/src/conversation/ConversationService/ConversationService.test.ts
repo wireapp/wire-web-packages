@@ -483,6 +483,46 @@ describe('ConversationService', () => {
     });
   });
 
+  describe('getConversations', () => {
+    it('returns a list of conversations by conversation ids', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+      const conversationIds = Array.from({length: 10}, () => ({id: PayloadHelper.getUUID(), domain: 'test.zinfra.io'}));
+      jest.spyOn(apiClient.api.conversation, 'getConversationsByQualifiedIds').mockResolvedValueOnce({
+        found: conversationIds as unknown as Conversation[],
+      });
+
+      const conversations = await conversationService.getConversations(conversationIds);
+      expect(conversations.found?.length).toBe(conversationIds.length);
+    });
+
+    it('returns a full list of conversations if a list of conversations is not provided', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockImplementation(jest.fn());
+
+      await conversationService.getConversations();
+
+      expect(apiClient.api.conversation.getConversationList).toHaveBeenCalled();
+    });
+
+    it('includes a list of ids to skip if they exist in db store', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      const conversationIdsToSkip = Array.from({length: 2}, () => ({
+        id: PayloadHelper.getUUID(),
+        domain: 'test.zinfra.io',
+      }));
+
+      conversationIdsToSkip.forEach(conversationService.blacklistConversation);
+
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockImplementation(jest.fn());
+
+      await conversationService.getConversations();
+
+      expect(apiClient.api.conversation.getConversationList).toHaveBeenCalledWith(conversationIdsToSkip);
+    });
+  });
+
   describe('fetchAllParticipantsClients', () => {
     it('gives the members and clients of a federated conversation', async () => {
       const [conversationService, {apiClient}] = await buildConversationService();
