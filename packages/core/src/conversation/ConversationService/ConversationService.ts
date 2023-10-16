@@ -70,6 +70,7 @@ import {HandledEventPayload} from '../../notification';
 import {CoreDatabase} from '../../storage/CoreDB';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
+import {serializeQualifiedId} from '../../util/qualifiedIdUtil';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
@@ -84,8 +85,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
   constructor(
     private readonly apiClient: APIClient,
     private readonly proteusService: ProteusService,
-    private readonly _mlsService?: MLSService,
     private readonly coreDatabase: CoreDatabase,
+    private readonly _mlsService?: MLSService,
   ) {
     super();
     this.messageTimer = new MessageTimer();
@@ -143,7 +144,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
   public async getConversations(conversationIds?: QualifiedId[]): Promise<RemoteConversations> {
     if (!conversationIds) {
-      return this.apiClient.api.conversation.getConversationList();
+      const conversationIdsToSkip = await this.coreDatabase.getAll('conversationBlacklist');
+      return this.apiClient.api.conversation.getConversationList(conversationIdsToSkip);
     }
     return this.apiClient.api.conversation.getConversationsByQualifiedIds(conversationIds);
   }
@@ -192,6 +194,14 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
   public sendTypingStop(conversationId: QualifiedId): Promise<void> {
     return this.apiClient.api.conversation.postTyping(conversationId, {status: CONVERSATION_TYPING.STOPPED});
+  }
+
+  public async blacklistConversation(conversationId: QualifiedId): Promise<void> {
+    await this.coreDatabase.put(
+      'conversationBlacklist',
+      {id: conversationId.id, domain: conversationId.domain},
+      serializeQualifiedId(conversationId),
+    );
   }
 
   /**

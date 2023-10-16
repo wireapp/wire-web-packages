@@ -35,7 +35,7 @@ interface CoreDBSchema extends DBSchema {
   };
   conversationBlacklist: {
     key: string;
-    value: {id: string};
+    value: {id: string; domain: string};
   };
 }
 
