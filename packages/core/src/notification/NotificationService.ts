@@ -241,7 +241,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
    * Will process one event
    * @param event The backend event to process
    * @param dryRun Will not try to decrypt if true
-   * @return the decrypted payload and the raw event. If the event was handled, but we do not want to emit it, null will be returned.
+   * @return event handling status and if event was handled, the payload
    */
   private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventResult> {
     if (dryRun) {

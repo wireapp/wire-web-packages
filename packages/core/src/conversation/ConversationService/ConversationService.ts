@@ -681,8 +681,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
   /**
    * Will process one conversation event
    * @param event The backend event to process
-   * @return The decrypted payload and the raw event. If the event was handled, but we do not want to emit it, response will contain skipEmit flag.
-   * If the handler was not able to handle the event, null will be returned.
+   * @return Event handling status (if handled successfully also the decrypted payload and the raw event)
    */
   public async handleEvent(event: BackendEvent): Promise<HandledEventResult> {
     if ('conversation' in event) {
