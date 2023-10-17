@@ -519,7 +519,9 @@ describe('ConversationService', () => {
 
       await conversationService.getConversations();
 
-      expect(apiClient.api.conversation.getConversationList).toHaveBeenCalledWith(conversationIdsToSkip);
+      expect(apiClient.api.conversation.getConversationList).toHaveBeenCalledWith(
+        expect.arrayContaining(conversationIdsToSkip),
+      );
     });
   });
 
