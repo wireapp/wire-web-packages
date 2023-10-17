@@ -17,13 +17,11 @@
  *
  */
 
-import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {BackendEvent, ConversationEvent} from '@wireapp/api-client/lib/event';
 
-type SerializedQualifiedId = `${string}@${string}`;
+const CONVERSATION_EVENT = 'conversation';
 
-export const serializeQualifiedId = ({id, domain}: QualifiedId): SerializedQualifiedId => `${id}@${domain}`;
-
-export const parseQualifiedId = (serializedQualifiedId: SerializedQualifiedId): QualifiedId => {
-  const [id, domain] = serializedQualifiedId.split('@');
-  return {id, domain};
+export const isConversationEvent = (event: BackendEvent): event is ConversationEvent => {
+  const [eventCategory] = event.type.split('.');
+  return eventCategory === CONVERSATION_EVENT;
 };

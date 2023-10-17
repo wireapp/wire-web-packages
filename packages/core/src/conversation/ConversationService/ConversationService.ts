@@ -70,7 +70,6 @@ import {HandledEventPayload} from '../../notification';
 import {CoreDatabase} from '../../storage/CoreDB';
 import {isMLSConversation} from '../../util';
 import {mapQualifiedUserClientIdsToFullyQualifiedClientIds} from '../../util/fullyQualifiedClientIdUtils';
-import {serializeQualifiedId} from '../../util/qualifiedIdUtil';
 import {RemoteData} from '../content';
 import {isSendingMessage, sendMessage} from '../message/messageSender';
 
@@ -202,11 +201,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * @param conversationId id of the conversation to blacklist
    */
   public readonly blacklistConversation = async (conversationId: QualifiedId): Promise<void> => {
-    await this.coreDatabase.put(
-      'conversationBlacklist',
-      {id: conversationId.id, domain: conversationId.domain},
-      serializeQualifiedId(conversationId),
-    );
+    await this.coreDatabase.put('conversationBlacklist', conversationId, conversationId.id);
   };
 
   /**
