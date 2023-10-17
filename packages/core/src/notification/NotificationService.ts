@@ -203,9 +203,9 @@ export class NotificationService extends TypedEventEmitter<Events> {
         continue;
       }
       try {
-        const data = await this.handleEvent(event, dryRun);
-        if (typeof data !== 'undefined') {
-          yield data;
+        const handledEvent = await this.handleEvent(event, dryRun);
+        if (handledEvent) {
+          yield handledEvent;
         }
       } catch (error) {
         this.logger.error(
@@ -230,9 +230,9 @@ export class NotificationService extends TypedEventEmitter<Events> {
    * Will process one event
    * @param event The backend event to process
    * @param dryRun Will not try to decrypt if true
-   * @return the decrypted payload and the raw event. Returns `undefined` when the payload is a coreCrypto-only system message
+   * @return the decrypted payload and the raw event. If the event was handled, but we do not want to emit it, null will be returned.
    */
-  private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventPayload | undefined> {
+  private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventPayload | null> {
     if (dryRun) {
       // In case of a dry run, we do not want to decrypt messages
       // We just return the raw event to the caller
@@ -241,7 +241,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
 
     const conversationEventResult = await this.conversationService.handleEvent(event);
     if (conversationEventResult) {
-      return conversationEventResult;
+      return conversationEventResult.skipEmit ? null : conversationEventResult;
     }
 
     return {event};

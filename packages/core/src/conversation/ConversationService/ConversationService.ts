@@ -56,6 +56,7 @@ import {
   SendMlsMessageParams,
   SendResult,
 } from './ConversationService.types';
+import {isConversationEvent} from './Utility/isConversationEvent';
 
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
 import {decryptAsset} from '../../cryptography/AssetCryptography';
@@ -673,7 +674,28 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return this.proteusService.handleOtrMessageAddEvent(event);
   }
 
-  public async handleEvent(event: BackendEvent): Promise<HandledEventPayload | null> {
+  private async isConversationBlacklisted(conversationId: string): Promise<boolean> {
+    const foundEntry = await this.coreDatabase.get('conversationBlacklist', conversationId);
+    return !!foundEntry;
+  }
+
+  /**
+   * Will process one conversation event
+   * @param event The backend event to process
+   * @return The decrypted payload and the raw event. If the event was handled, but we do not want to emit it, response will contain skipEmit flag.
+   * If the handler was not able to handle the event, null will be returned.
+   */
+  public async handleEvent(event: BackendEvent): Promise<(HandledEventPayload & {skipEmit?: boolean}) | null> {
+    if (!isConversationEvent(event)) {
+      return null;
+    }
+
+    const isBlacklisted = await this.isConversationBlacklisted(event.conversation);
+    if (isBlacklisted) {
+      this.logger.info(`Conversation ${event.conversation} is blacklisted, ignoring event ${event.type}`);
+      return {event, skipEmit: true};
+    }
+
     switch (event.type) {
       case CONVERSATION_EVENT.MLS_MESSAGE_ADD:
         return this.handleMLSMessageAddEvent(event);
