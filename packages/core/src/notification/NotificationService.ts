@@ -44,6 +44,12 @@ export type HandledEventPayload = {
   decryptionError?: DecryptionError;
 };
 
+/**
+ * The result of handling an event
+ * - unhandled: The event was not handled by the particular service
+ * - ignored: The event was handled, but it got marked as ignored for whatever reason, it will not be emitted
+ * - handled: The event was handled and its payload will be emitted
+ */
 export type HandledEventResult =
   | {status: 'unhandled'}
   | {status: 'ignored'}
