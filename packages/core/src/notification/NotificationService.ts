@@ -44,6 +44,11 @@ export type HandledEventPayload = {
   decryptionError?: DecryptionError;
 };
 
+export type HandledEventResult =
+  | {status: 'unhandled'}
+  | {status: 'ignored'}
+  | {status: 'handled'; payload: HandledEventPayload | null};
+
 enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
 }
@@ -203,9 +208,9 @@ export class NotificationService extends TypedEventEmitter<Events> {
         continue;
       }
       try {
-        const handledEvent = await this.handleEvent(event, dryRun);
-        if (handledEvent) {
-          yield handledEvent;
+        const handledEventResult = await this.handleEvent(event, dryRun);
+        if (handledEventResult.status === 'handled' && handledEventResult.payload) {
+          yield handledEventResult.payload;
         }
       } catch (error) {
         this.logger.error(
@@ -232,18 +237,18 @@ export class NotificationService extends TypedEventEmitter<Events> {
    * @param dryRun Will not try to decrypt if true
    * @return the decrypted payload and the raw event. If the event was handled, but we do not want to emit it, null will be returned.
    */
-  private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventPayload | null> {
+  private async handleEvent(event: BackendEvent, dryRun: boolean = false): Promise<HandledEventResult> {
     if (dryRun) {
       // In case of a dry run, we do not want to decrypt messages
       // We just return the raw event to the caller
-      return {event};
+      return {status: 'handled', payload: {event}};
     }
 
     const conversationEventResult = await this.conversationService.handleEvent(event);
-    if (conversationEventResult) {
-      return conversationEventResult.skipEmit ? null : conversationEventResult;
+    if (conversationEventResult.status !== 'unhandled') {
+      return conversationEventResult;
     }
 
-    return {event};
+    return {status: 'handled', payload: {event}};
   }
 }
