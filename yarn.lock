@@ -4188,10 +4188,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/platform@npm:1.3.4":
-  version: 1.3.4
-  resolution: "@types/platform@npm:1.3.4"
-  checksum: dce83952e6af3e488fb2a3c7c7ec226cef4a8606ab63bd40301fe7883ff0c434512210497d6cb79adc4c8e671648ed3e7035438a40f41a5f395c60d2bfb6390d
+"@types/platform@npm:1.3.5":
+  version: 1.3.5
+  resolution: "@types/platform@npm:1.3.5"
+  checksum: acdefc3f58029747d76dc9f985ab1fc3dd62125d53fe807eedf2cf88f5c660e0aa31e4c2737cfe7738cf1972608ea03d06ca368ce1385cd5e5a5d54632d2a18c
   languageName: node
   linkType: hard
 
@@ -4978,7 +4978,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
-    "@types/platform": 1.3.4
+    "@types/platform": 1.3.5
     "@types/rimraf": ^3.0.2
     ansi-regex: 5.0.1
     fs-extra: 11.1.0
