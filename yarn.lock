@@ -3846,12 +3846,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/copy@npm:0.3.3":
-  version: 0.3.3
-  resolution: "@types/copy@npm:0.3.3"
+"@types/copy@npm:0.3.4":
+  version: 0.3.4
+  resolution: "@types/copy@npm:0.3.4"
   dependencies:
     "@types/vinyl": "*"
-  checksum: b9124f5f4b16bfad29b0d4cef1ea5f3f87ed2fa5c539d4f8e77316cf4d9f96725a1e0f1026600a391fd1eeba72fe133e9b5f0d45dc4964946a77fc2677dbd662
+  checksum: 634b432dc3a5380f189843e4aa967ae763b8dbbc4339b2d73767ceb8d9903ad5b0bcf352a5d463402e54c3da902373e0c5710f53c16f200f1f547b79700be0af
   languageName: node
   linkType: hard
 
@@ -4997,7 +4997,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/axios": ^0.14.0
-    "@types/copy": 0.3.3
+    "@types/copy": 0.3.4
     "@types/fs-extra": 9.0.13
     "@types/jest": ^29.2.0
     "@types/rimraf": ^3.0.2
