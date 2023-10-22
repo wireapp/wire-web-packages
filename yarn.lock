@@ -4068,9 +4068,9 @@ __metadata:
   linkType: hard
 
 "@types/license-checker@npm:^25":
-  version: 25.0.4
-  resolution: "@types/license-checker@npm:25.0.4"
-  checksum: 488c537562e5027050690aa16526c18b5f7bc07ed1dd5b34b9d4deccc17d84fd3d29af3e425f9131cb3e9f4e182909dd4ef7c5e2a7da95bc8a127460ddc20878
+  version: 25.0.5
+  resolution: "@types/license-checker@npm:25.0.5"
+  checksum: 1e171a2bb788fda8f03c67467578c63896d5e0884cddc7f8ec732300a83dbb1393bfbec53c17da7a41f51f3cebcbba87c9028a4d41c93ef57632ced633379300
   languageName: node
   linkType: hard
 
