@@ -4331,10 +4331,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/spark-md5@npm:3.0.2":
-  version: 3.0.2
-  resolution: "@types/spark-md5@npm:3.0.2"
-  checksum: daa98b1adbda0c0ba6996dbaf2472cb09d72a828d01c114f67dbab1e7f0ffc23268680c64978a88db46ee1948282d01b0ea0ecd5cfdbac0c6c4eb9c9de76a12a
+"@types/spark-md5@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@types/spark-md5@npm:3.0.3"
+  checksum: 3104daa81dbc1983859540569ea4223dae890e26ca60727997eb0939e7a5e62455baa6da49a5b083448224f6969aba3dcc60f5d3c238d24c8ae41c4c59212e0a
   languageName: node
   linkType: hard
 
@@ -4894,7 +4894,7 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/node": ^20.1.0
     "@types/pako": 2
-    "@types/spark-md5": 3.0.2
+    "@types/spark-md5": 3.0.3
     "@types/tough-cookie": 4.0.4
     "@types/ws": 8.5.7
     "@wireapp/commons": "workspace:^"
