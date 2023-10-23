@@ -583,7 +583,7 @@ export class Account extends TypedEventEmitter<Events> {
     });
 
     const handleMissedNotifications = async (notificationId: string) => {
-      if (await this.isMlsEnabled()) {
+      if (this.service?.mls) {
         await this.service?.conversation.handleConversationsEpochMismatch();
       }
       return onMissedNotifications(notificationId);
