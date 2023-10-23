@@ -436,12 +436,11 @@ export class APIClient extends EventEmitter {
       return false;
     }
 
-    let isBackendRemovalKeyPresent = false;
     try {
       const backendRemovalKey = (await this.api.client.getPublicKeys()).removal;
-      isBackendRemovalKeyPresent = !!backendRemovalKey;
+      return !!backendRemovalKey;
     } catch {}
 
-    return isBackendRemovalKeyPresent;
+    return false;
   }
 }
