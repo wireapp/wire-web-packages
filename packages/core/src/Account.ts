@@ -162,8 +162,7 @@ export class Account extends TypedEventEmitter<Events> {
     this.backendFeatures = this.apiClient.backendFeatures;
     this.cryptoProtocolConfig = cryptoProtocolConfig;
     this.nbPrekeys = nbPrekeys;
-    this.isMlsEnabled = async () =>
-      !!this.cryptoProtocolConfig?.mls && (await this.apiClient.isMLSSupportedByBackend());
+    this.isMlsEnabled = async () => !!this.cryptoProtocolConfig?.mls && (await this.apiClient.supportsMLS());
     this.createStore = createStore;
     this.recurringTaskScheduler = new RecurringTaskScheduler({
       get: async key => {

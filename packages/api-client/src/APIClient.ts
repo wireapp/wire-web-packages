@@ -429,10 +429,10 @@ export class APIClient extends EventEmitter {
   /**
    * Will check if MLS is supported by backend (whether the api version used supports MLS, and whether a backend removal key is present).
    */
-  public async isMLSSupportedByBackend(): Promise<boolean> {
-    const isMLSSupportedByBackend = this.backendFeatures.supportsMLS;
+  public async supportsMLS(): Promise<boolean> {
+    const {supportsMLS} = this.backendFeatures;
 
-    if (!isMLSSupportedByBackend) {
+    if (!supportsMLS) {
       return false;
     }
 
