@@ -55,13 +55,13 @@ export class SubconversationService extends TypedEventEmitter<Events> {
     return this._mlsService;
   }
 
-  public async joinSubconversationByExternalCommit(conversationId: QualifiedId, subconversation: SUBCONVERSATION_ID) {
+  private async joinSubconversationByExternalCommit(conversationId: QualifiedId, subconversation: SUBCONVERSATION_ID) {
     await this.mlsService.joinByExternalCommit(() =>
       this.apiClient.api.conversation.getSubconversationGroupInfo(conversationId, subconversation),
     );
   }
 
-  public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
+  private async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
     return this.apiClient.api.conversation.getSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
   }
 
