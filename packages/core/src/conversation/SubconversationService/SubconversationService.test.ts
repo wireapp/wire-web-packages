@@ -68,6 +68,10 @@ const buildSubconversationService = () => {
     registerConversation: jest.fn(),
     getEpoch: jest.fn(),
     joinByExternalCommit: jest.fn(),
+    getGroupIdFromConversationId: jest.fn(),
+    exportSecretKey: jest.fn(),
+    getClientIds: jest.fn(),
+    renewKeyMaterial: jest.fn(),
   } as unknown as MLSService;
 
   const subconversationService = new SubconversationService(apiClient, mlsService);
@@ -329,8 +333,108 @@ describe('SubconversationService', () => {
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(subconversationGroupId);
     });
   });
-  describe('leaveStaleConferenceSubconversations', () => {});
-  describe('getSubconversationEpochInfo', () => {});
+
+  describe('getSubconversationEpochInfo', () => {
+    it('returns null if subconversation id is not known by a client', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(undefined);
+
+      const response = await subconversationService.getSubconversationEpochInfo(parentConversationId);
+
+      expect(response).toEqual(null);
+    });
+
+    it('returns null if MLS group for subconversation does not exist locally', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentConversationGroupId = 'parentConversationGroupId';
+      const subconversationGroupId = 'subconversationGroupId';
+
+      jest
+        .spyOn(mlsService, 'getGroupIdFromConversationId')
+        .mockImplementation(async (_conversationId, subconverstionId): Promise<string> => {
+          if (subconverstionId) {
+            return subconversationGroupId;
+          }
+
+          return parentConversationGroupId;
+        });
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
+
+      const response = await subconversationService.getSubconversationEpochInfo(parentConversationId);
+
+      expect(response).toEqual(null);
+    });
+
+    it('returns epoch info and advances epoch number', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentConversationGroupId = 'parentConversationGroupId';
+      const subconversationGroupId = 'subconversationGroupId';
+
+      jest
+        .spyOn(mlsService, 'getGroupIdFromConversationId')
+        .mockImplementation(async (_conversationId, subconverstionId): Promise<string> => {
+          if (subconverstionId) {
+            return subconversationGroupId;
+          }
+
+          return parentConversationGroupId;
+        });
+
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
+
+      const mockedEpoch = 2;
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(mockedEpoch);
+
+      const mockedSecretKey = 'mockedSecretKey';
+      jest.spyOn(mlsService, 'exportSecretKey').mockResolvedValueOnce(mockedSecretKey);
+
+      const subconversationMemberIds: {
+        userId: string;
+        clientId: string;
+        domain: string;
+      }[] = [{userId: 'userId1', clientId: 'clientId1', domain: 'domain'}];
+
+      const parentConversationMemberIds: {
+        userId: string;
+        clientId: string;
+        domain: string;
+      }[] = [
+        {userId: 'userId1', clientId: 'clientId1', domain: 'domain'},
+        {userId: 'userId2', clientId: 'clientId2', domain: 'domain'},
+      ];
+
+      jest.spyOn(mlsService, 'getClientIds').mockImplementation(async groupId => {
+        if (groupId === parentConversationGroupId) {
+          return parentConversationMemberIds;
+        }
+
+        return subconversationMemberIds;
+      });
+
+      const response = await subconversationService.getSubconversationEpochInfo(parentConversationId, true);
+
+      const expected = {
+        epoch: mockedEpoch,
+        keyLength: 32,
+        members: [
+          {clientid: 'clientId1', in_subconv: true, userid: 'userId1@domain'},
+          {clientid: 'clientId2', in_subconv: false, userid: 'userId2@domain'},
+        ],
+        secretKey: mockedSecretKey,
+      };
+
+      expect(response).toEqual(expected);
+      expect(mlsService.renewKeyMaterial).toHaveBeenCalledWith(subconversationGroupId);
+    });
+  });
   describe('subscribeToEpochUpdates', () => {});
   describe('removeClientFromConferenceSubconversation', () => {});
 });
