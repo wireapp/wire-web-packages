@@ -131,9 +131,9 @@ export class SubconversationService extends TypedEventEmitter<Events> {
       return;
     }
 
-    const isSubconversationEstablished = await this.mlsService.conversationExists(subconversationGroupId);
-    if (!isSubconversationEstablished) {
-      // if the subconversation was known by a client but is not established anymore, we can remove it from the store
+    const doesGroupExistLocally = await this.mlsService.conversationExists(subconversationGroupId);
+    if (!doesGroupExistLocally) {
+      // If the subconversation was known by a client but is does not exist locally, we can remove it from the store.
       return subconversationGroupIdStore.removeGroupId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
     }
 
