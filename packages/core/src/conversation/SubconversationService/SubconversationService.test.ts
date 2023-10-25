@@ -72,6 +72,8 @@ const buildSubconversationService = () => {
     exportSecretKey: jest.fn(),
     getClientIds: jest.fn(),
     renewKeyMaterial: jest.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
   } as unknown as MLSService;
 
   const subconversationService = new SubconversationService(apiClient, mlsService);
@@ -435,6 +437,48 @@ describe('SubconversationService', () => {
       expect(mlsService.renewKeyMaterial).toHaveBeenCalledWith(subconversationGroupId);
     });
   });
-  describe('subscribeToEpochUpdates', () => {});
+
+  describe('subscribeToEpochUpdates', () => {
+    it('should subscribe to newEpoch event', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentConversationGroupId = 'parentConversationGroupId';
+
+      const subconversationGroupId = 'subconversationGroupId';
+      const mockedInitialEpoch = 1;
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(subconversationGroupId);
+
+      const mockedEpochInfo = {epoch: mockedInitialEpoch, keyLength: 32, members: [], secretKey: ''};
+      jest.spyOn(subconversationService, 'getSubconversationEpochInfo').mockResolvedValueOnce(mockedEpochInfo);
+      jest
+        .spyOn(subconversationService, 'joinConferenceSubconversation')
+        .mockResolvedValue({epoch: mockedInitialEpoch, groupId: subconversationGroupId});
+
+      const findConversationByGroupId = (groupId: string) => {
+        if (groupId === parentConversationGroupId) {
+          return parentConversationId;
+        }
+
+        return undefined;
+      };
+
+      const onEpochUpdateCallback = jest.fn();
+
+      const unsubscribe = await subconversationService.subscribeToEpochUpdates(
+        parentConversationId,
+        findConversationByGroupId,
+        onEpochUpdateCallback,
+      );
+
+      expect(mlsService.on).toHaveBeenCalledWith('newEpoch', expect.any(Function));
+      expect(subconversationService.getSubconversationEpochInfo).toHaveBeenCalledWith(parentConversationId);
+      expect(onEpochUpdateCallback).toHaveBeenCalledWith(mockedEpochInfo);
+
+      unsubscribe();
+      expect(mlsService.off).toHaveBeenCalledWith('newEpoch', expect.any(Function));
+    });
+  });
   describe('removeClientFromConferenceSubconversation', () => {});
 });
