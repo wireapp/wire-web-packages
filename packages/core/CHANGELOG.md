@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [42.18.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.17.0...@wireapp/core@42.18.0) (2023-10-24)
+
+### Features
+
+* check if removal key is available on backend ([#5662](https://github.com/wireapp/wire-web-packages/issues/5662)) ([441762d](https://github.com/wireapp/wire-web-packages/commit/441762d83a620c253650e8425bfe60b03a848265))
+
+# [42.17.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.16.0...@wireapp/core@42.17.0) (2023-10-20)
+
+### Features
+
+* remove conversation from blacklist ([#5639](https://github.com/wireapp/wire-web-packages/issues/5639)) ([6eec567](https://github.com/wireapp/wire-web-packages/commit/6eec567ad1c8bc3d03946e648c95ff885b424c70))
+
+# [42.16.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.15.0...@wireapp/core@42.16.0) (2023-10-17)
+
+### Features
+
+* ignore events from a blacklisted conversation ([#5637](https://github.com/wireapp/wire-web-packages/issues/5637)) ([552f8c1](https://github.com/wireapp/wire-web-packages/commit/552f8c1bc966ded30dc895e91604213a4812c53a))
+
+# [42.15.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.14.1...@wireapp/core@42.15.0) (2023-10-17)
+
+### Features
+
+* add ability to blacklist conversations ([#5633](https://github.com/wireapp/wire-web-packages/issues/5633)) ([4e82b87](https://github.com/wireapp/wire-web-packages/commit/4e82b87d62ccbaa8de54ceefa7c60b7f7913e7b3))
+
+## [42.14.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.14.0...@wireapp/core@42.14.1) (2023-10-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [42.14.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.13.0...@wireapp/core@42.14.0) (2023-10-16)
+
+### Features
+
+* export needed e2ei types ([#5627](https://github.com/wireapp/wire-web-packages/issues/5627)) ([f407026](https://github.com/wireapp/wire-web-packages/commit/f4070267dfe500fe77c3545f4e1fad270e028fe6))
+
 # [42.13.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@42.12.1...@wireapp/core@42.13.0) (2023-10-13)
 
 ### Features
