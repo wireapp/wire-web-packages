@@ -18,6 +18,7 @@
  */
 
 import {SUBCONVERSATION_ID, Subconversation} from '@wireapp/api-client/lib/conversation';
+import {BackendError, BackendErrorLabel, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {APIClient} from '@wireapp/api-client';
@@ -211,6 +212,34 @@ describe('SubconversationService', () => {
       expect(mlsService.registerConversation).not.toHaveBeenCalled();
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
       expect(mlsService.joinByExternalCommit).toHaveBeenCalled();
+    });
+
+    it('retries to join if registering a conversations throws an error', async () => {
+      const [subconversationService, {apiClient, mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const subconversationGroupId = 'subconversationGroupId';
+
+      const subconversationResponse = getSubconversationResponse({
+        epoch: 0,
+        epochTimestamp: '',
+        parentConversationId,
+        groupId: subconversationGroupId,
+        subconversationId: SUBCONVERSATION_ID.CONFERENCE,
+      });
+
+      jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValue(subconversationResponse);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
+
+      jest
+        .spyOn(mlsService, 'registerConversation')
+        .mockRejectedValueOnce(new BackendError('', BackendErrorLabel.MLS_STALE_MESSAGE, StatusCode.CONFLICT));
+
+      await subconversationService.joinConferenceSubconversation(parentConversationId);
+
+      expect(mlsService.wipeConversation).not.toHaveBeenCalled();
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
+      expect(mlsService.registerConversation).toHaveBeenCalledTimes(2);
     });
 
     it('returns fresh epoch number after joining the group', async () => {

@@ -64,46 +64,56 @@ export class SubconversationService extends TypedEventEmitter<Events> {
    *
    * @param conversationId Id of the parent conversation in which the call should happen
    */
-  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<{groupId: string; epoch: number}> {
-    const {
-      group_id: subconversationGroupId,
-      epoch: subconversationEpoch,
-      epoch_timestamp: subconversationEpochTimestamp,
-      subconv_id: subconversationId,
-    } = await this.getConferenceSubconversation(conversationId);
+  public async joinConferenceSubconversation(
+    conversationId: QualifiedId,
+    shouldRetry = true,
+  ): Promise<{groupId: string; epoch: number}> {
+    try {
+      const {
+        group_id: subconversationGroupId,
+        epoch: subconversationEpoch,
+        epoch_timestamp: subconversationEpochTimestamp,
+        subconv_id: subconversationId,
+      } = await this.getConferenceSubconversation(conversationId);
 
-    if (subconversationEpoch === 0) {
-      const doesConversationExistsLocally = await this.mlsService.conversationExists(subconversationGroupId);
-      if (doesConversationExistsLocally) {
-        await this.mlsService.wipeConversation(subconversationGroupId);
+      if (subconversationEpoch === 0) {
+        const doesConversationExistsLocally = await this.mlsService.conversationExists(subconversationGroupId);
+        if (doesConversationExistsLocally) {
+          await this.mlsService.wipeConversation(subconversationGroupId);
+        }
+
+        // If subconversation is not yet established, create it and upload the commit bundle.
+        await this.mlsService.registerConversation(subconversationGroupId, []);
+      } else {
+        const epochUpdateTime = new Date(subconversationEpochTimestamp).getTime();
+        const epochAge = new Date().getTime() - epochUpdateTime;
+
+        if (epochAge > TimeInMillis.DAY) {
+          // If subconversation does exist, but it's older than 24h, delete and re-join
+          await this.deleteConferenceSubconversation(conversationId, {
+            groupId: subconversationGroupId,
+            epoch: subconversationEpoch,
+          });
+          await this.mlsService.wipeConversation(subconversationGroupId);
+
+          return this.joinConferenceSubconversation(conversationId);
+        }
+
+        await this.joinSubconversationByExternalCommit(conversationId, SUBCONVERSATION_ID.CONFERENCE);
       }
 
-      // If subconversation is not yet established, create it and upload the commit bundle.
-      await this.mlsService.registerConversation(subconversationGroupId, []);
-    } else {
-      const epochUpdateTime = new Date(subconversationEpochTimestamp).getTime();
-      const epochAge = new Date().getTime() - epochUpdateTime;
+      const epoch = Number(await this.mlsService.getEpoch(subconversationGroupId));
 
-      if (epochAge > TimeInMillis.DAY) {
-        // If subconversation does exist, but it's older than 24h, delete and re-join
-        await this.deleteConferenceSubconversation(conversationId, {
-          groupId: subconversationGroupId,
-          epoch: subconversationEpoch,
-        });
-        await this.mlsService.wipeConversation(subconversationGroupId);
+      // We store the mapping between the subconversation and the parent conversation
+      subconversationGroupIdStore.storeGroupId(conversationId, subconversationId, subconversationGroupId);
 
-        return this.joinConferenceSubconversation(conversationId);
+      return {groupId: subconversationGroupId, epoch};
+    } catch (error) {
+      if (shouldRetry) {
+        return this.joinConferenceSubconversation(conversationId, false);
       }
-
-      await this.joinSubconversationByExternalCommit(conversationId, SUBCONVERSATION_ID.CONFERENCE);
+      throw error;
     }
-
-    const epoch = Number(await this.mlsService.getEpoch(subconversationGroupId));
-
-    // We store the mapping between the subconversation and the parent conversation
-    subconversationGroupIdStore.storeGroupId(conversationId, subconversationId, subconversationGroupId);
-
-    return {groupId: subconversationGroupId, epoch};
   }
 
   /**
