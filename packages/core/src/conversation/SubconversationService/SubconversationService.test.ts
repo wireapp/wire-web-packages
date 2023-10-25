@@ -27,6 +27,7 @@ import {SubconversationService} from './SubconversationService';
 
 import {MLSService} from '../../messagingProtocols/mls';
 import {subconversationGroupIdStore} from '../../messagingProtocols/mls/MLSService/stores/subconversationGroupIdStore/subconversationGroupIdStore';
+import {constructFullyQualifiedClientId} from '../../util/fullyQualifiedClientIdUtils';
 
 interface SubconversationMember {
   client_id: string;
@@ -74,6 +75,7 @@ const buildSubconversationService = () => {
     renewKeyMaterial: jest.fn(),
     on: jest.fn(),
     off: jest.fn(),
+    removeClientsFromConversation: jest.fn(),
   } as unknown as MLSService;
 
   const subconversationService = new SubconversationService(apiClient, mlsService);
@@ -480,5 +482,101 @@ describe('SubconversationService', () => {
       expect(mlsService.off).toHaveBeenCalledWith('newEpoch', expect.any(Function));
     });
   });
-  describe('removeClientFromConferenceSubconversation', () => {});
+
+  describe('removeClientFromConferenceSubconversation', () => {
+    it('does nothing if subconversation group is not known', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(undefined);
+
+      const user = {id: 'userId', domain: 'domain'};
+      const clientId = 'clientId';
+      const clientToRemove = {user, clientId};
+
+      await subconversationService.removeClientFromConferenceSubconversation(parentConversationId, clientToRemove);
+
+      expect(mlsService.removeClientsFromConversation).not.toHaveBeenCalled();
+    });
+
+    it('does nothing if subconversation group is not established', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const subconversationGroupId = 'subconversationGroupId';
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(subconversationGroupId);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValue(false);
+
+      const user = {id: 'userId', domain: 'domain'};
+      const clientId = 'clientId';
+      const clientToRemove = {user, clientId};
+
+      await subconversationService.removeClientFromConferenceSubconversation(parentConversationId, clientToRemove);
+
+      expect(mlsService.removeClientsFromConversation).not.toHaveBeenCalled();
+    });
+
+    it('does nothing if client is not a subconversation group member', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const subconversationGroupId = 'subconversationGroupId';
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(subconversationGroupId);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValue(true);
+
+      const subconversationMemberIds: {
+        userId: string;
+        clientId: string;
+        domain: string;
+      }[] = [
+        {userId: 'userId1', clientId: 'clientId1', domain: 'domain'},
+        {userId: 'userId2', clientId: 'clientId2', domain: 'domain2'},
+      ];
+
+      jest.spyOn(mlsService, 'getClientIds').mockResolvedValueOnce(subconversationMemberIds);
+
+      const user = {id: 'userId3', domain: 'domain3'};
+      const clientId = 'clientId3';
+      const clientToRemove = {user, clientId};
+
+      await subconversationService.removeClientFromConferenceSubconversation(parentConversationId, clientToRemove);
+
+      expect(mlsService.removeClientsFromConversation).not.toHaveBeenCalled();
+    });
+
+    it('removes client from subconversation group', async () => {
+      const [subconversationService, {mlsService}] = buildSubconversationService();
+
+      const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const subconversationGroupId = 'subconversationGroupId';
+
+      jest.spyOn(mlsService, 'getGroupIdFromConversationId').mockResolvedValue(subconversationGroupId);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValue(true);
+
+      const user = {id: 'userId3', domain: 'domain3'};
+      const clientId = 'clientId3';
+      const clientToRemove = {user, clientId};
+
+      const subconversationMemberIds: {
+        userId: string;
+        clientId: string;
+        domain: string;
+      }[] = [
+        {userId: 'userId1', clientId: 'clientId1', domain: 'domain'},
+        {userId: 'userId2', clientId: 'clientId2', domain: 'domain2'},
+        {userId: clientToRemove.user.id, clientId: clientToRemove.clientId, domain: clientToRemove.user.domain},
+      ];
+
+      jest.spyOn(mlsService, 'getClientIds').mockResolvedValueOnce(subconversationMemberIds);
+
+      await subconversationService.removeClientFromConferenceSubconversation(parentConversationId, clientToRemove);
+
+      expect(mlsService.removeClientsFromConversation).toHaveBeenCalledWith(subconversationGroupId, [
+        constructFullyQualifiedClientId(clientToRemove.user.id, clientToRemove.clientId, clientToRemove.user.domain),
+      ]);
+    });
+  });
 });
