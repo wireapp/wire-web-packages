@@ -58,7 +58,7 @@ import {TaskScheduler} from '../../../util/TaskScheduler';
 import {AcmeChallenge, E2EIServiceExternal, User} from '../E2EIdentityService';
 import {E2EIServiceInternal} from '../E2EIdentityService/E2EIServiceInternal';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
-import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
+import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, CoreCallbacks} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -86,7 +86,7 @@ type Events = {
 export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: LocalMLSServiceConfig;
-  groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
+  groupIdFromConversationId?: CoreCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
 
@@ -119,6 +119,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       [this.config.defaultCiphersuite],
       this.config.nbKeyPackages,
     );
+
+    await this.coreCryptoClient.registerCallbacks({
+      // All authorization/membership rules are enforced on backend
+      clientIsExistingGroupUser: async () => true,
+      authorize: async () => true,
+      userAuthorize: async () => true,
+    });
 
     // We need to make sure keypackages and public key are uploaded to the backend
     await this.uploadMLSPublicKeys(client);
@@ -186,14 +193,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     );
   }
 
-  public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
-    void this.coreCryptoClient.registerCallbacks({
-      ...coreCryptoCallbacks,
-      clientIsExistingGroupUser: (_groupId, _client, _otherClients): Promise<boolean> => {
-        // All authorization/membership rules are enforced on backend
-        return Promise.resolve(true);
-      },
-    });
+  public configureMLSCallbacks({groupIdFromConversationId}: CoreCallbacks): void {
     this.groupIdFromConversationId = groupIdFromConversationId;
   }
 

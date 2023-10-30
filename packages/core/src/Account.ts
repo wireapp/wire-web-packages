@@ -50,7 +50,7 @@ import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {AcmeChallenge, E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
-import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
+import {CoreCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
@@ -129,6 +129,7 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly isMlsEnabled: () => Promise<boolean>;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
+  private coreCallbacks?: CoreCallbacks;
 
   public service?: {
     mls?: MLSService;
@@ -397,10 +398,11 @@ export class Account extends TypedEventEmitter<Events> {
    * Namely:
    * - is the current user allowed to administrate a specific conversation
    * - what is the groupId of a conversation
-   * @param mlsCallbacks
+   * @param coreCallbacks
    */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
+  configureCoreCallbacks(coreCallbacks: CoreCallbacks) {
+    this.coreCallbacks = coreCallbacks;
+    this.service?.mls?.configureMLSCallbacks(coreCallbacks);
   }
 
   public async initServices(context: Context): Promise<void> {
