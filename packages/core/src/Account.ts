@@ -677,11 +677,6 @@ export class Account extends TypedEventEmitter<Events> {
       return this.coreCallbacks?.groupIdFromConversationId(conversationId);
     }
 
-    const foundSubconversation = await this.service?.subconversation.getSubconversationGroupId(
-      conversationId,
-      subconversationId,
-    );
-
-    return foundSubconversation;
+    return this.service?.subconversation.getSubconversationGroupId(conversationId, subconversationId);
   };
 }
