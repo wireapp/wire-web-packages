@@ -27,11 +27,13 @@ import {
   LoginData,
 } from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
@@ -402,7 +404,6 @@ export class Account extends TypedEventEmitter<Events> {
    */
   configureCoreCallbacks(coreCallbacks: CoreCallbacks) {
     this.coreCallbacks = coreCallbacks;
-    this.service?.mls?.configureMLSCallbacks(coreCallbacks);
   }
 
   public async initServices(context: Context): Promise<void> {
@@ -438,8 +439,14 @@ export class Account extends TypedEventEmitter<Events> {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, proteusService, this.db, mlsService);
-    const subconversationService = new SubconversationService(this.apiClient, mlsService);
+    const conversationService = new ConversationService(
+      this.apiClient,
+      proteusService,
+      this.db,
+      this.groupIdFromConversationId,
+      mlsService,
+    );
+    const subconversationService = new SubconversationService(this.apiClient, this.db, mlsService);
     const notificationService = new NotificationService(this.apiClient, this.storeEngine, conversationService);
 
     const selfService = new SelfService(this.apiClient);
@@ -661,4 +668,20 @@ export class Account extends TypedEventEmitter<Events> {
     }
     return storeEngine;
   }
+
+  private groupIdFromConversationId = async (
+    conversationId: QualifiedId,
+    subconversationId?: SUBCONVERSATION_ID,
+  ): Promise<string | undefined> => {
+    if (!subconversationId) {
+      return this.coreCallbacks?.groupIdFromConversationId(conversationId);
+    }
+
+    const foundSubconversation = await this.service?.subconversation.getSubconversationGroupId(
+      conversationId,
+      subconversationId,
+    );
+
+    return foundSubconversation;
+  };
 }

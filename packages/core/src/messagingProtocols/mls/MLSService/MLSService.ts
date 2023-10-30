@@ -46,7 +46,6 @@ import {
 
 import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
@@ -191,10 +190,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.processCommitAction(groupIdBytes, () =>
       this.coreCryptoClient.addClientsToConversation(groupIdBytes, invitee),
     );
-  }
-
-  public configureMLSCallbacks({groupIdFromConversationId}: CoreCallbacks): void {
-    this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
   public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
@@ -632,23 +627,6 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * If there is a matching conversationId => groupId pair in the database,
-   * we can find the groupId and return it as a string
-   *
-   * @param conversationQualifiedId
-   */
-  public async getGroupIdFromConversationId(
-    conversationQualifiedId: QualifiedId,
-    subconversationId?: SUBCONVERSATION_ID,
-  ): Promise<string | undefined> {
-    const groupId = subconversationId
-      ? subconversationGroupIdStore.getGroupId(conversationQualifiedId, subconversationId)
-      : await this.groupIdFromConversationId?.(conversationQualifiedId);
-
-    return groupId;
-  }
-
-  /**
    * If there are pending proposals, we need to either process them,
    * or save them in the database for later processing
    *
@@ -743,8 +721,14 @@ export class MLSService extends TypedEventEmitter<Events> {
     return clientIds;
   }
 
-  public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
-    return handleMLSMessageAdd({event, mlsService: this});
+  public async handleMLSMessageAddEvent(
+    event: ConversationMLSMessageAddEvent,
+    groupIdFromConversationId: (
+      conversationId: QualifiedId,
+      subconversationId?: SUBCONVERSATION_ID,
+    ) => Promise<string | undefined>,
+  ) {
+    return handleMLSMessageAdd({event, mlsService: this, groupIdFromConversationId});
   }
 
   public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent, clientId: string) {
