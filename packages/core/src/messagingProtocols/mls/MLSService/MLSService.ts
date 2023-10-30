@@ -57,7 +57,7 @@ import {TaskScheduler} from '../../../util/TaskScheduler';
 import {AcmeChallenge, E2EIServiceExternal, User} from '../E2EIdentityService';
 import {E2EIServiceInternal} from '../E2EIdentityService/E2EIServiceInternal';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
-import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, CoreCallbacks} from '../types';
+import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -85,7 +85,6 @@ type Events = {
 export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: LocalMLSServiceConfig;
-  groupIdFromConversationId?: CoreCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
 
