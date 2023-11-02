@@ -88,6 +88,9 @@ export class Runtime {
     if (Runtime.isFranz()) {
       return false;
     }
+    if (Runtime.isIOS() && Runtime.getBrowserName() === BROWSER.SAFARI && Runtime.getBrowserVersion().major >= 11) {
+      return true;
+    }
 
     return Object.entries(WEBAPP_SUPPORTED_BROWSERS).some(([browser, supportedVersion]) => {
       const isBrowserSupported = Runtime.getBrowserName() === browser;
