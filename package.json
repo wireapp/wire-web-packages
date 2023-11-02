@@ -46,7 +46,7 @@
     "typescript": "^5.0.4"
   },
   "engines": {
-    "node": ">= 14",
+    "node": ">= 18",
     "yarn": ">= 1"
   },
   "lint-staged": {
