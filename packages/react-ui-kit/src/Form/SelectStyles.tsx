@@ -29,44 +29,50 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
   indicatorsContainer: provided => ({
     ...provided,
   }),
-  container: (_, {isDisabled, selectProps}) => {
+  container: (_, {isDisabled, selectProps, options}) => {
     const {menuIsOpen} = selectProps;
     const isSelectDisabled = selectProps.isDisabled;
 
     return {
-      '& > div': {
-        ...inputStyle(theme, {disabled: isSelectDisabled, markInvalid}),
-        padding: 0,
-        height: 'auto',
-        minHeight: '48px',
-        '&:-moz-focusring': {
-          color: 'transparent',
-          textShadow: '0 0 0 #000',
-        },
-        position: 'relative',
-        ...(isDisabled && {
-          backgroundColor: theme.Input.backgroundColorDisabled,
-          color: theme.Select.disabledColor,
-          cursor: 'default',
-        }),
-        ...(markInvalid && {
-          boxShadow: `0 0 0 1px ${theme.general.dangerColor}`,
-        }),
-        ...(menuIsOpen && {
-          boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
-          '&:hover': {
-            boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+      '& > div': isGroup(options)
+        ? {
+            display: 'inline',
+            position: 'relative',
+            top: '-10px',
+          }
+        : {
+            ...inputStyle(theme, {disabled: isSelectDisabled, markInvalid}),
+            padding: 0,
+            height: 'auto',
+            minHeight: '48px',
+            '&:-moz-focusring': {
+              color: 'transparent',
+              textShadow: '0 0 0 #000',
+            },
+            position: 'relative',
+            ...(isDisabled && {
+              backgroundColor: theme.Input.backgroundColorDisabled,
+              color: theme.Select.disabledColor,
+              cursor: 'default',
+            }),
+            ...(markInvalid && {
+              boxShadow: `0 0 0 1px ${theme.general.dangerColor}`,
+            }),
+            ...(menuIsOpen && {
+              boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+              '&:hover': {
+                boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+              },
+            }),
+            cursor: !isSelectDisabled && 'pointer',
+            '&:focus:visible, active': {
+              boxShadow: !isSelectDisabled && `0 0 0 1px ${theme.general.primaryColor}`,
+            },
           },
-        }),
-        cursor: !isSelectDisabled && 'pointer',
-        '&:focus:visible, active': {
-          boxShadow: !isSelectDisabled && `0 0 0 1px ${theme.general.primaryColor}`,
-        },
-      },
     };
   },
-  control: () => ({
-    display: 'flex',
+  control: (_provided, {options}) => ({
+    display: isGroup(options) ? 'none' : 'flex',
     alignItems: 'center',
     appearance: 'none',
     padding: '0 8px 0 16px',
@@ -82,13 +88,16 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
       },
     };
   },
-  menu: provided => ({
+  menu: (provided, {options}) => ({
     ...provided,
     boxShadow: `0 0 0 1px ${theme.general.primaryColor}, 0 4px 11px hsl(0deg 0% 0% / 10%)`,
     borderRadius: 12,
     marginBottom: 0,
     marginTop: 4,
     overflowY: 'overlay',
+    ...(isGroup(options) && {
+      minWidth: '400px',
+    }),
   }),
   menuList: provided => ({
     ...provided,
@@ -156,6 +165,7 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
         color: theme.Select.disabledColor,
       }),
     }),
+
     ...(isGroup(options) && {
       'div > svg': {
         fill: theme.general.contrastColor,

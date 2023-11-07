@@ -30,6 +30,7 @@ const groupOptions = [
     ],
   },
 ];
+const [isOpen, setIsOpen] = React.useState(false);
 
 <Container>
   <Columns>
@@ -88,13 +89,30 @@ const groupOptions = [
     <Column>Select With Groups</Column>
 
     <Column>
-      <Select
-        label="group select"
-        id="groupSelect"
-        options={groupOptions}
-        dataUieName="group-select"
-        defaultValue={[groupOptions[0].options[0], groupOptions[1].options[0]]}
-      />
+      <button
+        className="device-toggle-button"
+        onClick={() => {
+          setIsOpen(prev => !prev);
+        }}
+        style={{width: '18px', height: '18px'}}
+      >
+        click me
+        {isOpen && (
+          <Select
+            id="groupSelect"
+            menuPlacement="top"
+            menuIsOpen
+            controlShouldRenderValue={false}
+            isClearable={false}
+            backspaceRemovesValue={false}
+            hideSelectedOptions={false}
+            options={groupOptions}
+            onChange={selectedOption => console.log('Selected option', selectedOption)}
+            dataUieName="group-select"
+            defaultValue={[groupOptions[0].options[0], groupOptions[1].options[0]]}
+          />
+        )}
+      </button>
     </Column>
   </Columns>
 
