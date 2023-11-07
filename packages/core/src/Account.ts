@@ -27,11 +27,13 @@ import {
   LoginData,
 } from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
 import {AbortHandler, WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
+import {QualifiedId} from '@wireapp/api-client/lib/user';
 import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
@@ -45,11 +47,12 @@ import {ClientInfo, ClientService} from './client/';
 import {ConnectionService} from './connection/';
 import {AssetService, ConversationService} from './conversation/';
 import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conversation/message/messageSender';
+import {SubconversationService} from './conversation/SubconversationService/SubconversationService';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {AcmeChallenge, E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
-import {MLSCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
+import {CoreCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
@@ -128,6 +131,7 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly isMlsEnabled: () => Promise<boolean>;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
+  private coreCallbacks?: CoreCallbacks;
 
   public service?: {
     mls?: MLSService;
@@ -139,6 +143,7 @@ export class Account extends TypedEventEmitter<Events> {
     client: ClientService;
     connection: ConnectionService;
     conversation: ConversationService;
+    subconversation: SubconversationService;
     giphy: GiphyService;
     linkPreview: LinkPreviewService;
     notification: NotificationService;
@@ -357,7 +362,7 @@ export class Account extends TypedEventEmitter<Events> {
       await this.service.mls.schedulePeriodicKeyPackagesBackendSync(validClient.id);
 
       // leave stale conference subconversations (e.g after a crash)
-      await this.service.mls.leaveStaleConferenceSubconversations();
+      await this.service.subconversation.leaveStaleConferenceSubconversations();
     }
 
     return validClient;
@@ -395,10 +400,10 @@ export class Account extends TypedEventEmitter<Events> {
    * Namely:
    * - is the current user allowed to administrate a specific conversation
    * - what is the groupId of a conversation
-   * @param mlsCallbacks
+   * @param coreCallbacks
    */
-  configureMLSCallbacks(mlsCallbacks: MLSCallbacks) {
-    this.service?.mls?.configureMLSCallbacks(mlsCallbacks);
+  configureCoreCallbacks(coreCallbacks: CoreCallbacks) {
+    this.coreCallbacks = coreCallbacks;
   }
 
   public async initServices(context: Context): Promise<void> {
@@ -434,7 +439,14 @@ export class Account extends TypedEventEmitter<Events> {
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
     const linkPreviewService = new LinkPreviewService(assetService);
-    const conversationService = new ConversationService(this.apiClient, proteusService, this.db, mlsService);
+    const conversationService = new ConversationService(
+      this.apiClient,
+      proteusService,
+      this.db,
+      this.groupIdFromConversationId,
+      mlsService,
+    );
+    const subconversationService = new SubconversationService(this.apiClient, this.db, mlsService);
     const notificationService = new NotificationService(this.apiClient, this.storeEngine, conversationService);
 
     const selfService = new SelfService(this.apiClient);
@@ -453,6 +465,7 @@ export class Account extends TypedEventEmitter<Events> {
       client: clientService,
       connection: connectionService,
       conversation: conversationService,
+      subconversation: subconversationService,
       giphy: giphyService,
       linkPreview: linkPreviewService,
       notification: notificationService,
@@ -655,4 +668,15 @@ export class Account extends TypedEventEmitter<Events> {
     }
     return storeEngine;
   }
+
+  private groupIdFromConversationId = async (
+    conversationId: QualifiedId,
+    subconversationId?: SUBCONVERSATION_ID,
+  ): Promise<string | undefined> => {
+    if (!subconversationId) {
+      return this.coreCallbacks?.groupIdFromConversationId(conversationId);
+    }
+
+    return this.service?.subconversation.getSubconversationGroupId(conversationId, subconversationId);
+  };
 }

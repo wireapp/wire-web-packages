@@ -13,13 +13,13 @@
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
-    "@wireapp/core-crypto": "1.0.0-rc.13",
+    "@wireapp/core-crypto": "1.0.0-rc.16",
     "@wireapp/cryptobox": "12.8.0",
     "@wireapp/promise-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.44.0",
     "@wireapp/store-engine": "workspace:*",
     "@wireapp/store-engine-dexie": "workspace:^",
-    "axios": "1.5.1",
+    "axios": "1.6.0",
     "bazinga64": "workspace:^",
     "deepmerge-ts": "5.1.0",
     "hash.js": "1.1.7",
@@ -44,7 +44,7 @@
     "fake-indexeddb": "^4.0.0",
     "jest": "^29.2.1",
     "jest-websocket-mock": "2.5.0",
-    "nock": "13.3.6",
+    "nock": "13.3.8",
     "rimraf": "^3.0.2",
     "typescript": "^5.0.4"
   },
@@ -61,6 +61,6 @@
     "test:coverage": "jest --coverage",
     "watch": "tsc --watch"
   },
-  "version": "42.18.0",
+  "version": "42.19.2",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }

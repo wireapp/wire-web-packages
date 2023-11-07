@@ -19,11 +19,9 @@
 
 import type {ClaimedKeyPackages, RegisteredClient} from '@wireapp/api-client/lib/client';
 import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
-import {Subconversation} from '@wireapp/api-client/lib/conversation/Subconversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
 
@@ -48,7 +46,6 @@ import {
 
 import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
 import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
-import {subconversationGroupIdStore} from './stores/subconversationGroupIdStore/subconversationGroupIdStore';
 
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
@@ -60,7 +57,7 @@ import {TaskScheduler} from '../../../util/TaskScheduler';
 import {AcmeChallenge, E2EIServiceExternal, User} from '../E2EIdentityService';
 import {E2EIServiceInternal} from '../E2EIdentityService/E2EIServiceInternal';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
-import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams, MLSCallbacks} from '../types';
+import {ClientId, CommitPendingProposalsParams, HandlePendingProposalsParams} from '../types';
 
 //@todo: this function is temporary, we wait for the update from core-crypto side
 //they are returning regular array instead of Uint8Array for commit and welcome messages
@@ -82,19 +79,12 @@ const defaultConfig: MLSServiceConfig = {
   defaultCredentialType: CredentialType.Basic,
 };
 
-export interface SubconversationEpochInfoMember {
-  userid: string;
-  clientid: ClientId;
-  in_subconv: boolean;
-}
-
 type Events = {
   newEpoch: {epoch: number; groupId: string};
 };
 export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
   config: LocalMLSServiceConfig;
-  groupIdFromConversationId?: MLSCallbacks['groupIdFromConversationId'];
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
 
@@ -127,6 +117,13 @@ export class MLSService extends TypedEventEmitter<Events> {
       [this.config.defaultCiphersuite],
       this.config.nbKeyPackages,
     );
+
+    await this.coreCryptoClient.registerCallbacks({
+      // All authorization/membership rules are enforced on backend
+      clientIsExistingGroupUser: async () => true,
+      authorize: async () => true,
+      userAuthorize: async () => true,
+    });
 
     // We need to make sure keypackages and public key are uploaded to the backend
     await this.uploadMLSPublicKeys(client);
@@ -192,17 +189,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.processCommitAction(groupIdBytes, () =>
       this.coreCryptoClient.addClientsToConversation(groupIdBytes, invitee),
     );
-  }
-
-  public configureMLSCallbacks({groupIdFromConversationId, ...coreCryptoCallbacks}: MLSCallbacks): void {
-    void this.coreCryptoClient.registerCallbacks({
-      ...coreCryptoCallbacks,
-      clientIsExistingGroupUser: (_groupId, _client, _otherClients): Promise<boolean> => {
-        // All authorization/membership rules are enforced on backend
-        return Promise.resolve(true);
-      },
-    });
-    this.groupIdFromConversationId = groupIdFromConversationId;
   }
 
   public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
@@ -282,100 +268,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     }
 
     return mlsResponse;
-  }
-
-  public async getConferenceSubconversation(conversationId: QualifiedId): Promise<Subconversation> {
-    return this.apiClient.api.conversation.getSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-  }
-
-  private async deleteConferenceSubconversation(
-    conversationId: QualifiedId,
-    data: {groupId: string; epoch: number},
-  ): Promise<void> {
-    return this.apiClient.api.conversation.deleteSubconversation(conversationId, SUBCONVERSATION_ID.CONFERENCE, data);
-  }
-
-  /**
-   * Will leave conference subconversation if it's known by client and established.
-   *
-   * @param conversationId Id of the parent conversation which subconversation we want to leave
-   */
-  public async leaveConferenceSubconversation(conversationId: QualifiedId): Promise<void> {
-    const subconversationGroupId = subconversationGroupIdStore.getGroupId(
-      conversationId,
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
-
-    if (!subconversationGroupId) {
-      return;
-    }
-
-    const isSubconversationEstablished = await this.conversationExists(subconversationGroupId);
-    if (!isSubconversationEstablished) {
-      // if the subconversation was known by a client but is not established anymore, we can remove it from the store
-      return subconversationGroupIdStore.removeGroupId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-    }
-
-    try {
-      await this.apiClient.api.conversation.deleteSubconversationSelf(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-    } catch (error) {
-      this.logger.error(`Failed to leave conference subconversation:`, error);
-    }
-
-    await this.wipeConversation(subconversationGroupId);
-
-    // once we've left the subconversation, we can remove it from the store
-    subconversationGroupIdStore.removeGroupId(conversationId, SUBCONVERSATION_ID.CONFERENCE);
-  }
-
-  public async leaveStaleConferenceSubconversations(): Promise<void> {
-    const conversationIds = subconversationGroupIdStore.getAllGroupIdsBySubconversationId(
-      SUBCONVERSATION_ID.CONFERENCE,
-    );
-
-    for (const {parentConversationId} of conversationIds) {
-      await this.leaveConferenceSubconversation(parentConversationId);
-    }
-  }
-
-  /**
-   * Will join or register an mls subconversation for conference calls.
-   * Will return the secret key derived from the subconversation
-   *
-   * @param conversationId Id of the parent conversation in which the call should happen
-   */
-  public async joinConferenceSubconversation(conversationId: QualifiedId): Promise<{groupId: string; epoch: number}> {
-    const subconversation = await this.getConferenceSubconversation(conversationId);
-
-    if (subconversation.epoch === 0) {
-      // if subconversation is not yet established, create it
-      await this.registerConversation(subconversation.group_id, []);
-    } else {
-      const epochUpdateTime = new Date(subconversation.epoch_timestamp).getTime();
-      const epochAge = new Date().getTime() - epochUpdateTime;
-
-      if (epochAge > TimeInMillis.DAY) {
-        // if subconversation does exist, but it's older than 24h, delete and re-join
-        await this.deleteConferenceSubconversation(conversationId, {
-          groupId: subconversation.group_id,
-          epoch: subconversation.epoch,
-        });
-        await this.wipeConversation(subconversation.group_id);
-
-        return this.joinConferenceSubconversation(conversationId);
-      }
-
-      await this.joinByExternalCommit(() =>
-        this.apiClient.api.conversation.getSubconversationGroupInfo(conversationId, SUBCONVERSATION_ID.CONFERENCE),
-      );
-    }
-
-    const epoch = Number(await this.getEpoch(subconversation.group_id));
-
-    // We store the mapping between the subconversation and the parent conversation
-    subconversationGroupIdStore.storeGroupId(conversationId, subconversation.subconv_id, subconversation.group_id);
-
-    return {groupId: subconversation.group_id, epoch};
   }
 
   public async exportSecretKey(groupId: string, keyLength: number): Promise<string> {
@@ -734,23 +626,6 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   /**
-   * If there is a matching conversationId => groupId pair in the database,
-   * we can find the groupId and return it as a string
-   *
-   * @param conversationQualifiedId
-   */
-  public async getGroupIdFromConversationId(
-    conversationQualifiedId: QualifiedId,
-    subconversationId?: SUBCONVERSATION_ID,
-  ): Promise<string | undefined> {
-    const groupId = subconversationId
-      ? subconversationGroupIdStore.getGroupId(conversationQualifiedId, subconversationId)
-      : await this.groupIdFromConversationId?.(conversationQualifiedId);
-
-    return groupId;
-  }
-
-  /**
    * If there are pending proposals, we need to either process them,
    * or save them in the database for later processing
    *
@@ -845,8 +720,14 @@ export class MLSService extends TypedEventEmitter<Events> {
     return clientIds;
   }
 
-  public async handleMLSMessageAddEvent(event: ConversationMLSMessageAddEvent) {
-    return handleMLSMessageAdd({event, mlsService: this});
+  public async handleMLSMessageAddEvent(
+    event: ConversationMLSMessageAddEvent,
+    groupIdFromConversationId: (
+      conversationId: QualifiedId,
+      subconversationId?: SUBCONVERSATION_ID,
+    ) => Promise<string | undefined>,
+  ) {
+    return handleMLSMessageAdd({event, mlsService: this, groupIdFromConversationId});
   }
 
   public async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent, clientId: string) {
