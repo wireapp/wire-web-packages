@@ -4431,10 +4431,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/tough-cookie@npm:4.0.4":
-  version: 4.0.4
-  resolution: "@types/tough-cookie@npm:4.0.4"
-  checksum: 6be275b09f5fbf33f359fd6d5372c69357cf96dea5d7ba7a6563c76c6cce8b0c7f81caa4805810b0e67427cad381aeef00d8c060d614fee79ca245c2b9887c3a
+"@types/tough-cookie@npm:4.0.5":
+  version: 4.0.5
+  resolution: "@types/tough-cookie@npm:4.0.5"
+  checksum: f19409d0190b179331586365912920d192733112a195e870c7f18d20ac8adb7ad0b0ff69dad430dba8bc2be09593453a719cfea92dc3bda19748fd158fe1498d
   languageName: node
   linkType: hard
 
@@ -5028,7 +5028,7 @@ __metadata:
     "@types/node": ^20.1.0
     "@types/pako": 2
     "@types/spark-md5": 3.0.4
-    "@types/tough-cookie": 4.0.4
+    "@types/tough-cookie": 4.0.5
     "@types/ws": 8.5.9
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
@@ -5147,7 +5147,7 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/long": ^5.0.0
     "@types/rimraf": ^3.0.2
-    "@types/tough-cookie": 4.0.4
+    "@types/tough-cookie": 4.0.5
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 1.0.0-rc.16
