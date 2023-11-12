@@ -4060,12 +4060,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/libsodium-wrappers-sumo@npm:0.7.7":
-  version: 0.7.7
-  resolution: "@types/libsodium-wrappers-sumo@npm:0.7.7"
+"@types/libsodium-wrappers-sumo@npm:0.7.8":
+  version: 0.7.8
+  resolution: "@types/libsodium-wrappers-sumo@npm:0.7.8"
   dependencies:
     "@types/libsodium-wrappers": "*"
-  checksum: 9aa7caadbedd35f0efd8b0b1fe54675e02ab1e1d14c8fb1f7e50de85a30641d157247228be764cf14ae2a86035a8e3ce581c0f13e244a808e30a692b25f7d18a
+  checksum: 878106ea886da94e3d0136f2af437dc90327248f72c2877400f7249b24a397b8b85bfdc3491d8f0d4e17b7f80bad02f242f2841e8cc4d6045efd3c8eb37bd9e7
   languageName: node
   linkType: hard
 
@@ -6495,7 +6495,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/libsodium-wrappers-sumo": 0.7.7
+    "@types/libsodium-wrappers-sumo": 0.7.8
     "@types/node": ^20.1.0
     "@types/rimraf": ^3.0.2
     cross-env: 7.0.3
