@@ -17,6 +17,7 @@
  *
  */
 
+import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
 import {Self} from '@wireapp/api-client/lib/self/';
 
 import {APIClient} from '@wireapp/api-client';
@@ -56,5 +57,17 @@ export class SelfService {
 
   public setUsername(username: string): Promise<void> {
     return this.apiClient.api.self.putHandle({handle: username});
+  }
+
+  /**
+   * Update self user's list of supported-protocols
+   * @param supportedProtocols The list of supported protocols
+   */
+  public async putSupportedProtocols(supportedProtocols: ConversationProtocol[]) {
+    if (!supportedProtocols || supportedProtocols.length === 0) {
+      throw new Error('Supported protocols must be a non-empty array');
+    }
+
+    return this.apiClient.api.self.putSupportedProtocols(supportedProtocols);
   }
 }
