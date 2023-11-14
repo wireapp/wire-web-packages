@@ -32,9 +32,10 @@ const MOCK_BACKEND = {
 
 describe('SelfService', () => {
   describe('putSupportedProtocols', () => {
-    it('updates the list of self supported protocols', async () => {
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
+    const apiClient = new APIClient({urls: MOCK_BACKEND});
+    apiClient.backendFeatures.supportsMLS = true;
 
+    it('updates the list of self supported protocols', async () => {
       const selfService = new SelfService(apiClient);
 
       const supportedProtocols = [ConversationProtocol.PROTEUS, ConversationProtocol.MLS];
@@ -47,8 +48,6 @@ describe('SelfService', () => {
     });
 
     it('throws if supported protocols list is not provided', async () => {
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
-
       const selfService = new SelfService(apiClient);
 
       const supportedProtocols = undefined as any;
@@ -56,13 +55,11 @@ describe('SelfService', () => {
       jest.spyOn(apiClient.api.self, 'putSupportedProtocols').mockImplementation(jest.fn());
 
       await expect(() => selfService.putSupportedProtocols(supportedProtocols)).rejects.toThrow(
-        'Supported protocols must be a non-empty array',
+        'Supported protocols must be a non-empty protocols list',
       );
     });
 
     it('throws if supported protocols list is empty', async () => {
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
-
       const selfService = new SelfService(apiClient);
 
       const supportedProtocols: ConversationProtocol[] = [];
@@ -70,7 +67,7 @@ describe('SelfService', () => {
       jest.spyOn(apiClient.api.self, 'putSupportedProtocols').mockImplementation(jest.fn());
 
       await expect(() => selfService.putSupportedProtocols(supportedProtocols)).rejects.toThrow(
-        'Supported protocols must be a non-empty array',
+        'Supported protocols must be a non-empty protocols list',
       );
     });
   });
