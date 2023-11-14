@@ -65,7 +65,7 @@ export class SelfService {
    */
   public async putSupportedProtocols(supportedProtocols: ConversationProtocol[]) {
     if (!supportedProtocols || supportedProtocols.length === 0) {
-      throw new Error('Supported protocols must be a non-empty array');
+      throw new Error('Supported protocols must be a non-empty protocols list');
     }
 
     return this.apiClient.api.self.putSupportedProtocols(supportedProtocols);
