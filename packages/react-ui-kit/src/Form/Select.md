@@ -94,7 +94,7 @@ const [isOpen, setIsOpen] = React.useState(false);
         onClick={() => {
           setIsOpen(prev => !prev);
         }}
-        style={{width: '18px', height: '18px'}}
+        style={{width: '100px', height: '30px'}}
       >
         click me
         {isOpen && (
@@ -109,7 +109,7 @@ const [isOpen, setIsOpen] = React.useState(false);
             options={groupOptions}
             onChange={selectedOption => console.log('Selected option', selectedOption)}
             dataUieName="group-select"
-            defaultValue={[groupOptions[0].options[0], groupOptions[1].options[0]]}
+            defaultValue={[groupOptions[0].options[0], groupOptions[1].options[3]]}
           />
         )}
       </button>

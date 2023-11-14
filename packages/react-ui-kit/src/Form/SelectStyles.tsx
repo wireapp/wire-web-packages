@@ -88,6 +88,19 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
       },
     };
   },
+  group: provided => ({
+    ...provided,
+    paddingBottom: 0,
+  }),
+  groupHeading: provided => ({
+    ...provided,
+    display: 'flex',
+    color: theme.general.color,
+    fontSize: '14px',
+    marginBottom: '16px',
+    paddingLeft: '16px',
+    marginTop: '8px',
+  }),
   menu: (provided, {options}) => ({
     ...provided,
     boxShadow: `0 0 0 1px ${theme.general.primaryColor}, 0 4px 11px hsl(0deg 0% 0% / 10%)`,
@@ -176,9 +189,11 @@ export const customStyles = (theme: Theme, markInvalid = false) => ({
         borderBottom: `1px solid ${theme.Select.borderColor}`,
       },
     }),
-    '&:first-of-type': {
-      borderRadius: '12px 12px 0 0',
-    },
+    ...(!isGroup(options) && {
+      '&:first-of-type': {
+        borderRadius: '12px 12px 0 0',
+      },
+    }),
     '&:last-of-type': {
       ...(!isGroup(options) && {borderRadius: '0 0 12px 12px'}),
       ...(isGroup(options) &&
