@@ -341,7 +341,7 @@ export class Account extends TypedEventEmitter<Events> {
    * Will create a new MLS Client for the current user
    */
   private async initMLSClient(userId: QualifiedId, client: RegisteredClient): Promise<void> {
-    if (!this.service || !this.service.mls) {
+    if (!this.service?.mls) {
       throw new Error('MLS Services is not ready.');
     }
     // we need to check if E2EI is enabled before creating the client
