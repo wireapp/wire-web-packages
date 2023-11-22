@@ -222,9 +222,12 @@ export class Account extends TypedEventEmitter<Events> {
     return storeEngine.updateOrCreate(AUTH_TABLE_NAME, AUTH_COOKIE_KEY, entity);
   }
 
-  private async getE2EIStatus(): Promise<boolean> {
+  private async getE2EIStatus() {
     const features = await this.apiClient.api.teams.feature.getAllFeatures();
-    return features[FEATURE_KEY.MLSE2EID]?.status === FeatureStatus.ENABLED;
+
+    return {
+      isFeatureEnabled: features[FEATURE_KEY.MLSE2EID]?.status === FeatureStatus.ENABLED,
+    };
   }
 
   public async enrollE2EI(
@@ -343,8 +346,8 @@ export class Account extends TypedEventEmitter<Events> {
     }
     // we need to check if E2EI is enabled before creating the client
     // in case it is enabled we are not supposed to upload new keypackages, that are not of type x509, to the backend
-    const isE2EIEnabled = await this.getE2EIStatus();
-    await this.service.mls.initClient(userId, client, isE2EIEnabled);
+    const {isFeatureEnabled} = await this.getE2EIStatus();
+    await this.service.mls.initClient(userId, client, isFeatureEnabled);
   }
 
   /**
