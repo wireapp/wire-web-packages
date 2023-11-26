@@ -2686,37 +2686,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/cli@npm:2.7.0":
-  version: 2.7.0
-  resolution: "@lerna-lite/cli@npm:2.7.0"
-  dependencies:
-    "@lerna-lite/core": 2.7.0
-    "@lerna-lite/init": 2.7.0
-    dedent: ^1.5.1
-    dotenv: ^16.3.1
-    import-local: ^3.1.0
-    load-json-file: ^7.0.1
-    npmlog: ^7.0.1
-    yargs: ^17.7.2
-  peerDependenciesMeta:
-    "@lerna-lite/exec":
-      optional: true
-    "@lerna-lite/list":
-      optional: true
-    "@lerna-lite/publish":
-      optional: true
-    "@lerna-lite/run":
-      optional: true
-    "@lerna-lite/version":
-      optional: true
-    "@lerna-lite/watch":
-      optional: true
-  bin:
-    lerna: dist/cli.js
-  checksum: 6f82560f0e35fb6ff069e74dadf079949837e0825908c6156013d499a347967734e45a3d7c8299d1a87d4ee2c79bee99494c56262b8658a3796772ddc0b076ad
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/cli@npm:3.0.0":
   version: 3.0.0
   resolution: "@lerna-lite/cli@npm:3.0.0"
@@ -2745,40 +2714,6 @@ __metadata:
   bin:
     lerna: dist/cli.js
   checksum: 431374b7def4d8e49ea76201e4e79d7d67c28abab7cb3c1c3e5bda03cdc52b27925e46b2cd16a1f68a0ce3e3412c533dcf778be7255b50918a83450a374f3573
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/core@npm:2.7.0":
-  version: 2.7.0
-  resolution: "@lerna-lite/core@npm:2.7.0"
-  dependencies:
-    "@npmcli/run-script": ^7.0.2
-    chalk: ^5.3.0
-    clone-deep: ^4.0.1
-    config-chain: ^1.1.13
-    cosmiconfig: ^8.3.6
-    dedent: ^1.5.1
-    execa: ^8.0.1
-    fs-extra: ^11.1.1
-    glob-parent: ^6.0.2
-    globby: ^13.2.2
-    inquirer: ^9.2.12
-    is-ci: ^3.0.1
-    json5: ^2.2.3
-    load-json-file: ^7.0.1
-    minimatch: ^9.0.3
-    npm-package-arg: ^11.0.1
-    npmlog: ^7.0.1
-    p-map: ^6.0.0
-    p-queue: ^7.4.1
-    resolve-from: ^5.0.0
-    semver: ^7.5.4
-    slash: ^5.1.0
-    strong-log-transformer: ^2.1.0
-    write-file-atomic: ^5.0.1
-    write-json-file: ^5.0.0
-    write-pkg: ^6.0.1
-  checksum: 7abe4fcf840ad0bc5a9ba0161fc4fb928ed4af6e9e645252b1cd03427b99894e3cb725f1337c31790ee173d12643a4da32cba906d7f21b96b848905003003485
   languageName: node
   linkType: hard
 
@@ -2824,18 +2759,6 @@ __metadata:
     multimatch: 6.0.0
     npmlog: ^7.0.1
   checksum: c825584616a5d1e4d34551e5e6dd4bc98c7ffdd951429b08e0470c765c294c9a7265c3e5fb5b16fa049bf69c3b36afa4f55c9c4e46a7c72ef7e681f808e17372
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/init@npm:2.7.0":
-  version: 2.7.0
-  resolution: "@lerna-lite/init@npm:2.7.0"
-  dependencies:
-    "@lerna-lite/core": 2.7.0
-    fs-extra: ^11.1.1
-    p-map: ^6.0.0
-    write-json-file: ^5.0.0
-  checksum: b47e27bc81f0a9f5054bf2dce95992a75836a9208f9f879fa21efb9a54a06c4d48e226094e6260b8969dd08100d6596ed2d6c5bf87a09d3e30d9767c27c9d9f0
   languageName: node
   linkType: hard
 
@@ -5216,7 +5139,7 @@ __metadata:
     cross-env: 7.0.3
     deepmerge-ts: 5.1.0
     dotenv-defaults: 5.0.2
-    fake-indexeddb: ^4.0.0
+    fake-indexeddb: ^5.0.1
     hash.js: 1.1.7
     http-status-codes: 2.3.0
     idb: 7.1.1
@@ -5442,7 +5365,7 @@ __metadata:
     "@types/rimraf": ^3.0.2
     "@wireapp/store-engine": "workspace:^"
     dexie: ^3.2.0
-    fake-indexeddb: ^4.0.0
+    fake-indexeddb: ^5.0.1
     jest: ^29.2.1
     logdown: 3.3.1
     rimraf: ^3.0.2
@@ -6520,13 +6443,6 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
-  languageName: node
-  linkType: hard
-
-"base64-arraybuffer-es6@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "base64-arraybuffer-es6@npm:0.7.0"
-  checksum: 6d2fd114df49201b476cea5d470504e5d4e8c4cd42544152b312c9bdcb824313086fe83f1ffc34262e9e276b82d46aefc6e63bb85553f016932061137b355cdf
   languageName: node
   linkType: hard
 
@@ -8526,15 +8442,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"domexception@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "domexception@npm:1.0.1"
-  dependencies:
-    webidl-conversions: ^4.0.2
-  checksum: f564a9c0915dcb83ceefea49df14aaed106b1468fbe505119e8bcb0b77e242534f3aba861978537c0fc9dc6f35b176d0ffc77b3e342820fb27a8f215e7ae4d52
-  languageName: node
-  linkType: hard
-
 "domexception@npm:^4.0.0":
   version: 4.0.0
   resolution: "domexception@npm:4.0.0"
@@ -9833,12 +9740,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fake-indexeddb@npm:^4.0.0":
-  version: 4.0.2
-  resolution: "fake-indexeddb@npm:4.0.2"
-  dependencies:
-    realistic-structured-clone: ^3.0.0
-  checksum: ad257e5cc6273d9ea667b4129d8b0798830d56a68c7c77ddba752b3fd0088cb33e34b9569b218d16dfc8a78733d360d325f89c2ce352b70a0587c1f46f6f881d
+"fake-indexeddb@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "fake-indexeddb@npm:5.0.1"
+  checksum: b9bf94003e40923513863dde1f0f852fb00faa9d31db5203e4142e7937371e9061801b68cfdd37b321df1a314b2a30788b904be909685302d8f9c37a54580cb9
   languageName: node
   linkType: hard
 
@@ -10843,7 +10748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^13.1.1, globby@npm:^13.2.2":
+"globby@npm:^13.1.1":
   version: 13.2.2
   resolution: "globby@npm:13.2.2"
   dependencies:
@@ -13776,7 +13681,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.10, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.10, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -16836,17 +16741,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"realistic-structured-clone@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "realistic-structured-clone@npm:3.0.0"
-  dependencies:
-    domexception: ^1.0.1
-    typeson: ^6.1.0
-    typeson-registry: ^1.0.0-alpha.20
-  checksum: b4521b299c8dc320a5e3ef44678f80a92b0f1837901a5fbd1c7be06808110fb0b591b417114306ec55b44ef47fd17968aacca079afc9665afbe1c528026295ec
-  languageName: node
-  linkType: hard
-
 "recast@npm:~0.18.5":
   version: 0.18.10
   resolution: "recast@npm:0.18.10"
@@ -18925,15 +18819,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tr46@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "tr46@npm:2.1.0"
-  dependencies:
-    punycode: ^2.1.1
-  checksum: ffe6049b9dca3ae329b059aada7f515b0f0064c611b39b51ff6b53897e954650f6f63d9319c6c008d36ead477c7b55e5f64c9dc60588ddc91ff720d64eb710b3
-  languageName: node
-  linkType: hard
-
 "tr46@npm:^3.0.0":
   version: 3.0.0
   resolution: "tr46@npm:3.0.0"
@@ -19298,24 +19183,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: c034461079fbfde3cb584ddee52afccb15b6e32a0ce186d0b2719968786f7ca73e1b07f71fac4163088790b16811c6ccf79680de190664ef66ff0ba9c1fe4a23
-  languageName: node
-  linkType: hard
-
-"typeson-registry@npm:^1.0.0-alpha.20":
-  version: 1.0.0-alpha.39
-  resolution: "typeson-registry@npm:1.0.0-alpha.39"
-  dependencies:
-    base64-arraybuffer-es6: ^0.7.0
-    typeson: ^6.0.0
-    whatwg-url: ^8.4.0
-  checksum: c6b629697acf4652aecfff7be760356d764600afc9beca253278bbfc44fae0fe635b7619201b83e497cdc30645cbce7614d12a04b5726d9b8b505f73e6a3fc2a
-  languageName: node
-  linkType: hard
-
-"typeson@npm:^6.0.0, typeson@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "typeson@npm:6.1.0"
-  checksum: 00a77b03ac8f704acb103307bad9295fe47d6b304c386297f078ec3be63875c0b81e022a4815edb9dc2c7da0a72a431345411d35c755a8510af4a420e9e46cdc
   languageName: node
   linkType: hard
 
@@ -20054,20 +19921,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webidl-conversions@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "webidl-conversions@npm:4.0.2"
-  checksum: c93d8dfe908a0140a4ae9c0ebc87a33805b416a33ee638a605b551523eec94a9632165e54632f6d57a39c5f948c4bab10e0e066525e9a4b87a79f0d04fbca374
-  languageName: node
-  linkType: hard
-
-"webidl-conversions@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "webidl-conversions@npm:6.1.0"
-  checksum: 1f526507aa491f972a0c1409d07f8444e1d28778dfa269a9971f2e157182f3d496dc33296e4ed45b157fdb3bf535bb90c90bf10c50dcf1dd6caacb2a34cc84fb
-  languageName: node
-  linkType: hard
-
 "webidl-conversions@npm:^7.0.0":
   version: 7.0.0
   resolution: "webidl-conversions@npm:7.0.0"
@@ -20238,17 +20091,6 @@ __metadata:
     tr46: ^3.0.0
     webidl-conversions: ^7.0.0
   checksum: ed4826aaa57e66bb3488a4b25c9cd476c46ba96052747388b5801f137dd740b73fde91ad207d96baf9f17fbcc80fc1a477ad65181b5eb5fa718d27c69501d7af
-  languageName: node
-  linkType: hard
-
-"whatwg-url@npm:^8.4.0":
-  version: 8.7.0
-  resolution: "whatwg-url@npm:8.7.0"
-  dependencies:
-    lodash: ^4.7.0
-    tr46: ^2.1.0
-    webidl-conversions: ^6.1.0
-  checksum: a87abcc6cefcece5311eb642858c8fdb234e51ec74196bfacf8def2edae1bfbffdf6acb251646ed6301f8cee44262642d8769c707256125a91387e33f405dd1e
   languageName: node
   linkType: hard
 
