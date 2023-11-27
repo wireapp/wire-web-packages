@@ -130,6 +130,7 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly nbPrekeys: number;
   private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
   private readonly isMlsEnabled: () => Promise<boolean>;
+  /** this is the client the consumer is currently using. Will be set as soon as `initClient` is called and will be rest upon logout */
   private currentClient?: RegisteredClient;
   private storeEngine?: CRUDEngine;
   private db?: CoreDatabase;
