@@ -21,27 +21,27 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {createCustomEncryptedStore, createEncryptedStore} from './encryptedStore';
 
-import {SecretCrypto} from '../../../../mls/types';
+import {SecretCrypto} from '../messagingProtocols/mls/types';
 
 const isBase64 = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
 const KEY_SIZE = 16;
 
 export class CorruptedKeyError extends Error {}
 
-type GeneratedKey = {
+export type GeneratedKey = {
   key: Uint8Array;
   deleteKey: () => Promise<void>;
 };
 
 export async function generateSecretKey({
+  keyName,
   dbName,
   systemCrypto: baseCrypto,
 }: {
+  keyName: string;
   dbName: string;
   systemCrypto?: SecretCrypto;
 }): Promise<GeneratedKey> {
-  const coreCryptoKeyId = 'corecrypto-key';
-
   const systemCrypto = baseCrypto
     ? {
         encrypt: (value: Uint8Array) => {
@@ -77,20 +77,22 @@ export async function generateSecretKey({
   try {
     let key;
     try {
-      key = await secretsDb.getsecretValue(coreCryptoKeyId);
+      key = await secretsDb.getsecretValue(keyName);
     } catch (error) {
+      await secretsDb.deleteSecretValue(keyName);
       throw new CorruptedKeyError('Could not decrypt key');
     }
     if (key && key.length !== KEY_SIZE) {
       // If the key size is not correct, we have a corrupted key in the DB. This is unrecoverable.
+      await secretsDb.deleteSecretValue(keyName);
       throw new CorruptedKeyError('Invalid key');
     }
     if (!key) {
       key = crypto.getRandomValues(new Uint8Array(KEY_SIZE));
-      await secretsDb.saveSecretValue(coreCryptoKeyId, key);
+      await secretsDb.saveSecretValue(keyName, key);
     }
     await secretsDb?.close();
-    return {key, deleteKey: () => secretsDb.wipe()};
+    return {key, deleteKey: () => secretsDb.deleteSecretValue(keyName)};
   } catch (error) {
     await secretsDb?.close();
     throw error;

@@ -58,6 +58,7 @@ import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
+import {generateSecretKey} from './secretStore/secretKeyGenerator';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
@@ -422,7 +423,7 @@ export class Account extends TypedEventEmitter<Events> {
       storeEngine,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
+      generateSecretKey: keyName => this.generateSecretKey(keyName),
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
@@ -441,6 +442,18 @@ export class Account extends TypedEventEmitter<Events> {
    */
   configureCoreCallbacks(coreCallbacks: CoreCallbacks) {
     this.coreCallbacks = coreCallbacks;
+  }
+
+  public generateSecretKey(keyName: string) {
+    if (!this.storeEngine) {
+      throw new Error('trying to generate a secret key before storeEngine is initialized');
+    }
+    const secretKeysDbName = `secrets-${this.storeEngine?.storeName}`;
+    return generateSecretKey({
+      keyName,
+      dbName: secretKeysDbName,
+      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
+    });
   }
 
   public async initServices(context: Context): Promise<void> {

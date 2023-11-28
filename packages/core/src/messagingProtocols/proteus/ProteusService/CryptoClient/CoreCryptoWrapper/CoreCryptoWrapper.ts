@@ -25,43 +25,35 @@ import {Ciphersuite, CoreCrypto} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
-import {generateSecretKey, CorruptedKeyError} from './secretKeyGenerator';
 
-import {SecretCrypto} from '../../../../mls/types';
+import {CorruptedKeyError, GeneratedKey} from '../../../../../secretStore/secretKeyGenerator';
 import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
-  systemCrypto?: SecretCrypto;
+  generateSecretKey: (keyName: string) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
 
-type ClientConfig = Config & {
+type ClientConfig = Omit<Config, 'generateSecretKey'> & {
   onWipe: () => Promise<void>;
 };
 
 export async function buildClient(
   storeEngine: CRUDEngine,
   coreCryptoWasmFilePath: string,
-  {systemCrypto, nbPrekeys, onNewPrekeys}: Config,
+  {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
   let key;
   const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
-  const secretKeysDbName = `secrets-${storeEngine.storeName}`;
+  const coreCryptoKeyId = 'corecrypto-key';
   try {
-    key = await generateSecretKey({
-      dbName: secretKeysDbName,
-      systemCrypto,
-    });
+    key = await generateSecretKey(coreCryptoKeyId);
   } catch (error) {
     if (error instanceof CorruptedKeyError) {
       // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
-      await deleteDB(secretKeysDbName);
       await deleteDB(coreCryptoDbName);
-      key = await generateSecretKey({
-        dbName: secretKeysDbName,
-        systemCrypto,
-      });
+      key = await generateSecretKey(coreCryptoKeyId);
     } else {
       throw error;
     }

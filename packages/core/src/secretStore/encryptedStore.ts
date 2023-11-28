@@ -66,12 +66,18 @@ export class EncryptedStore<EncryptedPayload> {
     return this.#decrypt(result);
   }
 
-  async close() {
+  async deleteSecretValue(primaryKey: string) {
+    const instance = await openDB(this.db.name, this.db.version);
+    await instance.delete('secrets', primaryKey);
+    instance.close();
+  }
+
+  close() {
     this.db.close();
   }
 
   async wipe() {
-    this.db.close();
+    this.close();
     await deleteDB(this.db.name);
   }
 }
