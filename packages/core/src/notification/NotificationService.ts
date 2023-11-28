@@ -96,7 +96,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
   }
 
   /** Should only be called with a completely new client. */
-  public async initializeNotificationStream(clientId?: string): Promise<string> {
+  public async initializeNotificationStream(clientId: string): Promise<string> {
     await this.setLastEventDate(new Date(0));
     const latestNotification = await this.backend.getLastNotification(clientId);
     return this.setLastNotificationId(latestNotification);
