@@ -30,7 +30,7 @@ import {CorruptedKeyError, GeneratedKey} from '../../../../../secretStore/secret
 import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
-  generateSecretKey: (keyName: string) => Promise<GeneratedKey>;
+  generateSecretKey: (keyId: string) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };

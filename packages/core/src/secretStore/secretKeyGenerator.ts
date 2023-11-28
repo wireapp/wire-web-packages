@@ -34,11 +34,11 @@ export type GeneratedKey = {
 };
 
 export async function generateSecretKey({
-  keyName,
+  keyId,
   dbName,
   systemCrypto: baseCrypto,
 }: {
-  keyName: string;
+  keyId: string;
   dbName: string;
   systemCrypto?: SecretCrypto;
 }): Promise<GeneratedKey> {
@@ -77,22 +77,22 @@ export async function generateSecretKey({
   try {
     let key;
     try {
-      key = await secretsDb.getsecretValue(keyName);
+      key = await secretsDb.getsecretValue(keyId);
     } catch (error) {
-      await secretsDb.deleteSecretValue(keyName);
+      await secretsDb.deleteSecretValue(keyId);
       throw new CorruptedKeyError('Could not decrypt key');
     }
     if (key && key.length !== KEY_SIZE) {
       // If the key size is not correct, we have a corrupted key in the DB. This is unrecoverable.
-      await secretsDb.deleteSecretValue(keyName);
+      await secretsDb.deleteSecretValue(keyId);
       throw new CorruptedKeyError('Invalid key');
     }
     if (!key) {
       key = crypto.getRandomValues(new Uint8Array(KEY_SIZE));
-      await secretsDb.saveSecretValue(keyName, key);
+      await secretsDb.saveSecretValue(keyId, key);
     }
     await secretsDb?.close();
-    return {key, deleteKey: () => secretsDb.deleteSecretValue(keyName)};
+    return {key, deleteKey: () => secretsDb.deleteSecretValue(keyId)};
   } catch (error) {
     await secretsDb?.close();
     throw error;

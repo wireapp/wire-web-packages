@@ -423,7 +423,7 @@ export class Account extends TypedEventEmitter<Events> {
       storeEngine,
       nbPrekeys: this.nbPrekeys,
       coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-      generateSecretKey: keyName => this.generateSecretKey(keyName),
+      generateSecretKey: keyId => this.generateSecretKey(keyId),
       onNewPrekeys: async prekeys => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
@@ -444,13 +444,20 @@ export class Account extends TypedEventEmitter<Events> {
     this.coreCallbacks = coreCallbacks;
   }
 
-  public generateSecretKey(keyName: string) {
+  /**
+   * Will generate a secret key that can be used to encrypt stored data.
+   * If the key already exists in the secret store, it will be returned as is.
+   * If the key doesn't already exists in the secret store it will be generated and stored for future references
+   *
+   * @param keyId - the identifier of the key to generate (will be used as primary key in the secret store)
+   */
+  public generateSecretKey(keyId: string) {
     if (!this.storeEngine) {
       throw new Error('trying to generate a secret key before storeEngine is initialized');
     }
     const secretKeysDbName = `secrets-${this.storeEngine?.storeName}`;
     return generateSecretKey({
-      keyName,
+      keyId,
       dbName: secretKeysDbName,
       systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
     });
