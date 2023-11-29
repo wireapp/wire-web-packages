@@ -88,11 +88,14 @@ const getCertificateData = (): string => {
   return atob;
 };
 
+const removeIntialData = () => {
+  storage.remove(InitialDataKey);
+};
+
 const removeTemporaryData = () => {
   storage.remove(HandleKey);
   storage.remove(AuthDataKey);
   storage.remove(OderDataKey);
-  storage.remove(InitialDataKey);
 };
 
 const removeCertificateData = () => {
@@ -102,6 +105,7 @@ const removeCertificateData = () => {
 const removeAll = () => {
   removeTemporaryData();
   removeCertificateData();
+  removeIntialData();
 };
 
 export const E2EIStorage = {
@@ -125,6 +129,7 @@ export const E2EIStorage = {
     certificateData: hasCertificateData,
   },
   remove: {
+    initalData: removeIntialData,
     temporaryData: removeTemporaryData,
     certificateData: removeCertificateData,
     all: removeAll,
