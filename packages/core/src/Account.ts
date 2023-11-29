@@ -25,6 +25,7 @@ import {
   Cookie,
   CookieStore,
   LoginData,
+  PreKey,
 } from '@wireapp/api-client/lib/auth';
 import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
@@ -53,12 +54,10 @@ import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {AcmeChallenge, E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
-import {CoreCallbacks, CryptoProtocolConfig} from './messagingProtocols/mls/types';
+import {CoreCallbacks, CoreCryptoConfig} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
-import {buildCryptoClient, CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
-import {cryptoMigrationStore} from './messagingProtocols/proteus/ProteusService/cryptoMigrationStateStore';
+import {CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
-import {generateSecretKey} from './secretStore/secretKeyGenerator';
 import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
@@ -104,9 +103,9 @@ interface AccountOptions {
   nbPrekeys?: number;
 
   /**
-   * Config for MLS and proteus devices. Will fallback to the old proteus logic if not provided
+   * Config for MLS and proteus devices. Will fallback to the old cryptobox logic if not provided
    */
-  cryptoProtocolConfig?: CryptoProtocolConfig;
+  coreCryptoConfig?: CoreCryptoConfig;
 }
 
 type InitOptions = {
@@ -129,7 +128,7 @@ export class Account extends TypedEventEmitter<Events> {
   private readonly logger: logdown.Logger;
   private readonly createStore: CreateStoreFn;
   private readonly nbPrekeys: number;
-  private readonly cryptoProtocolConfig?: CryptoProtocolConfig;
+  private readonly coreCryptoConfig?: CoreCryptoConfig;
   private readonly isMlsEnabled: () => Promise<boolean>;
   /** this is the client the consumer is currently using. Will be set as soon as `initClient` is called and will be rest upon logout */
   private currentClient?: RegisteredClient;
@@ -164,14 +163,14 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    {createStore = () => undefined, nbPrekeys = 100, cryptoProtocolConfig}: AccountOptions = {},
+    {createStore = () => undefined, nbPrekeys = 100, coreCryptoConfig}: AccountOptions = {},
   ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
-    this.cryptoProtocolConfig = cryptoProtocolConfig;
+    this.coreCryptoConfig = coreCryptoConfig;
     this.nbPrekeys = nbPrekeys;
-    this.isMlsEnabled = async () => !!this.cryptoProtocolConfig?.mls && (await this.apiClient.supportsMLS());
+    this.isMlsEnabled = async () => !!this.coreCryptoConfig?.mls && (await this.apiClient.supportsMLS());
     this.createStore = createStore;
     this.recurringTaskScheduler = new RecurringTaskScheduler({
       get: async key => {
@@ -407,30 +406,30 @@ export class Account extends TypedEventEmitter<Events> {
   }
 
   private async buildCryptoClient(context: Context, storeEngine: CRUDEngine) {
-    /* There are 3 cases where we want to instantiate CoreCrypto:
-     * 1. MLS is enabled
-     * 2. The user has enabled CoreCrypto in the config
-     * 3. The user has already used CoreCrypto in the past (cannot rollback to using cryptobox)
-     */
-    const clientType =
-      (await this.isMlsEnabled()) ||
-      !!this.cryptoProtocolConfig?.useCoreCrypto ||
-      cryptoMigrationStore.coreCrypto.isReady(storeEngine.storeName)
-        ? CryptoClientType.CORE_CRYPTO
-        : CryptoClientType.CRYPTOBOX;
-
-    return buildCryptoClient(clientType, {
-      storeEngine,
+    const baseConfig = {
       nbPrekeys: this.nbPrekeys,
-      coreCryptoWasmFilePath: this.cryptoProtocolConfig?.coreCrypoWasmFilePath,
-      generateSecretKey: keyId => this.generateSecretKey(keyId),
-      onNewPrekeys: async prekeys => {
+      onNewPrekeys: async (prekeys: PreKey[]) => {
         this.logger.debug(`Received '${prekeys.length}' new PreKeys.`);
 
         await this.apiClient.api.client.putClient(context.clientId!, {prekeys});
         this.logger.debug(`Successfully uploaded '${prekeys.length}' PreKeys.`);
       },
-    });
+    };
+
+    const coreCryptoConfig = this.coreCryptoConfig;
+    if (coreCryptoConfig) {
+      const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CoreCryptoWrapper');
+      const client = await buildClient(storeEngine, {
+        ...baseConfig,
+        ...coreCryptoConfig,
+        generateSecretKey: keyId => coreCryptoConfig.generateSecretKey(storeEngine.storeName, keyId, 16),
+      });
+      return [CryptoClientType.CORE_CRYPTO, client] as const;
+    }
+
+    const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CryptoboxWrapper');
+    const client = await buildClient(storeEngine, baseConfig);
+    return [CryptoClientType.CRYPTOBOX, client] as const;
   }
 
   /**
@@ -442,25 +441,6 @@ export class Account extends TypedEventEmitter<Events> {
    */
   configureCoreCallbacks(coreCallbacks: CoreCallbacks) {
     this.coreCallbacks = coreCallbacks;
-  }
-
-  /**
-   * Will generate a secret key that can be used to encrypt stored data.
-   * If the key already exists in the secret store, it will be returned as is.
-   * If the key doesn't already exists in the secret store it will be generated and stored for future references
-   *
-   * @param keyId - the identifier of the key to generate (will be used as primary key in the secret store)
-   */
-  public generateSecretKey(keyId: string) {
-    if (!this.storeEngine) {
-      throw new Error('trying to generate a secret key before storeEngine is initialized');
-    }
-    const secretKeysDbName = `secrets-${this.storeEngine?.storeName}`;
-    return generateSecretKey({
-      keyId,
-      dbName: secretKeysDbName,
-      systemCrypto: this.cryptoProtocolConfig?.systemCrypto,
-    });
   }
 
   public async initServices(context: Context): Promise<void> {
@@ -489,7 +469,7 @@ export class Account extends TypedEventEmitter<Events> {
         this.db,
         this.recurringTaskScheduler,
         {
-          ...this.cryptoProtocolConfig?.mls,
+          ...this.coreCryptoConfig?.mls,
         },
       );
     }

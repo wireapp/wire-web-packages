@@ -24,7 +24,6 @@ import {createCustomEncryptedStore, createEncryptedStore} from './encryptedStore
 import {SecretCrypto} from '../messagingProtocols/mls/types';
 
 const isBase64 = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
-const KEY_SIZE = 16;
 
 export class CorruptedKeyError extends Error {}
 
@@ -35,10 +34,12 @@ export type GeneratedKey = {
 
 export async function generateSecretKey({
   keyId,
+  keySize = 16,
   dbName,
   systemCrypto: baseCrypto,
 }: {
   keyId: string;
+  keySize?: number;
   dbName: string;
   systemCrypto?: SecretCrypto;
 }): Promise<GeneratedKey> {
@@ -77,18 +78,18 @@ export async function generateSecretKey({
   try {
     let key;
     try {
-      key = await secretsDb.getsecretValue(keyId);
+      key = await secretsDb.getSecretValue(keyId);
     } catch (error) {
       await secretsDb.deleteSecretValue(keyId);
       throw new CorruptedKeyError('Could not decrypt key');
     }
-    if (key && key.length !== KEY_SIZE) {
+    if (key && key.length !== keySize) {
       // If the key size is not correct, we have a corrupted key in the DB. This is unrecoverable.
       await secretsDb.deleteSecretValue(keyId);
       throw new CorruptedKeyError('Invalid key');
     }
     if (!key) {
-      key = crypto.getRandomValues(new Uint8Array(KEY_SIZE));
+      key = crypto.getRandomValues(new Uint8Array(keySize));
       await secretsDb.saveSecretValue(keyId, key);
     }
     await secretsDb?.close();

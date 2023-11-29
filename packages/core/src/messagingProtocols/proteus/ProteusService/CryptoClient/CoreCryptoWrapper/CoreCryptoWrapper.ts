@@ -33,16 +33,16 @@ type Config = {
   generateSecretKey: (keyId: string) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
+  wasmFilePath: string;
 };
 
-type ClientConfig = Omit<Config, 'generateSecretKey'> & {
+type ClientConfig = Omit<Config, 'generateSecretKey' | 'wasmFilePath'> & {
   onWipe: () => Promise<void>;
 };
 
 export async function buildClient(
   storeEngine: CRUDEngine,
-  coreCryptoWasmFilePath: string,
-  {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
+  {wasmFilePath, generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
   let key;
   const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
@@ -61,7 +61,7 @@ export async function buildClient(
   const coreCrypto = await CoreCrypto.deferredInit({
     databaseName: coreCryptoDbName,
     key: Encoder.toBase64(key.key).asString,
-    wasmFilePath: coreCryptoWasmFilePath,
+    wasmFilePath,
     ciphersuites: [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
   });
   return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});

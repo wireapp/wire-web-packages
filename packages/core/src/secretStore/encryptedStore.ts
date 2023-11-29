@@ -58,7 +58,7 @@ export class EncryptedStore<EncryptedPayload> {
     await this.db.put('secrets', encrypted, primaryKey);
   }
 
-  async getsecretValue(primaryKey: string) {
+  async getSecretValue(primaryKey: string) {
     const result = await this.db.get('secrets', primaryKey);
     if (!result) {
       return undefined;
