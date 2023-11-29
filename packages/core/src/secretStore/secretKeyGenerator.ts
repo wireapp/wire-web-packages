@@ -32,15 +32,22 @@ export type GeneratedKey = {
   deleteKey: () => Promise<void>;
 };
 
+/**
+ * Will generate (or retrieve) a secret key from the database.
+ */
 export async function generateSecretKey({
   keyId,
   keySize = 16,
   dbName,
   systemCrypto: baseCrypto,
 }: {
+  /** the ID of the key to generate (if the ID already exists, then the generated key will be returned) */
   keyId: string;
+  /** size of the key to generate */
   keySize?: number;
+  /** name of the database that will hold the secrets */
   dbName: string;
+  /** custom crypto primitives to use to encrypt the secret keys */
   systemCrypto?: SecretCrypto;
 }): Promise<GeneratedKey> {
   const systemCrypto = baseCrypto
