@@ -190,8 +190,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     if (keyPackages.length < 1) {
-      // If there are no clients to add, just update the keying material
-      return this.updateKeyingMaterial(groupId);
+      throw new Error('Empty list of keys provided to addUsersToExistingConversation');
     }
     return this.processCommitAction(groupIdBytes, () =>
       this.coreCryptoClient.addClientsToConversation(groupIdBytes, keyPackages),
@@ -377,7 +376,11 @@ export class MLSService extends TypedEventEmitter<Events> {
       }),
     );
 
-    const response = await this.addUsersToExistingConversation(groupId, keyPackages);
+    const response =
+      keyPackages.length > 0
+        ? await this.addUsersToExistingConversation(groupId, keyPackages)
+        : // If there are no clients to add, just update the keying material
+          await this.updateKeyingMaterial(groupId);
 
     // We schedule a periodic key material renewal
     await this.scheduleKeyMaterialRenewal(groupId);
