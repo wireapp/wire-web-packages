@@ -378,7 +378,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const response =
       coreCryptoKeyPackagesPayload.length > 0
         ? await this.mlsService.addUsersToExistingConversation(groupId, coreCryptoKeyPackagesPayload)
-        : ({events: ''} as unknown as MLSCreateConversationResponse);
+        : {events: []};
 
     const conversation = await this.getConversation(conversationId);
 
