@@ -463,6 +463,7 @@ describe('SubconversationService', () => {
       jest
         .spyOn(subconversationService, 'joinConferenceSubconversation')
         .mockResolvedValue({epoch: mockedInitialEpoch, groupId: subconversationGroupId});
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValue(mockedInitialEpoch);
 
       const findConversationByGroupId = (groupId: string) => {
         if (groupId === parentConversationGroupId) {
