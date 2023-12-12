@@ -482,6 +482,7 @@ describe('SubconversationService', () => {
         onEpochUpdateCallback,
       );
 
+      expect(mlsService.getEpoch).toHaveBeenCalledWith(subconversationGroupId);
       expect(mlsService.on).toHaveBeenCalledWith('newEpoch', expect.any(Function));
       expect(subconversationService.getSubconversationEpochInfo).toHaveBeenCalledWith(
         parentConversationId,
