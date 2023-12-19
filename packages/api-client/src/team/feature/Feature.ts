@@ -59,8 +59,8 @@ export enum SelfDeletingTimeout {
 export interface FeatureSelfDeletingMessagesConfig extends FeatureConfig {
   enforcedTimeoutSeconds: SelfDeletingTimeout | number;
 }
-export interface FeatureDownloadPathConfig extends FeatureConfig {
-  downloadPath: string;
+export interface FeatureFileDownloadPathConfig extends FeatureConfig {
+  enforcedDownloadLocation: string;
 }
 
 export interface FeatureClassifiedDomainsConfig extends FeatureConfig {
@@ -91,7 +91,7 @@ export type FeatureDigitalSignature = FeatureWithoutConfig;
 export type FeatureConversationGuestLink = FeatureWithoutConfig;
 export type FeatureFileSharing = FeatureWithoutConfig;
 export type FeatureLegalhold = FeatureWithoutConfig;
-export type FeatureDownloadPath = Feature<FeatureDownloadPathConfig>;
+export type FeatureDownloadPath = Feature<FeatureFileDownloadPathConfig>;
 export type FeatureSearchVisibility = FeatureWithoutConfig;
 export type FeatureSelfDeletingMessages = Feature<FeatureSelfDeletingMessagesConfig>;
 export type FeatureMLS = Feature<FeatureMLSConfig>;
