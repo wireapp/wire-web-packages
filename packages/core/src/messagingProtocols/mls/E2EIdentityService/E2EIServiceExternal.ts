@@ -27,7 +27,7 @@ import {getE2EIClientId} from './Helper';
 import {E2EIStorage} from './Storage/E2EIStorage';
 
 import {ClientService} from '../../../client';
-import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
+import {ParsedFullyQualifiedId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 
 export type DeviceIdentity = Omit<WireIdentity, 'free'> & {deviceId: string};
 
@@ -72,21 +72,36 @@ export class E2EIServiceExternal {
     return this.coreCryptoClient.e2eiIsEnabled(ciphersuite);
   }
 
-  public async getUsersIdentities(groupId: string, userIds: QualifiedId[]): Promise<Map<string, DeviceIdentity[]>> {
+  public async getUsersIdentities(
+    groupId: string,
+    userIds: QualifiedId[],
+  ): Promise<Map<string, (DeviceIdentity | ParsedFullyQualifiedId)[]>> {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    const textDecoder = new TextDecoder();
+
+    // we get all the devices that have an identity (either valid, expired or revoked)
     const userIdentities = await this.coreCryptoClient.getUserIdentities(
-      Decoder.fromBase64(groupId).asBytes,
+      groupIdBytes,
       userIds.map(userId => userId.id),
     );
 
+    // We get all the devices in the conversation (in order to get devices that have no identity)
+    const allUsersMLSDevices = (await this.coreCryptoClient.getClientIds(groupIdBytes))
+      .map(id => textDecoder.decode(id))
+      .map(fullyQualifiedId => parseFullQualifiedClientId(fullyQualifiedId));
+
     const mappedUserIdentities = new Map();
-    for (const [userId, identities] of userIdentities) {
-      mappedUserIdentities.set(
-        userId,
-        identities.map(identity => ({
-          ...identity,
-          deviceId: parseFullQualifiedClientId((identity as any).client_id).client,
-        })),
-      );
+    for (const userId of userIds) {
+      const identities = (userIdentities.get(userId.id) || []).map(identity => ({
+        ...identity,
+        deviceId: parseFullQualifiedClientId((identity as any).client_id).client,
+      }));
+
+      const basicMLSDevices = allUsersMLSDevices
+        .filter(({user}) => user === userId.id)
+        .filter(({client}) => !identities.map(identity => identity.deviceId).includes(client));
+
+      mappedUserIdentities.set(userId.id, [...identities, ...basicMLSDevices]);
     }
 
     return mappedUserIdentities;
