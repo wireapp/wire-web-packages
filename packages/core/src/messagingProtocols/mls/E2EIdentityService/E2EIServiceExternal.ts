@@ -21,15 +21,15 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Decoder} from 'bazinga64';
 import logdown from 'logdown';
 
-import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity} from '@wireapp/core-crypto';
+import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity, DeviceStatus} from '@wireapp/core-crypto';
 
 import {getE2EIClientId} from './Helper';
 import {E2EIStorage} from './Storage/E2EIStorage';
 
 import {ClientService} from '../../../client';
-import {ParsedFullyQualifiedId, parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
+import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 
-export type DeviceIdentity = Omit<WireIdentity, 'free'> & {deviceId: string};
+export type DeviceIdentity = Omit<WireIdentity, 'free' | 'status'> & {status?: DeviceStatus; deviceId: string};
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
 export class E2EIServiceExternal {
@@ -72,10 +72,7 @@ export class E2EIServiceExternal {
     return this.coreCryptoClient.e2eiIsEnabled(ciphersuite);
   }
 
-  public async getUsersIdentities(
-    groupId: string,
-    userIds: QualifiedId[],
-  ): Promise<Map<string, (DeviceIdentity | ParsedFullyQualifiedId)[]>> {
+  public async getUsersIdentities(groupId: string, userIds: QualifiedId[]): Promise<Map<string, DeviceIdentity[]>> {
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
     const textDecoder = new TextDecoder();
 
@@ -90,7 +87,7 @@ export class E2EIServiceExternal {
       .map(id => textDecoder.decode(id))
       .map(fullyQualifiedId => parseFullQualifiedClientId(fullyQualifiedId));
 
-    const mappedUserIdentities = new Map();
+    const mappedUserIdentities = new Map<string, DeviceIdentity[]>();
     for (const userId of userIds) {
       const identities = (userIdentities.get(userId.id) || []).map(identity => ({
         ...identity,
@@ -99,7 +96,17 @@ export class E2EIServiceExternal {
 
       const basicMLSDevices = allUsersMLSDevices
         .filter(({user}) => user === userId.id)
-        .filter(({client}) => !identities.map(identity => identity.deviceId).includes(client));
+        .filter(({client}) => !identities.map(identity => identity.deviceId).includes(client))
+        .map<DeviceIdentity>(id => ({
+          ...id,
+          deviceId: id.client,
+          thumbprint: '',
+          user: '',
+          certificate: '',
+          displayName: '',
+          handle: '',
+          clientId: id.client,
+        }));
 
       mappedUserIdentities.set(userId.id, [...identities, ...basicMLSDevices]);
     }
