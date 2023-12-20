@@ -96,7 +96,9 @@ export class E2EIServiceExternal {
 
       const basicMLSDevices = allUsersMLSDevices
         .filter(({user}) => user === userId.id)
+        // filtering devices that have a valid identity
         .filter(({client}) => !identities.map(identity => identity.deviceId).includes(client))
+        // map basic MLS devices to "fake" identity object
         .map<DeviceIdentity>(id => ({
           ...id,
           deviceId: id.client,
