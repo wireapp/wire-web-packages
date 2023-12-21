@@ -83,8 +83,8 @@ const createMLSService = async () => {
     mockCoreCrypto,
     mockedDb,
     recurringTaskScheduler,
-    {},
     e2eServiceExternal,
+    {},
   );
 
   return [mlsService, {apiClient, coreCrypto: mockCoreCrypto, recurringTaskScheduler}] as const;
