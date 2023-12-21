@@ -449,7 +449,7 @@ export class Account extends TypedEventEmitter<Events> {
     const [clientType, cryptoClient] = await this.buildCryptoClient(context, this.storeEngine);
 
     let mlsService: MLSService | undefined;
-    let e2eIdentityService: E2EIServiceExternal | undefined;
+    let e2eServiceExternal: E2EIServiceExternal | undefined;
 
     const proteusService = new ProteusService(this.apiClient, cryptoClient, {
       onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
@@ -459,7 +459,7 @@ export class Account extends TypedEventEmitter<Events> {
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
 
     if (clientType === CryptoClientType.CORE_CRYPTO && (await this.isMlsEnabled())) {
-      e2eIdentityService = new E2EIServiceExternal(cryptoClient.getNativeClient(), clientService);
+      e2eServiceExternal = new E2EIServiceExternal(cryptoClient.getNativeClient(), clientService);
       mlsService = new MLSService(
         this.apiClient,
         cryptoClient.getNativeClient(),
@@ -468,6 +468,7 @@ export class Account extends TypedEventEmitter<Events> {
         {
           ...this.coreCryptoConfig?.mls,
         },
+        e2eServiceExternal,
       );
     }
 
@@ -491,7 +492,7 @@ export class Account extends TypedEventEmitter<Events> {
     const userService = new UserService(this.apiClient);
 
     this.service = {
-      e2eIdentity: e2eIdentityService,
+      e2eIdentity: e2eServiceExternal,
       mls: mlsService,
       proteus: proteusService,
       account: accountService,

@@ -92,12 +92,12 @@ export class MLSService extends TypedEventEmitter<Events> {
     private readonly coreCryptoClient: CoreCrypto,
     private readonly coreDatabase: CoreDatabase,
     private readonly recurringTaskScheduler: RecurringTaskScheduler,
-    private readonly e2eServiceExternal: E2EIServiceExternal,
     {
       keyingMaterialUpdateThreshold = defaultConfig.keyingMaterialUpdateThreshold,
       nbKeyPackages = defaultConfig.nbKeyPackages,
       cipherSuite = defaultConfig.cipherSuite,
     }: Partial<MLSServiceConfig>,
+    private readonly e2eServiceExternal: E2EIServiceExternal,
   ) {
     super();
     this.config = {
