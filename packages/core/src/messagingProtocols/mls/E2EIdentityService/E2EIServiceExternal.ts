@@ -140,9 +140,6 @@ export class E2EIServiceExternal {
     if (!client) {
       return true;
     }
-    if (typeof client.mls_public_keys.ed25519 === 'string' && client.mls_public_keys.ed25519.length > 0) {
-      return true;
-    }
-    return false;
+    return typeof client.mls_public_keys.ed25519 !== 'string' || client.mls_public_keys.ed25519.length === 0;
   }
 }
