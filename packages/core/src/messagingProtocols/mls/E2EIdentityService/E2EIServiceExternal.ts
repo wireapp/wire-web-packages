@@ -137,6 +137,12 @@ export class E2EIServiceExternal {
 
   public async isFreshMLSSelfClient(): Promise<boolean> {
     const client = await this.clientService.loadClient();
-    return !!client && typeof client.mls_public_keys.ed25519 === 'string' && client.mls_public_keys.ed25519.length > 0;
+    if (!client) {
+      return true;
+    }
+    if (typeof client.mls_public_keys.ed25519 === 'string' && client.mls_public_keys.ed25519.length > 0) {
+      return true;
+    }
+    return false;
   }
 }
