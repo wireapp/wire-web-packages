@@ -33,7 +33,7 @@ import {
   RotateBundle,
 } from './E2EIService.types';
 import {E2EIServiceExternal} from './E2EIServiceExternal';
-import {getE2EIClientId, isResponseStatusValid} from './Helper';
+import {isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorization} from './Steps/Authorization';
 import {getCertificate} from './Steps/Certificate';
@@ -120,15 +120,13 @@ class E2EIServiceInternal {
   // ############ Internal Functions ############
 
   private async initIdentity(hasActiveCertificate: boolean) {
-    const {clientId, user} = E2EIStorage.get.initialData();
-    const e2eiClientId = getE2EIClientId(clientId, user.id, user.domain).asString;
+    const {user} = E2EIStorage.get.initialData();
     const expiryDays = 2;
     const ciphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
     if (hasActiveCertificate) {
       try {
         this.identity = await this.coreCryptoClient.e2eiNewRotateEnrollment(
-          e2eiClientId,
           expiryDays,
           ciphersuite,
           user.displayName,
@@ -140,7 +138,6 @@ class E2EIServiceInternal {
       }
     } else {
       this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
-        e2eiClientId,
         user.displayName,
         user.handle,
         expiryDays,

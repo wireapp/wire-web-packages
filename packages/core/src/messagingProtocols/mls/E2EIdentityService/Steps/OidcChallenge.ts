@@ -42,7 +42,8 @@ export const doWireOidcChallenge = async ({
     throw new Error('No wireOIDCChallenge defined');
   }
 
-  const reqBody = identity.newOidcChallengeRequest(oAuthIdToken, nonce);
+  const refreshToken = (await identity.getRefreshToken()) as string;
+  const reqBody = await identity.newOidcChallengeRequest(oAuthIdToken, refreshToken, nonce);
 
   const oidcChallengeResponse = await connection.validateOidcChallenge(wireOidcChallenge.url, reqBody);
   if (!oidcChallengeResponse) {
