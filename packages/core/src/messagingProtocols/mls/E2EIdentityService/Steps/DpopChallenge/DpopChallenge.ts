@@ -17,6 +17,8 @@
  *
  */
 
+import {Converter} from 'bazinga64';
+
 import {DoWireDpopChallengeParams, GetClientAccessTokenParams, GetClientNonceParams} from './DpopChallenge.types';
 
 const getClientNonce = async ({apiClient, clientId}: GetClientNonceParams) => {
@@ -81,6 +83,9 @@ export const doWireDpopChallenge = async ({
   if (!dpopChallengeResponse) {
     throw new Error('No response received while validating DPOP challenge');
   }
+  await identity.newDpopChallengeResponse(
+    Converter.stringToArrayBufferViewUTF8(JSON.stringify(dpopChallengeResponse.data)),
+  );
 
   return dpopChallengeResponse;
 };
