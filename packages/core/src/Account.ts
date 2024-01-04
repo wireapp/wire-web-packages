@@ -238,13 +238,11 @@ export class Account extends TypedEventEmitter<Events> {
     displayName,
     handle,
     discoveryUrl,
-    hasActiveCertificate,
     oAuthIdToken,
   }: {
     displayName: string;
     handle: string;
     discoveryUrl: string;
-    hasActiveCertificate: boolean;
     oAuthIdToken?: string;
   }): Promise<AcmeChallenge | boolean> {
     const context = this.apiClient.context;
@@ -272,7 +270,6 @@ export class Account extends TypedEventEmitter<Events> {
       user,
       this.currentClient,
       this.nbPrekeys,
-      hasActiveCertificate,
       oAuthIdToken,
     );
   }
