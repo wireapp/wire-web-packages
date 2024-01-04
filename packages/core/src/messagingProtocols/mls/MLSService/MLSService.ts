@@ -786,10 +786,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     user: User,
     client: RegisteredClient,
     nbPrekeys: number,
-    hasActiveCertificate: boolean,
     oAuthIdToken?: string,
   ): Promise<AcmeChallenge | boolean> {
     try {
+      const hasActiveCertificate = await this.coreCryptoClient.e2eiIsEnabled(this.config.cipherSuite);
       const instance = await E2EIServiceInternal.getInstance({
         apiClient: this.apiClient,
         coreCryptClient: this.coreCryptoClient,
@@ -799,6 +799,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         discoveryUrl,
         keyPackagesAmount: nbPrekeys,
       });
+
       // If we don't have an OAuth id token, we need to start the certificate process with Oauth
       if (!oAuthIdToken) {
         const challengeData = await instance.startCertificateProcess(hasActiveCertificate);
