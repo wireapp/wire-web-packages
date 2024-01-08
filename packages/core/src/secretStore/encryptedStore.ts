@@ -42,7 +42,7 @@ type EncryptedStoreConfig<EncryptedPayload> = {
   decrypt: DecryptFn<EncryptedPayload>;
 };
 
-export class EncryptedStore<EncryptedPayload> {
+export class EncryptedStore<EncryptedPayload = unknown> {
   readonly #decrypt: DecryptFn<EncryptedPayload>;
   readonly #encrypt: EncryptFn<EncryptedPayload>;
   constructor(

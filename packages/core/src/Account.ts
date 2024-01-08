@@ -404,7 +404,7 @@ export class Account extends TypedEventEmitter<Events> {
     return validClient;
   }
 
-  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, encryptedStore: EncryptedStore<any>) {
+  private async buildCryptoClient(context: Context, storeEngine: CRUDEngine, encryptedStore: EncryptedStore) {
     const baseConfig = {
       nbPrekeys: this.options.nbPrekeys,
       onNewPrekeys: async (prekeys: PreKey[]) => {
@@ -696,7 +696,7 @@ export class Account extends TypedEventEmitter<Events> {
     return `secrets-${this.generateDbName(context)}`;
   }
 
-  private async initEngine(context: Context, encryptedStore: EncryptedStore<any>): Promise<CRUDEngine> {
+  private async initEngine(context: Context, encryptedStore: EncryptedStore): Promise<CRUDEngine> {
     const dbName = this.generateDbName(context);
     this.logger.log(`Initialising store with name "${dbName}"...`);
     const openDb = async () => {
