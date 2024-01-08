@@ -96,7 +96,7 @@ async function defaultDecrypt({value, iv}: DefaultEncryptedPayload, key: CryptoK
 }
 
 async function defaultEncrypt(data: Uint8Array, key: CryptoKey): Promise<DefaultEncryptedPayload> {
-  const iv = await crypto.getRandomValues(new Uint8Array(12));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
   return {
     iv,
     value: await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, data),

@@ -39,7 +39,7 @@ export async function generateSecretKey({
   /** size of the key to generate */
   keySize?: number;
   /** name of the database that will hold the secrets */
-  secretsDb: EncryptedStore<unknown>;
+  secretsDb: EncryptedStore<any>;
 }): Promise<GeneratedKey> {
   try {
     let key;
