@@ -427,7 +427,7 @@ export class Account extends TypedEventEmitter<Events> {
     }
 
     const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CryptoboxWrapper');
-    const client = await buildClient(storeEngine, baseConfig);
+    const client = buildClient(storeEngine, baseConfig);
     return [CryptoClientType.CRYPTOBOX, client] as const;
   }
 
