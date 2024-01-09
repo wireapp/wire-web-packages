@@ -19,7 +19,7 @@
     "@wireapp/protocol-messaging": "1.44.0",
     "@wireapp/store-engine": "workspace:*",
     "@wireapp/store-engine-dexie": "workspace:^",
-    "axios": "1.6.3",
+    "axios": "1.6.5",
     "bazinga64": "workspace:^",
     "deepmerge-ts": "5.1.0",
     "hash.js": "1.1.7",
@@ -61,6 +61,6 @@
     "test:coverage": "jest --coverage",
     "watch": "tsc --watch"
   },
-  "version": "43.4.0",
+  "version": "43.5.1",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }
