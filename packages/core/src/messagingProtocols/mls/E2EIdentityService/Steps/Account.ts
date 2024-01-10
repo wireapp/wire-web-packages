@@ -39,7 +39,7 @@ export const createNewAccount = async ({
   const response = await connection.createNewAccount(directory.newAccount, reqBody);
 
   if (response?.data && !!response.data.status.length && !!response.nonce.length) {
-    identity.newAccountResponse(jsonToByteArray(response.data));
+    await identity.newAccountResponse(jsonToByteArray(response.data));
     return response.nonce;
   }
 
