@@ -121,7 +121,9 @@ class E2EIServiceInternal {
 
   private async initIdentity(hasActiveCertificate: boolean) {
     const {user} = E2EIStorage.get.initialData();
-    const expiryDays = 2;
+
+    // How long the issued certificate should be maximal valid
+    const expiryDays = 90;
     const ciphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
     if (hasActiveCertificate) {
