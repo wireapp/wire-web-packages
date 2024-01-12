@@ -97,6 +97,16 @@ class E2EIServiceInternal {
     // If we don't have a handle, we need to start a new OAuth flow
     try {
       // Initialize the identity
+
+      if (!this.acmeService) {
+        throw new Error(
+          'Error while trying to start a certificate process. E2eIdentityService is not fully initialized',
+        );
+      }
+
+      // Before we initialise the identity we need to validate the local certificate root.
+      await this.validateLocalCertificateRoot(this.acmeService);
+
       await this.initIdentity(hasActiveCertificate);
       return this.startNewOAuthFlow();
     } catch (error) {
@@ -181,6 +191,19 @@ class E2EIServiceInternal {
       throw error;
     }
     return undefined;
+  }
+
+  private async validateLocalCertificateRoot(connection: AcmeService): Promise<string> {
+    try {
+      const localCertificateRoot = await connection.getLocalCertificateRoot();
+      //TODO: pass the cert to core-crypto
+      return localCertificateRoot;
+    } catch (error) {
+      //TODO: handle errors from corecrypto
+      //open question: how do we recover from these errors
+      this.logger.error('Error while trying to set a local certificate root', error);
+      throw error;
+    }
   }
 
   private async getInitialNonce(directory: AcmeDirectory, connection: AcmeService): Promise<string> {
