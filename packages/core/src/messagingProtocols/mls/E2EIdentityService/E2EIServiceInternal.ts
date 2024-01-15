@@ -104,8 +104,8 @@ class E2EIServiceInternal {
         );
       }
 
-      // Before we initialise the identity we need to validate the local certificate root.
-      await this.validateLocalCertificateRoot(this.acmeService);
+      // Before we initialise the identity we need to register the local certificate root.
+      await this.registerLocalCertificateRoot(this.acmeService);
 
       await this.initIdentity(hasActiveCertificate);
       return this.startNewOAuthFlow();
@@ -193,10 +193,11 @@ class E2EIServiceInternal {
     return undefined;
   }
 
-  private async validateLocalCertificateRoot(connection: AcmeService): Promise<string> {
+  private async registerLocalCertificateRoot(connection: AcmeService): Promise<string> {
     try {
       const localCertificateRoot = await connection.getLocalCertificateRoot();
-      //TODO: pass the cert to core-crypto
+      await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
+
       return localCertificateRoot;
     } catch (error) {
       //TODO: handle errors from corecrypto
