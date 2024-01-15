@@ -148,10 +148,11 @@ export class E2EIServiceInternal {
     return undefined;
   }
 
-  private async validateLocalCertificateRoot(connection: AcmeService): Promise<string> {
+  private async registerLocalCertificateRoot(connection: AcmeService): Promise<string> {
     try {
       const localCertificateRoot = await connection.getLocalCertificateRoot();
-      //TODO: pass the cert to core-crypto
+      await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
+
       return localCertificateRoot;
     } catch (error) {
       //TODO: handle errors from corecrypto
