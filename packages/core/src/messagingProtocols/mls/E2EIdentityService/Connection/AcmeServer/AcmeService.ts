@@ -64,8 +64,8 @@ export class AcmeService {
   constructor(private discoveryUrl: string) {}
 
   private get acmeBaseUrl() {
-    const hostname = new URL(this.discoveryUrl).hostname;
-    return `https://${hostname}`;
+    const {origin} = new URL(this.discoveryUrl);
+    return origin;
   }
 
   // ############ Internal Functions ############
