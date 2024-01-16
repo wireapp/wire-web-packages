@@ -45,9 +45,11 @@ const MOCK_BACKEND = {
   ws: `wss://${BASE_URL}`,
 };
 
+const config = {nbPrekeys: 100, coreCryptoConfig: {wasmFilePath: ''}};
+
 async function createAccount(): Promise<{account: Account; apiClient: APIClient}> {
   const apiClient = new APIClient({urls: MOCK_BACKEND});
-  const account = new Account(apiClient);
+  const account = new Account(apiClient, config);
   await account.initServices({
     clientType: ClientType.TEMPORARY,
     userId: '',
@@ -171,7 +173,8 @@ describe('Account', () => {
   };
   describe('"init"', () => {
     it('initializes the Protocol buffers', async () => {
-      const account = new Account();
+      const apiClient = new APIClient({urls: MOCK_BACKEND});
+      const account = new Account(apiClient, config);
 
       await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
 
@@ -189,7 +192,7 @@ describe('Account', () => {
   describe('"login"', () => {
     it('logs in with correct credentials', async () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const account = new Account(apiClient, config);
 
       await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});
       const {clientType, userId} = await account.login({
@@ -204,7 +207,7 @@ describe('Account', () => {
 
     it('does not log in with incorrect credentials', async () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const account = new Account(apiClient);
+      const account = new Account(apiClient, config);
       let backendError;
 
       await account.initServices({clientType: ClientType.TEMPORARY, userId: ''});

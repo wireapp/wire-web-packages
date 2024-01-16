@@ -14,11 +14,9 @@
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
     "@wireapp/core-crypto": "1.0.0-rc.23",
-    "@wireapp/cryptobox": "12.8.0",
     "@wireapp/promise-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.44.0",
     "@wireapp/store-engine": "workspace:*",
-    "@wireapp/store-engine-dexie": "workspace:^",
     "axios": "1.6.5",
     "bazinga64": "workspace:^",
     "deepmerge-ts": "5.1.0",
@@ -31,7 +29,6 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.0",
     "@swc/core": "^1.3.10",
     "@swc/jest": "^0.2.23",
     "@types/jest": "^29.2.0",

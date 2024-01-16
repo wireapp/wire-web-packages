@@ -56,7 +56,7 @@ import {MLSService} from './messagingProtocols/mls';
 import {AcmeChallenge, E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
 import {CoreCallbacks, CoreCryptoConfig, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
-import {CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {buildClient} from './messagingProtocols/proteus/ProteusService/CryptoClient/CoreCryptoWrapper';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './secretStore/encryptedStore';
 import {generateSecretKey} from './secretStore/secretKeyGenerator';
@@ -105,10 +105,7 @@ interface AccountOptions {
    */
   nbPrekeys: number;
 
-  /**
-   * Config for MLS and proteus devices. Will fallback to the old cryptobox logic if not provided
-   */
-  coreCryptoConfig?: CoreCryptoConfig;
+  coreCryptoConfig: CoreCryptoConfig;
 }
 
 type InitOptions = {
@@ -129,7 +126,7 @@ type Events = {
 export class Account extends TypedEventEmitter<Events> {
   private readonly apiClient: APIClient;
   private readonly logger: logdown.Logger;
-  private readonly coreCryptoConfig?: CoreCryptoConfig;
+  private readonly coreCryptoConfig: CoreCryptoConfig;
   private readonly isMlsEnabled: () => Promise<boolean>;
   /** this is the client the consumer is currently using. Will be set as soon as `initClient` is called and will be rest upon logout */
   private currentClient?: RegisteredClient;
@@ -165,13 +162,13 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    private options: AccountOptions = {nbPrekeys: 100},
+    private options: AccountOptions,
   ) {
     super();
     this.apiClient = apiClient;
     this.backendFeatures = this.apiClient.backendFeatures;
     this.coreCryptoConfig = options.coreCryptoConfig;
-    this.isMlsEnabled = async () => !!this.coreCryptoConfig?.mls && (await this.apiClient.supportsMLS());
+    this.isMlsEnabled = async () => !!this.coreCryptoConfig.mls && (await this.apiClient.supportsMLS());
     this.recurringTaskScheduler = new RecurringTaskScheduler({
       get: async key => {
         const task = await this.db?.get('recurringTasks', key);
@@ -226,7 +223,7 @@ export class Account extends TypedEventEmitter<Events> {
 
   private async getE2EIStatus() {
     const features = await this.apiClient.api.teams.feature.getAllFeatures();
-    const clientCanUseE2EI = this.coreCryptoConfig?.mls?.useE2EI;
+    const clientCanUseE2EI = this.coreCryptoConfig.mls?.useE2EI;
     const teamCanUseE2EI = features[FEATURE_KEY.MLSE2EID]?.status === FeatureStatus.ENABLED;
 
     return {
@@ -415,20 +412,11 @@ export class Account extends TypedEventEmitter<Events> {
       },
     };
 
-    const coreCryptoConfig = this.coreCryptoConfig;
-    if (coreCryptoConfig) {
-      const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CoreCryptoWrapper');
-      const client = await buildClient(storeEngine, {
-        ...baseConfig,
-        ...coreCryptoConfig,
-        generateSecretKey: keyId => generateSecretKey({keyId, keySize: 16, secretsDb: encryptedStore}),
-      });
-      return [CryptoClientType.CORE_CRYPTO, client] as const;
-    }
-
-    const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CryptoboxWrapper');
-    const client = buildClient(storeEngine, baseConfig);
-    return [CryptoClientType.CRYPTOBOX, client] as const;
+    return buildClient(storeEngine, {
+      ...baseConfig,
+      ...this.coreCryptoConfig,
+      generateSecretKey: keyId => generateSecretKey({keyId, keySize: 16, secretsDb: encryptedStore}),
+    });
   }
 
   /**
@@ -453,7 +441,7 @@ export class Account extends TypedEventEmitter<Events> {
     const accountService = new AccountService(this.apiClient);
     const assetService = new AssetService(this.apiClient);
 
-    const [clientType, cryptoClient] = await this.buildCryptoClient(context, this.storeEngine, this.encryptedDb);
+    const cryptoClient = await this.buildCryptoClient(context, this.storeEngine, this.encryptedDb);
 
     let mlsService: MLSService | undefined;
     let e2eServiceExternal: E2EIServiceExternal | undefined;
@@ -465,7 +453,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
 
-    if (clientType === CryptoClientType.CORE_CRYPTO && (await this.isMlsEnabled())) {
+    if (await this.isMlsEnabled()) {
       mlsService = new MLSService(
         this.apiClient,
         cryptoClient.getNativeClient(),
