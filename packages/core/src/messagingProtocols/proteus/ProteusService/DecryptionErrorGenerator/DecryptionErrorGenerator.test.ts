@@ -31,12 +31,4 @@ describe('generateDecryptionError', () => {
     expect(error.message).toBe(`Decryption error from user1 (client1) (${coreCryptoError.message})`);
     expect(error.code).toBe(coreCryptoError.proteusErrorCode);
   });
-
-  it.each([Math.floor(Math.random() * 100), 0])('handles cryptobox error', code => {
-    const coreCryptoError = {code, message: 'decryption error'};
-    const error = generateDecryptionError(basePayload, coreCryptoError);
-    expect(error).toBeInstanceOf(DecryptionError);
-    expect(error.message).toBe(`Decryption error from user1 (client1) (${coreCryptoError.message})`);
-    expect(error.code).toBe(coreCryptoError.code);
-  });
 });

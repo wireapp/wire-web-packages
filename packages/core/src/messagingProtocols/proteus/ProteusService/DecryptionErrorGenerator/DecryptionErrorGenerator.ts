@@ -31,13 +31,8 @@ export const ProteusErrors = {
   Unknown: 999,
 } as const;
 
-type CryptoboxError = Error & {code: number};
-
 const isCoreCryptoError = (error: any): error is CoreCryptoError => {
   return 'proteusErrorCode' in error;
-};
-const isCryptoboxError = (error: any): error is CryptoboxError => {
-  return 'code' in error;
 };
 
 type SenderInfo = {clientId: string; userId: QualifiedId};
@@ -45,10 +40,7 @@ export const generateDecryptionError = (senderInfo: SenderInfo, error: any): Dec
   const {clientId, userId} = senderInfo;
   const sender = `${userId.id} (${clientId})`;
 
-  const coreCryptoCode = isCoreCryptoError(error) ? error.proteusErrorCode : null;
-  const cryptoboxCode = isCryptoboxError(error) ? error.code : null;
-  const code = coreCryptoCode ?? cryptoboxCode ?? ProteusErrors.Unknown;
-
+  const code = isCoreCryptoError(error) ? error.proteusErrorCode : ProteusErrors.Unknown;
   const message = `Decryption error from ${sender} (${error.message})`;
 
   return new DecryptionError(message, code);
