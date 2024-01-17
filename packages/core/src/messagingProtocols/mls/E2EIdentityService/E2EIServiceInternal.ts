@@ -97,13 +97,6 @@ class E2EIServiceInternal {
     // If we don't have a handle, we need to start a new OAuth flow
     try {
       // Initialize the identity
-
-      if (!this.acmeService) {
-        throw new Error(
-          'Error while trying to start a certificate process. E2eIdentityService is not fully initialized',
-        );
-      }
-
       await this.initIdentity(hasActiveCertificate);
       return this.startNewOAuthFlow();
     } catch (error) {
