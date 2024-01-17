@@ -18,6 +18,7 @@
  */
 
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Decoder} from 'bazinga64';
 
 import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity, DeviceStatus} from '@wireapp/core-crypto';
@@ -29,6 +30,7 @@ import {E2EIStorage} from './Storage/E2EIStorage';
 import {ClientService} from '../../../client';
 import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {LocalStorageStore} from '../../../util/LocalStorageStore';
+import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 
 export type DeviceIdentity = Omit<WireIdentity, 'free' | 'status'> & {status?: DeviceStatus; deviceId: string};
 
@@ -38,6 +40,7 @@ export class E2EIServiceExternal {
     private readonly coreCryptoClient: CoreCrypto,
     private readonly clientService: ClientService,
     private readonly cipherSuite: Ciphersuite,
+    private readonly recurringTaskScheduler: RecurringTaskScheduler,
   ) {}
 
   // If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
@@ -135,6 +138,11 @@ export class E2EIServiceExternal {
     return localCertificateRoot;
   }
 
+  private async registerCrossSignedCertificates(connection: AcmeService): Promise<void> {
+    const certificates = await connection.getFederationCrossSignedCertificates();
+    await Promise.all(certificates.map(cert => this.coreCryptoClient.e2eiRegisterIntermediateCA(cert)));
+  }
+
   /**
    * This function is used to register different server certificates in CoreCrypto.
    *
@@ -166,5 +174,19 @@ export class E2EIServiceExternal {
     }
 
     // Register intermediate certificate and update it every 24 hours
+    const task = async () => {
+      try {
+        await this.registerCrossSignedCertificates(acmeService);
+      } catch (error) {
+        console.error('Failed to register intermediate certificates', error);
+      }
+    };
+
+    await task();
+    await this.recurringTaskScheduler.registerTask({
+      every: TimeInMillis.DAY,
+      key: 'update-intermediate-certificates',
+      task,
+    });
   }
 }
