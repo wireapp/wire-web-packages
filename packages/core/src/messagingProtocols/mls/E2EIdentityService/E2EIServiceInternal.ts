@@ -148,20 +148,6 @@ export class E2EIServiceInternal {
     return undefined;
   }
 
-  private async registerLocalCertificateRoot(connection: AcmeService): Promise<string> {
-    try {
-      const localCertificateRoot = await connection.getLocalCertificateRoot();
-      await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
-
-      return localCertificateRoot;
-    } catch (error) {
-      //TODO: handle errors from corecrypto
-      //open question: how do we recover from these errors
-      this.logger.error('Error while trying to set a local certificate root', error);
-      throw error;
-    }
-  }
-
   private async getInitialNonce(directory: AcmeDirectory, connection: AcmeService): Promise<string> {
     const nonce = await connection.getInitialNonce(directory.newNonce);
     if (!nonce) {
