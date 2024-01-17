@@ -104,9 +104,6 @@ class E2EIServiceInternal {
         );
       }
 
-      // Before we initialise the identity we need to register the local certificate root.
-      await this.registerLocalCertificateRoot(this.acmeService);
-
       await this.initIdentity(hasActiveCertificate);
       return this.startNewOAuthFlow();
     } catch (error) {
@@ -191,20 +188,6 @@ class E2EIServiceInternal {
       throw error;
     }
     return undefined;
-  }
-
-  private async registerLocalCertificateRoot(connection: AcmeService): Promise<string> {
-    try {
-      const localCertificateRoot = await connection.getLocalCertificateRoot();
-      await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
-
-      return localCertificateRoot;
-    } catch (error) {
-      //TODO: handle errors from corecrypto
-      //open question: how do we recover from these errors
-      this.logger.error('Error while trying to set a local certificate root', error);
-      throw error;
-    }
   }
 
   private async getInitialNonce(directory: AcmeDirectory, connection: AcmeService): Promise<string> {
