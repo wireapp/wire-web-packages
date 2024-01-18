@@ -151,7 +151,7 @@ export class E2EIServiceExternal {
    * @param discoveryUrl
    */
   public async registerServerCertificates(discoveryUrl: string): Promise<void> {
-    const ROOT_CA_KEY = 'e2ei_root-received';
+    const ROOT_CA_KEY = 'e2ei_root-registered';
     const store = LocalStorageStore(ROOT_CA_KEY);
     const acmeService = new AcmeService(discoveryUrl);
 
