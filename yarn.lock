@@ -5184,7 +5184,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:1.0.0-rc.30, @wireapp/core-crypto@npm:^1.0.0-rc.30":
+"@wireapp/core-crypto@npm:1.0.0-rc.30":
   version: 1.0.0-rc.30
   resolution: "@wireapp/core-crypto@npm:1.0.0-rc.30"
   checksum: 3787dd855cc091a63d526e73fe289a1ba93742cd159895f70c08e3e2537b8055754fb49881105b2a20e35695cd223c383fbc7af1585262a3acd599aad53d050d
@@ -17162,7 +17162,6 @@ __metadata:
     "@types/rimraf": 3.0.2
     "@typescript-eslint/eslint-plugin": 6.18.1
     "@typescript-eslint/parser": 6.18.1
-    "@wireapp/core-crypto": ^1.0.0-rc.30
     "@wireapp/eslint-config": "workspace:^"
     eslint: 8.56.0
     eslint-config-prettier: 9.1.0

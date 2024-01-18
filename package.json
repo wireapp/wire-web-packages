@@ -88,8 +88,5 @@
   "resolutions": {
     "license-checker": "25.0.1"
   },
-  "packageManager": "yarn@3.2.4",
-  "dependencies": {
-    "@wireapp/core-crypto": "^1.0.0-rc.30"
-  }
+  "packageManager": "yarn@3.2.4"
 }
