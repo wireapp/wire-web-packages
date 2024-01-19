@@ -812,9 +812,12 @@ export class MLSService extends TypedEventEmitter<Events> {
 
         if (rotateBundle !== undefined) {
           // upload the clients public keys
-          if (!hasActiveCertificate) {
-            // we only upload public keys for the initial certification process. Renewals do not need to upload new public keys
-            await this.uploadMLSPublicKeys(client);
+          // We only upload public keys for the initial certification process AND if they dont exist already.
+          if (typeof client.mls_public_keys.ed25519 !== 'string' || client.mls_public_keys.ed25519.length === 0) {
+            // Renewals do not need to upload new public keys
+            if (!hasActiveCertificate) {
+              await this.uploadMLSPublicKeys(client);
+            }
           }
           // Remove old key packages
           await this.deleteMLSKeyPackages(client.id, rotateBundle.keyPackageRefsToRemove);
