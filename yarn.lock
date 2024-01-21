@@ -5438,7 +5438,7 @@ __metadata:
     react-helmet: 6.1.0
     react-hot-loader: 4.13.1
     react-select: 5.7.5
-    react-styleguidist: 13.1.1
+    react-styleguidist: 13.1.2
     react-test-renderer: 18.2.0
     react-transition-group: 4.4.5
     rimraf: ^3.0.2
@@ -16365,9 +16365,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-styleguidist@npm:13.1.1":
-  version: 13.1.1
-  resolution: "react-styleguidist@npm:13.1.1"
+"react-styleguidist@npm:13.1.2":
+  version: 13.1.2
+  resolution: "react-styleguidist@npm:13.1.2"
   dependencies:
     "@tippyjs/react": 4.1.0
     "@types/react-test-renderer": ^18.0.0
@@ -16438,7 +16438,7 @@ __metadata:
     react-dom: ">=18.0"
   bin:
     styleguidist: lib/bin/styleguidist.js
-  checksum: 1903811f776dbe30e33fcf229b5c790b013d7a936e28d65c5355cff7663bc91f07d9fbf3abce80758db91e968b7c9d33e8fabc3db472fbfa85b4374e83c6c73f
+  checksum: 9644b6922270aa67d44348e6aa140fbf6000f45e4629e6691eb2dd578a3d14194f00a88de5c20f3df9e9e58228e5f74beb0c97e1ab6128171d82598aa89c5254
   languageName: node
   linkType: hard
 
