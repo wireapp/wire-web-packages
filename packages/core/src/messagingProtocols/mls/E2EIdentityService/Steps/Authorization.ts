@@ -40,6 +40,7 @@ export const getAuthorizationChallenges = async ({
   for (const authzUrl of authzUrls) {
     const reqBody = await identity.newAuthzRequest(authzUrl, nonce);
     const response = await connection.getAuthorization(authzUrl, reqBody);
+    // The backend returns a list of challenges (to be inline with the protocol), but in our case we are only ever going to have a single element in the list
     const backendChallenge = response.data.challenges[0];
     const challenge = await identity.newAuthzResponse(jsonToByteArray(response.data));
     challenges.push({type: backendChallenge.type, challenge});
