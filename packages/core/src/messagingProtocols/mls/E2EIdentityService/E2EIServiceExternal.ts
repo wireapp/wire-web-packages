@@ -131,15 +131,15 @@ export class E2EIServiceExternal {
     return typeof client.mls_public_keys.ed25519 !== 'string' || client.mls_public_keys.ed25519.length === 0;
   }
 
-  private async registerLocalCertificateRoot(connection: AcmeService): Promise<string> {
-    const localCertificateRoot = await connection.getLocalCertificateRoot();
+  private async registerLocalCertificateRoot(acmeService: AcmeService): Promise<string> {
+    const localCertificateRoot = await acmeService.getLocalCertificateRoot();
     await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
 
     return localCertificateRoot;
   }
 
-  private async registerCrossSignedCertificates(connection: AcmeService): Promise<void> {
-    const certificates = await connection.getFederationCrossSignedCertificates();
+  private async registerCrossSignedCertificates(acmeService: AcmeService): Promise<void> {
+    const certificates = await acmeService.getFederationCrossSignedCertificates();
     await Promise.all(certificates.map(cert => this.coreCryptoClient.e2eiRegisterIntermediateCA(cert)));
   }
 
