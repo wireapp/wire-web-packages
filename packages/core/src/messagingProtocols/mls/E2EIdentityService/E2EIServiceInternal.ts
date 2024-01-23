@@ -35,7 +35,7 @@ import {createNewOrder, finalizeOrder} from './Steps/Order';
 import {E2EIStorage} from './Storage/E2EIStorage';
 import {AuthData} from './Storage/E2EIStorage.schema';
 
-class E2EIServiceInternal {
+export class E2EIServiceInternal {
   private static instance: E2EIServiceInternal;
   private readonly logger = logdown('@wireapp/core/E2EIdentityServiceInternal');
   private readonly coreCryptoClient: CoreCrypto;
@@ -129,46 +129,31 @@ class E2EIServiceInternal {
   }
 
   private async init(params: Required<Pick<InitParams, 'user' | 'clientId' | 'discoveryUrl'>>): Promise<void> {
-    try {
-      const {user, clientId, discoveryUrl} = params;
-      if (!user || !clientId) {
-        this.logger.error('user and clientId are required to initialize E2eIdentityService');
-        throw new Error();
-      }
-      this.acmeService = new AcmeService(discoveryUrl);
-      this.isInitialized = true;
-    } catch (error) {
-      this.logger.error('Error while trying to initialize E2eIdentityService', error);
-      throw error;
+    const {user, clientId, discoveryUrl} = params;
+    if (!user || !clientId) {
+      this.logger.error('user and clientId are required to initialize E2eIdentityService');
+      throw new Error();
     }
+    this.acmeService = new AcmeService(discoveryUrl);
+    this.isInitialized = true;
   }
 
   private async getDirectory(identity: E2eiEnrollment, connection: AcmeService): Promise<AcmeDirectory | undefined> {
-    try {
-      const directory = await connection.getDirectory();
+    const directory = await connection.getDirectory();
 
-      if (directory) {
-        const parsedDirectory = identity.directoryResponse(directory);
-        return parsedDirectory;
-      }
-    } catch (error) {
-      this.logger.error('Error while trying to receive a directory', error);
-      throw error;
+    if (directory) {
+      const parsedDirectory = identity.directoryResponse(directory);
+      return parsedDirectory;
     }
     return undefined;
   }
 
   private async getInitialNonce(directory: AcmeDirectory, connection: AcmeService): Promise<string> {
-    try {
-      const nonce = await connection.getInitialNonce(directory.newNonce);
-      if (nonce) {
-        return nonce;
-      }
+    const nonce = await connection.getInitialNonce(directory.newNonce);
+    if (!nonce) {
       throw new Error('No initial-nonce received');
-    } catch (error) {
-      this.logger.error('Error while trying to receive a nonce', error);
-      throw error;
     }
+    return nonce;
   }
 
   /**
@@ -295,12 +280,7 @@ class E2EIServiceInternal {
     }
 
     // Step 10: Initialize MLS with the certificate
-    try {
-      return await this.coreCryptoClient.e2eiRotateAll(this.identity, certificate, this.keyPackagesAmount);
-    } catch (error) {
-      this.logger.error('Error while e2eiRotateAll', error);
-      throw error;
-    }
+    return this.coreCryptoClient.e2eiRotateAll(this.identity, certificate, this.keyPackagesAmount);
   }
 
   /**
@@ -316,15 +296,19 @@ class E2EIServiceInternal {
       throw new Error('Error while trying to start OAuth flow. E2eIdentityService is not fully initialized');
     }
 
-    const authData = await this.getEnrollmentChallenges();
+    const {
+      authorization: {wireOidcChallenge, keyauth},
+    } = await this.getEnrollmentChallenges();
 
-    // Step 6: Start E2E OAuth flow
+    if (!wireOidcChallenge || !keyauth) {
+      throw new Error('missing wireOidcChallenge or keyauth');
+    }
     // stash the identity for later use
     const handle = await this.coreCryptoClient.e2eiEnrollmentStash(this.identity);
     // stash the handle in local storage
     E2EIStorage.store.handle(Encoder.toBase64(handle).asString);
     // we need to pass back the aquired wireOidcChallenge to the UI
-    return authData;
+    return {challenge: wireOidcChallenge, keyAuth: keyauth};
   }
 
   /**
@@ -357,22 +341,15 @@ class E2EIServiceInternal {
    */
   public async startRefreshCertficateFlow(oAuthIdToken: string, hasActiveCertificate: boolean) {
     // we dont have an oauth flow since we already get the oAuthIdToken from the client
-    try {
-      if (!this.acmeService) {
-        throw new Error('Error while trying to continue OAuth flow. AcmeService is not initialized');
-      }
-
-      // We need to initialize the identity
-      await this.initIdentity(hasActiveCertificate);
-
-      const authData = await this.getEnrollmentChallenges();
-
-      return this.getRotateBundleAndStoreCertificateData(oAuthIdToken, authData);
-    } catch (error) {
-      this.logger.error('Error while trying do the certificate refresh flow', error);
-      throw error;
+    if (!this.acmeService) {
+      throw new Error('Error while trying to continue OAuth flow. AcmeService is not initialized');
     }
+
+    // We need to initialize the identity
+    await this.initIdentity(hasActiveCertificate);
+
+    const authData = await this.getEnrollmentChallenges();
+
+    return this.getRotateBundleAndStoreCertificateData(oAuthIdToken, authData);
   }
 }
-
-export {E2EIServiceInternal};

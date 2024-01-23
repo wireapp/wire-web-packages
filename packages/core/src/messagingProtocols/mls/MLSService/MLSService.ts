@@ -51,9 +51,8 @@ import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUt
 import {numberToHex} from '../../../util/numberToHex';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
-import {E2EIServiceExternal, User} from '../E2EIdentityService';
+import {AcmeChallenge, E2EIServiceExternal, User} from '../E2EIdentityService';
 import {E2EIServiceInternal} from '../E2EIdentityService/E2EIServiceInternal';
-import {AuthorizationChallenge} from '../E2EIdentityService/Steps/Authorization';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {
   deleteMLSMessagesQueue,
@@ -72,7 +71,7 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 type EnrollmentProcessState =
   | {
       status: 'authentication';
-      authenticationChallenge: AuthorizationChallenge;
+      authenticationChallenge: {keyAuth: string; challenge: AcmeChallenge};
     }
   | {status: 'successful'};
 
@@ -803,11 +802,11 @@ export class MLSService extends TypedEventEmitter<Events> {
       // If we don't have an OAuth id token, we need to start the certificate process with Oauth
       if (!oAuthIdToken) {
         const data = await instance.startCertificateProcess(hasActiveCertificate);
-        const oidcChallenge = data.authorization.wireOidcChallenge;
+        const oidcChallenge = data.challenge;
         if (!oidcChallenge) {
           throw new Error('Not oidc challenge found');
         }
-        return {status: 'authentication', authenticationChallenge: oidcChallenge};
+        return {status: 'authentication', authenticationChallenge: data};
       }
 
       // If we have an OAuth id token, we can continue the certificate process / start a refresh
