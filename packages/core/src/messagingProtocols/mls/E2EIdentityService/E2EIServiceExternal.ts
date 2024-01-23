@@ -165,22 +165,12 @@ export class E2EIServiceExternal {
 
     // Register root certificate if not already registered
     if (!store.has(ROOT_CA_KEY)) {
-      try {
-        await this.registerLocalCertificateRoot(acmeService);
-        store.add(ROOT_CA_KEY, 'true');
-      } catch (error) {
-        console.error('Failed to register root certificate', error);
-      }
+      await this.registerLocalCertificateRoot(acmeService);
+      store.add(ROOT_CA_KEY, 'true');
     }
 
     // Register intermediate certificate and update it every 24 hours
-    const task = async () => {
-      try {
-        await this.registerCrossSignedCertificates(acmeService);
-      } catch (error) {
-        console.error('Failed to register intermediate certificates', error);
-      }
-    };
+    const task = () => this.registerCrossSignedCertificates(acmeService);
 
     await task();
     await this.recurringTaskScheduler.registerTask({
