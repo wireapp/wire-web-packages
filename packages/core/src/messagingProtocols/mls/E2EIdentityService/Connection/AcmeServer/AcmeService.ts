@@ -50,7 +50,8 @@ export class AcmeService {
   private readonly axiosInstance: AxiosInstance = axios.create();
   private readonly url = {
     ROOTS: '/roots.pem',
-  };
+    PROXY_CRL: '/proxyCrl',
+  } as const;
 
   constructor(private discoveryUrl: string) {}
 
@@ -106,6 +107,22 @@ export class AcmeService {
     const {data} = await this.axiosInstance.get(`${this.acmeBaseUrl}${this.url.ROOTS}`);
     const localCertificateRoot = LocalCertificateRootResponseSchema.parse(data);
     return localCertificateRoot;
+  }
+
+  public async getCRLFromDistributionPoint(distributionPointUrl: string): Promise<Uint8Array> {
+    const response = await this.axiosInstance.get(`${this.acmeBaseUrl}${this.url.PROXY_CRL}/${distributionPointUrl}`, {
+      headers: {
+        'Content-Type': '*/*',
+        Accept: '*/*',
+      },
+      responseType: 'arraybuffer',
+    });
+    const {data} = response;
+
+    return data;
+
+    // eslint-disable-next-line no-console
+    console.log('patryk', {data, response});
   }
 
   public async getInitialNonce(url: AcmeDirectory['newNonce']): GetInitialNonceReturnValue {

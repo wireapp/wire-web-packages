@@ -90,6 +90,7 @@ const defaultConfig: MLSServiceConfig = {
 
 type Events = {
   newEpoch: {epoch: number; groupId: string};
+  newCrlDistributionPoints: string[];
 };
 export class MLSService extends TypedEventEmitter<Events> {
   logger = logdown('@wireapp/core/MLSService');
@@ -300,6 +301,13 @@ export class MLSService extends TypedEventEmitter<Events> {
   public async decryptMessage(conversationId: ConversationId, payload: Uint8Array): Promise<DecryptedMessage> {
     try {
       const decryptedMessage = await this.coreCryptoClient.decryptMessage(conversationId, payload);
+
+      const {crlNewDistributionPoints} = decryptedMessage;
+
+      if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
+        this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+      }
+
       return decryptedMessage;
     } catch (error) {
       // According to CoreCrypto JS doc on .decryptMessage method, we should ignore some errors (corecrypto handle them internally)

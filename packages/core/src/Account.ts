@@ -477,11 +477,15 @@ export class Account extends TypedEventEmitter<Events> {
           ...this.coreCryptoConfig?.mls,
         },
       );
+
       e2eServiceExternal = new E2EIServiceExternal(
         cryptoClient.getNativeClient(),
+        this.db,
         clientService,
         mlsService.config.cipherSuite,
       );
+
+      mlsService.on('newCrlDistributionPoints', e2eServiceExternal.handleNewCrlDistributionPoints);
     }
 
     const connectionService = new ConnectionService(this.apiClient);
