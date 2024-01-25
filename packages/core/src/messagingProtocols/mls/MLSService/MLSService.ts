@@ -267,10 +267,12 @@ export class MLSService extends TypedEventEmitter<Events> {
     const credentialType = await this.getCredentialType();
     const generateCommit = async () => {
       const groupInfo = await getGroupInfo();
-      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
-        groupInfo,
-        credentialType,
-      );
+      const {conversationId, crlNewDistributionPoints, ...commitBundle} =
+        await this.coreCryptoClient.joinByExternalCommit(groupInfo, credentialType);
+
+      if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
+        this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+      }
       return {groupId: conversationId, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
