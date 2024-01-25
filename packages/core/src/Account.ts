@@ -240,12 +240,15 @@ export class Account extends TypedEventEmitter<Events> {
     teamId,
     discoveryUrl,
     oAuthIdToken,
+    certificateTtl = 90,
   }: {
     displayName: string;
     handle: string;
     teamId: string;
     discoveryUrl: string;
     oAuthIdToken?: string;
+    /** number of days the certificate should be valid (default 90) */
+    certificateTtl?: number;
   }) {
     const context = this.apiClient.context;
     const domain = context?.domain ?? '';
@@ -272,6 +275,7 @@ export class Account extends TypedEventEmitter<Events> {
       user,
       this.currentClient,
       this.options.nbPrekeys,
+      certificateTtl,
       oAuthIdToken,
     );
   }
