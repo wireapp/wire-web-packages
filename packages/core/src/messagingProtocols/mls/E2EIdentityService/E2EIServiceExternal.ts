@@ -170,12 +170,20 @@ export class E2EIServiceExternal {
     }
 
     // Register intermediate certificate and update it every 24 hours
+
+    const INTERMEDIATE_CA_KEY = 'update-intermediate-certificates';
+    const hasPendingTask = await this.recurringTaskScheduler.hasTask(INTERMEDIATE_CA_KEY);
+
     const task = () => this.registerCrossSignedCertificates(acmeService);
 
-    await task();
+    // If the task was never registered, we run it once, and then register it to run every 24 hours
+    if (!hasPendingTask) {
+      await task();
+    }
+
     await this.recurringTaskScheduler.registerTask({
       every: TimeInMillis.DAY,
-      key: 'update-intermediate-certificates',
+      key: INTERMEDIATE_CA_KEY,
       task,
     });
   }
