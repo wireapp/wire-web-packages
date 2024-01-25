@@ -41,6 +41,7 @@ import {
   OidcChallengeResponseSchema,
   GetCertificateResponseSchema,
   LocalCertificateRootResponseSchema,
+  FederationCrossSignedCertificatesResponseSchema,
 } from './schema';
 
 import {AcmeChallenge, AcmeDirectory} from '../../E2EIService.types';
@@ -51,6 +52,7 @@ export class AcmeService {
   private readonly url = {
     ROOTS: '/roots.pem',
     PROXY_CRL: '/proxyCrl',
+    FEDERATION: '/federation',
   } as const;
 
   constructor(private discoveryUrl: string) {}
@@ -120,9 +122,12 @@ export class AcmeService {
     const {data} = response;
 
     return data;
+  }
 
-    // eslint-disable-next-line no-console
-    console.log('patryk', {data, response});
+  public async getFederationCrossSignedCertificates(): Promise<string[]> {
+    const {data} = await this.axiosInstance.get(`${this.acmeBaseUrl}${this.url.FEDERATION}`);
+    const federationCrossSignedCertificates = FederationCrossSignedCertificatesResponseSchema.parse(data);
+    return federationCrossSignedCertificates.crts;
   }
 
   public async getInitialNonce(url: AcmeDirectory['newNonce']): GetInitialNonceReturnValue {

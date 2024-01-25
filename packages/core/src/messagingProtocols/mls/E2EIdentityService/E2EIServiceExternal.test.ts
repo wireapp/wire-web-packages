@@ -24,6 +24,7 @@ import {E2EIServiceExternal} from './E2EIServiceExternal';
 import {ClientService} from '../../../client';
 import {openDB} from '../../../storage/CoreDB';
 import {getUUID} from '../../../test/PayloadHelper';
+import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 
 async function buildE2EIService() {
   const coreCrypto = {
@@ -35,8 +36,22 @@ async function buildE2EIService() {
 
   const mockedDb = await openDB('core-test-db');
 
+  const recurringTaskScheduler = new RecurringTaskScheduler({
+    delete: key => mockedDb.delete('recurringTasks', key),
+    get: async key => (await mockedDb.get('recurringTasks', key))?.firingDate,
+    set: async (key, timestamp) => {
+      await mockedDb.put('recurringTasks', {key, firingDate: timestamp});
+    },
+  });
+
   return [
-    new E2EIServiceExternal(coreCrypto, mockedDb, clientService, Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256),
+    new E2EIServiceExternal(
+      coreCrypto,
+      mockedDb,
+      recurringTaskScheduler,
+      clientService,
+      Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256,
+    ),
     {coreCrypto},
   ] as const;
 }
