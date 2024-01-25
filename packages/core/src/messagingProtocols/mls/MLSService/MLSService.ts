@@ -206,9 +206,18 @@ export class MLSService extends TypedEventEmitter<Events> {
     if (keyPackages.length < 1) {
       throw new Error('Empty list of keys provided to addUsersToExistingConversation');
     }
-    return this.processCommitAction(groupIdBytes, () =>
-      this.coreCryptoClient.addClientsToConversation(groupIdBytes, keyPackages),
-    );
+    return this.processCommitAction(groupIdBytes, async () => {
+      const {crlNewDistributionPoints, ...commitBundle} = await this.coreCryptoClient.addClientsToConversation(
+        groupIdBytes,
+        keyPackages,
+      );
+
+      if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
+        this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+      }
+
+      return commitBundle;
+    });
   }
 
   public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
