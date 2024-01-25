@@ -295,7 +295,11 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async processWelcomeMessage(welcomeMessage: Uint8Array): Promise<ConversationId> {
-    return this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+    const {id, crlNewDistributionPoints} = await this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+    if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
+      this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+    }
+    return id;
   }
 
   public async decryptMessage(conversationId: ConversationId, payload: Uint8Array): Promise<DecryptedMessage> {
