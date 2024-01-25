@@ -481,9 +481,9 @@ export class Account extends TypedEventEmitter<Events> {
       e2eServiceExternal = new E2EIServiceExternal(
         cryptoClient.getNativeClient(),
         this.db,
+        this.recurringTaskScheduler,
         clientService,
         mlsService.config.cipherSuite,
-        this.recurringTaskScheduler,
       );
 
       mlsService.on('newCrlDistributionPoints', e2eServiceExternal.handleNewCrlDistributionPoints);
