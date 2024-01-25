@@ -822,6 +822,10 @@ export class MLSService extends TypedEventEmitter<Events> {
         keyPackagesAmount: nbPrekeys,
       });
 
+      instance.on('newCrlDistributionPoints', crlDistributionPoints => {
+        this.emit('newCrlDistributionPoints', crlDistributionPoints);
+      });
+
       // If we don't have an OAuth id token, we need to start the certificate process with Oauth
       if (!oAuthIdToken) {
         const data = await instance.startCertificateProcess(hasActiveCertificate);
