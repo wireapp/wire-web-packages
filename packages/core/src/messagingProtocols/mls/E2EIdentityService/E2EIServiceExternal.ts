@@ -21,6 +21,7 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Decoder} from 'bazinga64';
 
+import {TypedEventEmitter} from '@wireapp/commons';
 import {Ciphersuite, CoreCrypto, E2eiConversationState, WireIdentity, DeviceStatus} from '@wireapp/core-crypto';
 
 import {AcmeService} from './Connection';
@@ -35,8 +36,12 @@ import {LowPrecisionTaskScheduler} from '../../../util/LowPrecisionTaskScheduler
 
 export type DeviceIdentity = Omit<WireIdentity, 'free' | 'status'> & {status?: DeviceStatus; deviceId: string};
 
+type Events = {
+  crlChanged: undefined;
+};
+
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
-export class E2EIServiceExternal {
+export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   private _acmeService?: AcmeService;
 
   public constructor(
@@ -45,6 +50,7 @@ export class E2EIServiceExternal {
     private readonly clientService: ClientService,
     private readonly cipherSuite: Ciphersuite,
   ) {
+    super();
     void this.initialiseCrlDistributionTimers();
   }
 
@@ -221,7 +227,7 @@ export class E2EIServiceExternal {
 
     const crl = await this.getCRLFromDistributionPoint(domain);
 
-    const {expiration} = await this.coreCryptoClient.e2eiRegisterCRL(domain, crl);
+    const {expiration, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(domain, crl);
 
     await this.cancelCrlDistributionTimer(domain);
 
@@ -231,6 +237,9 @@ export class E2EIServiceExternal {
     }
 
     //if it was dirty, trigger e2eiconversationstate for every conversation
+    if (dirty) {
+      this.emit('crlChanged');
+    }
   }
 
   public async handleNewCrlDistributionPoints(distributionPoints: string[]): Promise<void> {
