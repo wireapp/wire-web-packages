@@ -39,6 +39,7 @@ import {
   ProposalArgs,
   ProposalType,
   RemoveProposalArgs,
+  WelcomeBundle,
 } from '@wireapp/core-crypto';
 
 import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
@@ -306,7 +307,14 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async processWelcomeMessage(welcomeMessage: Uint8Array): Promise<ConversationId> {
-    const {id, crlNewDistributionPoints} = await this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+    const response = await this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+
+    //FIXME: this is temporary (it should be camel case), we wait for the update from core-crypto side
+    const {id, crl_new_distribution_points: crlNewDistributionPoints} = response as unknown as {
+      id: WelcomeBundle['id'];
+      crl_new_distribution_points: WelcomeBundle['crlNewDistributionPoints'];
+    };
+
     if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
       this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
     }
