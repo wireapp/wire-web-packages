@@ -42,6 +42,7 @@ import {
   GetCertificateResponseSchema,
   LocalCertificateRootResponseSchema,
   FederationCrossSignedCertificatesResponseSchema,
+  CrlResponseSchema,
 } from './schema';
 
 import {AcmeChallenge, AcmeDirectory} from '../../E2EIService.types';
@@ -112,16 +113,13 @@ export class AcmeService {
   }
 
   public async getCRLFromDistributionPoint(distributionPointUrl: string): Promise<Uint8Array> {
-    const response = await this.axiosInstance.get(`${this.acmeBaseUrl}${this.url.PROXY_CRL}/${distributionPointUrl}`, {
-      headers: {
-        'Content-Type': '*/*',
-        Accept: '*/*',
-      },
+    const {data} = await this.axiosInstance.get(`${this.acmeBaseUrl}${this.url.PROXY_CRL}/${distributionPointUrl}`, {
       responseType: 'arraybuffer',
     });
-    const {data} = response;
+    const crl = CrlResponseSchema.parse(data);
+    const crlUint8Array = new Uint8Array(crl);
 
-    return data;
+    return crlUint8Array;
   }
 
   public async getFederationCrossSignedCertificates(): Promise<string[]> {
