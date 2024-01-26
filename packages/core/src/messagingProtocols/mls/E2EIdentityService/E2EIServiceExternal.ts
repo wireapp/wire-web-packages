@@ -211,7 +211,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
     });
   }
 
-  public async getCRLFromDistributionPoint(distributionPointUrl: string): Promise<any> {
+  public async getCRLFromDistributionPoint(distributionPointUrl: string): Promise<Uint8Array> {
     return this.acmeService.getCRLFromDistributionPoint(distributionPointUrl);
   }
 
@@ -243,16 +243,15 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
   private async validateCrlDistributionPoint(distributionPointUrl: string): Promise<void> {
     const domain = new URL(distributionPointUrl).hostname;
-
     const crl = await this.getCRLFromDistributionPoint(domain);
 
-    const {expiration, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(domain, crl);
+    const {expiration, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(distributionPointUrl, crl);
 
-    await this.cancelCrlDistributionTimer(domain);
+    await this.cancelCrlDistributionTimer(distributionPointUrl);
 
     //set a new timer that will execute a task once the CRL is expired
     if (expiration) {
-      await this.addCrlDistributionTimer({expiresAt: expiration, url: domain});
+      await this.addCrlDistributionTimer({expiresAt: expiration, url: distributionPointUrl});
     }
 
     //if it was dirty, trigger e2eiconversationstate for every conversation
