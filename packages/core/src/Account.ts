@@ -486,7 +486,7 @@ export class Account extends TypedEventEmitter<Events> {
         mlsService.config.cipherSuite,
       );
 
-      mlsService.on('newCrlDistributionPoints', e2eServiceExternal.handleNewCrlDistributionPoints);
+      mlsService.on('newCrlDistributionPoints', e2eServiceExternal.handleNewRemoteCrlDistributionPoints);
     }
 
     const connectionService = new ConnectionService(this.apiClient);

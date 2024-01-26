@@ -38,7 +38,8 @@ import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 export type DeviceIdentity = Omit<WireIdentity, 'free' | 'status'> & {status?: DeviceStatus; deviceId: string};
 
 type Events = {
-  crlChanged: undefined;
+  remoteCrlChanged: undefined;
+  selfCrlChanged: undefined;
 };
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
@@ -220,7 +221,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
       intervalDelay: TimeInMillis.SECOND,
       firingDate: expiresAt,
       key: url,
-      task: () => this.validateCrlDistributionPoint(url),
+      task: () => this.validateRemoteCrlDistributionPoint(url),
     });
   }
 
@@ -241,28 +242,42 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
     await this.coreDatabase.delete('crls', url);
   }
 
-  private async validateCrlDistributionPoint(distributionPointUrl: string): Promise<void> {
+  public async validateSelfCrl(): Promise<void> {
+    const {crl, url} = await this.acmeService.getSelfCRL();
+
+    await this.validateCrl(url, crl, async () => {
+      this.emit('selfCrlChanged');
+    });
+  }
+
+  private async validateRemoteCrlDistributionPoint(distributionPointUrl: string): Promise<void> {
     const domain = new URL(distributionPointUrl).hostname;
     const crl = await this.getCRLFromDistributionPoint(domain);
 
-    const {expiration, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(distributionPointUrl, crl);
+    await this.validateCrl(distributionPointUrl, crl, async () => {
+      this.emit('remoteCrlChanged');
+    });
+  }
 
-    await this.cancelCrlDistributionTimer(distributionPointUrl);
+  private async validateCrl(url: string, crl: Uint8Array, onDirty: () => Promise<void>): Promise<void> {
+    const {expiration, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(url, crl);
+
+    await this.cancelCrlDistributionTimer(url);
 
     //set a new timer that will execute a task once the CRL is expired
     if (expiration) {
-      await this.addCrlDistributionTimer({expiresAt: expiration, url: distributionPointUrl});
+      await this.addCrlDistributionTimer({expiresAt: expiration, url});
     }
 
     //if it was dirty, trigger e2eiconversationstate for every conversation
     if (dirty) {
-      this.emit('crlChanged');
+      await onDirty();
     }
   }
 
-  public async handleNewCrlDistributionPoints(distributionPoints: string[]): Promise<void> {
+  public async handleNewRemoteCrlDistributionPoints(distributionPoints: string[]): Promise<void> {
     for (const distributionPointUrl of distributionPoints) {
-      await this.validateCrlDistributionPoint(distributionPointUrl);
+      await this.validateRemoteCrlDistributionPoint(distributionPointUrl);
     }
   }
 }
