@@ -247,7 +247,7 @@ export class Account extends TypedEventEmitter<Events> {
     teamId: string;
     discoveryUrl: string;
     oAuthIdToken?: string;
-    /** number of days the certificate should be valid (default 90) */
+    /** number of seconds the certificate should be valid (default 90) */
     certificateTtl?: number;
   }) {
     const context = this.apiClient.context;

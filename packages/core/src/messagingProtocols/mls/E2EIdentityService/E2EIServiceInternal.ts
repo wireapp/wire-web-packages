@@ -48,7 +48,7 @@ export class E2EIServiceInternal {
     private readonly coreCryptoClient: CoreCrypto,
     private readonly apiClient: APIClient,
     private readonly e2eiServiceExternal: E2EIServiceExternal,
-    /** number of days the certificate should be valid */
+    /** number of seconds the certificate should be valid */
     private readonly certificateTtl: number,
     private readonly keyPackagesAmount: number,
     private readonly dispatchNewCrlDistributionPoints: (payload: NewCrlDistributionPointsPayload) => void;
