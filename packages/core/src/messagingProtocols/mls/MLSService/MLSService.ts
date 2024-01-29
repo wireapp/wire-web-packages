@@ -208,6 +208,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     }
     return this.processCommitAction(groupIdBytes, async () => {
       const commitBundle = await this.coreCryptoClient.addClientsToConversation(groupIdBytes, keyPackages);
+      this.dispatchNewCrlDistributionPoints(commitBundle);
       return commitBundle;
     });
   }
@@ -268,11 +269,9 @@ export class MLSService extends TypedEventEmitter<Events> {
     const credentialType = await this.getCredentialType();
     const generateCommit = async () => {
       const groupInfo = await getGroupInfo();
-      const {conversationId, ...commitBundle} = await this.coreCryptoClient.joinByExternalCommit(
-        groupInfo,
-        credentialType,
-      );
-
+      const joinRequest = await this.coreCryptoClient.joinByExternalCommit(groupInfo, credentialType);
+      this.dispatchNewCrlDistributionPoints(joinRequest);
+      const {conversationId, ...commitBundle} = joinRequest;
       return {groupId: conversationId, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
@@ -296,20 +295,23 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
+  private dispatchNewCrlDistributionPoints(payload: {crlNewDistributionPoints?: string[]}) {
+    const {crlNewDistributionPoints} = payload;
+    if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
+      this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+    }
+  }
+
   public async processWelcomeMessage(welcomeMessage: Uint8Array): Promise<ConversationId> {
-    return this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+    const welcomeBundle = await this.coreCryptoClient.processWelcomeMessage(welcomeMessage);
+    this.dispatchNewCrlDistributionPoints(welcomeBundle);
+    return welcomeBundle.id;
   }
 
   public async decryptMessage(conversationId: ConversationId, payload: Uint8Array): Promise<DecryptedMessage> {
     try {
       const decryptedMessage = await this.coreCryptoClient.decryptMessage(conversationId, payload);
-
-      const {crlNewDistributionPoints} = decryptedMessage;
-
-      if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
-        this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
-      }
-
+      this.dispatchNewCrlDistributionPoints(decryptedMessage);
       return decryptedMessage;
     } catch (error) {
       // According to CoreCrypto JS doc on .decryptMessage method, we should ignore some errors (corecrypto handle them internally)
@@ -833,6 +835,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       if (rotateBundle === undefined) {
         throw new Error('Could not get the rotate bundle');
       }
+      this.dispatchNewCrlDistributionPoints(rotateBundle);
       // upload the clients public keys
       if (!hasActiveCertificate) {
         // we only upload public keys for the initial certification process. Renewals do not need to upload new public keys
