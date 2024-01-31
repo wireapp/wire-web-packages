@@ -42,7 +42,7 @@ import {
 } from '@wireapp/core-crypto';
 
 import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
-import {MLSServiceConfig, UploadCommitOptions} from './MLSService.types';
+import {MLSServiceConfig, NewCrlDistributionPointsPayload, UploadCommitOptions} from './MLSService.types';
 
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
@@ -295,7 +295,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
-  private dispatchNewCrlDistributionPoints(payload: {crlNewDistributionPoints?: string[]}) {
+  private dispatchNewCrlDistributionPoints(payload: NewCrlDistributionPointsPayload) {
     const {crlNewDistributionPoints} = payload;
     if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
       this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
@@ -809,10 +809,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         clientId: client.id,
         discoveryUrl,
         keyPackagesAmount: nbPrekeys,
-      });
-
-      instance.on('newCrlDistributionPoints', crlDistributionPoints => {
-        this.emit('newCrlDistributionPoints', crlDistributionPoints);
+        dispatchNewCrlDistributionPoints: payload => this.dispatchNewCrlDistributionPoints(payload),
       });
 
       // If we don't have an OAuth id token, we need to start the certificate process with Oauth
