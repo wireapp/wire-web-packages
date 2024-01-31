@@ -544,7 +544,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * Handles epoch mismatch in a MLS group.
    * Compares the epoch of the local group with the epoch of the remote conversation.
    * If the epochs do not match, it will call onEpochMismatch callback.
-   * @param mlsConversation - mls conversation
+   * @param groupId - id of the MLS group
+   * @param epoch - epoch of the remote conversation
+   * @param onEpochMismatch - callback to be called when epochs do not match
    */
   private async handleEpochMismatch({
     groupId,
