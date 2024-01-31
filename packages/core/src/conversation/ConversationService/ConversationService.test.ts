@@ -40,6 +40,7 @@ import * as MessagingProtocols from '../../messagingProtocols/proteus';
 import {openDB} from '../../storage/CoreDB';
 import * as PayloadHelper from '../../test/PayloadHelper';
 import * as MessageBuilder from '../message/MessageBuilder';
+import {SubconversationService} from '../SubconversationService/SubconversationService';
 
 const createMLSMessageAddEventMock = (conversationId: QualifiedId): ConversationMLSMessageAddEvent => ({
   data: '',
@@ -124,11 +125,14 @@ describe('ConversationService', () => {
 
     const groupIdFromConversationId = jest.fn();
 
+    const mockedSubconversationService = {} as unknown as SubconversationService;
+
     const conversationService = new ConversationService(
       client,
       mockedProteusService,
       mockedDb,
       groupIdFromConversationId,
+      mockedSubconversationService,
       mockedMLSService,
     );
 
