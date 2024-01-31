@@ -113,11 +113,12 @@ export class E2EIServiceInternal extends TypedEventEmitter<Events> {
 
     // How long the issued certificate should be maximal valid
     const expiryDays = 90;
+    const expirySecs = expiryDays * 24 * 60 * 60;
     const ciphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
     if (hasActiveCertificate) {
       this.identity = await this.coreCryptoClient.e2eiNewRotateEnrollment(
-        expiryDays,
+        expirySecs,
         ciphersuite,
         user.displayName,
         user.handle,
@@ -127,7 +128,7 @@ export class E2EIServiceInternal extends TypedEventEmitter<Events> {
       this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
         user.displayName,
         user.handle,
-        expiryDays,
+        expirySecs,
         ciphersuite,
         user.teamId,
       );
