@@ -45,7 +45,7 @@ jobs:
 
       - name: Skip CI
         if: env.BRANCH_NAME != 'main'
-        uses: andymckay/cancel-action@0.3
+        uses: andymckay/cancel-action@0.4
 
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
