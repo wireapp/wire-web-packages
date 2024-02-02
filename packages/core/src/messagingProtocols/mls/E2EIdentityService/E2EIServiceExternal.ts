@@ -33,6 +33,7 @@ import {CoreDatabase} from '../../../storage/CoreDB';
 import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {LocalStorageStore} from '../../../util/LocalStorageStore';
 import {LowPrecisionTaskScheduler} from '../../../util/LowPrecisionTaskScheduler';
+import {stringifyQualifiedId} from '../../../util/qualifiedIdUtil';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {MLSService} from '../MLSService';
 
@@ -78,7 +79,17 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
   public async getAllGroupUsersIdentities(groupId: string): Promise<Map<string, DeviceIdentity[]>> {
     const allGroupClients = await this.mlsService.getClientIds(groupId);
-    const userIds = allGroupClients.map(({userId, domain}) => ({id: userId, domain}));
+
+    const userIdsMap = allGroupClients.reduce(
+      (acc, {userId, domain}) => {
+        const qualifiedId = {id: userId, domain};
+        acc[stringifyQualifiedId(qualifiedId)] = qualifiedId;
+        return acc;
+      },
+      {} as Record<string, QualifiedId>,
+    );
+
+    const userIds = Object.values(userIdsMap);
     return this.getUsersIdentities(groupId, userIds);
   }
 
