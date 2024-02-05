@@ -51,9 +51,8 @@ export class E2EIServiceInternal {
     /** number of seconds the certificate should be valid */
     private readonly certificateTtl: number,
     private readonly keyPackagesAmount: number,
-    private readonly dispatchNewCrlDistributionPoints: (payload: NewCrlDistributionPointsPayload) => void;
-  ) {
-  }
+    private readonly dispatchNewCrlDistributionPoints: (payload: NewCrlDistributionPointsPayload) => void,
+  ) {}
 
   // ############ Public Functions ############
 
