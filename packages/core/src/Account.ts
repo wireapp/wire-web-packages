@@ -241,7 +241,7 @@ export class Account extends TypedEventEmitter<Events> {
     teamId,
     discoveryUrl,
     oAuthIdToken,
-    certificateTtl = 90 * TimeInMillis.DAY,
+    certificateTtl = 90 * (TimeInMillis.DAY / 1000),
   }: {
     displayName: string;
     handle: string;
