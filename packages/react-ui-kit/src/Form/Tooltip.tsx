@@ -81,18 +81,16 @@ const PortalComponent = ({children, bounding}: PortalProps) => {
           return;
         }
 
-        if (element) {
-          const isTouchingTopEdge = bounding.y <= element.clientHeight + paddingTop * 2;
-          setIsTouchingTop(isTouchingTopEdge);
+        const isTouchingTopEdge = bounding.y <= element.clientHeight + paddingTop * 2;
+        setIsTouchingTop(isTouchingTopEdge);
 
-          const elementWidth = (element.scrollWidth - bounding.width) / 2;
-          element.style.left = `${bounding.x - elementWidth}px`;
+        const elementWidth = (element.scrollWidth - bounding.width) / 2;
+        element.style.left = `${bounding.x - elementWidth}px`;
 
-          if (isTouchingTopEdge) {
-            element.style.top = `${bounding.y + bounding.height + paddingTop}px`;
-          } else {
-            element.style.top = `${bounding.y - element.clientHeight - paddingTop}px`;
-          }
+        if (isTouchingTopEdge) {
+          element.style.top = `${bounding.y + bounding.height + paddingTop}px`;
+        } else {
+          element.style.top = `${bounding.y - element.clientHeight - paddingTop}px`;
         }
       }}
       className="tooltip"
@@ -100,16 +98,7 @@ const PortalComponent = ({children, bounding}: PortalProps) => {
     >
       <div
         ref={element => {
-          if (!element) {
-            return;
-          }
-
           const {parentElement} = element;
-
-          if (!parentElement) {
-            return;
-          }
-
           const parentElementRect = parentElement.getBoundingClientRect();
           element.style.left = `${parentElementRect.width / 2 - paddingTop}px`;
         }}
