@@ -77,11 +77,6 @@ const mockedProteusService = {
 } as unknown as ProteusService;
 
 describe('ConversationService', () => {
-  beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date(0));
-  });
-
   async function buildConversationService() {
     const client = new APIClient({urls: APIClient.BACKEND.STAGING});
     jest.spyOn(client.api.conversation, 'postMlsMessage').mockReturnValue(
@@ -242,12 +237,6 @@ describe('ConversationService', () => {
         conversationId: mockConversationId,
       });
       expect(apiClient.api.conversation.postMlsMessage).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  describe('handleConversationsEpochMismatch', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
     });
   });
 
@@ -440,6 +429,8 @@ describe('ConversationService', () => {
 
       await conversationService.handleEvent(mockMLSMessageAddEvent);
 
+      await new Promise(resolve => setImmediate(resolve));
+
       expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(conversationId);
       expect(conversationService.emit).toHaveBeenCalledWith('MLSConversationRecovered', {conversationId});
     });
@@ -471,6 +462,8 @@ describe('ConversationService', () => {
       jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValueOnce(mockedSubconversationResponse);
 
       await conversationService.handleEvent(mockMLSMessageAddEvent);
+
+      await new Promise(resolve => setImmediate(resolve));
 
       expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
       expect(subconversationService.joinConferenceSubconversation).toHaveBeenCalledWith(conversationId);
