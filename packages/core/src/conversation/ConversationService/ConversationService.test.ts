@@ -240,6 +240,73 @@ describe('ConversationService', () => {
     });
   });
 
+  describe('handleConversationsEpochMismatch', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    const createConversation = (epoch: number, conversationId?: string) => {
+      return {
+        group_id: 'group-id',
+        qualified_id: {id: conversationId || 'conversation-id', domain: 'staging.zinfra.io'},
+        protocol: ConversationProtocol.MLS,
+        epoch,
+      } as Conversation;
+    };
+
+    it('re-joins multiple not-established conversations', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      const remoteEpoch = 1;
+
+      const mlsConversation1 = createConversation(remoteEpoch, 'conversation1');
+      const mlsConversation2 = createConversation(remoteEpoch, 'conversation2');
+
+      const mockedDBResponse: Conversation[] = [mlsConversation1, mlsConversation2];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'mlsGroupExistsLocally').mockResolvedValue(false);
+
+      await conversationService.handleConversationsEpochMismatch();
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
+    });
+
+    it('re-joins multiple conversations when mismatches detected', async () => {
+      const [conversationService, {apiClient, mlsService}] = await buildConversationService();
+
+      const mlsConversation1 = createConversation(1, 'conversation1');
+      const mlsConversation2 = createConversation(1, 'conversation2');
+
+      const mockedDBResponse: Conversation[] = [mlsConversation1, mlsConversation2];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'mlsGroupExistsLocally').mockResolvedValue(true);
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValue(2);
+
+      await conversationService.handleConversationsEpochMismatch();
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation1.qualified_id);
+      expect(conversationService.joinByExternalCommit).toHaveBeenCalledWith(mlsConversation2.qualified_id);
+    });
+
+    it("does not re-join when there's no mismatch", async () => {
+      const [conversationService, {apiClient, mlsService}] = await buildConversationService();
+
+      const mlsConversation = createConversation(1);
+
+      const mockedDBResponse: Conversation[] = [mlsConversation];
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: mockedDBResponse});
+
+      jest.spyOn(conversationService, 'mlsGroupExistsLocally').mockResolvedValueOnce(true);
+
+      jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(1);
+      jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
+
+      await conversationService.handleConversationsEpochMismatch();
+      expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
+    });
+  });
+
   describe('establishMLS1to1Conversation', () => {
     it('only returns a conversation if a group is already established on backend and locally', async () => {
       const [conversationService, {apiClient, mlsService}] = await buildConversationService();

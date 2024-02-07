@@ -28,15 +28,14 @@ const queuedJobs = new Set<string>();
  * @param groupId the groupId in which we will trigger the rejoin (will be used as ID, in order not to add another rejoin task for the same conversation if it's already in the queue)
  * @param rejoinFn the function to be executed to trigger the rejoin
  */
-export async function queueConversationRejoin<T>(groupId: string, rejoinFn: Task<T>): Promise<T | undefined> {
-  if (queuedJobs.has(groupId)) {
-    return undefined;
-  }
-  queuedJobs.add(groupId);
+export async function queueConversationRejoin<T>(groupId: string, rejoinFn: Task<T>): Promise<T | void> {
+  if (!queuedJobs.has(groupId)) {
+    queuedJobs.add(groupId);
 
-  const result = await sendingQueue.push(rejoinFn);
-  queuedJobs.delete(groupId);
-  return result;
+    const result = await sendingQueue.push(rejoinFn);
+    queuedJobs.delete(groupId);
+    return result;
+  }
 }
 
 export function resumeRejoiningMLSConversations(): void {

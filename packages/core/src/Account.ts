@@ -56,6 +56,7 @@ import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
 import {
   pauseRejoiningMLSConversations,
+  queueConversationRejoin,
   resumeRejoiningMLSConversations,
 } from './messagingProtocols/mls/conversationRejoinQueue';
 import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
@@ -658,6 +659,15 @@ export class Account extends TypedEventEmitter<Events> {
       }
     });
 
+    const handleMissedNotifications = async (notificationId: string) => {
+      if (this.service?.mls) {
+        queueConversationRejoin('all-conversations', () =>
+          this.service!.conversation.handleConversationsEpochMismatch(),
+        );
+      }
+      return onMissedNotifications(notificationId);
+    };
+
     const processNotificationStream = async (abortHandler: AbortHandler) => {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
       this.apiClient.transport.ws.lock();
@@ -671,7 +681,7 @@ export class Account extends TypedEventEmitter<Events> {
           await handleNotification(notification, source);
           onNotificationStreamProgress(progress);
         },
-        onMissedNotifications,
+        handleMissedNotifications,
         abortHandler,
       );
       this.logger.info(`Finished processing notifications ${JSON.stringify(results)}`, results);

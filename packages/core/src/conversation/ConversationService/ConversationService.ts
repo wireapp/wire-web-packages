@@ -458,6 +458,21 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return BigInt(localEpoch) === BigInt(backendEpoch);
   }
 
+  public async handleConversationsEpochMismatch() {
+    this.logger.info(`There were some missed messages, handling possible epoch mismatch in MLS conversations.`);
+
+    //fetch all the mls conversations from backend
+    const conversations = await this.apiClient.api.conversation.getConversationList();
+    const foundConversations = conversations.found || [];
+
+    const mlsConversations = foundConversations.filter(isMLSConversation);
+
+    //check all the established conversations' epoch with the core-crypto epoch
+    for (const mlsConversation of mlsConversations) {
+      await this.handleConversationEpochMismatch(mlsConversation);
+    }
+  }
+
   /**
    * Handles epoch mismatch in a subconversation.
    * @param subconversation - subconversation
