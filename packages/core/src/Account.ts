@@ -54,6 +54,7 @@ import {SubconversationService} from './conversation/SubconversationService/Subc
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
+import {resumeRejoiningMLSConversations} from './messagingProtocols/mls/conversationRejoinQueue';
 import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
 import {CoreCallbacks, CoreCryptoConfig, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
@@ -654,17 +655,12 @@ export class Account extends TypedEventEmitter<Events> {
       }
     });
 
-    const handleMissedNotifications = async (notificationId: string) => {
-      if (this.service?.mls) {
-        await this.service?.conversation.handleConversationsEpochMismatch();
-      }
-      return onMissedNotifications(notificationId);
-    };
-
     const processNotificationStream = async (abortHandler: AbortHandler) => {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
       this.apiClient.transport.ws.lock();
       pauseMessageSending();
+      // We want  to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
+      //pauseRejoiningMLSConversations();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
 
       const results = await this.service!.notification.processNotificationStream(
@@ -672,7 +668,7 @@ export class Account extends TypedEventEmitter<Events> {
           await handleNotification(notification, source);
           onNotificationStreamProgress(progress);
         },
-        handleMissedNotifications,
+        onMissedNotifications,
         abortHandler,
       );
       this.logger.info(`Finished processing notifications ${JSON.stringify(results)}`, results);
@@ -688,6 +684,7 @@ export class Account extends TypedEventEmitter<Events> {
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
       resumeMessageSending();
+      resumeRejoiningMLSConversations();
     };
     this.apiClient.connect(processNotificationStream);
 
