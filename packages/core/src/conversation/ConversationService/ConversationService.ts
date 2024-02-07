@@ -681,7 +681,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
         subconversationId,
       );
 
-      await this.handleSubconversationEpochMismatch(subconversation);
+      return this.handleSubconversationEpochMismatch(subconversation);
     }
 
     const mlsConversation = await this.apiClient.api.conversation.getConversation(conversationId);
