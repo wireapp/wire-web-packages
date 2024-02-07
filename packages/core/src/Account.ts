@@ -54,7 +54,10 @@ import {SubconversationService} from './conversation/SubconversationService/Subc
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
 import {MLSService} from './messagingProtocols/mls';
-import {resumeRejoiningMLSConversations} from './messagingProtocols/mls/conversationRejoinQueue';
+import {
+  pauseRejoiningMLSConversations,
+  resumeRejoiningMLSConversations,
+} from './messagingProtocols/mls/conversationRejoinQueue';
 import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
 import {CoreCallbacks, CoreCryptoConfig, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
@@ -659,8 +662,8 @@ export class Account extends TypedEventEmitter<Events> {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
       this.apiClient.transport.ws.lock();
       pauseMessageSending();
-      // We want  to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
-      //pauseRejoiningMLSConversations();
+      // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
+      pauseRejoiningMLSConversations();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
 
       const results = await this.service!.notification.processNotificationStream(
