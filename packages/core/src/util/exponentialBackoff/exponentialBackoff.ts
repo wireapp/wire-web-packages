@@ -35,10 +35,23 @@ type ExponentialBackoffConfig = {
   multiplyBy?: number;
 };
 
+/**
+ * Exponential backoff function creator.
+ * It will return a function that will back off exponentially (wait) every time it is called.
+ *
+ * @param key - The key to identify the backoff
+ * @param config - The configuration for the backoff
+ * @param config.maxDelay - The maximum delay to wait (default 32 seconds)
+ * @param config.minDelay - The minimum delay to wait (default 500ms)
+ * @param config.maxRetries - The maximum number of retries (default 10)
+ * @param config.multiplyBy - The number to multiply the delay by (default 2)
+ * @param config.onRetryLimitReached - The function to call when the retry limit is reached (by default it will reset backoff for the fiven key and throw an error)
+ * @returns
+ */
 export function exponentialBackoff(
   key: string,
   config: ExponentialBackoffConfig = defaultConfig,
-): {backOff: (onRetryLimitReached?: () => void) => Promise<void>; resetBackOff: () => void} {
+): {backOff: <T>(fn: () => Promise<T>, onRetryLimitReached?: () => void) => Promise<T>; resetBackOff: () => void} {
   const {
     maxDelay = defaultConfig.maxDelay,
     minDelay = defaultConfig.minDelay,
@@ -46,12 +59,12 @@ export function exponentialBackoff(
   } = config;
 
   const resetBackOff = () => {
-    delaysMap.delete(key);
     clearTimeout(delaysMap.get(key)?.timeoutId);
+    delaysMap.delete(key);
   };
 
   return {
-    backOff: async (onRetryLimitReached?: () => void) => {
+    backOff: async <T>(fn: () => Promise<T>, onRetryLimitReached?: () => void): Promise<T> => {
       const entry = delaysMap.get(key);
 
       const retryCount = entry?.retryCount || 0;
@@ -61,31 +74,25 @@ export function exponentialBackoff(
       const clampedDelay = Math.min(delay, maxDelay);
 
       // If we have reached the retry limit or the delay is greater than the max delay, we reset the backoff
-      if (retryCount >= maxRetries || delay > maxDelay) {
+      if (retryCount > maxRetries - 1 || delay > maxDelay) {
         resetBackOff();
-        onRetryLimitReached?.();
-        return;
+        if (!onRetryLimitReached) {
+          throw new Error('Exponential backoff retry limit reached');
+        }
+        onRetryLimitReached();
       }
-
-      // If there is already a timeout running, we just wait for it to finish
-      if (retryTimeout) {
-        await new Promise(resolve => {
-          const tid = setTimeout(resolve, clampedDelay);
-          delaysMap.set(key, {retryCount, timeoutId: tid});
-        });
-      }
-
-      const newRetryCount = retryCount + 1;
 
       // We wait for the delay to pass
-      await new Promise(resolve => {
-        const tid = setTimeout(resolve, clampedDelay);
-        delaysMap.set(key, {retryCount: newRetryCount, timeoutId: tid});
-      });
+      return new Promise(resolve => {
+        clearTimeout(retryTimeout);
 
-      // We reset the timeoutId and increase the retry count
-      clearTimeout(delaysMap.get(key)?.timeoutId);
-      delaysMap.set(key, {retryCount: newRetryCount, timeoutId: undefined});
+        const tid = setTimeout(async () => {
+          delaysMap.set(key, {retryCount: retryCount + 1, timeoutId: undefined});
+          resolve(fn());
+        }, clampedDelay);
+
+        delaysMap.set(key, {retryCount, timeoutId: tid});
+      });
     },
 
     resetBackOff,

@@ -199,13 +199,16 @@ export class MLSService extends TypedEventEmitter<Events> {
           // in this case we will most likely receive a commit from backend that will increase our local epoch
           this.logger.warn(`Uploading commitBundle failed. Will retry generating a new bundle`);
 
-          await backOff(() => {
-            this.logger.error('Uploading commit bundle retry limit reached', error);
-            throw error;
-          });
-
-          const updatedCommitBundle = await regenerateCommitBundle();
-          return this.uploadCommitBundle(groupId, updatedCommitBundle, {regenerateCommitBundle, isExternalCommit});
+          return backOff(
+            async () => {
+              const updatedCommitBundle = await regenerateCommitBundle();
+              return this.uploadCommitBundle(groupId, updatedCommitBundle, {regenerateCommitBundle, isExternalCommit});
+            },
+            () => {
+              this.logger.error('Uploading commit bundle retry limit reached', error);
+              throw error;
+            },
+          );
         }
         throw error;
       }
