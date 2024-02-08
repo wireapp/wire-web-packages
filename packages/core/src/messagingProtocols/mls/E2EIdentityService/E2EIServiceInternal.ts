@@ -40,9 +40,7 @@ import {NewCrlDistributionPointsPayload} from '../MLSService/MLSService.types';
 export class E2EIServiceInternal {
   private static instance: E2EIServiceInternal;
   private readonly logger = logdown('@wireapp/core/E2EIdentityServiceInternal');
-  private identity?: E2eiEnrollment;
   private acmeService?: AcmeService;
-  private isInitialized = false;
 
   private constructor(
     private readonly coreCryptoClient: CoreCrypto,
@@ -93,8 +91,8 @@ export class E2EIServiceInternal {
   public async startCertificateProcess(hasActiveCertificate: boolean) {
     // Step 0: Check if we have a handle in local storage
     // If we don't have a handle, we need to start a new OAuth flow
-    await this.initIdentity(hasActiveCertificate);
-    return this.startNewOAuthFlow();
+    const identity = await this.initIdentity(hasActiveCertificate);
+    return this.startNewOAuthFlow(identity);
   }
 
   public async continueCertificateProcess(oAuthIdToken: string): Promise<RotateBundle | undefined> {
@@ -113,23 +111,21 @@ export class E2EIServiceInternal {
     // How long the issued certificate should be maximal valid
     const ciphersuite = Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519;
 
-    if (hasActiveCertificate) {
-      this.identity = await this.coreCryptoClient.e2eiNewRotateEnrollment(
-        this.certificateTtl,
-        ciphersuite,
-        user.displayName,
-        user.handle,
-        user.teamId,
-      );
-    } else {
-      this.identity = await this.coreCryptoClient.e2eiNewActivationEnrollment(
-        user.displayName,
-        user.handle,
-        this.certificateTtl,
-        ciphersuite,
-        user.teamId,
-      );
-    }
+    return hasActiveCertificate
+      ? this.coreCryptoClient.e2eiNewRotateEnrollment(
+          this.certificateTtl,
+          ciphersuite,
+          user.displayName,
+          user.handle,
+          user.teamId,
+        )
+      : this.coreCryptoClient.e2eiNewActivationEnrollment(
+          user.displayName,
+          user.handle,
+          this.certificateTtl,
+          ciphersuite,
+          user.teamId,
+        );
   }
 
   private async init(params: Required<Pick<InitParams, 'user' | 'clientId' | 'discoveryUrl'>>): Promise<void> {
@@ -139,7 +135,6 @@ export class E2EIServiceInternal {
       throw new Error();
     }
     this.acmeService = new AcmeService(discoveryUrl);
-    this.isInitialized = true;
   }
 
   private async getDirectory(identity: E2eiEnrollment, connection: AcmeService): Promise<AcmeDirectory | undefined> {
@@ -166,13 +161,13 @@ export class E2EIServiceInternal {
    *
    * @returns authData
    */
-  private async getEnrollmentChallenges() {
-    if (!this.isInitialized || !this.identity || !this.acmeService) {
+  private async getEnrollmentChallenges(identity: E2eiEnrollment) {
+    if (!this.acmeService) {
       throw new Error('Error while trying to start OAuth flow. E2eIdentityService is not fully initialized');
     }
 
     // Get the directory
-    const directory = await this.getDirectory(this.identity, this.acmeService);
+    const directory = await this.getDirectory(identity, this.acmeService);
     if (!directory) {
       throw new Error('Error while trying to start OAuth flow. No directory received');
     }
@@ -182,7 +177,7 @@ export class E2EIServiceInternal {
     if (!nonce) {
       throw new Error('Error while trying to start OAuth flow. No nonce received');
     }
-    const {acmeService, identity} = this;
+    const {acmeService} = this;
 
     // Step 2: Create a new account
     const newAccountNonce = await createNewAccount({
@@ -223,8 +218,12 @@ export class E2EIServiceInternal {
    * @param oAuthIdToken
    * @returns RotateBundle
    */
-  private async getRotateBundleAndStoreCertificateData(oAuthIdToken: string, authData: AuthData) {
-    if (!this.isInitialized || !this.identity || !this.acmeService) {
+  private async getRotateBundleAndStoreCertificateData(
+    identity: E2eiEnrollment,
+    oAuthIdToken: string,
+    authData: AuthData,
+  ) {
+    if (!this.acmeService) {
       throw new Error('Error while trying to start OAuth flow. E2eIdentityService is not fully initialized');
     }
 
@@ -233,7 +232,7 @@ export class E2EIServiceInternal {
       oAuthIdToken,
       authData,
       connection: this.acmeService,
-      identity: this.identity,
+      identity,
       nonce: authData.nonce,
     });
     this.logger.log('received oidcData', oidcData);
@@ -248,7 +247,7 @@ export class E2EIServiceInternal {
       authData,
       clientId,
       connection: this.acmeService,
-      identity: this.identity,
+      identity,
       userDomain: wireUser.domain,
       apiClient: this.apiClient,
       expirySecs: 30,
@@ -263,7 +262,7 @@ export class E2EIServiceInternal {
     const orderData = E2EIStorage.get.orderData();
     const finalizeOrderData = await finalizeOrder({
       connection: this.acmeService,
-      identity: this.identity,
+      identity,
       nonce: dpopData.nonce,
       orderUrl: orderData.orderUrl,
     });
@@ -276,14 +275,14 @@ export class E2EIServiceInternal {
       certificateUrl: finalizeOrderData.certificateUrl,
       nonce: finalizeOrderData.nonce,
       connection: this.acmeService,
-      identity: this.identity,
+      identity,
     });
     if (!certificate) {
       throw new Error('Error while trying to continue OAuth flow. No certificate received');
     }
 
     // Step 10: Initialize MLS with the certificate
-    const rotateBundle = await this.coreCryptoClient.e2eiRotateAll(this.identity, certificate, this.keyPackagesAmount);
+    const rotateBundle = await this.coreCryptoClient.e2eiRotateAll(identity, certificate, this.keyPackagesAmount);
     this.dispatchNewCrlDistributionPoints(rotateBundle);
     return rotateBundle;
   }
@@ -292,24 +291,24 @@ export class E2EIServiceInternal {
    *  This function starts a new ACME enrollment flow for either a new client
    *  or a client that wants to refresh its certificate but has no valid refresh token
    */
-  private async startNewOAuthFlow() {
+  private async startNewOAuthFlow(identity: E2eiEnrollment) {
     if (this.e2eiServiceExternal.isEnrollmentInProgress()) {
       throw new Error('Error while trying to start OAuth flow. There is already a flow in progress');
     }
 
-    if (!this.isInitialized || !this.identity) {
+    if (!this.acmeService) {
       throw new Error('Error while trying to start OAuth flow. E2eIdentityService is not fully initialized');
     }
 
     const {
       authorization: {oidcChallenge: wireOidcChallenge, keyauth},
-    } = await this.getEnrollmentChallenges();
+    } = await this.getEnrollmentChallenges(identity);
 
     if (!wireOidcChallenge || !keyauth) {
       throw new Error('missing wireOidcChallenge or keyauth');
     }
     // stash the identity for later use
-    const handle = await this.coreCryptoClient.e2eiEnrollmentStash(this.identity);
+    const handle = await this.coreCryptoClient.e2eiEnrollmentStash(identity);
     // stash the handle in local storage
     E2EIStorage.store.handle(Encoder.toBase64(handle).asString);
     // we need to pass back the aquired wireOidcChallenge to the UI
@@ -332,10 +331,10 @@ export class E2EIServiceInternal {
     const handle = E2EIStorage.get.handle();
     const authData = E2EIStorage.get.authData();
 
-    this.identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
+    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(Decoder.fromBase64(handle).asBytes);
     this.logger.log('retrieved identity from stash');
 
-    return this.getRotateBundleAndStoreCertificateData(oAuthIdToken, authData);
+    return this.getRotateBundleAndStoreCertificateData(identity, oAuthIdToken, authData);
   }
 
   /**
@@ -351,10 +350,10 @@ export class E2EIServiceInternal {
     }
 
     // We need to initialize the identity
-    await this.initIdentity(hasActiveCertificate);
+    const identity = await this.initIdentity(hasActiveCertificate);
 
-    const authData = await this.getEnrollmentChallenges();
+    const authData = await this.getEnrollmentChallenges(identity);
 
-    return this.getRotateBundleAndStoreCertificateData(oAuthIdToken, authData);
+    return this.getRotateBundleAndStoreCertificateData(identity, oAuthIdToken, authData);
   }
 }
