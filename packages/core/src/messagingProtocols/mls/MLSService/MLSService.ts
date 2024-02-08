@@ -22,7 +22,7 @@ import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/li
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-import {exponentialBackoff} from '@wireapp/commons/lib/util/ExponentialBackoffUtil';
+import {exponentialBackoff} from '@wireapp/commons/lib/util/ExponentialBackoff';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
