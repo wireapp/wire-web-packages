@@ -37,7 +37,7 @@ type ExponentialBackoffConfig = {
 
 /**
  * Exponential backoff function creator.
- * It will return a function that will back off exponentially (wait) every time it is called.
+ * It will return a function that will back off exponentially (wait) passed callback every time it is called.
  *
  * @param key - The key to identify the backoff
  * @param config - The configuration for the backoff
@@ -45,13 +45,15 @@ type ExponentialBackoffConfig = {
  * @param config.minDelay - The minimum delay to wait (default 500ms)
  * @param config.maxRetries - The maximum number of retries (default 10)
  * @param config.multiplyBy - The number to multiply the delay by (default 2)
- * @param config.onRetryLimitReached - The function to call when the retry limit is reached (by default it will reset backoff for the fiven key and throw an error)
- * @returns
+ * @returns - The backoff function and the reset function
  */
 export function exponentialBackoff(
   key: string,
   config: ExponentialBackoffConfig = defaultConfig,
-): {backOff: <T>(fn: () => Promise<T>, onRetryLimitReached?: () => void) => Promise<T>; resetBackOff: () => void} {
+): {
+  backOff: <T>(callback: () => Promise<T>, onRetryLimitReached?: () => void) => Promise<T>;
+  resetBackOff: () => void;
+} {
   const {
     maxDelay = defaultConfig.maxDelay,
     minDelay = defaultConfig.minDelay,
@@ -64,7 +66,7 @@ export function exponentialBackoff(
   };
 
   return {
-    backOff: async <T>(fn: () => Promise<T>, onRetryLimitReached?: () => void): Promise<T> => {
+    backOff: async <T>(callback: () => Promise<T>, onRetryLimitReached?: () => void): Promise<T> => {
       const entry = delaysMap.get(key);
 
       const retryCount = entry?.retryCount || 0;
@@ -88,7 +90,7 @@ export function exponentialBackoff(
 
         const tid = setTimeout(async () => {
           delaysMap.set(key, {retryCount: retryCount + 1, timeoutId: undefined});
-          resolve(fn());
+          resolve(callback());
         }, clampedDelay);
 
         delaysMap.set(key, {retryCount, timeoutId: tid});
