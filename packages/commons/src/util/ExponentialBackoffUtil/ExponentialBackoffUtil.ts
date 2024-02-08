@@ -17,7 +17,7 @@
  *
  */
 
-import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
+import {TimeInMillis} from '../TimeUtil';
 
 const delaysMap = new Map<string, {retryCount: number; timeoutId?: NodeJS.Timeout}>();
 

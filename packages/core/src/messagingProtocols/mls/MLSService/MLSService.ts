@@ -22,6 +22,7 @@ import {PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/li
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, StatusCode} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
+import {exponentialBackoff} from '@wireapp/commons/lib/util/ExponentialBackoffUtil';
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 import logdown from 'logdown';
@@ -48,7 +49,6 @@ import {MLSServiceConfig, NewCrlDistributionPointsPayload, UploadCommitOptions} 
 import {KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
 import {CoreDatabase} from '../../../storage/CoreDB';
-import {exponentialBackoff} from '../../../util/exponentialBackoff';
 import {parseFullQualifiedClientId} from '../../../util/fullyQualifiedClientIdUtils';
 import {numberToHex} from '../../../util/numberToHex';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
@@ -172,9 +172,6 @@ export class MLSService extends TypedEventEmitter<Events> {
       try {
         const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
 
-        // We need to reset the backoff after a successful request
-        resetBackOff();
-
         if (isExternalCommit) {
           await this.coreCryptoClient.mergePendingGroupFromExternalCommit(groupId);
         } else {
@@ -183,6 +180,9 @@ export class MLSService extends TypedEventEmitter<Events> {
         const newEpoch = await this.getEpoch(groupId);
 
         this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
+
+        // We need to reset the backoff after a successful request
+        resetBackOff();
         return response;
       } catch (error) {
         if (isExternalCommit) {

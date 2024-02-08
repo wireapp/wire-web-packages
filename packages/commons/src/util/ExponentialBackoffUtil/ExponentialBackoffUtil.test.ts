@@ -17,9 +17,9 @@
  *
  */
 
-import {advanceJestTimersWithPromise} from '../../testUtils';
+import {advanceJestTimersWithPromise} from '../testUtils';
 
-import {exponentialBackoff} from './';
+import {exponentialBackoff} from '.';
 
 describe('exponentialBackoff', () => {
   beforeEach(() => {

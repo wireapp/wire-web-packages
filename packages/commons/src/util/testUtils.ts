@@ -17,4 +17,7 @@
  *
  */
 
-export * from './exponentialBackoff';
+export const advanceJestTimersWithPromise = async (time: number) => {
+  jest.advanceTimersByTime(time);
+  return new Promise(jest.requireActual('timers').setImmediate);
+};
