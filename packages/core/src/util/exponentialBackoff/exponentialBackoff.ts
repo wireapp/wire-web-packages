@@ -58,6 +58,7 @@ export function exponentialBackoff(
     maxDelay = defaultConfig.maxDelay,
     minDelay = defaultConfig.minDelay,
     maxRetries = defaultConfig.maxRetries,
+    multiplyBy = defaultConfig.multiplyBy,
   } = config;
 
   const resetBackOff = () => {
@@ -72,7 +73,7 @@ export function exponentialBackoff(
       const retryCount = entry?.retryCount || 0;
       const retryTimeout = entry?.timeoutId;
 
-      const delay = Math.pow(2, retryCount) * minDelay;
+      const delay = Math.pow(multiplyBy, retryCount) * minDelay;
       const clampedDelay = Math.min(delay, maxDelay);
 
       // If we have reached the retry limit or the delay is greater than the max delay, we reset the backoff
