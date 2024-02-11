@@ -5271,7 +5271,7 @@ __metadata:
     eslint-plugin-prettier: ^5
     eslint-plugin-react: ^7.31.10
     eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-simple-import-sort: ^10.0.0
+    eslint-plugin-simple-import-sort: ^12.0.0
     eslint-plugin-testing-library: ^6.0.0
     eslint-plugin-unused-imports: ^3
     prettier: ^3
@@ -9382,12 +9382,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-simple-import-sort@npm:10.0.0, eslint-plugin-simple-import-sort@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "eslint-plugin-simple-import-sort@npm:10.0.0"
+"eslint-plugin-simple-import-sort@npm:12.0.0, eslint-plugin-simple-import-sort@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "eslint-plugin-simple-import-sort@npm:12.0.0"
   peerDependencies:
     eslint: ">=5.0.0"
-  checksum: 23221ff63f80f9c52da807d388ee8a51bc36a3b73345f60ec886e7973c28d75eb1d1e47f7f2916a7c1f94a1b5037b1450356a64a8fbd58096fd6bee57c6e3e48
+  checksum: 1b97055a9e8782099a788d030d3ceb03729bd7c9fe145eb617e5857c8c429d3124f1926621f4a363e1f2fad23037285b5b43ee01c6597eedb5f19b1d2f50604b
   languageName: node
   linkType: hard
 
@@ -17175,7 +17175,7 @@ __metadata:
     eslint-plugin-prettier: ^5
     eslint-plugin-react: 7.33.2
     eslint-plugin-react-hooks: 4.6.0
-    eslint-plugin-simple-import-sort: 10.0.0
+    eslint-plugin-simple-import-sort: 12.0.0
     eslint-plugin-testing-library: ^6.0.0
     eslint-plugin-unused-imports: ^3.0.0
     husky: 9.0.10
