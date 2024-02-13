@@ -5163,7 +5163,7 @@ __metadata:
     browser-sync: 3.0.2
     concurrently: 8.2.2
     cross-env: 7.0.3
-    dotenv: 16.4.1
+    dotenv: 16.4.3
     exponential-backoff: 3.1.1
     http-status-codes: 2.3.0
     jest: ^29.2.1
@@ -8605,10 +8605,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.4.1":
-  version: 16.4.1
-  resolution: "dotenv@npm:16.4.1"
-  checksum: a343f0a1d156deef8c60034f797969867af4dbccfacedd4ac15fad04547e7ffe0553b58fc3b27a5837950f0d977e38e9234943fbcec4aeced4e3d044309a76ab
+"dotenv@npm:16.4.3":
+  version: 16.4.3
+  resolution: "dotenv@npm:16.4.3"
+  checksum: c66d0b0d7160fe1ee90b219db2de7bf3037e3586195d2ccb5ed37260163616e9620f3f1b4d3319d506a23e8d4916531491285fec2f5fb4dc765702174173d1ae
   languageName: node
   linkType: hard
 
