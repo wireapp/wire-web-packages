@@ -5510,6 +5510,7 @@ __metadata:
     "@types/node": ^20.1.0
     "@types/rimraf": ^3.0.2
     "@wireapp/store-engine": "workspace:^"
+    core-js: ^3.36.0
     dexie: ^3.2.0
     fake-indexeddb: ^5.0.2
     jest: ^29.2.1
@@ -7890,6 +7891,13 @@ __metadata:
   dependencies:
     browserslist: ^4.22.2
   checksum: 4c1a7076d31fa489eec5c46eb11c7127703f9756b5fed1eab9bf27b7f0f151247886d3fa488911078bd2801a5dfa12a9ea2ecb7a4e61dfa460b2c291805f503b
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.36.0":
+  version: 3.36.0
+  resolution: "core-js@npm:3.36.0"
+  checksum: 48c807d5055ad0424f52d13583e96ddca2efcdc4e3cd9c479d60f269c8fe225191cd4e26a4593f43f7ef6dba08d161091147ecf8ae0300c15bc648a4f555217b
   languageName: node
   linkType: hard
 
