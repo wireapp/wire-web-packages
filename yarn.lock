@@ -5279,7 +5279,6 @@ __metadata:
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.44.0
     "@wireapp/store-engine": "workspace:*"
-    "@wireapp/store-engine-dexie": "workspace:^"
     axios: 1.6.7
     bazinga64: "workspace:^"
     commander: 12.0.0
@@ -5501,7 +5500,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine-dexie@workspace:^, @wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
+"@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine-dexie@workspace:packages/store-engine-dexie"
   dependencies:
