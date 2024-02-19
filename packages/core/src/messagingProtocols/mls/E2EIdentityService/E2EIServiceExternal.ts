@@ -57,7 +57,9 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   ) {
     super();
     void this.initialiseCrlDistributionTimers();
-    mlsService.on('newCrlDistributionPoints', this.handleNewRemoteCrlDistributionPoints);
+    mlsService.on('newCrlDistributionPoints', distributionPoints =>
+      this.handleNewRemoteCrlDistributionPoints(distributionPoints),
+    );
   }
 
   // If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
