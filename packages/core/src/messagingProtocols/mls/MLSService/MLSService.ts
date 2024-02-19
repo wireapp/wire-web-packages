@@ -497,9 +497,19 @@ export class MLSService extends TypedEventEmitter<Events> {
     );
   }
 
-  private async commitProposals(groupId: ConversationId): Promise<void> {
-    const commitBundle = await this.coreCryptoClient.commitPendingProposals(groupId);
-    return commitBundle ? void (await this.uploadCommitBundle(groupId, commitBundle)) : undefined;
+  private async commitProposals(groupId: ConversationId, shouldRetry = true): Promise<void> {
+    try {
+      const commitBundle = await this.coreCryptoClient.commitPendingProposals(groupId);
+      return commitBundle ? void (await this.uploadCommitBundle(groupId, commitBundle)) : undefined;
+    } catch (error) {
+      if (!shouldRetry) {
+        throw error;
+      }
+
+      this.logger.warn('Failed to commit proposals, clearing the pending commit and retrying', error);
+      await this.coreCryptoClient.clearPendingCommit(groupId);
+      return this.commitProposals(groupId, false);
+    }
   }
 
   /**
