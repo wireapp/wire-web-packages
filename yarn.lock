@@ -5080,10 +5080,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:1.0.0-rc.36":
-  version: 1.0.0-rc.36
-  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.36"
-  checksum: 108f5e983abb35ff65b4d1a62804e69dbc72c9953a5a51401163fab44a8e8dbb63139b66d3d85864f4de21812aa1cda8605f8cfa6161d839f9b8f872f11c4e2b
+"@wireapp/core-crypto@npm:1.0.0-rc.39":
+  version: 1.0.0-rc.39
+  resolution: "@wireapp/core-crypto@npm:1.0.0-rc.39"
+  checksum: eb1a22fbcb30677efc52fa87e5d68bd54e3b32df3578b9ffba15e0aba337f1417b7879006e20c75cce9ecb3101a163785dc75a66cd799d9a881837d979066639
   languageName: node
   linkType: hard
 
@@ -5100,7 +5100,7 @@ __metadata:
     "@types/tough-cookie": 4.0.5
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 1.0.0-rc.36
+    "@wireapp/core-crypto": 1.0.0-rc.39
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.44.0
