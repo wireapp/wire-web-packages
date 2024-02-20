@@ -96,6 +96,7 @@ describe('SubconversationService', () => {
       const [subconversationService, {apiClient, mlsService}] = await buildSubconversationService();
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentGroupId = 'parentGroupId';
       const subconversationGroupId = 'subconversationGroupId';
 
       const subconversationResponse = getSubconversationResponse({
@@ -109,7 +110,7 @@ describe('SubconversationService', () => {
       jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValueOnce(subconversationResponse);
       jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(true);
 
-      await subconversationService.joinConferenceSubconversation(parentConversationId);
+      await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(subconversationGroupId);
       expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
@@ -119,6 +120,7 @@ describe('SubconversationService', () => {
       const [subconversationService, {apiClient, mlsService}] = await buildSubconversationService();
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentGroupId = 'parentGroupId';
       const subconversationGroupId = 'subconversationGroupId';
 
       const subconversationResponse = getSubconversationResponse({
@@ -132,7 +134,7 @@ describe('SubconversationService', () => {
       jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValueOnce(subconversationResponse);
       jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
 
-      await subconversationService.joinConferenceSubconversation(parentConversationId);
+      await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
       expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
@@ -143,6 +145,7 @@ describe('SubconversationService', () => {
       const [subconversationService, {apiClient, mlsService}] = await buildSubconversationService();
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentGroupId = 'parentGroupId';
       const subconversationGroupId = 'subconversationGroupId';
       const initialSubconversationEpoch = 1;
 
@@ -176,7 +179,7 @@ describe('SubconversationService', () => {
 
       jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValueOnce(subconversationResponse2);
 
-      await subconversationService.joinConferenceSubconversation(parentConversationId);
+      await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(apiClient.api.conversation.deleteSubconversation).toHaveBeenCalledWith(
         parentConversationId,
@@ -197,6 +200,7 @@ describe('SubconversationService', () => {
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
       const subconversationGroupId = 'subconversationGroupId';
+      const parentGroupId = 'parentGroupId';
       const subconversationEpoch = 1;
 
       const currentTimeISO = '2023-10-24T12:00:00.000Z';
@@ -217,7 +221,7 @@ describe('SubconversationService', () => {
 
       jest.spyOn(apiClient.api.conversation, 'getSubconversation').mockResolvedValueOnce(subconversationResponse);
 
-      await subconversationService.joinConferenceSubconversation(parentConversationId);
+      await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(apiClient.api.conversation.deleteSubconversation).not.toHaveBeenCalled();
       expect(mlsService.registerConversation).not.toHaveBeenCalled();
@@ -229,6 +233,7 @@ describe('SubconversationService', () => {
       const [subconversationService, {apiClient, mlsService}] = await buildSubconversationService();
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentGroupId = 'parentGroupId';
       const subconversationGroupId = 'subconversationGroupId';
 
       const subconversationResponse = getSubconversationResponse({
@@ -246,7 +251,7 @@ describe('SubconversationService', () => {
         .spyOn(mlsService, 'registerConversation')
         .mockRejectedValueOnce(new BackendError('', BackendErrorLabel.MLS_STALE_MESSAGE, StatusCode.CONFLICT));
 
-      await subconversationService.joinConferenceSubconversation(parentConversationId);
+      await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
       expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
@@ -257,6 +262,7 @@ describe('SubconversationService', () => {
       const [subconversationService, {apiClient, mlsService}] = await buildSubconversationService();
 
       const parentConversationId = {id: 'parentConversationId', domain: 'domain'};
+      const parentGroupId = 'parentGroupId';
       const subconversationGroupId = 'subconversationGroupId';
 
       const subconversationResponse = getSubconversationResponse({
@@ -273,7 +279,7 @@ describe('SubconversationService', () => {
       const updatedEpoch = 1;
       jest.spyOn(mlsService, 'getEpoch').mockResolvedValueOnce(updatedEpoch);
 
-      const response = await subconversationService.joinConferenceSubconversation(parentConversationId);
+      const response = await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
       expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
