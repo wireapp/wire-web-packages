@@ -26,7 +26,7 @@ import {CoreCrypto, E2eiConversationState, WireIdentity, DeviceStatus} from '@wi
 
 import {AcmeService} from './Connection';
 import {getE2EIClientId} from './Helper';
-import {E2EIStorage} from './Storage/E2EIStorage';
+import {createE2EIEnrollmentStorage} from './Storage/E2EIStorage';
 
 import {ClientService} from '../../../client';
 import {CoreDatabase} from '../../../storage/CoreDB';
@@ -47,6 +47,7 @@ type Events = {
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
 export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   private _acmeService?: AcmeService;
+  private readonly enrollmentStorage: ReturnType<typeof createE2EIEnrollmentStorage>;
 
   public constructor(
     private readonly coreCryptoClient: CoreCrypto,
@@ -57,18 +58,19 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   ) {
     super();
     void this.initialiseCrlDistributionTimers();
+    this.enrollmentStorage = createE2EIEnrollmentStorage(coreDatabase);
     mlsService.on('newCrlDistributionPoints', distributionPoints =>
       this.handleNewCrlDistributionPoints(distributionPoints),
     );
   }
 
   // If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
-  public isEnrollmentInProgress(): boolean {
-    return E2EIStorage.has.handle();
+  public async isEnrollmentInProgress(userId: string): Promise<boolean> {
+    return !!(await this.enrollmentStorage.getEnrollmentFlowData(userId));
   }
 
-  public clearAllProgress(): void {
-    E2EIStorage.remove.temporaryData();
+  public clearAllProgress(userId: string) {
+    return this.enrollmentStorage.delete(userId);
   }
 
   public getConversationState(conversationId: Uint8Array): Promise<E2eiConversationState> {

@@ -856,6 +856,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   ): Promise<EnrollmentProcessState> {
     const hasActiveCertificate = await this.coreCryptoClient.e2eiIsEnabled(this.config.cipherSuite);
     const e2eiServiceInternal = new E2EIServiceInternal(
+      this.coreDatabase,
       this.coreCryptoClient,
       this.apiClient,
       certificateTtl,
@@ -865,14 +866,14 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     // If we don't have an OAuth id token, we need to start the certificate process with Oauth
     if (!oAuthIdToken) {
-      const data = await e2eiServiceInternal.startCertificateProcess(hasActiveCertificate);
+      const data = await e2eiServiceInternal.startCertificateProcess(user.id, hasActiveCertificate);
       return {status: 'authentication', authenticationChallenge: data};
     }
 
     // If we have an OAuth id token, we can continue the certificate process / start a refresh
     const rotateBundle = !hasActiveCertificate
       ? // If we are not refreshing the active certificate, we need to continue the certificate process with Oauth
-        await e2eiServiceInternal.continueCertificateProcess(oAuthIdToken)
+        await e2eiServiceInternal.continueCertificateProcess(user.id, oAuthIdToken)
       : // If we are refreshing the active certificate, can start the refresh process
         await e2eiServiceInternal.renewCertificate(oAuthIdToken, hasActiveCertificate);
 
