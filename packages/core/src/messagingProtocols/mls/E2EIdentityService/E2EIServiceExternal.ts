@@ -130,6 +130,9 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
           certificate: '',
           displayName: '',
           handle: '',
+          notAfter: BigInt(0),
+          notBefore: BigInt(0),
+          serialNumber: '',
           clientId: id.client,
         }));
 
