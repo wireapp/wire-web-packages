@@ -23,14 +23,14 @@ import {CoreDatabase} from '../../../../storage/CoreDB';
 
 export function createE2EIEnrollmentStorage(coreDB: CoreDatabase) {
   return {
-    async getEnrollmentFlowData(id: string): Promise<EnrollmentFlowData | undefined> {
-      return coreDB.get('enrollmentFlowData', id);
+    async getEnrollmentFlowData(): Promise<EnrollmentFlowData | undefined> {
+      return coreDB.get('enrollmentFlowData', 'data');
     },
-    async save(id: string, data: EnrollmentFlowData): Promise<void> {
-      await coreDB.put('enrollmentFlowData', data, id);
+    async save(data: EnrollmentFlowData): Promise<void> {
+      await coreDB.put('enrollmentFlowData', data, 'data');
     },
-    async delete(id: string): Promise<void> {
-      return coreDB.delete('enrollmentFlowData', id);
+    async delete(): Promise<void> {
+      return coreDB.delete('enrollmentFlowData', 'data');
     },
   };
 }

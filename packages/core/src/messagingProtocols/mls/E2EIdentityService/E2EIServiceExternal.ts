@@ -65,12 +65,12 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   }
 
   // If we have a handle in the local storage, we are in the enrollment process (this handle is saved before oauth redirect)
-  public async isEnrollmentInProgress(userId: string): Promise<boolean> {
-    return !!(await this.enrollmentStorage.getEnrollmentFlowData(userId));
+  public async isEnrollmentInProgress(): Promise<boolean> {
+    return !!(await this.enrollmentStorage.getEnrollmentFlowData());
   }
 
-  public clearAllProgress(userId: string) {
-    return this.enrollmentStorage.delete(userId);
+  public clearAllProgress() {
+    return this.enrollmentStorage.delete();
   }
 
   public getConversationState(conversationId: Uint8Array): Promise<E2eiConversationState> {
