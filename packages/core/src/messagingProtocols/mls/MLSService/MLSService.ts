@@ -405,7 +405,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     }
 
     const configuration: ConversationConfiguration = {
-      externalSenders: externalSenders,
+      externalSenders,
       ciphersuite: this.config.cipherSuite,
     };
 
