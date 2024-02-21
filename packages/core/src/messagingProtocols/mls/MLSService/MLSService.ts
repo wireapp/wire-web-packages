@@ -253,15 +253,28 @@ export class MLSService extends TypedEventEmitter<Events> {
      */
     const failedToFetchKeyPackages: QualifiedId[] = [];
     const keyPackagesSettledResult = await Promise.allSettled(
-      qualifiedUsers.map(({id, domain, skipOwnClientId}) =>
-        this.apiClient.api.client
-          .claimMLSKeyPackages(id, domain, numberToHex(this.config.cipherSuite), skipOwnClientId)
-          .catch(error => {
-            failedToFetchKeyPackages.push({id, domain});
-            // Throw the error so we don't get {status: 'fulfilled', value: undefined}
-            throw error;
-          }),
-      ),
+      qualifiedUsers.map(async ({id, domain, skipOwnClientId}) => {
+        try {
+          const keys = await this.apiClient.api.client.claimMLSKeyPackages(
+            id,
+            domain,
+            numberToHex(this.config.cipherSuite),
+            skipOwnClientId,
+          );
+
+          // It's possible that user's backend is reachable but they have not uploaded their MLS key packages (or all of them have been claimed already)
+          if (keys.key_packages.length === 0) {
+            this.logger.warn(`User ${id} has no key packages uploaded`);
+            throw new Error(`User ${id} has no key packages uploaded`);
+          }
+
+          return keys;
+        } catch (error) {
+          failedToFetchKeyPackages.push({id, domain});
+          // Throw the error so we don't get {status: 'fulfilled', value: undefined}
+          throw error;
+        }
+      }),
     );
 
     /**
