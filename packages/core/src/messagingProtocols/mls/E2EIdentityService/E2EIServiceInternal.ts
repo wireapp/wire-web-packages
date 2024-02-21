@@ -63,7 +63,7 @@ export class E2EIServiceInternal {
 
     // store auth data for continuing the flow later on
     const handle = await this.coreCryptoClient.e2eiEnrollmentStash(identity);
-    await this.enrollmentStorage.save({
+    await this.enrollmentStorage.savePendingEnrollmentData({
       handle,
       ...enrollmentData,
     });
@@ -72,7 +72,7 @@ export class E2EIServiceInternal {
   }
 
   public async continueCertificateProcess(oAuthIdToken: string): Promise<RotateBundle | undefined> {
-    const enrollmentData = await this.enrollmentStorage.getEnrollmentFlowData();
+    const enrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
     if (!enrollmentData) {
       throw new Error('Error while trying to continue OAuth flow. No enrollment in progress found');
     }

@@ -49,7 +49,7 @@ interface CoreDBSchema extends DBSchema {
     key: string;
     value: {expiresAt: number; url: string};
   };
-  enrollmentFlowData: {
+  pendingEnrollmentData: {
     key: string;
     value: EnrollmentFlowData;
   };
@@ -75,7 +75,7 @@ export async function openDB(dbName: string): Promise<CoreDatabase> {
         case 5:
           db.createObjectStore('crls');
         case 6:
-          db.createObjectStore('enrollmentFlowData');
+          db.createObjectStore('pendingEnrollmentData');
       }
     },
   });

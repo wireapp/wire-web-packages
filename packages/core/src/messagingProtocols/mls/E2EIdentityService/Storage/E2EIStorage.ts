@@ -21,16 +21,19 @@ import {EnrollmentFlowData} from './E2EIStorage.schema';
 
 import {CoreDatabase} from '../../../../storage/CoreDB';
 
+const PENDING_ENROLLMENT_TABLE = 'pendingEnrollmentData';
+const STORAGE_KEY = 'data';
+
 export function createE2EIEnrollmentStorage(coreDB: CoreDatabase) {
   return {
-    async getEnrollmentFlowData(): Promise<EnrollmentFlowData | undefined> {
-      return coreDB.get('enrollmentFlowData', 'data');
+    async getPendingEnrollmentData(): Promise<EnrollmentFlowData | undefined> {
+      return coreDB.get(PENDING_ENROLLMENT_TABLE, STORAGE_KEY);
     },
-    async save(data: EnrollmentFlowData): Promise<void> {
-      await coreDB.put('enrollmentFlowData', data, 'data');
+    async savePendingEnrollmentData(data: EnrollmentFlowData): Promise<void> {
+      await coreDB.put(PENDING_ENROLLMENT_TABLE, data, STORAGE_KEY);
     },
-    async delete(): Promise<void> {
-      return coreDB.delete('enrollmentFlowData', 'data');
+    async deletePendingEnrollmentData(): Promise<void> {
+      return coreDB.delete(PENDING_ENROLLMENT_TABLE, STORAGE_KEY);
     },
   };
 }
