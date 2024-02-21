@@ -113,7 +113,7 @@ describe('SubconversationService', () => {
       await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(subconversationGroupId);
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, [], {parentGroupId});
     });
 
     it('registers a group if remote epoch is 0 and group does not exist locally', async () => {
@@ -137,7 +137,7 @@ describe('SubconversationService', () => {
       await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, [], {parentGroupId});
     });
 
     it('deletes conference subconversation from backend if group is already established and epoch is older than one day, then rejoins', async () => {
@@ -254,7 +254,7 @@ describe('SubconversationService', () => {
       await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, [], {parentGroupId});
       expect(mlsService.registerConversation).toHaveBeenCalledTimes(2);
     });
 
@@ -282,7 +282,7 @@ describe('SubconversationService', () => {
       const response = await subconversationService.joinConferenceSubconversation(parentConversationId, parentGroupId);
 
       expect(mlsService.wipeConversation).not.toHaveBeenCalled();
-      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, []);
+      expect(mlsService.registerConversation).toHaveBeenCalledWith(subconversationGroupId, [], {parentGroupId});
       expect(response).toEqual({epoch: updatedEpoch, groupId: subconversationGroupId});
     });
   });
