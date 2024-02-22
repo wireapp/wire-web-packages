@@ -182,6 +182,48 @@ describe('MLSService', () => {
     });
   });
 
+  describe('getKeyPackagesPayload', () => {
+    it('succesfully claims keys for all users', async () => {
+      const [mlsService, {apiClient}] = await createMLSService();
+      const users = [createUserId(), createUserId()];
+
+      jest.spyOn(apiClient.api.client, 'claimMLSKeyPackages').mockImplementation(async userId => ({
+        key_packages: [{client: 'client-1', domain: 'domain-1', key_package: '', key_package_ref: '', user: userId}],
+      }));
+
+      const {failures, keyPackages} = await mlsService.getKeyPackagesPayload(users);
+
+      expect(failures).toEqual([]);
+      expect(keyPackages).toHaveLength(2);
+    });
+
+    it('returns failure reasons list if it was not possible to claim user keys', async () => {
+      const [mlsService, {apiClient}] = await createMLSService();
+      const users = [createUserId(), createUserId(), createUserId()];
+
+      jest.spyOn(apiClient.api.client, 'claimMLSKeyPackages').mockRejectedValueOnce(undefined);
+
+      jest.spyOn(apiClient.api.client, 'claimMLSKeyPackages').mockResolvedValueOnce({
+        key_packages: [],
+      });
+
+      jest.spyOn(apiClient.api.client, 'claimMLSKeyPackages').mockResolvedValueOnce({
+        key_packages: [
+          {client: 'client-1', domain: 'domain-1', key_package: '', key_package_ref: '', user: users[2].id},
+        ],
+      });
+
+      const {failures, keyPackages} = await mlsService.getKeyPackagesPayload(users);
+
+      expect(failures).toEqual([
+        {reason: AddUsersFailureReasons.OFFLINE_FOR_TOO_LONG, users: [users[1]]},
+        {reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS, users: [users[0]], backends: [users[1].domain]},
+      ]);
+
+      expect(keyPackages).toHaveLength(1);
+    });
+  });
+
   describe('isConversationEstablished', () => {
     it('returns false if conversation does not exist locally', async () => {
       const [mlsService] = await createMLSService();
