@@ -477,7 +477,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     const creator = options?.creator;
 
-    const {keyPackages, failures: keysUploadFailures} = await this.getKeyPackagesPayload(
+    const {keyPackages, failures: keysClaimingFailures} = await this.getKeyPackagesPayload(
       users.map(user => {
         if (user.id === creator?.user.id) {
           /**
@@ -495,7 +495,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       const response = await this.updateKeyingMaterial(groupId);
       await this.scheduleKeyMaterialRenewal(groupId);
 
-      return {...response, failures: keysUploadFailures};
+      return {...response, failures: keysClaimingFailures};
     }
 
     const response = await this.addUsersToExistingConversation(groupId, keyPackages);
@@ -507,7 +507,7 @@ export class MLSService extends TypedEventEmitter<Events> {
      * @note If we can't fetch a user's key packages then we can not add them to mls conversation
      * so we're adding them to the list of failed users.
      */
-    response.failures = [...keysUploadFailures, ...response.failures];
+    response.failures = [...keysClaimingFailures, ...response.failures];
     return response;
   }
 

@@ -375,7 +375,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
-    const {keyPackages, failures: keysUploadFailures} = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
+    const {keyPackages, failures: keysClaimingFailures} = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
 
     const {events, failures} =
       keyPackages.length > 0
@@ -390,7 +390,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     return {
       events,
       conversation,
-      failedToAdd: [...keysUploadFailures, ...failures],
+      failedToAdd: [...keysClaimingFailures, ...failures],
     };
   }
 
