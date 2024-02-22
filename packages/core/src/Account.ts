@@ -59,6 +59,7 @@ import {
   resumeRejoiningMLSConversations,
 } from './messagingProtocols/mls/conversationRejoinQueue';
 import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
+import {getTokenCallback} from './messagingProtocols/mls/E2EIdentityService/E2EIServiceInternal';
 import {CoreCallbacks, CoreCryptoConfig, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
@@ -70,7 +71,6 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
-import {getTokenCallback} from './messagingProtocols/mls/E2EIdentityService/E2EIServiceInternal';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
