@@ -554,7 +554,7 @@ describe('MLSService', () => {
       const mockGroupId = 'mock-group-id2';
 
       jest.spyOn(mlsService, 'conversationExists').mockResolvedValueOnce(false);
-      jest.spyOn(mlsService, 'registerConversation').mockResolvedValueOnce({events: [], time: ''});
+      jest.spyOn(mlsService, 'registerConversation').mockResolvedValueOnce({events: [], time: '', failures: []});
       jest.spyOn(mlsService, 'wipeConversation').mockImplementation(jest.fn());
 
       const wasConversationEstablished = await mlsService.tryEstablishingMLSGroup(mockGroupId);

@@ -22,7 +22,6 @@ import {
   Conversation,
   ConversationProtocol,
   MLSConversation,
-  PostMlsMessageResponse,
   Subconversation,
   SUBCONVERSATION_ID,
 } from '@wireapp/api-client/lib/conversation';
@@ -627,9 +626,7 @@ describe('ConversationService', () => {
 
       const qualifiedUsers = [...otherUsersToAdd, selfUserToAdd];
 
-      jest
-        .spyOn(mlsService, 'getKeyPackagesPayload')
-        .mockResolvedValueOnce({coreCryptoKeyPackagesPayload: [], failedToFetchKeyPackages: []});
+      jest.spyOn(mlsService, 'getKeyPackagesPayload').mockResolvedValueOnce({keyPackages: [], failures: []});
 
       jest.spyOn(apiClient.api.conversation, 'getConversation').mockResolvedValueOnce({
         qualified_id: mockConversationId,
@@ -638,7 +635,7 @@ describe('ConversationService', () => {
         group_id: mockGroupId,
       } as unknown as Conversation);
 
-      const mlsMessage: PostMlsMessageResponse = {events: [], time: ''};
+      const mlsMessage = {events: [], time: '', failures: []};
       jest.spyOn(mlsService, 'addUsersToExistingConversation').mockResolvedValueOnce(mlsMessage);
 
       await conversationService.addUsersToMLSConversation({
