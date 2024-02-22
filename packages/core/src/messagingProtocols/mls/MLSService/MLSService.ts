@@ -854,7 +854,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     certificateTtl: number,
     getOAuthToken: getTokenCallback,
   ): Promise<EnrollmentProcessState> {
-    const hasActiveCertificate = await this.coreCryptoClient.e2eiIsEnabled(this.config.cipherSuite);
+    const isCertificateRenewal = await this.coreCryptoClient.e2eiIsEnabled(this.config.cipherSuite);
     const e2eiServiceInternal = new E2EIServiceInternal(
       this.coreDatabase,
       this.coreCryptoClient,
@@ -864,11 +864,11 @@ export class MLSService extends TypedEventEmitter<Events> {
       {user, clientId: client.id, discoveryUrl},
     );
 
-    const rotateBundle = await e2eiServiceInternal.generateCertificate(getOAuthToken, hasActiveCertificate);
+    const rotateBundle = await e2eiServiceInternal.generateCertificate(getOAuthToken, isCertificateRenewal);
 
     this.dispatchNewCrlDistributionPoints(rotateBundle);
     // upload the clients public keys
-    if (!hasActiveCertificate) {
+    if (!isCertificateRenewal) {
       // we only upload public keys for the initial certification process. Renewals do not need to upload new public keys
       await this.uploadMLSPublicKeys(client);
     }

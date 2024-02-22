@@ -31,7 +31,7 @@ import {doWireDpopChallenge} from './Steps/DpopChallenge';
 import {doWireOidcChallenge} from './Steps/OidcChallenge';
 import {createNewOrder, finalizeOrder} from './Steps/Order';
 import {createE2EIEnrollmentStorage} from './Storage/E2EIStorage';
-import {InitialData, UnidentifiedEnrollmentFlowData} from './Storage/E2EIStorage.schema';
+import {EnrollmentFlowData, InitialData, UnidentifiedEnrollmentFlowData} from './Storage/E2EIStorage.schema';
 
 import {CoreDatabase} from '../../../storage/CoreDB';
 
@@ -55,42 +55,49 @@ export class E2EIServiceInternal {
     this.enrollmentStorage = createE2EIEnrollmentStorage(coreDb);
   }
 
+  /**
+   * Will get a certificate for the user
+   * @param getOAuthToken function called when the process needs an oauth token
+   * @param refresh should the process refresh the current certificate or get a new one
+   */
   public async generateCertificate(getOAuthToken: getTokenCallback, refresh: boolean) {
     const stashedEnrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
+
     if (stashedEnrollmentData) {
-      const handle = stashedEnrollmentData.handle;
-      const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
+      // In case we have stashed data, we continue the enrollment flow (we are coming back from a redirect)
       const oAuthToken = await getOAuthToken();
       if (!oAuthToken) {
         throw new Error('No OAuthToken received for in progress enrollment process');
       }
-      return this.getRotateBundle(identity, oAuthToken, stashedEnrollmentData);
+      return this.continueCertificateGeneration(oAuthToken, stashedEnrollmentData);
     }
 
-    const newIdentity = await this.initIdentity(refresh);
-    const {token, handle, enrollmentData} = await this.getInitialOAuthToken(newIdentity, getOAuthToken);
-    if (!token) {
+    // We first get the challenges needed to validate the user identity
+    const identity = await this.initIdentity(refresh);
+    const enrollmentChallenges = await this.getEnrollmentChallenges(identity);
+    const {keyauth, oidcChallenge} = enrollmentChallenges.authorization;
+    const challengeData = {challenge: oidcChallenge, keyAuth: keyauth};
+
+    // store auth data for continuing the flow later on (in case we are redirected to the identity provider)
+    const handle = await this.coreCryptoClient.e2eiEnrollmentStash(identity);
+    const enrollmentData = {
+      handle,
+      ...enrollmentChallenges,
+    };
+    await this.enrollmentStorage.savePendingEnrollmentData(enrollmentData);
+
+    // At this point we might be redirected to the identity provider. We have
+    const oAuthToken = await getOAuthToken(challengeData);
+    if (!oAuthToken) {
       throw new Error('No OAuthToken received for in initial enrollment process');
     }
-    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
-    return this.getRotateBundle(identity, token, enrollmentData);
+    return this.continueCertificateGeneration(oAuthToken, enrollmentData);
   }
 
-  private async getInitialOAuthToken(identity: E2eiEnrollment, getOAuthToken: getTokenCallback) {
-    const enrollmentData = await this.getEnrollmentChallenges(identity);
-
-    const {keyauth, oidcChallenge} = enrollmentData.authorization;
-
-    // store auth data for continuing the flow later on
-    const handle = await this.coreCryptoClient.e2eiEnrollmentStash(identity);
-    await this.enrollmentStorage.savePendingEnrollmentData({
-      handle,
-      ...enrollmentData,
-    });
-
-    const challengeData = {challenge: oidcChallenge, keyAuth: keyauth};
-    const token = await getOAuthToken(challengeData);
-    return {enrollmentData, handle, token};
+  private async continueCertificateGeneration(oAuthToken: string, enrollmentData: EnrollmentFlowData) {
+    const handle = enrollmentData.handle;
+    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
+    return this.getRotateBundle(identity, oAuthToken, enrollmentData);
   }
 
   // ############ Internal Functions ############

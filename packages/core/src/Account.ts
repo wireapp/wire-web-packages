@@ -238,7 +238,9 @@ export class Account extends TypedEventEmitter<Events> {
     getOAuthToken,
     certificateTtl = 90 * (TimeInMillis.DAY / 1000),
   }: {
+    /** display name of the user (should match the identity provider) */
     displayName: string;
+    /** handle of the user (should match the identity provider) */
     handle: string;
     teamId: string;
     discoveryUrl: string;
