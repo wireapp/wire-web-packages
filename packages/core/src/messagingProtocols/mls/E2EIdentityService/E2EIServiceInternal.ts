@@ -22,7 +22,7 @@ import logdown from 'logdown';
 import {APIClient} from '@wireapp/api-client';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {AcmeDirectory, Ciphersuite, CoreCrypto, E2eiEnrollment, RotateBundle} from './E2EIService.types';
+import {AcmeDirectory, Ciphersuite, CoreCrypto, E2eiEnrollment} from './E2EIService.types';
 import {isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorizationChallenges} from './Steps/Authorization';
@@ -35,6 +35,7 @@ import {InitialData, UnidentifiedEnrollmentFlowData} from './Storage/E2EIStorage
 
 import {CoreDatabase} from '../../../storage/CoreDB';
 
+export type getTokenCallback = (challengesData?: {challenge: any; keyAuth: string}) => Promise<string | undefined>;
 export class E2EIServiceInternal {
   private readonly logger = logdown('@wireapp/core/E2EIdentityServiceInternal');
   private acmeService: AcmeService;
@@ -54,11 +55,30 @@ export class E2EIServiceInternal {
     this.enrollmentStorage = createE2EIEnrollmentStorage(coreDb);
   }
 
-  public async startCertificateProcess(hasActiveCertificate: boolean) {
-    const identity = await this.initIdentity(hasActiveCertificate);
+  public async generateCertificate(getOAuthToken: getTokenCallback, refresh: boolean) {
+    const stashedEnrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
+    if (stashedEnrollmentData) {
+      const handle = stashedEnrollmentData.handle;
+      const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
+      const oAuthToken = await getOAuthToken();
+      if (!oAuthToken) {
+        throw new Error('No OAuthToken received for in progress enrollment process');
+      }
+      return this.getRotateBundle(identity, oAuthToken, stashedEnrollmentData);
+    }
 
-    // Store the values in local storage for later use (e.g. in the continue flow)
+    const newIdentity = await this.initIdentity(refresh);
+    const {token, handle, enrollmentData} = await this.getInitialOAuthToken(newIdentity, getOAuthToken);
+    if (!token) {
+      throw new Error('No OAuthToken received for in initial enrollment process');
+    }
+    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
+    return this.getRotateBundle(identity, token, enrollmentData);
+  }
+
+  private async getInitialOAuthToken(identity: E2eiEnrollment, getOAuthToken: getTokenCallback) {
     const enrollmentData = await this.getEnrollmentChallenges(identity);
+
     const {keyauth, oidcChallenge} = enrollmentData.authorization;
 
     // store auth data for continuing the flow later on
@@ -68,32 +88,9 @@ export class E2EIServiceInternal {
       ...enrollmentData,
     });
 
-    return {challenge: oidcChallenge, keyAuth: keyauth};
-  }
-
-  public async continueCertificateProcess(oAuthIdToken: string): Promise<RotateBundle | undefined> {
-    const enrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
-    if (!enrollmentData) {
-      throw new Error('Error while trying to continue OAuth flow. No enrollment in progress found');
-    }
-
-    const {handle} = enrollmentData;
-    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
-
-    return this.getRotateBundle(identity, oAuthIdToken, enrollmentData);
-  }
-
-  /**
-   * This function starts a ACME refresh flow for an existing client with a valid refresh token
-   *
-   * @param oAuthIdToken
-   * @returns
-   */
-  public async renewCertificate(oAuthIdToken: string, hasActiveCertificate: boolean) {
-    const identity = await this.initIdentity(hasActiveCertificate);
-    const enrollmentData = await this.getEnrollmentChallenges(identity);
-
-    return this.getRotateBundle(identity, oAuthIdToken, enrollmentData);
+    const challengeData = {challenge: oidcChallenge, keyAuth: keyauth};
+    const token = await getOAuthToken(challengeData);
+    return {enrollmentData, handle, token};
   }
 
   // ############ Internal Functions ############

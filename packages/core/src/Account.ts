@@ -70,6 +70,7 @@ import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
 import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
+import {getTokenCallback} from './messagingProtocols/mls/E2EIdentityService/E2EIServiceInternal';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
@@ -234,14 +235,14 @@ export class Account extends TypedEventEmitter<Events> {
     handle,
     teamId,
     discoveryUrl,
-    oAuthIdToken,
+    getOAuthToken,
     certificateTtl = 90 * (TimeInMillis.DAY / 1000),
   }: {
     displayName: string;
     handle: string;
     teamId: string;
     discoveryUrl: string;
-    oAuthIdToken?: string;
+    getOAuthToken: getTokenCallback;
     /** number of seconds the certificate should be valid (default 90 days) */
     certificateTtl?: number;
   }) {
@@ -270,7 +271,7 @@ export class Account extends TypedEventEmitter<Events> {
       this.currentClient,
       this.options.nbPrekeys,
       certificateTtl,
-      oAuthIdToken,
+      getOAuthToken,
     );
   }
 
