@@ -507,7 +507,7 @@ export class MLSService extends TypedEventEmitter<Events> {
      * @note If we can't fetch a user's key packages then we can not add them to mls conversation
      * so we're adding them to the list of failed users.
      */
-    response.failures = response.failures ? [...keysUploadFailures, ...response.failures] : keysUploadFailures;
+    response.failures = [...keysUploadFailures, ...response.failures];
     return response;
   }
 
