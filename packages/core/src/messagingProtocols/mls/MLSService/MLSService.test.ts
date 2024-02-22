@@ -33,6 +33,7 @@ import {CommitBundle, CoreCrypto, DecryptedMessage} from '@wireapp/core-crypto';
 import {CoreCryptoMLSError} from './CoreCryptoMLSError';
 import {MLSService} from './MLSService';
 
+import {AddUsersFailure, AddUsersFailureReasons} from '../../../conversation';
 import {openDB} from '../../../storage/CoreDB';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
@@ -125,6 +126,58 @@ describe('MLSService', () => {
 
       await mlsService.registerConversation(groupId, [createUserId(), createUserId()]);
 
+      expect(mlsService.scheduleKeyMaterialRenewal).toHaveBeenCalledWith(groupId);
+    });
+
+    it('returns a list of failure reasons if it was not possible to claim keys for intended users', async () => {
+      const groupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc=';
+      const selfUser = createUserId();
+      const creator = {user: selfUser, client: 'client-1'};
+      const users = [createUserId(), createUserId()];
+
+      const failure: AddUsersFailure = {reason: AddUsersFailureReasons.OFFLINE_FOR_TOO_LONG, users};
+
+      jest.spyOn(mlsService, 'getKeyPackagesPayload').mockResolvedValueOnce({
+        keyPackages: [],
+        failures: [failure],
+      });
+
+      const {failures} = await mlsService.registerConversation(groupId, [...users, selfUser], {creator});
+
+      expect(failures).toEqual([failure]);
+      expect(mlsService.scheduleKeyMaterialRenewal).toHaveBeenCalledWith(groupId);
+    });
+
+    it("returns a list of failure reasons if it was not possible to upload users' keys", async () => {
+      const groupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc=';
+      const selfUser = createUserId();
+      const creator = {user: selfUser, client: 'client-1'};
+      const users = [createUserId(), createUserId()];
+
+      const failureKeysClaiming: AddUsersFailure = {
+        reason: AddUsersFailureReasons.OFFLINE_FOR_TOO_LONG,
+        users: [users[0]],
+      };
+      const failureKeysUpload: AddUsersFailure = {
+        reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
+        users: [users[1]],
+        backends: [users[1].domain],
+      };
+
+      jest.spyOn(mlsService, 'getKeyPackagesPayload').mockResolvedValueOnce({
+        keyPackages: [new Uint8Array()],
+        failures: [failureKeysClaiming],
+      });
+
+      jest.spyOn(mlsService, 'addUsersToExistingConversation').mockResolvedValueOnce({
+        failures: [failureKeysUpload],
+        events: [] as any,
+        time: '',
+      });
+
+      const {failures} = await mlsService.registerConversation(groupId, [...users, selfUser], {creator});
+
+      expect(failures).toEqual([failureKeysClaiming, failureKeysUpload]);
       expect(mlsService.scheduleKeyMaterialRenewal).toHaveBeenCalledWith(groupId);
     });
   });
