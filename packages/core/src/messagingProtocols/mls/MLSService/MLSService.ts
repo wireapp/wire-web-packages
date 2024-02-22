@@ -242,7 +242,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       throw new Error('Empty list of keys provided to addUsersToExistingConversation');
     }
 
-    //TODO: return failures array based on the response here - check .failed field and/or 503 "federation-unreachable-domains-error"
+    //TODO: handle federation error when sending a commit bundle to backend like we do in ProteusService
     const response = await this.processCommitAction(groupIdBytes, async () => {
       const commitBundle = await this.coreCryptoClient.addClientsToConversation(groupIdBytes, keyPackages);
       this.dispatchNewCrlDistributionPoints(commitBundle);
