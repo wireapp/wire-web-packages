@@ -96,8 +96,8 @@ describe('E2EIServiceExternal', () => {
 
       const userIdentities = await service.getUsersIdentities(groupId, userIds);
 
-      expect(userIdentities.get(user1.id)).toHaveLength(2);
-      expect(userIdentities.get(user2.id)).toHaveLength(1);
+      expect(userIdentities?.get(user1.id)).toHaveLength(2);
+      expect(userIdentities?.get(user2.id)).toHaveLength(1);
     });
 
     it('returns MLS basic devices with empty identity', async () => {
@@ -122,8 +122,8 @@ describe('E2EIServiceExternal', () => {
 
       const userIdentities = await service.getUsersIdentities(groupId, userIds);
 
-      expect(userIdentities.get(user1.id)).toHaveLength(3);
-      expect(userIdentities.get(user2.id)).toHaveLength(1);
+      expect(userIdentities?.get(user1.id)).toHaveLength(3);
+      expect(userIdentities?.get(user2.id)).toHaveLength(1);
     });
   });
 
@@ -156,8 +156,8 @@ describe('E2EIServiceExternal', () => {
 
       const userIdentities = await service.getAllGroupUsersIdentities(groupId);
 
-      expect(userIdentities.get(user1.userId)).toHaveLength(2);
-      expect(userIdentities.get(user2.userId)).toHaveLength(1);
+      expect(userIdentities?.get(user1.userId)).toHaveLength(2);
+      expect(userIdentities?.get(user2.userId)).toHaveLength(1);
     });
   });
 });
