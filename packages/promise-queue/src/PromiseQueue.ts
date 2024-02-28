@@ -114,6 +114,10 @@ export class PromiseQueue {
     return this.queue.length;
   }
 
+  setDelay(delay: number) {
+    this.delay = delay;
+  }
+
   /**
    * Pause or resume the execution.
    */
