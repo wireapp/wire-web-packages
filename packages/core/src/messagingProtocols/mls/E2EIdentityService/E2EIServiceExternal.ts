@@ -202,7 +202,6 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   public async initialize(discoveryUrl: string): Promise<void> {
     this._acmeService = new AcmeService(discoveryUrl);
     await this.registerServerCertificates();
-    await this.validateSelfCrl();
     await this.initialiseCrlDistributionTimers();
   }
 
@@ -284,14 +283,6 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
   private async cancelCrlDistributionTimer(url: string): Promise<void> {
     await this.coreDatabase.delete('crls', url);
-  }
-
-  private async validateSelfCrl(): Promise<void> {
-    const {crl, url} = await this.acmeService.getSelfCRL();
-
-    await this.validateCrl(url, crl, async () => {
-      this.emit('selfCrlChanged');
-    });
   }
 
   private async validateCrlDistributionPoint(distributionPointUrl: string): Promise<void> {
