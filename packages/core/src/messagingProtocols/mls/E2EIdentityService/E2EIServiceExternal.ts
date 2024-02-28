@@ -202,8 +202,8 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   public async initialize(discoveryUrl: string): Promise<void> {
     this._acmeService = new AcmeService(discoveryUrl);
     await this.registerServerCertificates();
-    await this.initialiseCrlDistributionTimers();
     await this.validateSelfCrl();
+    await this.initialiseCrlDistributionTimers();
   }
 
   private get acmeService(): AcmeService {
