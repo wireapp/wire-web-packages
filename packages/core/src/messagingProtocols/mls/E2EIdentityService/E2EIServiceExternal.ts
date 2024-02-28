@@ -40,8 +40,7 @@ import {MLSService} from '../MLSService';
 export type DeviceIdentity = Omit<WireIdentity, 'free' | 'status'> & {status?: DeviceStatus; deviceId: string};
 
 type Events = {
-  remoteCrlChanged: undefined;
-  selfCrlChanged: undefined;
+  crlChanged: {domain: string};
 };
 
 // This export is meant to be accessible from the outside (e.g the Webapp / UI)
@@ -289,12 +288,10 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
     const domain = new URL(distributionPointUrl).hostname;
     const crl = await this.acmeService.getCRLFromDistributionPoint(domain);
 
-    await this.validateCrl(distributionPointUrl, crl, async () => {
-      this.emit('remoteCrlChanged');
-    });
+    await this.validateCrl(distributionPointUrl, crl, () => this.emit('crlChanged', {domain}));
   }
 
-  private async validateCrl(url: string, crl: Uint8Array, onDirty: () => Promise<void>): Promise<void> {
+  private async validateCrl(url: string, crl: Uint8Array, onDirty: () => void): Promise<void> {
     const {expiration: expirationTimestampSeconds, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(url, crl);
 
     const expirationTimestamp = expirationTimestampSeconds && expirationTimestampSeconds * TimeInMillis.SECOND;
@@ -308,7 +305,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
     //if it was dirty, trigger e2eiconversationstate for every conversation
     if (dirty) {
-      await onDirty();
+      onDirty();
     }
   }
 
