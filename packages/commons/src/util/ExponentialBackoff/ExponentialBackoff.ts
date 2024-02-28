@@ -19,7 +19,7 @@
 
 import {TimeInMillis} from '../TimeUtil';
 
-const delaysMap = new Map<string, {retryCount: number; timeoutId?: NodeJS.Timeout}>();
+const retriesMap = new Map<string, number>();
 
 const defaultConfig = {
   minDelay: TimeInMillis.SECOND / 2,
@@ -62,16 +62,14 @@ export function exponentialBackoff(
   } = config;
 
   const resetBackOff = () => {
-    clearTimeout(delaysMap.get(key)?.timeoutId);
-    delaysMap.delete(key);
+    retriesMap.delete(key);
   };
 
   return {
     backOff: async <T>(callback: () => Promise<T>, onRetryLimitReached?: () => void): Promise<T> => {
-      const entry = delaysMap.get(key);
+      const entry = retriesMap.get(key);
 
-      const retryCount = entry?.retryCount || 0;
-      const retryTimeout = entry?.timeoutId;
+      const retryCount = entry || 0;
 
       const delay = Math.pow(multiplyBy, retryCount) * minDelay;
       const clampedDelay = Math.min(delay, maxDelay);
@@ -87,14 +85,10 @@ export function exponentialBackoff(
 
       // We wait for the delay to pass
       return new Promise(resolve => {
-        clearTimeout(retryTimeout);
-
-        const tid = setTimeout(async () => {
-          delaysMap.set(key, {retryCount: retryCount + 1, timeoutId: undefined});
+        setTimeout(async () => {
+          retriesMap.set(key, retryCount + 1);
           resolve(callback());
         }, clampedDelay);
-
-        delaysMap.set(key, {retryCount, timeoutId: tid});
       });
     },
 
