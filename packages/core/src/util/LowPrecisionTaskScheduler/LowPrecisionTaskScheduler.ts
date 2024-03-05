@@ -20,12 +20,12 @@
 import logdown from 'logdown';
 
 interface IntervalTask {
-  key: string;
   firingDate: number;
   task: () => void;
 }
 
 interface ScheduleLowPrecisionTaskParams extends IntervalTask {
+  key: string;
   intervalDelay: number;
 }
 
@@ -45,21 +45,23 @@ const addTask = ({key, firingDate, task, intervalDelay}: ScheduleLowPrecisionTas
 
   const tasks = intervals[intervalDelay]?.tasks || {};
 
-  tasks[key] = {key, firingDate, task};
+  tasks[key] = {firingDate, task};
 
   const timeoutId = setInterval(async () => {
     const nowTime = new Date().getTime();
 
     const tasks = intervals[intervalDelay]?.tasks;
-    const tasksList = tasks ? Object.values(tasks) : [];
-    if (tasksList.length !== 0) {
-      for (const taskData of tasksList) {
-        if (nowTime >= taskData.firingDate) {
-          const {task, key} = taskData;
-          logger.info(`Executing task with key "${key}"`);
-          cancelTask({intervalDelay, key});
-          task();
-        }
+
+    if (!tasks) {
+      return;
+    }
+
+    for (const key in tasks) {
+      if (tasks[key].firingDate <= nowTime) {
+        const {task} = tasks[key];
+        logger.info(`Executing task with key "${key}"`);
+        delete tasks[key];
+        task();
       }
     }
   }, intervalDelay);
