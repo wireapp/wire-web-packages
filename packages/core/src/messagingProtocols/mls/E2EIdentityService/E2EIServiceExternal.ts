@@ -319,7 +319,8 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   }
 
   private async handleNewCrlDistributionPoints(distributionPoints: string[]): Promise<void> {
-    for (const distributionPointUrl of distributionPoints) {
+    const uniqueDistributionPoints = Array.from(new Set(distributionPoints));
+    for (const distributionPointUrl of uniqueDistributionPoints) {
       await this.validateCrlDistributionPoint(distributionPointUrl);
     }
   }
