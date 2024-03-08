@@ -723,9 +723,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
       return await this.mlsService.handleMLSWelcomeMessageEvent(event, this.apiClient.validatedClientId);
     } catch (error) {
       if (isCoreCryptoMLSWelcomeMessageDeletedKeyPackageError(error)) {
-        this.logger.info(
-          'Received welcome message with deleted key package, joining the conversation via external commit...',
-        );
         const {qualified_conversation: conversationId} = event;
 
         // Note that we don't care about a subconversation here, as the welcome message is always for the parent conversation.
@@ -734,6 +731,10 @@ export class ConversationService extends TypedEventEmitter<Events> {
         if (!conversationId) {
           throw new Error('Qualified conversation id is missing in the event');
         }
+
+        this.logger.info(
+          `Received welcome message with deleted key package, joining the conversation (${conversationId.id}) via external commit...`,
+        );
 
         await queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
         return null;
