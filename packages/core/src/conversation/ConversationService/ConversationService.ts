@@ -63,7 +63,7 @@ import {decryptAsset} from '../../cryptography/AssetCryptography';
 import {MLSService} from '../../messagingProtocols/mls';
 import {queueConversationRejoin} from '../../messagingProtocols/mls/conversationRejoinQueue';
 import {
-  isCoreCryptoMLSWelcomeMessageDeletedKeyPackageError,
+  isCoreCryptoMLSWelcomeMessageMissingKeyPackageError,
   isCoreCryptoMLSWrongEpochError,
 } from '../../messagingProtocols/mls/MLSService/CoreCryptoMLSError';
 import {getConversationQualifiedMembers, ProteusService} from '../../messagingProtocols/proteus';
@@ -722,7 +722,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     try {
       return await this.mlsService.handleMLSWelcomeMessageEvent(event, this.apiClient.validatedClientId);
     } catch (error) {
-      if (isCoreCryptoMLSWelcomeMessageDeletedKeyPackageError(error)) {
+      if (isCoreCryptoMLSWelcomeMessageMissingKeyPackageError(error)) {
         const {qualified_conversation: conversationId} = event;
 
         // Note that we don't care about a subconversation here, as the welcome message is always for the parent conversation.
@@ -733,7 +733,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
         }
 
         this.logger.info(
-          `Received welcome message with deleted key package, joining the conversation (${conversationId.id}) via external commit...`,
+          `Received welcome message with a key package that is no longer in the store, joining the conversation (${conversationId.id}) via external commit...`,
         );
 
         void queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
