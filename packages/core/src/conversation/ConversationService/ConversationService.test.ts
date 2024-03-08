@@ -553,7 +553,7 @@ describe('ConversationService', () => {
       expect(subconversationService.joinConferenceSubconversation).toHaveBeenCalledWith(conversationId, 'groupId');
     });
 
-    it('joins a MLS conversation if it was sent a valid welcome message with a deleted key', async () => {
+    it('joins a MLS conversation if it was sent an orphan welcome message', async () => {
       const [conversationService, {apiClient, mlsService}] = await buildConversationService();
       const conversationId = {id: 'conversationId', domain: 'staging.zinfra.io'};
 
@@ -561,7 +561,7 @@ describe('ConversationService', () => {
 
       jest
         .spyOn(mlsService, 'handleMLSWelcomeMessageEvent')
-        .mockRejectedValueOnce(new Error(CoreCryptoMLSError.WELCOME_MESSAGE_DELETED_KEY_PACKAGE));
+        .mockRejectedValueOnce(new Error(CoreCryptoMLSError.ORPHAN_WELCOME_MESSAGE));
 
       jest.spyOn(apiClient.api.conversation, 'getConversation').mockResolvedValueOnce({
         qualified_id: conversationId,
