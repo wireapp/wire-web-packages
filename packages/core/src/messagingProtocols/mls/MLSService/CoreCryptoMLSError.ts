@@ -29,11 +29,8 @@ export const CoreCryptoMLSError = {
     DUPLICATE_MESSAGE: 'We already decrypted this message once',
   },
   CONVERSATION_ALREADY_EXISTS: 'Conversation already exists',
-  WELCOME_MESSAGE: {
-    DELETED_KEY_PACKAGE:
-      'Although this Welcome seems valid, the local KeyPackage it references has already been deleted locally. Join this group with an external commit',
-    NO_MATCHING_ENCRYPTION_KEY: 'No matching encryption key was found in the key store.',
-  },
+  WELCOME_MESSAGE_DELETED_KEY_PACKAGE:
+    'Although this Welcome seems valid, the local KeyPackage it references has already been deleted locally. Join this group with an external commit',
 } as const;
 
 export const isCoreCryptoMLSWrongEpochError = (error: unknown): boolean => {
@@ -44,12 +41,8 @@ export const isCoreCryptoMLSConversationAlreadyExistsError = (error: unknown): b
   return error instanceof Error && error.message === CoreCryptoMLSError.CONVERSATION_ALREADY_EXISTS;
 };
 
-const missingKeyPackageErrorMessages: string[] = [
-  CoreCryptoMLSError.WELCOME_MESSAGE.DELETED_KEY_PACKAGE,
-  CoreCryptoMLSError.WELCOME_MESSAGE.NO_MATCHING_ENCRYPTION_KEY,
-];
-export const isCoreCryptoMLSWelcomeMessageMissingKeyPackageError = (error: unknown): boolean => {
-  return error instanceof Error && missingKeyPackageErrorMessages.includes(error.message);
+export const isCoreCryptoMLSWelcomeMessageDeletedKeyPackageError = (error: unknown): boolean => {
+  return error instanceof Error && error.message === CoreCryptoMLSError.WELCOME_MESSAGE_DELETED_KEY_PACKAGE;
 };
 
 const mlsDecryptionErrorsToIgnore: string[] = [
