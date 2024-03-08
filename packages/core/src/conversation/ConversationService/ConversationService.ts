@@ -736,7 +736,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
           `Received welcome message with deleted key package, joining the conversation (${conversationId.id}) via external commit...`,
         );
 
-        await queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
+        void queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
         return null;
       }
 
