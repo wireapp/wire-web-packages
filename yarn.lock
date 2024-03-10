@@ -4243,10 +4243,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsrsasign@npm:10.5.12":
-  version: 10.5.12
-  resolution: "@types/jsrsasign@npm:10.5.12"
-  checksum: cd35b7ab0e57c8dff9d940dbd40bb68287338c74e3e5cb5e21364f3285b58149c2902a0fd1ee9940e56e28d47a59cdbe6f843d51163607ca840ad61434bb3b9f
+"@types/jsrsasign@npm:10.5.13":
+  version: 10.5.13
+  resolution: "@types/jsrsasign@npm:10.5.13"
+  checksum: 2b3a737668dbea8c47c5107fd48f06a039db723259dfd67e3878e2d9fad0cf64d4906dbc168116ae8dc94fcd026b95cddb4a18774c01e811aacc69c8adfa4fc2
   languageName: node
   linkType: hard
 
@@ -5094,7 +5094,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/jsrsasign": 10.5.12
+    "@types/jsrsasign": 10.5.13
     "@types/node": ^20.1.0
     "@types/rimraf": ^3.0.2
     jest: ^29.2.1
