@@ -13,7 +13,7 @@
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
-    "@wireapp/core-crypto": "1.0.0-rc.48",
+    "@wireapp/core-crypto": "1.0.0-rc.50",
     "@wireapp/cryptobox": "12.8.0",
     "@wireapp/priority-queue": "workspace:^",
     "@wireapp/promise-queue": "workspace:^",
@@ -61,6 +61,6 @@
     "test:coverage": "jest --coverage",
     "watch": "tsc --watch"
   },
-  "version": "45.2.6",
+  "version": "45.2.9",
   "gitHead": "5339f01fe01ef0871da8c8bc8662fbe9e604754a"
 }
