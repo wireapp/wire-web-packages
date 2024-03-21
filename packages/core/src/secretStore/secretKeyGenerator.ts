@@ -58,13 +58,13 @@ export async function generateSecretKey({
       key = await crypto.subtle.generateKey(
         {
           name: 'AES-GCM',
-          length: 256,
+          length: keySize * 8,
         },
         true,
         ['encrypt', 'decrypt'],
       );
-      key = await crypto.subtle.exportKey('raw', key);
-      await secretsDb.saveSecretValue(keyId, new Uint8Array(key));
+      key = new Uint8Array(await crypto.subtle.exportKey('raw', key));
+      await secretsDb.saveSecretValue(keyId, key);
     }
     return {key, deleteKey: () => secretsDb.deleteSecretValue(keyId)};
   } catch (error) {
