@@ -41,7 +41,7 @@
     "jest-environment-jsdom": "^29.2.1",
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
-    "rimraf": "3.0.2",
+    "rimraf": "5.0.5",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.0.4"
   },
