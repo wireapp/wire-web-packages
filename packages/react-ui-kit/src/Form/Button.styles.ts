@@ -39,8 +39,6 @@ const buttonSecondaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isAc
     color: theme.general.primaryColor,
   };
 
-  console.log('[Button.styles.ts] przemvs isActive', isActive);
-
   return {
     border: `1px solid ${theme.IconButton.primaryBorderColor}`,
 
