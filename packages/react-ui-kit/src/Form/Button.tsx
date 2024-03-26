@@ -17,12 +17,13 @@
  *
  */
 
+import {buttonStyle} from './Button.styles';
+
 import {COLOR} from '../Identity';
 import {Theme} from '../Layout';
 import {Loading} from '../Misc';
 import {TextProps, filterTextProps} from '../Text';
 import {filterProps} from '../util';
-import {buttonStyle} from './Button.styles';
 
 export enum ButtonVariant {
   PRIMARY = 'primary',
