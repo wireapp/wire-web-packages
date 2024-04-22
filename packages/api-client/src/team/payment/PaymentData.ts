@@ -340,7 +340,7 @@ export type Subscription = {
     save_default_payment_method: string;
   };
   pending_invoice_item_interval: object;
-  pending_setup_intent: object;
+  pending_setup_intent: null | {status: string; client_secret: string};
   pending_update: object;
   schedule: object;
   start_date: number;
