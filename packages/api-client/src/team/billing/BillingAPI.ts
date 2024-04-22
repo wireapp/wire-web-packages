@@ -28,6 +28,7 @@ import {PlanData, PlanInterval} from './PlanData';
 import {SupportedCurrency} from './SupportedCurrency';
 
 import {HttpClient} from '../../http';
+import {Subscription} from '../payment';
 
 export class BillingAPI {
   public static readonly DEFAULT_INVOICES_CHUNK_SIZE = 10;
@@ -136,14 +137,14 @@ export class BillingAPI {
     return response.data;
   }
 
-  public async subscribe(teamId: string, planId: string, paymentMethod: string): Promise<PlanData> {
+  public async subscribe(teamId: string, planId: string, paymentMethod: string) {
     const config: AxiosRequestConfig = {
       data: {planId, paymentMethod},
       method: 'post',
       url: `${BillingAPI.URL.TEAMS}/${teamId}/${BillingAPI.URL.BILLING}/subscription`,
     };
 
-    const response = await this.client.sendJSON<PlanData>(config);
+    const response = await this.client.sendJSON<Subscription>(config);
     return response.data;
   }
 
