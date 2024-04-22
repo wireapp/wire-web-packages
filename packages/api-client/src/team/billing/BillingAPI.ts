@@ -78,10 +78,10 @@ export class BillingAPI {
     return response.data;
   }
 
-  public async putCard(teamId: string, stripeToken: string): Promise<CardData> {
+  public async putCard(teamId: string, paymentMethodId: string): Promise<CardData> {
     const config: AxiosRequestConfig = {
       data: {
-        stripeToken,
+        paymentMethod: paymentMethodId,
       },
       method: 'put',
       url: `${BillingAPI.URL.TEAMS}/${teamId}/${BillingAPI.URL.BILLING}/${BillingAPI.URL.CARD}`,
@@ -130,6 +130,17 @@ export class BillingAPI {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${BillingAPI.URL.TEAMS}/${teamId}/${BillingAPI.URL.BILLING}/${BillingAPI.URL.PLAN}`,
+    };
+
+    const response = await this.client.sendJSON<PlanData>(config);
+    return response.data;
+  }
+
+  public async subscribe(teamId: string, planId: string, paymentMethod: string): Promise<PlanData> {
+    const config: AxiosRequestConfig = {
+      data: {planId, paymentMethod},
+      method: 'post',
+      url: `${BillingAPI.URL.TEAMS}/${teamId}/${BillingAPI.URL.BILLING}/subscription`,
     };
 
     const response = await this.client.sendJSON<PlanData>(config);
