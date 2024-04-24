@@ -44,6 +44,11 @@ function createUserId() {
   return {id: randomUUID(), domain: ''};
 }
 
+const defaultMLSInitConfig: InitClientOptions = {
+  ciphersuites: [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
+  defaultCiphersuite: Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519,
+};
+
 const createMLSService = async () => {
   const apiClient = new APIClient();
   const mockCoreCrypto = {
@@ -76,12 +81,8 @@ const createMLSService = async () => {
 
   const mlsService = new MLSService(apiClient, mockCoreCrypto, mockedDb, recurringTaskScheduler);
 
+  mlsService['_config'] = {...defaultMLSInitConfig, nbKeyPackages: 100, keyingMaterialUpdateThreshold: 1};
   return [mlsService, {apiClient, coreCrypto: mockCoreCrypto, recurringTaskScheduler}] as const;
-};
-
-const defaultMLSInitConfig: InitClientOptions = {
-  ciphersuites: [Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256],
-  defaultCiphersuite: Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256,
 };
 
 describe('MLSService', () => {
