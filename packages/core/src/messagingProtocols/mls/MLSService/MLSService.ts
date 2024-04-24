@@ -69,7 +69,9 @@ import {generateMLSDeviceId} from '../utils/MLSId';
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 interface MLSConfig {
+  /** List of ciphersuites that could be used for MLS */
   ciphersuites: Ciphersuite[];
+  /** preferred ciphersuite to use */
   defaultCiphersuite: Ciphersuite;
   /**
    * (milliseconds) period of time between automatic updates of the keying material (30 days by default)
