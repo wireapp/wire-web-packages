@@ -99,7 +99,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   }
 
   public isE2EIEnabled(): Promise<boolean> {
-    return this.coreCryptoClient.e2eiIsEnabled(this.mlsService.config.cipherSuite);
+    return this.coreCryptoClient.e2eiIsEnabled(this.mlsService.config.defaultCiphersuite);
   }
 
   public async getAllGroupUsersIdentities(

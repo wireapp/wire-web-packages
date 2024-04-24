@@ -28,10 +28,10 @@ import {BackendError, BackendErrorLabel, StatusCode} from '@wireapp/api-client/l
 import {randomUUID} from 'crypto';
 
 import {APIClient} from '@wireapp/api-client';
-import {CommitBundle, CoreCrypto, DecryptedMessage} from '@wireapp/core-crypto';
+import {Ciphersuite, CommitBundle, CoreCrypto, DecryptedMessage} from '@wireapp/core-crypto';
 
 import {CoreCryptoMLSError} from './CoreCryptoMLSError';
-import {MLSService} from './MLSService';
+import {InitClientOptions, MLSService} from './MLSService';
 
 import {AddUsersFailure, AddUsersFailureReasons} from '../../../conversation';
 import {openDB} from '../../../storage/CoreDB';
@@ -74,9 +74,14 @@ const createMLSService = async () => {
     },
   });
 
-  const mlsService = new MLSService(apiClient, mockCoreCrypto, mockedDb, recurringTaskScheduler, {});
+  const mlsService = new MLSService(apiClient, mockCoreCrypto, mockedDb, recurringTaskScheduler);
 
   return [mlsService, {apiClient, coreCrypto: mockCoreCrypto, recurringTaskScheduler}] as const;
+};
+
+const defaultMLSInitConfig: InitClientOptions = {
+  ciphersuites: [Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256],
+  defaultCiphersuite: Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256,
 };
 
 describe('MLSService', () => {
@@ -280,7 +285,7 @@ describe('MLSService', () => {
       jest.spyOn(apiClient.api.client, 'putClient').mockResolvedValueOnce(undefined);
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(mlsService.config.nbKeyPackages);
 
-      await mlsService.initClient(mockUserId, mockClient);
+      await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 
       expect(coreCrypto.mlsInit).toHaveBeenCalled();
       expect(apiClient.api.client.putClient).toHaveBeenCalledWith(mockClientId, expect.anything());
@@ -299,10 +304,10 @@ describe('MLSService', () => {
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
       jest
         .spyOn(apiClient.api.client, 'getMLSKeyPackageCount')
-        .mockResolvedValueOnce(mlsService.config.minRequiredNumberOfAvailableKeyPackages - 1);
+        .mockResolvedValueOnce(mlsService['minRequiredKeyPackages'] - 1);
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
 
-      await mlsService.initClient(mockUserId, mockClient);
+      await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 
       expect(coreCrypto.mlsInit).toHaveBeenCalled();
       expect(apiClient.api.client.uploadMLSKeyPackages).toHaveBeenCalledWith(mockClientId, expect.anything());
@@ -323,7 +328,7 @@ describe('MLSService', () => {
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages');
       jest.spyOn(apiClient.api.client, 'putClient');
 
-      await mlsService.initClient(mockUserId, mockClient);
+      await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 
       expect(coreCrypto.mlsInit).toHaveBeenCalled();
       expect(apiClient.api.client.uploadMLSKeyPackages).not.toHaveBeenCalled();
@@ -494,7 +499,7 @@ describe('MLSService', () => {
       const mockedClientKeyPackages = [new Uint8Array()];
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
 
-      const numberOfKeysBelowThreshold = mlsService.config.minRequiredNumberOfAvailableKeyPackages - 1;
+      const numberOfKeysBelowThreshold = mlsService['minRequiredKeyPackages'] - 1;
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(numberOfKeysBelowThreshold);
       jest.spyOn(coreCrypto, 'clientValidKeypackagesCount').mockResolvedValueOnce(numberOfKeysBelowThreshold);
 
@@ -530,7 +535,7 @@ describe('MLSService', () => {
       const mockedClientKeyPackages = [new Uint8Array()];
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
 
-      const numberOfKeysAboveThreshold = mlsService.config.minRequiredNumberOfAvailableKeyPackages + 1;
+      const numberOfKeysAboveThreshold = mlsService['minRequiredKeyPackages'] + 1;
       jest.spyOn(coreCrypto, 'clientValidKeypackagesCount').mockResolvedValueOnce(numberOfKeysAboveThreshold);
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(numberOfKeysAboveThreshold);
 
@@ -566,8 +571,8 @@ describe('MLSService', () => {
       const mockedClientKeyPackages = [new Uint8Array()];
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
 
-      const numberOfKeysBelowThreshold = mlsService.config.minRequiredNumberOfAvailableKeyPackages - 1;
-      const numberOfKeysAboveThreshold = mlsService.config.minRequiredNumberOfAvailableKeyPackages + 1;
+      const numberOfKeysBelowThreshold = mlsService['minRequiredKeyPackages'] - 1;
+      const numberOfKeysAboveThreshold = mlsService['minRequiredKeyPackages'] + 1;
 
       jest.spyOn(coreCrypto, 'clientValidKeypackagesCount').mockResolvedValueOnce(numberOfKeysBelowThreshold);
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(numberOfKeysAboveThreshold);
