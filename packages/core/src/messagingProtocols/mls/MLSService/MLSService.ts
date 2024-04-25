@@ -161,7 +161,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       userAuthorize: async () => true,
     });
 
-    const isFreshMLSSelfClient = !isMLSDevice(client);
+    const isFreshMLSSelfClient = !this.isInitializedMLSClient(client);
     const shouldinitIdentity = !(isFreshMLSSelfClient && skipInitIdentity);
 
     if (shouldinitIdentity) {
@@ -174,6 +174,14 @@ export class MLSService extends TypedEventEmitter<Events> {
       this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
     }
   }
+
+  /**
+   * returns true if the client has a valid MLS identity in regard of the default ciphersuite set
+   * @param client the client to check
+   */
+  public isInitializedMLSClient = async (client: RegisteredClient) => {
+    return isMLSDevice(client, this.config.defaultCiphersuite);
+  };
 
   private async getCredentialType() {
     return (await this.coreCryptoClient.e2eiIsEnabled(this.config.defaultCiphersuite))
@@ -979,7 +987,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     this.dispatchNewCrlDistributionPoints(rotateBundle);
     // upload the clients public keys
-    if (!isMLSDevice(client)) {
+    if (!this.isInitializedMLSClient(client)) {
       // we only upload public keys for the initial certification process if the device is not already a registered MLS device.
       await this.uploadMLSPublicKeys(client);
     }
