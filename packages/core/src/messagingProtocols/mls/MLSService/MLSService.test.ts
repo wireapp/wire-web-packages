@@ -270,6 +270,92 @@ describe('MLSService', () => {
     });
   });
 
+  describe('isInitializedMLSClient', () => {
+    it.each([
+      [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
+      [Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256],
+      [Ciphersuite.MLS_128_DHKEMX25519_CHACHA20POLY1305_SHA256_Ed25519],
+      [Ciphersuite.MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448],
+      [Ciphersuite.MLS_256_DHKEMP521_AES256GCM_SHA512_P521],
+      [Ciphersuite.MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448],
+      [Ciphersuite.MLS_256_DHKEMP384_AES256GCM_SHA384_P384],
+      [Ciphersuite.MLS_128_X25519KYBER768DRAFT00_AES128GCM_SHA256_Ed25519],
+    ])('always return false for empty mls_public_keys (%d)', async ciphersuite => {
+      const [mlsService] = await createMLSService();
+
+      const mockClient = {mls_public_keys: {}} as unknown as RegisteredClient;
+
+      mlsService['_config'] = {
+        ...defaultMLSInitConfig,
+        defaultCiphersuite: ciphersuite,
+        nbKeyPackages: 100,
+        keyingMaterialUpdateThreshold: 1,
+      };
+
+      const isInitialized = mlsService.isInitializedMLSClient(mockClient);
+
+      expect(isInitialized).toBe(false);
+    });
+
+    it.each([
+      [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519, 'ed25519'],
+      [Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256, 'p256'],
+      [Ciphersuite.MLS_128_DHKEMX25519_CHACHA20POLY1305_SHA256_Ed25519, 'ed25519'],
+      [Ciphersuite.MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448, 'ed448'],
+      [Ciphersuite.MLS_256_DHKEMP521_AES256GCM_SHA512_P521, 'p521'],
+      [Ciphersuite.MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448, 'ed448'],
+      [Ciphersuite.MLS_256_DHKEMP384_AES256GCM_SHA384_P384, 'p384'],
+      [Ciphersuite.MLS_128_X25519KYBER768DRAFT00_AES128GCM_SHA256_Ed25519, 'ed25519'],
+    ])(
+      'returns true if there is a signature corresponding to the ciphersuite used (%d, %s)',
+      async (ciphersuite, signatureAlgo) => {
+        const [mlsService] = await createMLSService();
+
+        const mockClient = {mls_public_keys: {[signatureAlgo]: 'signature'}} as unknown as RegisteredClient;
+
+        mlsService['_config'] = {
+          ...defaultMLSInitConfig,
+          defaultCiphersuite: ciphersuite,
+          nbKeyPackages: 100,
+          keyingMaterialUpdateThreshold: 1,
+        };
+
+        const isInitialized = mlsService.isInitializedMLSClient(mockClient);
+
+        expect(isInitialized).toBe(true);
+      },
+    );
+
+    it.each([
+      [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519, 'p256'],
+      [Ciphersuite.MLS_128_DHKEMP256_AES128GCM_SHA256_P256, 'ed25519'],
+      [Ciphersuite.MLS_128_DHKEMX25519_CHACHA20POLY1305_SHA256_Ed25519, 'p256'],
+      [Ciphersuite.MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448, 'p384'],
+      [Ciphersuite.MLS_256_DHKEMP521_AES256GCM_SHA512_P521, 'ed448'],
+      [Ciphersuite.MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448, 'p256'],
+      [Ciphersuite.MLS_256_DHKEMP384_AES256GCM_SHA384_P384, 'p256'],
+      [Ciphersuite.MLS_128_X25519KYBER768DRAFT00_AES128GCM_SHA256_Ed25519, 'p384'],
+    ])(
+      'returns false if there is a signature not corresponding to the ciphersuite used (%d, %s)',
+      async (ciphersuite, signatureAlgo) => {
+        const [mlsService] = await createMLSService();
+
+        const mockClient = {mls_public_keys: {[signatureAlgo]: 'signature'}} as unknown as RegisteredClient;
+
+        mlsService['_config'] = {
+          ...defaultMLSInitConfig,
+          defaultCiphersuite: ciphersuite,
+          nbKeyPackages: 100,
+          keyingMaterialUpdateThreshold: 1,
+        };
+
+        const isInitialized = mlsService.isInitializedMLSClient(mockClient);
+
+        expect(isInitialized).toBe(false);
+      },
+    );
+  });
+
   describe('initClient', () => {
     it('uploads public key only if it was not yet defined on client entity', async () => {
       const [mlsService, {apiClient, coreCrypto}] = await createMLSService();
