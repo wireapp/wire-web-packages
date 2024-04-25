@@ -179,9 +179,7 @@ export class MLSService extends TypedEventEmitter<Events> {
    * returns true if the client has a valid MLS identity in regard of the default ciphersuite set
    * @param client the client to check
    */
-  public isInitializedMLSClient = async (client: RegisteredClient) => {
-    return isMLSDevice(client, this.config.defaultCiphersuite);
-  };
+  public isInitializedMLSClient = (client: RegisteredClient) => isMLSDevice(client, this.config.defaultCiphersuite);
 
   private async getCredentialType() {
     return (await this.coreCryptoClient.e2eiIsEnabled(this.config.defaultCiphersuite))
