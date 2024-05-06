@@ -152,9 +152,10 @@ export class MLSService extends TypedEventEmitter<Events> {
     {skipInitIdentity, ...mlsConfig}: InitClientOptions,
   ) {
     this._config = {
-      ...mlsConfig,
       ...defaultConfig,
+      ...mlsConfig,
     };
+
     await this.coreCryptoClient.mlsInit(
       generateMLSDeviceId(userId, client.id),
       this.config.ciphersuites,
