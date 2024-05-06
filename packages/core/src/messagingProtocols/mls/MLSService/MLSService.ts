@@ -151,9 +151,14 @@ export class MLSService extends TypedEventEmitter<Events> {
     client: RegisteredClient,
     {skipInitIdentity, ...mlsConfig}: InitClientOptions,
   ) {
+    // filter out undefined values from mlsConfig
+    const filteredMLSConfig = Object.fromEntries(
+      Object.entries(mlsConfig).filter(([_, value]) => value !== undefined),
+    ) as typeof mlsConfig;
+
     this._config = {
       ...defaultConfig,
-      ...mlsConfig,
+      ...filteredMLSConfig,
     };
 
     await this.coreCryptoClient.mlsInit(
