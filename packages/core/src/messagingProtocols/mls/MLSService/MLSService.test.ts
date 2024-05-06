@@ -414,6 +414,38 @@ describe('MLSService', () => {
       expect(mlsService.config).toEqual(config);
     });
 
+    it('uses the default config value when provided with undefined by the consumer', async () => {
+      const [mlsService, {apiClient, coreCrypto}] = await createMLSService();
+
+      const mockUserId = {id: 'user-1', domain: 'local.zinfra.io'};
+      const mockClientId = 'client-1';
+      const mockClient = {mls_public_keys: {}, id: mockClientId} as unknown as RegisteredClient;
+
+      apiClient.context = {clientType: ClientType.PERMANENT, clientId: mockClientId, userId: ''};
+
+      const mockedClientPublicKey = new Uint8Array();
+
+      jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValueOnce(mockedClientPublicKey);
+      jest.spyOn(apiClient.api.client, 'putClient').mockResolvedValueOnce(undefined);
+      jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(mlsService.config.nbKeyPackages);
+
+      const config = {
+        ...defaultMLSInitConfig,
+        nbKeyPackages: undefined,
+        keyingMaterialUpdateThreshold: TimeInMillis.DAY,
+      };
+
+      await mlsService.initClient(mockUserId, mockClient, config);
+
+      expect(coreCrypto.mlsInit).toHaveBeenCalledWith(
+        expect.any(Uint8Array),
+        [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
+        100,
+      );
+
+      expect(mlsService.config).toEqual({...config, nbKeyPackages: 100});
+    });
+
     it('uploads public key only if it was not yet defined on client entity', async () => {
       const [mlsService, {apiClient, coreCrypto}] = await createMLSService();
 
