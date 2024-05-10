@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish_all:
+  generate_test_report:
     runs-on: ubuntu-latest
 
     steps:
