@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
 
       - name: Authenticate git clone
@@ -65,9 +65,6 @@ jobs:
         run: |
           set -o pipefail
           yarn test:all -- --coverage --coverage_reporters=lcov 2>&1 | tee ./unit-tests.log
-
-      - name: List files in directory
-        run: ls -la
 
       - name: Save test coverage results
         uses: actions/upload-artifact@v4
