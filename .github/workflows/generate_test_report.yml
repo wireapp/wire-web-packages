@@ -1,6 +1,8 @@
 name: Generate test reports
 
 on:
+  push:
+    branches: [chore/generate-test-report-action]
   workflow_dispatch:
 
 jobs:
