@@ -67,6 +67,9 @@ jobs:
           set -o pipefail
           yarn test -- --coverage --coverage_reporters=lcov 2>&1 | tee ./unit-tests.log
 
+      - name: List files in directory
+        run: ls -la
+
       - name: Save test coverage results
         uses: actions/upload-artifact@v4
         with:
