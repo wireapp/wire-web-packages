@@ -62,7 +62,6 @@ jobs:
         run: yarn dist
 
       - name: Test
-        if: ${{ inputs.test }}
         run: |
           set -o pipefail
           yarn test -- --coverage --coverage_reporters=lcov 2>&1 | tee ./unit-tests.log
@@ -74,4 +73,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
-          path: unit-tests.log
+          path: ./unit-tests.log
