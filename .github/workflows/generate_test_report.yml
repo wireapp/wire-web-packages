@@ -39,10 +39,6 @@ jobs:
           echo -e "HOME = ${HOME}"
           echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
 
-      - name: Skip CI
-        if: env.BRANCH_NAME != 'main'
-        uses: andymckay/cancel-action@0.4
-
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
