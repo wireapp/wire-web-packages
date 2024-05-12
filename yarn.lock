@@ -4218,10 +4218,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-env@npm:1.18.4":
-  version: 1.18.4
-  resolution: "@types/webpack-env@npm:1.18.4"
-  checksum: f195b3ae974ac3b631477b57737dad7b6c44ecca86770cf3c29f284e02961c9f2dfc619e3e253d8c23966864cb052b1e8437e9834ede32ac97972e6e2235bb51
+"@types/webpack-env@npm:1.18.5":
+  version: 1.18.5
+  resolution: "@types/webpack-env@npm:1.18.5"
+  checksum: 4ca8eb4c44e1e1807c3e245442fce7aaf2816a163056de9436bbac44cc47c8bc5b1c9a330dc05748d6616431b1fb5bd5379733fb1da0b78d03c59f4ec824c184
   languageName: node
   linkType: hard
 
@@ -5058,7 +5058,7 @@ __metadata:
     "@types/react": ^18.0.25
     "@types/react-dom": ^18.0.8
     "@types/rimraf": ^3.0.2
-    "@types/webpack-env": 1.18.4
+    "@types/webpack-env": 1.18.5
     babel-jest: 29.7.0
     babel-loader: 9.1.3
     color: 4.2.3
