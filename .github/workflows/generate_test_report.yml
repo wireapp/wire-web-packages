@@ -1,9 +1,12 @@
 name: Generate test reports
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit SHA'
+        required: true
+        type: string
 
 jobs:
   generate_test_report:
@@ -13,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.5
         with:
-          fetch-depth: 0
+          ref: ${{ inputs.commit }}
 
       - name: Set environment variables
         run: |
