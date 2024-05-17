@@ -4741,7 +4741,7 @@ __metadata:
     "@types/ws": 8.5.10
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.46.0
+    "@wireapp/protocol-messaging": 1.48.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.6.8
@@ -4863,7 +4863,7 @@ __metadata:
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.46.0
+    "@wireapp/protocol-messaging": 1.48.0
     "@wireapp/store-engine": "workspace:*"
     axios: 1.6.8
     bazinga64: "workspace:^"
@@ -5022,15 +5022,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/protocol-messaging@npm:1.46.0":
-  version: 1.46.0
-  resolution: "@wireapp/protocol-messaging@npm:1.46.0"
+"@wireapp/protocol-messaging@npm:1.48.0":
+  version: 1.48.0
+  resolution: "@wireapp/protocol-messaging@npm:1.48.0"
   dependencies:
     long: 5.2.0
-    protobufjs: 7.2.4
+    protobufjs: 7.2.5
     protobufjs-cli: 1.1.2
     typescript: 4.8.4
-  checksum: b4a75b69f0c1b03962f7215aa25da1172bc511f748e463d1aba675c71fc4482d0e5dd70bf267eef833a5fc24a9c9b65c12b0538a3cd113e4e0227335e6675e27
+  checksum: bb8929c5395a629b85eeae36dce601cf0b5aa09de11163a31ea2f21cbe843c98d18191a48a8fee4826593e9c76c94a3b4f59c35fee7d3c532c749cc4f1d4cc8c
   languageName: node
   linkType: hard
 
@@ -15030,9 +15030,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.2.4":
-  version: 7.2.4
-  resolution: "protobufjs@npm:7.2.4"
+"protobufjs@npm:7.2.5":
+  version: 7.2.5
+  resolution: "protobufjs@npm:7.2.5"
   dependencies:
     "@protobufjs/aspromise": ^1.1.2
     "@protobufjs/base64": ^1.1.2
@@ -15046,7 +15046,7 @@ __metadata:
     "@protobufjs/utf8": ^1.1.0
     "@types/node": ">=13.7.0"
     long: ^5.0.0
-  checksum: a952cdf2a5e5250c16ae651b570849b6f5b20a5475c3eef63ffb290ad239aa2916adfc1cc676f7fc93c69f48113df268761c0c246f7f023118c85bdd1a170044
+  checksum: 3770a072114061faebbb17cfd135bc4e187b66bc6f40cd8bac624368b0270871ec0cfb43a02b9fb4f029c8335808a840f1afba3c2e7ede7063b98ae6b98a703f
   languageName: node
   linkType: hard
 

@@ -2,7 +2,7 @@
   "dependencies": {
     "@wireapp/api-client": "workspace:^",
     "@wireapp/core": "workspace:^",
-    "@wireapp/protocol-messaging": "1.38.0",
+    "@wireapp/protocol-messaging": "1.48.0",
     "@wireapp/store-engine": "workspace:^",
     "file-type": "16.5.4",
     "logdown": "^3.3.1",
