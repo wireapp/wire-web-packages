@@ -31,7 +31,7 @@ import {Account} from '@wireapp/core';
 import {PayloadBundle, PayloadBundleType} from '@wireapp/core/lib/conversation/';
 import {CRUDEngine} from '@wireapp/store-engine';
 import logdown from 'logdown';
-import UUID from 'uuidjs';
+import {v4 as uuidv4} from 'uuid';
 
 import {BotConfig, BotCredentials} from './Interfaces';
 import {MessageHandler} from './MessageHandler';
@@ -62,7 +62,7 @@ export class Bot extends MessageHandler {
   }
 
   public addHandler(handler: MessageHandler): void {
-    this.handlers.set(UUID.genV4().toString(), handler);
+    this.handlers.set(uuidv4(), handler);
   }
 
   public removeHandler(key: string): void {
