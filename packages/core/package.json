@@ -27,7 +27,7 @@
     "idb": "8.0.0",
     "logdown": "3.3.1",
     "long": "^5.2.0",
-    "uuidjs": "4.2.13",
+    "uuidjs": "5.1.0",
     "zod": "3.23.8"
   },
   "devDependencies": {

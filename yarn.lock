@@ -4871,7 +4871,7 @@ __metadata:
     nock: 13.5.4
     rimraf: 5.0.7
     typescript: ^5.0.4
-    uuidjs: 4.2.13
+    uuidjs: 5.1.0
     zod: 3.23.8
   languageName: unknown
   linkType: soft
@@ -5093,7 +5093,7 @@ __metadata:
     rimraf: 5.0.7
     ts-node: ^10.9.1
     typescript: ^5.0.4
-    uuidjs: 4.2.13
+    uuidjs: 5.1.0
   peerDependencies:
     "@wireapp/store-engine": 5.x.x
   languageName: unknown
@@ -18496,12 +18496,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuidjs@npm:4.2.13":
-  version: 4.2.13
-  resolution: "uuidjs@npm:4.2.13"
+"uuidjs@npm:5.1.0":
+  version: 5.1.0
+  resolution: "uuidjs@npm:5.1.0"
   bin:
-    uuidjs: bin/cli.js
-  checksum: 67d4a32f6abbe68f692d57d9524aa01e2959a30dadf6e47779a6f31807dc89da057da349e02a4ded08b8f53bbbe29bb3a46fb667a59d5ed9627d5eebef55a6ad
+    uuidjs: dist/cli.js
+  checksum: 5f372264ff371de4a7e3df206cc5774e07643e38f78e66f4baf79b13e61f80a4d777724ff5c2753bc67f7f0eeab85004c276a4fb1ce8e7b4810b208aaeb5c7c1
   languageName: node
   linkType: hard
 
