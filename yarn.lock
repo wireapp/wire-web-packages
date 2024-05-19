@@ -8863,9 +8863,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:48.2.4":
-  version: 48.2.4
-  resolution: "eslint-plugin-jsdoc@npm:48.2.4"
+"eslint-plugin-jsdoc@npm:48.2.5":
+  version: 48.2.5
+  resolution: "eslint-plugin-jsdoc@npm:48.2.5"
   dependencies:
     "@es-joy/jsdoccomment": ~0.43.0
     are-docs-informative: ^0.0.2
@@ -8874,11 +8874,11 @@ __metadata:
     escape-string-regexp: ^4.0.0
     esquery: ^1.5.0
     is-builtin-module: ^3.2.1
-    semver: ^7.6.0
+    semver: ^7.6.1
     spdx-expression-parse: ^4.0.0
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
-  checksum: decbb8c99a992b35b3421d25bf2d5d35c971519f286cadd72bf0893f5c7ad1a3816de2d3801775aef7a6e087d4f3326b8b96810e6481d9e9face50d9359075c5
+  checksum: 8c274a471406ce9c3cd7911b20248c32700c04a3b423223bca2053f850fc43214e4a8d0f1a24b7cc0f9a777f4d4734d869c58b43fd7e0c7060f673f58459ae97
   languageName: node
   linkType: hard
 
@@ -16480,7 +16480,7 @@ __metadata:
     eslint-plugin-import: 2.29.1
     eslint-plugin-jest: 28.5.0
     eslint-plugin-jest-dom: ^5
-    eslint-plugin-jsdoc: 48.2.4
+    eslint-plugin-jsdoc: 48.2.5
     eslint-plugin-jsx-a11y: ^6.6.1
     eslint-plugin-no-unsanitized: 4.0.2
     eslint-plugin-prettier: ^5
@@ -16701,7 +16701,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.6.2":
+"semver@npm:^7.6.1, semver@npm:^7.6.2":
   version: 7.6.2
   resolution: "semver@npm:7.6.2"
   bin:
