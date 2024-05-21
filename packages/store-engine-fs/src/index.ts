@@ -106,7 +106,7 @@ export class FileEngine implements CRUDEngine {
       }
 
       const filePath = this.resolvePath(tableName, primaryKey);
-      const newEntity: string = JSON.stringify(entity);
+      const newEntity: string = typeof entity === 'object' ? JSON.stringify(entity) : entity.toString();
 
       try {
         await fs.writeFile(filePath, newEntity, {flag: 'wx'});
