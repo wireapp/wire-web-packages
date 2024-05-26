@@ -4831,7 +4831,7 @@ __metadata:
     cross-env: 7.0.3
     deepmerge-ts: 6.0.0
     dotenv-defaults: 5.0.2
-    fake-indexeddb: ^5.0.2
+    fake-indexeddb: ^6.0.0
     hash.js: 1.1.7
     http-status-codes: 2.3.0
     idb: 8.0.0
@@ -5059,7 +5059,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:^"
     core-js: ^3.36.0
     dexie: ">3.2.0"
-    fake-indexeddb: ^5.0.2
+    fake-indexeddb: ^6.0.0
     jest: ^29.2.1
     logdown: 3.3.1
     rimraf: 5.0.7
@@ -9154,10 +9154,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fake-indexeddb@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "fake-indexeddb@npm:5.0.2"
-  checksum: df4dc15c2f2b1a04429461fdc4da02bf25e9b84e2bbfa2ffcf4bb87764f75eef772bb36b245547538796f372c5190eb06cdaa391c7c5f5662b19667f949106cb
+"fake-indexeddb@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "fake-indexeddb@npm:6.0.0"
+  checksum: c55bb1f54c1c910a6ca9e18b376ebecc51a29eceb829550d415aa34c2e246730a76dd35dc4fd6d8ae5c5790b9b4f180859e9457bcb73f2d167cc87aa04b6201e
   languageName: node
   linkType: hard
 
