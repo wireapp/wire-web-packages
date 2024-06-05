@@ -48,7 +48,7 @@ export class ReconnectingWebsocket {
   private static readonly RECONNECTING_OPTIONS: Options = {
     WebSocket: WebSocketNode,
     connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
-    debug: false,
+    debug: true,
     maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
     maxRetries: Infinity,
     minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
@@ -173,16 +173,10 @@ export class ReconnectingWebsocket {
     return this.socket ? this.socket.readyState : WEBSOCKET_STATE.CLOSED;
   }
 
-  public disconnect(reason = 'Closed by client', keepClosed = true): void {
+  public disconnect(reason = 'Closed by client'): void {
     if (this.socket) {
       this.logger.info(`Disconnecting from WebSocket (reason: "${reason}")`);
-      // TODO: 'any' can be removed once this issue is resolved:
-      // https://github.com/pladaria/reconnecting-websocket/issues/44
-      (this.socket as any).close(CloseEventCode.NORMAL_CLOSURE, reason, {
-        delay: 0,
-        fastClose: true,
-        keepClosed,
-      });
+      this.socket.close(CloseEventCode.NORMAL_CLOSURE, reason);
     }
   }
 
