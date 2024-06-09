@@ -2122,6 +2122,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@inquirer/figures@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@inquirer/figures@npm:1.0.3"
+  checksum: ca83d9e2a02ed5309b3df5642d2194fde24e6f89779339c63304f2570f36f3bc431236a93db7fa412765a06f01c765974b06b1ed8b9aed881be46f2cbb67f9c7
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -2511,15 +2518,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/changed@npm:3.4.0":
-  version: 3.4.0
-  resolution: "@lerna-lite/changed@npm:3.4.0"
+"@lerna-lite/changed@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/changed@npm:3.5.1"
   dependencies:
-    "@lerna-lite/cli": 3.4.0
-    "@lerna-lite/core": 3.4.0
-    "@lerna-lite/list": 3.4.0
-    "@lerna-lite/listable": 3.4.0
-  checksum: a3c8c6ca94c7a2739dbf5c38e9c743c94e98372f1a4b0fd94945bb0dff21b4b08b5ddf25926197b6e160035e246adceaea34da8819fef0e44ee0f8f6a0a179f3
+    "@lerna-lite/cli": 3.5.1
+    "@lerna-lite/core": 3.5.1
+    "@lerna-lite/list": 3.5.1
+    "@lerna-lite/listable": 3.5.1
+  checksum: 84e91b0ed8ebf367bc328efec223ce5a52803aee34200cc12b74b73bfb45d11fbc9ac2b1ab59c7db74c43d74659e1c35bcc874a61f8e19831bccdea5f459594f
   languageName: node
   linkType: hard
 
@@ -2551,6 +2558,37 @@ __metadata:
   bin:
     lerna: dist/cli.js
   checksum: 812fb8a0f0d70f48f3f893787e158df4aafa1af5ae8df926214b870f3bc42bb3830a624dabfae642eb6e67d2b58389919b581a29743b3f9522cd34fbb4fbe702
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/cli@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/cli@npm:3.5.1"
+  dependencies:
+    "@lerna-lite/core": 3.5.1
+    "@lerna-lite/init": 3.5.1
+    dedent: ^1.5.3
+    dotenv: ^16.4.5
+    import-local: ^3.1.0
+    load-json-file: ^7.0.1
+    npmlog: ^7.0.1
+    yargs: ^17.7.2
+  peerDependenciesMeta:
+    "@lerna-lite/exec":
+      optional: true
+    "@lerna-lite/list":
+      optional: true
+    "@lerna-lite/publish":
+      optional: true
+    "@lerna-lite/run":
+      optional: true
+    "@lerna-lite/version":
+      optional: true
+    "@lerna-lite/watch":
+      optional: true
+  bin:
+    lerna: dist/cli.js
+  checksum: 4cd0b082f15fe024d97da49e471f93fb84af404672432b0bcb7f43f93b48c30520a84fee52134012ab13350e37d24960794ccb9af9bbfd95a69f30617ad4a116
   languageName: node
   linkType: hard
 
@@ -2588,6 +2626,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/core@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/core@npm:3.5.1"
+  dependencies:
+    "@npmcli/run-script": ^8.1.0
+    chalk: ^5.3.0
+    clone-deep: ^4.0.1
+    config-chain: ^1.1.13
+    cosmiconfig: ^9.0.0
+    dedent: ^1.5.3
+    execa: ^8.0.1
+    fs-extra: ^11.2.0
+    glob-parent: ^6.0.2
+    globby: ^14.0.1
+    inquirer: ^9.2.23
+    is-ci: ^3.0.1
+    json5: ^2.2.3
+    load-json-file: ^7.0.1
+    minimatch: ^9.0.4
+    npm-package-arg: ^11.0.2
+    npmlog: ^7.0.1
+    p-map: ^7.0.2
+    p-queue: ^8.0.1
+    resolve-from: ^5.0.0
+    semver: ^7.6.2
+    slash: ^5.1.0
+    strong-log-transformer: ^2.1.0
+    write-file-atomic: ^5.0.1
+    write-json-file: ^5.0.0
+    write-package: ^7.0.1
+  checksum: e8f2528daf909eef9e88c6a65501675d869a3e968078ad43e75e25fcfa48b24a7b428a7474250c4b003a4ae790959e284590cf31dca9ee6e4f4b6032fdaab1be
+  languageName: node
+  linkType: hard
+
 "@lerna-lite/filter-packages@npm:3.4.0":
   version: 3.4.0
   resolution: "@lerna-lite/filter-packages@npm:3.4.0"
@@ -2596,6 +2668,17 @@ __metadata:
     multimatch: ^7.0.0
     npmlog: ^7.0.1
   checksum: 1d30b4274f7d91db621dab83d8733593811531175199dcca74904a6b41c1e48a3cbf35c35513294469b0a356d378bc3608086bb8b70d22d43761d2375b874f28
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/filter-packages@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/filter-packages@npm:3.5.1"
+  dependencies:
+    "@lerna-lite/core": 3.5.1
+    multimatch: ^7.0.0
+    npmlog: ^7.0.1
+  checksum: 52932efa152e1105d16c5d69fd8ae7df6e3eb806327d15ed4d5e47f06afc3031330ebd5af8c8664ca1d7b4ce672ce256abbc306d3cf248187122a1600e1d6dc2
   languageName: node
   linkType: hard
 
@@ -2611,26 +2694,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:3.4.0":
-  version: 3.4.0
-  resolution: "@lerna-lite/list@npm:3.4.0"
+"@lerna-lite/init@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/init@npm:3.5.1"
   dependencies:
-    "@lerna-lite/cli": 3.4.0
-    "@lerna-lite/core": 3.4.0
-    "@lerna-lite/filter-packages": 3.4.0
-    "@lerna-lite/listable": 3.4.0
-  checksum: cc3a682d17e85f7d0fef5cfb0dacd95e74675a24ceaeba1bfdfea8b8038c75d97948ff0f77ddb29a34219459ea0cb87c4aaa4f4ddc2b75e451076e6e1961d20f
+    "@lerna-lite/core": 3.5.1
+    fs-extra: ^11.2.0
+    p-map: ^7.0.2
+    write-json-file: ^5.0.0
+  checksum: 7e03e90468dc7b49e37abf79e26e9e3997985159ec5622b6e081d54c68463336fe7b07fe9a2d356bd0c7ea3356d12cc0c7678da173080685eee503d87b00ddd0
   languageName: node
   linkType: hard
 
-"@lerna-lite/listable@npm:3.4.0":
-  version: 3.4.0
-  resolution: "@lerna-lite/listable@npm:3.4.0"
+"@lerna-lite/list@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/list@npm:3.5.1"
   dependencies:
-    "@lerna-lite/core": 3.4.0
+    "@lerna-lite/cli": 3.5.1
+    "@lerna-lite/core": 3.5.1
+    "@lerna-lite/filter-packages": 3.5.1
+    "@lerna-lite/listable": 3.5.1
+  checksum: 3ae981200c3a3c51a0e275004165aefcefb7dda12be8818fa8cde7ea963cedf16478bfad34dd6ed4a46b5597b1fea7e066928a23df11e5b2e31a253562afe857
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/listable@npm:3.5.1":
+  version: 3.5.1
+  resolution: "@lerna-lite/listable@npm:3.5.1"
+  dependencies:
+    "@lerna-lite/core": 3.5.1
     chalk: ^5.3.0
     columnify: ^1.6.0
-  checksum: 1e6e85279cae4f9d8165695f60b5b90659226fc570b4a471c941073c946f4cc3dbfcb3a1e50a1c33f1f7dccb0b3abfd69f33b4c353e92709701a70f2e7fc4721
+  checksum: 3d105745d11f739a794495966f985d6c62cd3d00495ed8a62a716840ac9cbcb6b346d2fa138c815894ef9ab937649811aef51e50485a53c3365deddf6561769c
   languageName: node
   linkType: hard
 
@@ -10853,6 +10948,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inquirer@npm:^9.2.23":
+  version: 9.2.23
+  resolution: "inquirer@npm:9.2.23"
+  dependencies:
+    "@inquirer/figures": ^1.0.3
+    "@ljharb/through": ^2.3.13
+    ansi-escapes: ^4.3.2
+    chalk: ^5.3.0
+    cli-cursor: ^3.1.0
+    cli-width: ^4.1.0
+    external-editor: ^3.1.0
+    lodash: ^4.17.21
+    mute-stream: 1.0.0
+    ora: ^5.4.1
+    run-async: ^3.0.0
+    rxjs: ^7.8.1
+    string-width: ^4.2.3
+    strip-ansi: ^6.0.1
+    wrap-ansi: ^6.2.0
+  checksum: d3d5c48b2c3e606b59bc0b825a0dc3805cd12b4068cf9bb17e5f05a43e512f28b280124f2b3e9e8f8845c1031fb92eca73be25e764c4522e02b48af08428117c
+  languageName: node
+  linkType: hard
+
 "internal-slot@npm:^1.0.5, internal-slot@npm:^1.0.7":
   version: 1.0.7
   resolution: "internal-slot@npm:1.0.7"
@@ -16325,7 +16443,7 @@ __metadata:
     "@babel/core": ^7.19.6
     "@babel/eslint-parser": ^7.19.1
     "@emotion/eslint-plugin": ^11.10.0
-    "@lerna-lite/changed": 3.4.0
+    "@lerna-lite/changed": 3.5.1
     "@lerna-lite/cli": 3.4.0
     "@lerna-lite/publish": 3.4.0
     "@lerna-lite/run": 3.4.0
