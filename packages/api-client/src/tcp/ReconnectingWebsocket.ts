@@ -49,7 +49,7 @@ export class ReconnectingWebsocket {
   private static readonly RECONNECTING_OPTIONS: Options = {
     WebSocket: WebSocketNode,
     connectionTimeout: TimeUtil.TimeInMillis.SECOND * 4,
-    debug: true,
+    debug: false,
     maxReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 10,
     maxRetries: Infinity,
     minReconnectionDelay: TimeUtil.TimeInMillis.SECOND * 4,
