@@ -84,6 +84,12 @@ export class ReconnectingWebsocket {
 
     this.hasUnansweredPing = false;
 
+    /**
+     * According to https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine, navigator.onLine attribute and 'online' and 'offline' events are not reliable enough (especially when it's truthy).
+     * We won't receive the 'offline' event when the system goes to sleep (e.g. closing the lid of a laptop).
+     * In this case navigator.onLine will still return true, but the WebSocket connection could be closed.
+     * To handle this, we need a custom approach to detect when the system goes to sleep and when it wakes up.
+     * **/
     onBackFromSleep({
       callback: () => {
         if (this.socket) {
