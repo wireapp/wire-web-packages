@@ -24,6 +24,7 @@ import {TimeUtil} from '@wireapp/commons';
 
 import * as buffer from '../shims/node/buffer';
 import {WebSocketNode} from '../shims/node/websocket';
+import {onBackFromSleep} from '../utils/BackFromSleepHandler';
 
 export enum CloseEventCode {
   NORMAL_CLOSURE = 1000,
@@ -82,6 +83,16 @@ export class ReconnectingWebsocket {
     }
 
     this.hasUnansweredPing = false;
+
+    onBackFromSleep({
+      callback: () => {
+        if (this.socket) {
+          this.logger.debug('Back from sleep, reconnecting WebSocket');
+          this.socket?.reconnect();
+        }
+      },
+      isDisconnected: () => this.getState() === WEBSOCKET_STATE.CLOSED,
+    });
   }
 
   private readonly internalOnError = (error: ErrorEvent) => {
