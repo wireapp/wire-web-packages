@@ -143,6 +143,7 @@ const [isOpen, setIsOpen] = React.useState(false);
         id="manyItemsSelect"
         options={[...selectOptions, ...selectOptions, ...selectOptions, ...selectOptions]}
         dataUieName="required-select"
+        defaultMenuIsOpen={true}
       />
     </Column>
   </Columns>
