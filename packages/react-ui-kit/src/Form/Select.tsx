@@ -121,7 +121,7 @@ export const Select = <IsMulti extends boolean = false, Group extends GroupBase<
         tabIndex={TabIndex.UNFOCUSABLE}
         isDisabled={disabled}
         hideSelectedOptions={false}
-        isSearchable={false}
+        isSearchable={isSearchable}
         isClearable={false}
         closeMenuOnSelect={!isMulti}
         isMulti={isMulti}
