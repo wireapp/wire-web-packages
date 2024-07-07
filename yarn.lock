@@ -3681,8 +3681,8 @@ __metadata:
   linkType: hard
 
 "@testing-library/dom@npm:^10.0.0":
-  version: 10.2.0
-  resolution: "@testing-library/dom@npm:10.2.0"
+  version: 10.3.1
+  resolution: "@testing-library/dom@npm:10.3.1"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
@@ -3692,7 +3692,7 @@ __metadata:
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.5.0
     pretty-format: ^27.0.2
-  checksum: ea2ce77f5777a6d00803bba938528d785c80aed8ca3f3d2c703b4ef6a697ef65b57773bb1f4363d893dde4e7e88f40ffb963f2a0fa1d9af7f49bee62034b24a7
+  checksum: 1afc3dc2ab742e15cf9560ec04bc7e493ad7644374d2bc6001a15542ed05c34fa6152a919cb170fc11e9a74602d8c7f31901f99af61ce25e76f20157b2e0805d
   languageName: node
   linkType: hard
 
