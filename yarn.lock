@@ -4968,7 +4968,7 @@ __metadata:
     ts-node: ^10.9.1
     typescript: ^5.0.4
     webpack: ^5.74.0
-    ws: 8.17.1
+    ws: 8.18.0
     zod: 3.23.8
   languageName: unknown
   linkType: soft
@@ -19850,7 +19850,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.17.1, ws@npm:^8.13.0, ws@npm:~8.17.1":
+"ws@npm:8.18.0":
+  version: 8.18.0
+  resolution: "ws@npm:8.18.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 91d4d35bc99ff6df483bdf029b9ea4bfd7af1f16fc91231a96777a63d263e1eabf486e13a2353970efc534f9faa43bdbf9ee76525af22f4752cbc5ebda333975
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.13.0, ws@npm:~8.17.1":
   version: 8.17.1
   resolution: "ws@npm:8.17.1"
   peerDependencies:
