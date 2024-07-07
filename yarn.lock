@@ -3090,6 +3090,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/version@npm:3.7.0":
+  version: 3.7.0
+  resolution: "@lerna-lite/version@npm:3.7.0"
+  dependencies:
+    "@lerna-lite/cli": 3.7.0
+    "@lerna-lite/core": 3.7.0
+    "@lerna-lite/npmlog": ^3.7.0
+    "@octokit/plugin-enterprise-rest": ^6.0.1
+    "@octokit/rest": ^21.0.0
+    chalk: ^5.3.0
+    conventional-changelog-angular: ^7.0.0
+    conventional-changelog-core: ^7.0.0
+    conventional-changelog-writer: ^7.0.1
+    conventional-commits-parser: ^5.0.0
+    conventional-recommended-bump: ^9.0.0
+    dedent: ^1.5.3
+    fs-extra: ^11.2.0
+    get-stream: ^9.0.1
+    git-url-parse: ^14.0.0
+    graceful-fs: ^4.2.11
+    is-stream: ^4.0.1
+    load-json-file: ^7.0.1
+    make-dir: ^5.0.0
+    minimatch: ^9.0.5
+    new-github-release-url: ^2.0.0
+    node-fetch: ^3.3.2
+    npm-package-arg: ^11.0.2
+    p-limit: ^6.0.0
+    p-map: ^7.0.2
+    p-pipe: ^4.0.0
+    p-reduce: ^3.0.0
+    pify: ^6.1.0
+    semver: ^7.6.2
+    slash: ^5.1.0
+    temp-dir: ^3.0.0
+    uuid: ^10.0.0
+    write-json-file: ^5.0.0
+  checksum: dbcfd67d151fbfa7133b6ac93278d5ea4fc458d015629c20ee940fe27699488dbf801247ea8b973a8b46d59bba4ced88d7f5fb95d946aca173776e94c8b11d79
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
   version: 2.1.8-no-fsevents.3
   resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
@@ -15026,6 +15067,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-limit@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "p-limit@npm:6.0.0"
+  dependencies:
+    yocto-queue: ^1.1.1
+  checksum: 395b82eb776dbfdfba8171ae1d60f94a0ee19cd682182a152f915c60f674d0519688dffe9b7a3f6fa8ba0b6ec7c6b115c6f64a5d6ad5ddfd250362629d77c450
+  languageName: node
+  linkType: hard
+
 "p-locate@npm:^3.0.0":
   version: 3.0.0
   resolution: "p-locate@npm:3.0.0"
@@ -16854,7 +16904,7 @@ __metadata:
     "@lerna-lite/cli": 3.6.0
     "@lerna-lite/publish": 3.6.0
     "@lerna-lite/run": 3.7.0
-    "@lerna-lite/version": 3.6.0
+    "@lerna-lite/version": 3.7.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@testing-library/dom": ^10.0.0
@@ -20200,6 +20250,13 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
+  languageName: node
+  linkType: hard
+
+"yocto-queue@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "yocto-queue@npm:1.1.1"
+  checksum: f2e05b767ed3141e6372a80af9caa4715d60969227f38b1a4370d60bffe153c9c5b33a862905609afc9b375ec57cd40999810d20e5e10229a204e8bde7ef255c
   languageName: node
   linkType: hard
 
