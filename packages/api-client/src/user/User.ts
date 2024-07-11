@@ -37,6 +37,7 @@ export interface User {
   picture?: Picture[];
   qualified_id: QualifiedId;
   service?: ServiceRef;
+  text_status?: string;
   team?: string;
   supported_protocols?: ConversationProtocol[];
 }
