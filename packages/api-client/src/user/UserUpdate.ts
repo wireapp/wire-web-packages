@@ -19,4 +19,4 @@
 
 import {User} from '../user/';
 
-export type UserUpdate = Partial<Pick<User, 'name' | 'text_status'> & Pick<User, 'assets' | 'accent_id'>>;
+export type UserUpdate = Partial<Pick<User, 'name' | 'text_status' | 'assets' | 'accent_id'>>;
