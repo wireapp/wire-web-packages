@@ -39,4 +39,5 @@ export interface User {
   service?: ServiceRef;
   team?: string;
   supported_protocols?: ConversationProtocol[];
+  text_status?: string;
 }
