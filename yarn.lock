@@ -6872,7 +6872,7 @@ __metadata:
     "@types/rimraf": 4.0.5
     cross-env: 7.0.3
     jest: ^29.2.1
-    libsodium-wrappers-sumo: 0.7.13
+    libsodium-wrappers-sumo: 0.7.14
     rimraf: 6.0.1
     ts-node: 10.9.2
     typescript: ^5.0.4
@@ -13735,19 +13735,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libsodium-sumo@npm:^0.7.0, libsodium-sumo@npm:^0.7.13":
+"libsodium-sumo@npm:^0.7.0":
   version: 0.7.13
   resolution: "libsodium-sumo@npm:0.7.13"
   checksum: d0905530c53c27a0c01348eed8abc2ecf3725c0647545cc528ea4bbd0ee63b7a471b56abefec5b293086ee64b5ba7cf911a655cd2c36f400a4bfec6e2d152ebd
   languageName: node
   linkType: hard
 
-"libsodium-wrappers-sumo@npm:0.7.13":
-  version: 0.7.13
-  resolution: "libsodium-wrappers-sumo@npm:0.7.13"
+"libsodium-sumo@npm:^0.7.14":
+  version: 0.7.14
+  resolution: "libsodium-sumo@npm:0.7.14"
+  checksum: 20deeae998b1f1513ed0641e8c7b8ab8a46066e9001c855e5bba04cbbe8cdaefd8effce1853baec3510223a5d1561c3684d3d2a46309e2d44f0436b86d0ed16b
+  languageName: node
+  linkType: hard
+
+"libsodium-wrappers-sumo@npm:0.7.14":
+  version: 0.7.14
+  resolution: "libsodium-wrappers-sumo@npm:0.7.14"
   dependencies:
-    libsodium-sumo: ^0.7.13
-  checksum: cdaa7ae5d64e71e860b40b5f2fbaec156adc7bc5606f7d32655b6ab84c9878fd90b3a41e99cb96380f0b5727d1ee1c6ad5b440bff35ce8289832e5c8cac99973
+    libsodium-sumo: ^0.7.14
+  checksum: 63d2682a1267ea1b766cb82d82ec69822d74f336d564bda984e99a5f9e72894eeaf4489b07a881acafe7c5fa95cfe783bf2ba584810123db330950747f481c04
   languageName: node
   linkType: hard
 
