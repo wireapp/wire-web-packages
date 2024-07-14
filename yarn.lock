@@ -3217,6 +3217,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/version@npm:3.7.1":
+  version: 3.7.1
+  resolution: "@lerna-lite/version@npm:3.7.1"
+  dependencies:
+    "@lerna-lite/cli": 3.7.1
+    "@lerna-lite/core": 3.7.1
+    "@lerna-lite/npmlog": ^3.7.0
+    "@octokit/plugin-enterprise-rest": ^6.0.1
+    "@octokit/rest": ^21.0.0
+    chalk: ^5.3.0
+    conventional-changelog-angular: ^7.0.0
+    conventional-changelog-core: ^7.0.0
+    conventional-changelog-writer: ^7.0.1
+    conventional-commits-parser: ^5.0.0
+    conventional-recommended-bump: ^9.0.0
+    dedent: ^1.5.3
+    fs-extra: ^11.2.0
+    get-stream: ^9.0.1
+    git-url-parse: ^14.0.0
+    graceful-fs: ^4.2.11
+    is-stream: ^4.0.1
+    load-json-file: ^7.0.1
+    make-dir: ^5.0.0
+    minimatch: ^9.0.5
+    new-github-release-url: ^2.0.0
+    node-fetch: ^3.3.2
+    npm-package-arg: ^11.0.2
+    p-limit: ^6.1.0
+    p-map: ^7.0.2
+    p-pipe: ^4.0.0
+    p-reduce: ^3.0.0
+    pify: ^6.1.0
+    semver: ^7.6.2
+    slash: ^5.1.0
+    temp-dir: ^3.0.0
+    uuid: ^10.0.0
+    write-json-file: ^5.0.0
+  checksum: 49f22b852accf1aa061665d0bb5c80bfe953cdade3c02c0fa1d63b485e6fba821c7fb2b17ea8e938e2e194575c256049bfc5dc35ca990da3119a78a51b043994
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
   version: 2.1.8-no-fsevents.3
   resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
@@ -15401,6 +15442,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-limit@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "p-limit@npm:6.1.0"
+  dependencies:
+    yocto-queue: ^1.1.1
+  checksum: 0c98d8fc1006b70fc7423232a47e8d026dc69279b06fe7ff8b4c0cc8023de2b6bb8991b609d93c3dec691a7a362ab0f0157df521d931a01fec192a5e404b9ee5
+  languageName: node
+  linkType: hard
+
 "p-locate@npm:^3.0.0":
   version: 3.0.0
   resolution: "p-locate@npm:3.0.0"
@@ -17281,7 +17331,7 @@ __metadata:
     "@lerna-lite/cli": 3.7.1
     "@lerna-lite/publish": 3.7.0
     "@lerna-lite/run": 3.7.0
-    "@lerna-lite/version": 3.7.0
+    "@lerna-lite/version": 3.7.1
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@testing-library/dom": ^10.0.0
