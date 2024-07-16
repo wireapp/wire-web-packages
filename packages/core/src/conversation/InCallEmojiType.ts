@@ -17,14 +17,7 @@
  *
  */
 
-export * from './AbortReason';
-export * from './AssetService';
-export * from './AssetTransferState';
-export * from './ClientActionType';
-export * from './ConversationService';
-export * from './GenericMessageType';
-export * from './MessageTimer';
-export * from './message/PayloadBundle';
-export * from './message/Message.types';
-export * from './ReactionType';
-export * from './InCallEmojiType';
+/**
+ * example value: {"👍": 2, "😂": 3}
+ */
+export type InCallEmojiType = Record<string, number>;
