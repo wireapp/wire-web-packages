@@ -302,12 +302,10 @@ export function buildInCallEmojiMessage(payloadBundle: InCallEmojiMessage['conte
     emojis,
   });
 
-  const genericMessage = GenericMessage.create({
+  return GenericMessage.create({
     [GenericMessageType.IN_CALL_EMOJI]: reaction,
     messageId: createId(),
   });
-
-  return genericMessage;
 }
 
 export function buildSessionResetMessage(): GenericMessage {
