@@ -72,3 +72,15 @@ npm publish --access public
 #### Release an existing package
 
 This will be handled by our CI setup.
+
+#### Release an existing package
+
+This will be handled by our CI setup.
+
+#### Manually trigger release on an existing package
+
+To trigger a build & release process without making code changes, create an empty commit:
+
+```shell
+git commit -m 'feat(PACKAGE_NAME): Trigger build' --allow-empty
+```
