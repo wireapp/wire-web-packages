@@ -2244,13 +2244,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css-prettifier@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "@emotion/css-prettifier@npm:1.1.3"
+"@emotion/css-prettifier@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@emotion/css-prettifier@npm:1.1.4"
   dependencies:
-    "@emotion/memoize": ^0.8.1
+    "@emotion/memoize": ^0.9.0
     stylis: 4.2.0
-  checksum: 082e27ea5ace0a54080a1073fdabc62711cbc94e4d966a4fc67aded9148c39a8c07f2757d26a32bddced94794433ee4555bea8471fe6c0eb2409698e12582e7b
+  checksum: e80e143e5bcdd8775319825496a4bd5e12a04eadb344a3ddba8a211584ba26bbec014b470e224d94c93a8cd206f21f5e6c81c65b1517fe1f4b5d6e928ead2620
   languageName: node
   linkType: hard
 
@@ -2272,12 +2272,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:11.11.0":
-  version: 11.11.0
-  resolution: "@emotion/jest@npm:11.11.0"
+"@emotion/jest@npm:11.13.0":
+  version: 11.13.0
+  resolution: "@emotion/jest@npm:11.13.0"
   dependencies:
     "@babel/runtime": ^7.18.3
-    "@emotion/css-prettifier": ^1.1.3
+    "@emotion/css-prettifier": ^1.1.4
     chalk: ^4.1.0
     specificity: ^0.4.1
     stylis: 4.2.0
@@ -2289,7 +2289,7 @@ __metadata:
       optional: true
     enzyme-to-json:
       optional: true
-  checksum: ae39af8f6952d77515a5066629ecaad97acffaa5fc32fc3479fc65dde341d730c740642454966c1a3bf5d7453e9cbd898d73c3950b9c3ff24e0a4c9be84e6fa0
+  checksum: 1bbf80c639b46f53cb7104e2c035ba293e58a1d2afbe9f14ee32cc711cd239ad03a4a372d60d77342a13310865efdb2503559a4e05f68e92e9a9e896d54f3421
   languageName: node
   linkType: hard
 
@@ -2297,6 +2297,13 @@ __metadata:
   version: 0.8.1
   resolution: "@emotion/memoize@npm:0.8.1"
   checksum: a19cc01a29fcc97514948eaab4dc34d8272e934466ed87c07f157887406bc318000c69ae6f813a9001c6a225364df04249842a50e692ef7a9873335fbcc141b0
+  languageName: node
+  linkType: hard
+
+"@emotion/memoize@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "@emotion/memoize@npm:0.9.0"
+  checksum: 038132359397348e378c593a773b1148cd0cf0a2285ffd067a0f63447b945f5278860d9de718f906a74c7c940ba1783ac2ca18f1c06a307b01cc0e3944e783b1
   languageName: node
   linkType: hard
 
@@ -5744,7 +5751,7 @@ __metadata:
     "@babel/preset-react": 7.24.7
     "@babel/preset-typescript": 7.24.7
     "@emotion/babel-preset-css-prop": ^11.10.0
-    "@emotion/jest": 11.11.0
+    "@emotion/jest": 11.13.0
     "@emotion/react": ^11.10.4
     "@hot-loader/react-dom": 17.0.2
     "@swc/core": ^1.3.10
