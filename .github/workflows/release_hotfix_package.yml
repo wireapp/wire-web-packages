@@ -2,11 +2,6 @@ name: Test, Build and release hotfix version of packages
 
 on:
   workflow_dispatch:
-    inputs:
-      preid:
-        description: 'Prerelease identifier.'
-        default: 'hotfix'
-        required: true
 
 jobs:
   test_build_release_hotfix:
@@ -74,4 +69,4 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
-          yarn hotfix-release ${{inputs.preid}}
+          yarn hotfix-release
