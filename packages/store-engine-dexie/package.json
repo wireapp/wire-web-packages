@@ -19,7 +19,7 @@
     "@types/jest": "^29.2.0",
     "@types/node": "^22.0.0",
     "@types/rimraf": "4.0.5",
-    "@types/uuid": "9.0.8",
+    "@types/uuid": "10.0.0",
     "@wireapp/store-engine": "5.1.7",
     "core-js": "^3.36.0",
     "fake-indexeddb": "^5.0.2",
@@ -28,7 +28,7 @@
     "rimraf": "6.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
-    "uuid": "9.0.1"
+    "uuid": "10.0.0"
   },
   "scripts": {
     "build": "yarn clean && tsc",
