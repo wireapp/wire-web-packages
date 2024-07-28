@@ -13,7 +13,7 @@
     "@testing-library/dom": "^10.0.0",
     "@types/babel__core": "^7",
     "@types/jest": "^29.2.0",
-    "@types/node": "^20.1.0",
+    "@types/node": "^22.0.0",
     "@types/rimraf": "4.0.5",
     "@typescript-eslint/eslint-plugin": "7.16.1",
     "@typescript-eslint/parser": "7.16.1",
