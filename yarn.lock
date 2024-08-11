@@ -3461,17 +3461,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/publish@npm:3.7.1":
-  version: 3.7.1
-  resolution: "@lerna-lite/publish@npm:3.7.1"
+"@lerna-lite/publish@npm:3.8.0":
+  version: 3.8.0
+  resolution: "@lerna-lite/publish@npm:3.8.0"
   dependencies:
-    "@lerna-lite/cli": 3.7.1
-    "@lerna-lite/core": 3.7.1
-    "@lerna-lite/npmlog": ^3.7.0
-    "@lerna-lite/version": 3.7.1
+    "@lerna-lite/cli": 3.8.0
+    "@lerna-lite/core": 3.8.0
+    "@lerna-lite/npmlog": ^3.8.0
+    "@lerna-lite/version": 3.8.0
     "@npmcli/arborist": ^7.5.4
     "@npmcli/package-json": ^5.2.0
-    byte-size: ^8.1.1
+    byte-size: ^9.0.0
     chalk: ^5.3.0
     columnify: ^1.6.0
     fs-extra: ^11.2.0
@@ -3480,17 +3480,17 @@ __metadata:
     libnpmaccess: ^8.0.6
     libnpmpublish: ^9.0.9
     normalize-path: ^3.0.0
-    npm-package-arg: ^11.0.2
+    npm-package-arg: ^11.0.3
     npm-packlist: ^8.0.2
     npm-registry-fetch: ^17.1.0
     p-map: ^7.0.2
     p-pipe: ^4.0.0
     pacote: ^18.0.6
-    semver: ^7.6.2
+    semver: ^7.6.3
     ssri: ^10.0.6
     tar: ^6.2.1
     temp-dir: ^3.0.0
-  checksum: 419b2113da80b149bc12ac15615e8eb62b5fca6a372cd6283ee05a1e0f47be85fec47e2c4f1e7764399371f5d0c9377857fdfa4d6b0fbc5f9743e51bbf27ef9a
+  checksum: feb09703853f2f3821046687008201b2eff87bf753079eeb5472c0473e1cf26ccfb9e9dd5393bb7d2cc6cf07275f844cb99d067915a80b89a2a4e0b1f121b830
   languageName: node
   linkType: hard
 
@@ -3507,47 +3507,6 @@ __metadata:
     fs-extra: ^11.2.0
     p-map: ^7.0.2
   checksum: 48993f721010bb4f4b92829abbcff8b76ffd4ccb78eb3928bab46d60d03532ebd2905eb0e118bfa6317af03840f739fa463e5cc62811f5bb26f0a1fb461d7eec
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/version@npm:3.7.1":
-  version: 3.7.1
-  resolution: "@lerna-lite/version@npm:3.7.1"
-  dependencies:
-    "@lerna-lite/cli": 3.7.1
-    "@lerna-lite/core": 3.7.1
-    "@lerna-lite/npmlog": ^3.7.0
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^21.0.0
-    chalk: ^5.3.0
-    conventional-changelog-angular: ^7.0.0
-    conventional-changelog-core: ^7.0.0
-    conventional-changelog-writer: ^7.0.1
-    conventional-commits-parser: ^5.0.0
-    conventional-recommended-bump: ^9.0.0
-    dedent: ^1.5.3
-    fs-extra: ^11.2.0
-    get-stream: ^9.0.1
-    git-url-parse: ^14.0.0
-    graceful-fs: ^4.2.11
-    is-stream: ^4.0.1
-    load-json-file: ^7.0.1
-    make-dir: ^5.0.0
-    minimatch: ^9.0.5
-    new-github-release-url: ^2.0.0
-    node-fetch: ^3.3.2
-    npm-package-arg: ^11.0.2
-    p-limit: ^6.1.0
-    p-map: ^7.0.2
-    p-pipe: ^4.0.0
-    p-reduce: ^3.0.0
-    pify: ^6.1.0
-    semver: ^7.6.2
-    slash: ^5.1.0
-    temp-dir: ^3.0.0
-    uuid: ^10.0.0
-    write-json-file: ^5.0.0
-  checksum: 49f22b852accf1aa061665d0bb5c80bfe953cdade3c02c0fa1d63b485e6fba821c7fb2b17ea8e938e2e194575c256049bfc5dc35ca990da3119a78a51b043994
   languageName: node
   linkType: hard
 
@@ -3968,15 +3927,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-request-log@npm:^5.1.0":
-  version: 5.3.0
-  resolution: "@octokit/plugin-request-log@npm:5.3.0"
-  peerDependencies:
-    "@octokit/core": ">=6"
-  checksum: 8c918b14f0687e8a3d9c7c81ef1092a49de07681940cc1aee0aeb7e3dd8ac64f69af5d65932eec32f6db4af3dca80541ad3bb13ac0fa44af3e2340ed91909272
-  languageName: node
-  linkType: hard
-
 "@octokit/plugin-request-log@npm:^5.3.1":
   version: 5.3.1
   resolution: "@octokit/plugin-request-log@npm:5.3.1"
@@ -4015,18 +3965,6 @@ __metadata:
     "@octokit/types": ^13.1.0
     universal-user-agent: ^7.0.2
   checksum: 0c41654911c217eb2892ce6c9c273cc2139e5510b025c71e72e1528f0d8bad2a9e578e5b305595599f2e1cb630c1812cd7d9e4f6d16a63007a7d1745f1c682ce
-  languageName: node
-  linkType: hard
-
-"@octokit/rest@npm:^21.0.0":
-  version: 21.0.0
-  resolution: "@octokit/rest@npm:21.0.0"
-  dependencies:
-    "@octokit/core": ^6.1.2
-    "@octokit/plugin-paginate-rest": ^11.0.0
-    "@octokit/plugin-request-log": ^5.1.0
-    "@octokit/plugin-rest-endpoint-methods": ^13.0.0
-  checksum: 1d2c28dfce0c11de252d105e2c256690e66bb6c1ccf73fbc142dd4e5570aa7d9d77a8e443956bcc461709c83dc018c5a3999fd784ac2fb3f4514a3db29a3a1bf
   languageName: node
   linkType: hard
 
@@ -7463,10 +7401,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"byte-size@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "byte-size@npm:8.1.1"
-  checksum: 65f00881ffd3c2b282fe848ed954fa4ff8363eaa3f652102510668b90b3fad04d81889486ee1b641ee0d8c8b75cf32201f3b309e6b5fbb6cc869b48a91b62d3e
+"byte-size@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "byte-size@npm:9.0.0"
+  checksum: 3c0c988dcb8eaee6364f42837b395fbff949b611d6b23a078a60b5b03d9e1a04841a1a2f471177a91971712f407e753d6ca9d46bb60f80c482b84e37b5a05193
   languageName: node
   linkType: hard
 
@@ -11058,15 +10996,6 @@ __metadata:
     is-ssh: ^1.4.0
     parse-url: ^8.1.0
   checksum: 2faadbab51e94d2ffb220e426e950087cc02c15d664e673bd5d1f734cfa8196fed8b19493f7bf28fe216d087d10e22a7fd9b63687e0ba7d24f0ddcfb0a266d6e
-  languageName: node
-  linkType: hard
-
-"git-url-parse@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "git-url-parse@npm:14.0.0"
-  dependencies:
-    git-up: ^7.0.0
-  checksum: b011c5de652e60e5f19de9815d1b78b2f725deb07e73d1b9ff8ca6657406d0a6c691fbe4460017822676a80635f93099345cadbd06361b76f53c4556265d3e48
   languageName: node
   linkType: hard
 
@@ -17617,7 +17546,7 @@ __metadata:
     "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": 3.8.0
     "@lerna-lite/cli": 3.7.1
-    "@lerna-lite/publish": 3.7.1
+    "@lerna-lite/publish": 3.8.0
     "@lerna-lite/run": 3.7.1
     "@lerna-lite/version": 3.8.0
     "@swc/core": ^1.3.10
