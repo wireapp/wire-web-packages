@@ -3551,6 +3551,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/version@npm:3.8.0":
+  version: 3.8.0
+  resolution: "@lerna-lite/version@npm:3.8.0"
+  dependencies:
+    "@lerna-lite/cli": 3.8.0
+    "@lerna-lite/core": 3.8.0
+    "@lerna-lite/npmlog": ^3.8.0
+    "@octokit/plugin-enterprise-rest": ^6.0.1
+    "@octokit/rest": ^21.0.1
+    chalk: ^5.3.0
+    conventional-changelog-angular: ^7.0.0
+    conventional-changelog-core: ^7.0.0
+    conventional-changelog-writer: ^7.0.1
+    conventional-commits-parser: ^5.0.0
+    conventional-recommended-bump: ^9.0.0
+    dedent: ^1.5.3
+    fs-extra: ^11.2.0
+    get-stream: ^9.0.1
+    git-url-parse: ^14.1.0
+    graceful-fs: ^4.2.11
+    is-stream: ^4.0.1
+    load-json-file: ^7.0.1
+    make-dir: ^5.0.0
+    minimatch: ^9.0.5
+    new-github-release-url: ^2.0.0
+    node-fetch: ^3.3.2
+    npm-package-arg: ^11.0.3
+    p-limit: ^6.1.0
+    p-map: ^7.0.2
+    p-pipe: ^4.0.0
+    p-reduce: ^3.0.0
+    pify: ^6.1.0
+    semver: ^7.6.3
+    slash: ^5.1.0
+    temp-dir: ^3.0.0
+    uuid: ^10.0.0
+    write-json-file: ^6.0.0
+  checksum: 8af4fc477cf277433e6c520406ad7bccb72a99f7b09cae17a7e188bda86a27a91b60ea2c063f64bf44ed56aedaf79b78929206f4bbe123f85f36b36bb77bb030
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
   version: 2.1.8-no-fsevents.3
   resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
@@ -3936,6 +3977,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/plugin-request-log@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "@octokit/plugin-request-log@npm:5.3.1"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: a27e163282c8d0ba8feee4d3cbbd1b62e1aa89a892877f7a9876fc17ddde3e1e1af922e6664221a0cabae99b8a7a2a5215b9ec2ee5222edb50e06298e99022b0
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-rest-endpoint-methods@npm:^13.0.0":
   version: 13.2.2
   resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.2"
@@ -3977,6 +4027,18 @@ __metadata:
     "@octokit/plugin-request-log": ^5.1.0
     "@octokit/plugin-rest-endpoint-methods": ^13.0.0
   checksum: 1d2c28dfce0c11de252d105e2c256690e66bb6c1ccf73fbc142dd4e5570aa7d9d77a8e443956bcc461709c83dc018c5a3999fd784ac2fb3f4514a3db29a3a1bf
+  languageName: node
+  linkType: hard
+
+"@octokit/rest@npm:^21.0.1":
+  version: 21.0.1
+  resolution: "@octokit/rest@npm:21.0.1"
+  dependencies:
+    "@octokit/core": ^6.1.2
+    "@octokit/plugin-paginate-rest": ^11.0.0
+    "@octokit/plugin-request-log": ^5.3.1
+    "@octokit/plugin-rest-endpoint-methods": ^13.0.0
+  checksum: 99a099a7fbb2c460955e941e0ab8d8aa7480988b9bcae80af752d8d6112aaf301f43916eac7be04e813ca97a3dd5ad5f27cc88812aa600f5bbf387dfbba2381c
   languageName: node
   linkType: hard
 
@@ -11008,6 +11070,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"git-url-parse@npm:^14.1.0":
+  version: 14.1.0
+  resolution: "git-url-parse@npm:14.1.0"
+  dependencies:
+    git-up: ^7.0.0
+  checksum: 16bbf5ca423352ab1b0d704dc40b46123e0bfcc0ae2959ef6a93d43c509146151cd6a1d99690f3555324d2261b36443b7978abc379dc1a7bf8f564e52d676dee
+  languageName: node
+  linkType: hard
+
 "github-slugger@npm:^1.2.1":
   version: 1.5.0
   resolution: "github-slugger@npm:1.5.0"
@@ -17548,7 +17619,7 @@ __metadata:
     "@lerna-lite/cli": 3.7.1
     "@lerna-lite/publish": 3.7.1
     "@lerna-lite/run": 3.7.1
-    "@lerna-lite/version": 3.7.1
+    "@lerna-lite/version": 3.8.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@testing-library/dom": ^10.0.0
