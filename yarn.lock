@@ -5480,7 +5480,7 @@ __metadata:
     "@wireapp/protocol-messaging": 1.49.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
-    axios: 1.7.4
+    axios: 1.7.5
     axios-retry: 4.5.0
     browser-sync: 3.0.2
     concurrently: 8.2.2
@@ -5561,7 +5561,7 @@ __metadata:
     "@types/fs-extra": 11.0.4
     "@types/jest": ^29.2.0
     "@types/rimraf": 4.0.5
-    axios: 1.7.4
+    axios: 1.7.5
     copy: 0.3.2
     cosmiconfig: 9.0.0
     fs-extra: 11.2.0
@@ -5602,7 +5602,7 @@ __metadata:
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.49.0
     "@wireapp/store-engine": "workspace:*"
-    axios: 1.7.4
+    axios: 1.7.5
     bazinga64: "workspace:^"
     commander: 12.1.0
     cross-env: 7.0.3
@@ -6639,14 +6639,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.7.4":
-  version: 1.7.4
-  resolution: "axios@npm:1.7.4"
+"axios@npm:1.7.5":
+  version: 1.7.5
+  resolution: "axios@npm:1.7.5"
   dependencies:
     follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 0c17039a9acfe6a566fca8431ba5c1b455c83d30ea6157fec68a6722878fcd30f3bd32d172f6bee0c51fe75ca98e6414ddcd968a87b5606b573731629440bfaf
+  checksum: 2859fe01437cf133eee35571abc1d4b5224bb13e530e66cb3581ca226e170541dd5eef9f46abb41592cee0a2f54930c9e4978354e0cf1064748fc20d9a05e9d5
   languageName: node
   linkType: hard
 
