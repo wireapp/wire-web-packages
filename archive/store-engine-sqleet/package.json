@@ -22,7 +22,7 @@
     "karma-jasmine": "5.1.0",
     "karma-webpack": "5.0.0",
     "ts-node": "^10.9.1",
-    "webpack": "4.46.0"
+    "webpack": "5.94.0"
   },
   "description": "Store Engine implementation for SQLite 3 (WebAssembly) with encryption.",
   "files": [
