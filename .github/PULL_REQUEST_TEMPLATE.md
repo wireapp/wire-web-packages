@@ -1,9 +1,20 @@
+## Description
+
+<!-- Uncomment this section if your PR has UI changes -->
 <!--
-Thanks for your contribution!
-Please check the following to make sure your contribution follows our guideline:
+## Screenshots/Screencast (for UI changes)
 -->
 
-## Pull Request Checklist
+## Checklist
 
-- [ ] My code is covered by tests
-- [ ] I will [merge the PR as breaking change](https://github.com/wireapp/wire-web-packages/wiki/Releases#create-major-release), if the API contract changes
+- [ ] mentions the JIRA issue in the PR name (Ex. [WPB-423])
+- [ ] PR has been self reviewed by the author;
+- [ ] Hard-to-understand areas of the code have been commented;
+- [ ] If it is a core feature, unit tests have been added;
+
+<!-- Uncomment this section if it is necessary to understand the PR -->
+<!-- ## Important Details for the Reviewers
+
+- use (x) data
+- can be reviewed commit-by-commit
+- be sure to look at ... -->
