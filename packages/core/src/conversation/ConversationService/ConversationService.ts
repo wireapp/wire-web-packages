@@ -29,6 +29,7 @@ import {
   MLSConversation,
   SUBCONVERSATION_ID,
   Subconversation,
+  MLS1on1Conversation,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
@@ -552,7 +553,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     selfUser: {user: QualifiedId; client: string},
     otherUserId: QualifiedId,
     shouldRetry = true,
-  ): Promise<MLSConversation> => {
+  ): Promise<MLS1on1Conversation> => {
     this.logger.debug(`Trying to establish a MLS 1:1 conversation with user ${otherUserId.id}...`);
 
     // Before trying to register a group, check if the group is already established o backend.
@@ -588,7 +589,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
     await this.mlsService.wipeConversation(groupId);
 
     try {
-      await this.mlsService.register1to1Conversation(groupId, otherUserId, selfUser);
+      await this.mlsService.register1to1Conversation(
+        groupId,
+        otherUserId,
+        selfUser,
+        mlsConversation.public_keys.removal,
+      );
 
       this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) established successfully.`);
 
