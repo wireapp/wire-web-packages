@@ -109,8 +109,9 @@ export interface MLSConversation extends Conversation {
   protocol: ConversationProtocol.MLS;
 }
 
-export interface MLS1on1Conversation extends MLSConversation {
-  public_keys: {
+export interface MLS1to1Conversation {
+  conversation: MLSConversation;
+  public_keys?: {
     removal: MLSPublicKeyRecord;
   };
 }

@@ -29,7 +29,6 @@ import {
   MLSConversation,
   SUBCONVERSATION_ID,
   Subconversation,
-  MLS1on1Conversation,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
@@ -553,13 +552,14 @@ export class ConversationService extends TypedEventEmitter<Events> {
     selfUser: {user: QualifiedId; client: string},
     otherUserId: QualifiedId,
     shouldRetry = true,
-  ): Promise<MLS1on1Conversation> => {
+  ): Promise<MLSConversation> => {
     this.logger.debug(`Trying to establish a MLS 1:1 conversation with user ${otherUserId.id}...`);
 
     // Before trying to register a group, check if the group is already established o backend.
     // If remote epoch is higher than 0, it means that the group was already established.
     // It's possible that we've already received a welcome message.
-    const mlsConversation = await this.getMLS1to1Conversation(otherUserId);
+
+    const {conversation: mlsConversation, public_keys} = await this.getMLS1to1Conversation(otherUserId);
 
     if (mlsConversation.epoch > 0) {
       this.logger.debug(
@@ -581,7 +581,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       );
 
       await this.joinByExternalCommit(mlsConversation.qualified_id);
-      return this.getMLS1to1Conversation(otherUserId);
+      return (await this.getMLS1to1Conversation(otherUserId)).conversation;
     }
 
     // If group is not established on backend,
@@ -589,16 +589,11 @@ export class ConversationService extends TypedEventEmitter<Events> {
     await this.mlsService.wipeConversation(groupId);
 
     try {
-      await this.mlsService.register1to1Conversation(
-        groupId,
-        otherUserId,
-        selfUser,
-        mlsConversation.public_keys.removal,
-      );
+      await this.mlsService.register1to1Conversation(groupId, otherUserId, selfUser, public_keys?.removal);
 
       this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) established successfully.`);
 
-      return this.getMLS1to1Conversation(otherUserId);
+      return (await this.getMLS1to1Conversation(otherUserId)).conversation;
     } catch (error) {
       if (!shouldRetry) {
         this.logger.error(`Could not register MLS group with id ${groupId}: `, error);
