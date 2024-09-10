@@ -21,7 +21,6 @@ import {Conversation} from './Conversation';
 import {DefaultConversationRoleName} from './ConversationRole';
 import {RECEIPT_MODE} from './data/ConversationReceiptModeUpdateData';
 
-import {MLSPublicKeyRecord} from '../client';
 import {TeamInfo} from '../team/';
 import {QualifiedId} from '../user/';
 
@@ -39,7 +38,4 @@ export interface NewConversation
   protocol?: ConversationProtocol;
   team?: TeamInfo;
   users?: string[]; // users must be empty for creating MLS conversations
-  public_key?: {
-    removal: MLSPublicKeyRecord;
-  };
 }
