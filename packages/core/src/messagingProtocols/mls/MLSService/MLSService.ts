@@ -485,9 +485,8 @@ export class MLSService extends TypedEventEmitter<Events> {
     } else {
       const mlsKeys = (await this.apiClient.api.client.getPublicKeys()).removal;
       const ciphersuiteSignature = getSignatureAlgorithmForCiphersuite(this.config.defaultCiphersuite);
-      const removalKeyForSignature = removalKeyFor1to1Signature
-        ? removalKeyFor1to1Signature[ciphersuiteSignature]
-        : mlsKeys[ciphersuiteSignature];
+      const removalKeyForSignature =
+        removalKeyFor1to1Signature?.[ciphersuiteSignature] ?? mlsKeys[ciphersuiteSignature];
       if (!removalKeyForSignature) {
         throw new Error(
           `Cannot create conversation: No backend removal key found for the signature ${ciphersuiteSignature}`,
