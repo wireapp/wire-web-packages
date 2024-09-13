@@ -21,7 +21,7 @@ import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {
   Conversation,
   ConversationProtocol,
-  MLS1to1Conversation,
+  MLSConversation,
   Subconversation,
   SUBCONVERSATION_ID,
 } from '@wireapp/api-client/lib/conversation';
@@ -338,7 +338,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: remoteEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
       jest.spyOn(mlsService, 'isConversationEstablished').mockResolvedValueOnce(true);
 
       await conversationService.establishMLS1to1Conversation(mockGroupId, selfUser, otherUserId);
@@ -365,7 +365,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: remoteEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       // The 2nd request we make after joining the conversation with external commit
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -373,7 +373,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: updatedEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       jest.spyOn(mlsService, 'isConversationEstablished').mockResolvedValueOnce(false);
       jest.spyOn(mlsService, 'joinByExternalCommit').mockResolvedValueOnce({events: [], time: ''});
@@ -406,7 +406,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: remoteEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       // The 2nd request we make after successfully registering a group
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -414,7 +414,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: updatedEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       jest.spyOn(mlsService, 'wipeConversation');
 
@@ -448,7 +448,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: remoteEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       // The 2nd request we make when retrying to register the conversation
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -456,7 +456,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: remoteEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       // The 3rd request we make after successfully registering a group
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
@@ -464,7 +464,7 @@ describe('ConversationService', () => {
         protocol: ConversationProtocol.MLS,
         epoch: updatedEpoch,
         group_id: mockGroupId,
-      } as unknown as MLS1to1Conversation);
+      } as unknown as MLSConversation);
 
       jest.spyOn(mlsService, 'register1to1Conversation').mockRejectedValueOnce(undefined);
       jest.spyOn(mlsService, 'wipeConversation');
