@@ -436,7 +436,7 @@ describe('ConversationService', () => {
 
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(mockGroupId);
       expect(mlsService.register1to1Conversation).toHaveBeenCalledTimes(1);
-      expect(mlsService.register1to1Conversation).toHaveBeenCalledWith(mockGroupId, otherUserId, selfUser, undefined);
+      expect(mlsService.register1to1Conversation).toHaveBeenCalledWith(mockGroupId, otherUserId, selfUser);
       expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
       expect(establishedConversation.epoch).toEqual(updatedEpoch);
     });
@@ -474,12 +474,10 @@ describe('ConversationService', () => {
 
       // The 3rd request we make after successfully registering a group
       jest.spyOn(apiClient.api.conversation, 'getMLS1to1Conversation').mockResolvedValueOnce({
-        conversation: {
-          qualified_id: mockConversationId,
-          protocol: ConversationProtocol.MLS,
-          epoch: updatedEpoch,
-          group_id: mockGroupId,
-        },
+        qualified_id: mockConversationId,
+        protocol: ConversationProtocol.MLS,
+        epoch: updatedEpoch,
+        group_id: mockGroupId,
       } as unknown as MLS1to1Conversation);
 
       jest.spyOn(mlsService, 'register1to1Conversation').mockRejectedValueOnce(undefined);
@@ -493,7 +491,7 @@ describe('ConversationService', () => {
 
       expect(mlsService.wipeConversation).toHaveBeenCalledWith(mockGroupId);
       expect(mlsService.register1to1Conversation).toHaveBeenCalledTimes(2);
-      expect(mlsService.register1to1Conversation).toHaveBeenCalledWith(mockGroupId, otherUserId, selfUser, undefined);
+      expect(mlsService.register1to1Conversation).toHaveBeenCalledWith(mockGroupId, otherUserId, selfUser);
       expect(conversationService.joinByExternalCommit).not.toHaveBeenCalled();
       expect(establishedConversation.epoch).toEqual(updatedEpoch);
     });
