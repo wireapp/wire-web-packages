@@ -537,12 +537,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * @param userId - qualified user id
    */
   async getMLS1to1Conversation(userId: QualifiedId) {
-    const response = await this.apiClient.api.conversation.getMLS1to1Conversation(userId);
+    const conversation = await this.apiClient.api.conversation.getMLS1to1Conversation(userId);
 
     if (isMLS1to1Conversation(response)) {
-      return response;
+      return conversation;
     }
-    return {conversation: response};
+    return {conversation};
   }
 
   /**
