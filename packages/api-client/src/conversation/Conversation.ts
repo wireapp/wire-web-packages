@@ -120,11 +120,7 @@ export function isMLS1to1Conversation(response: unknown): response is MLS1to1Con
   if (typeof response === 'object' && response !== null) {
     const conversation = response as MLS1to1Conversation;
 
-    if (!!conversation.conversation && !!conversation.public_keys) {
-      return true;
-    }
-
-    return false;
+    return !!conversation.conversation && !!conversation.public_keys
   }
 
   return false;
