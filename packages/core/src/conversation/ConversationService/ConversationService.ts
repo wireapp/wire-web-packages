@@ -29,6 +29,7 @@ import {
   MLSConversation,
   SUBCONVERSATION_ID,
   Subconversation,
+  isMLS1to1Conversation,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
@@ -536,7 +537,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * @param userId - qualified user id
    */
   async getMLS1to1Conversation(userId: QualifiedId) {
-    return this.apiClient.api.conversation.getMLS1to1Conversation(userId);
+    const response = await this.apiClient.api.conversation.getMLS1to1Conversation(userId);
+
+    if (isMLS1to1Conversation(response)) {
+      return response;
+    }
+    return {conversation: response};
   }
 
   /**
