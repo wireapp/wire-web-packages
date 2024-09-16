@@ -587,7 +587,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
       );
 
       await this.joinByExternalCommit(mlsConversation.qualified_id);
-      return (await this.getMLS1to1Conversation(otherUserId)).conversation;
+      const {conversation: updatedMLSConversation} = await this.getMLS1to1Conversation(otherUserId);
+      return updatedMLSConversation;
     }
 
     // If group is not established on backend,
@@ -599,7 +600,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
       this.logger.info(`Conversation (id ${mlsConversation.qualified_id.id}) established successfully.`);
 
-      return (await this.getMLS1to1Conversation(otherUserId)).conversation;
+      const {conversation: updatedMLSConversation} = await this.getMLS1to1Conversation(otherUserId);
+      return updatedMLSConversation;
     } catch (error) {
       if (!shouldRetry) {
         this.logger.error(`Could not register MLS group with id ${groupId}: `, error);
