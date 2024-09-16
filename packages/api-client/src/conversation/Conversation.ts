@@ -117,10 +117,8 @@ export interface MLS1to1Conversation {
 }
 
 export function isMLS1to1Conversation(response: unknown): response is MLS1to1Conversation {
-  if (typeof response === 'object' && response !== null) {
-    const mls1to1Conversation = response as MLS1to1Conversation;
-
-    return !!mls1to1Conversation.conversation && !!mls1to1Conversation.public_keys;
+  if (typeof response === 'object' && response !== null && 'conversation' in response && 'public_keys' in response) {
+    return true;
   }
 
   return false;
