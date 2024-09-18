@@ -17,7 +17,7 @@ yarn
 yarn start
 ```
 
-### Installation
+### Installation:
 
 ```bash
 yarn add @wireapp/api-client
