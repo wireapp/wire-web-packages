@@ -40,7 +40,7 @@ await account.listen();
 
 ### Contributing
 
-The following commits will help you getting started quickly with the code base:
+The following commits will help you getting started quickly with the code base
 
 - [Recieve a Protobuf message (i.e. `ButtonAction`)](https://github.com/wireapp/wire-web-packages/commit/2a2717f8f1983d029257841232e36dd0e1fc3930)
 - [Send a Protobuf message (i.e. `ButtonActionConfirmation`)](https://github.com/wireapp/wire-web-packages/commit/8bd812bed493eded0d9fd7a7ca6e8285033eb5e4)
