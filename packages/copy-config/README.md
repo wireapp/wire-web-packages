@@ -38,6 +38,6 @@ Additionally, some parameters can be set via environment variables (which then t
 copy-config
 ```
 
-### API Usage
+### API Usage:
 
 See [`cli.ts`](./src/main/cli.ts).
