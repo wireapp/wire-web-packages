@@ -9,7 +9,6 @@ const [value, setValue] = useState('');
 <>
   <form>
     <Input
-      id="modal_pswd"
       type="password"
       label="Password"
       autocomplete="on"
