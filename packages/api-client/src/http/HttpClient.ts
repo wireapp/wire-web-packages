@@ -46,6 +46,12 @@ enum TOPIC {
   ON_INVALID_TOKEN = 'HttpClient.TOPIC.ON_INVALID_TOKEN',
 }
 
+type SendRequest = {
+  config: AxiosRequestConfig;
+  isFirstTry?: boolean;
+  abortController?: AbortController;
+};
+
 export interface HttpClient {
   on(event: TOPIC.ON_CONNECTION_STATE_CHANGE, listener: (state: ConnectionState) => void): this;
 
@@ -131,16 +137,7 @@ export class HttpClient extends EventEmitter {
     }
   }
 
-type SendRequest = {
-    config: AxiosRequestConfig;
-    isFirstTry?: boolean,
-    abortController?: AbortController
-}
-  public async _sendRequest<T>({
-    config,
-    isFirstTry = true,
-    abortController,
-  }): Promise<AxiosResponse<T>> {
+  public async _sendRequest<T>({config, isFirstTry = true, abortController}: SendRequest): Promise<AxiosResponse<T>> {
     if (this.accessTokenStore.accessToken) {
       // TODO: remove tokenAsParam
       const {token_type, access_token} = this.accessTokenStore.accessToken;
@@ -327,7 +324,7 @@ type SendRequest = {
       'Content-Encoding': shouldGzipData ? 'gzip' : config.headers?.['Content-Encoding'],
     };
 
-    return this.sendRequest<T>({config, isFirstTry: isSynchronousRequest, abortController});
+    return this.sendRequest(config, isSynchronousRequest, abortController);
   }
 
   public sendXML<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
