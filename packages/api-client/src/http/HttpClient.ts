@@ -131,11 +131,16 @@ export class HttpClient extends EventEmitter {
     }
   }
 
-  public async _sendRequest<T>(
-    config: AxiosRequestConfig,
+type SendRequest = {
+    config: AxiosRequestConfig;
+    isFirstTry?: boolean,
+    abortController?: AbortController
+}
+  public async _sendRequest<T>({
+    config,
     isFirstTry = true,
-    abortController?: AbortController,
-  ): Promise<AxiosResponse<T>> {
+    abortController,
+  }): Promise<AxiosResponse<T>> {
     if (this.accessTokenStore.accessToken) {
       // TODO: remove tokenAsParam
       const {token_type, access_token} = this.accessTokenStore.accessToken;
