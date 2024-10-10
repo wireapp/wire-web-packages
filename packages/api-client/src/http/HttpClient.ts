@@ -327,7 +327,7 @@ type SendRequest = {
       'Content-Encoding': shouldGzipData ? 'gzip' : config.headers?.['Content-Encoding'],
     };
 
-    return this.sendRequest<T>(config, isSynchronousRequest, abortController);
+    return this.sendRequest<T>({config, isFirstTry: isSynchronousRequest, abortController});
   }
 
   public sendXML<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
