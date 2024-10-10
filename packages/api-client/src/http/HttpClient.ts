@@ -300,7 +300,7 @@ type SendRequest = {
       const isTooManyRequestsError = axios.isAxiosError(error) && error.response?.status === 420;
 
       if (isTooManyRequestsError) {
-        return this.backOffQueue.add(() => this._sendRequest<T>(config, true, abortController));
+        return this.backOffQueue.add(() => this._sendRequest<T>({config, abortController}));
       }
 
       throw error;
