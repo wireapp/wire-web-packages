@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.23.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.23.5...@wireapp/react-ui-kit@9.23.6) (2024-10-10)
+
+### Bug Fixes
+
+* **react-ui-kit:** input autocomplete background color [WPB-9764] ([#6576](https://github.com/wireapp/wire-web-packages/issues/6576)) ([e98d8ec](https://github.com/wireapp/wire-web-packages/commit/e98d8ec08ac0db275aaa59e90f0cc627ba129ae6))
+
+## [9.23.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.23.4...@wireapp/react-ui-kit@9.23.5) (2024-10-07)
+
+### Bug Fixes
+
+* isMatching not updating in useMatchMedia ([#6574](https://github.com/wireapp/wire-web-packages/issues/6574)) ([903d5e2](https://github.com/wireapp/wire-web-packages/commit/903d5e29cfbf01fbbcad25a77b4121c69c478997))
+
 ## [9.23.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.23.3...@wireapp/react-ui-kit@9.23.4) (2024-09-16)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit
