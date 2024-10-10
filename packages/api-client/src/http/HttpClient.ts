@@ -171,7 +171,7 @@ type SendRequest = {
         config['axios-retry'] = {
           retries: 0,
         };
-        return this._sendRequest<T>(config, false, abortController);
+        return this._sendRequest<T>({config, isFirstTry: false, abortController});
       };
 
       const hasAccessToken = !!this.accessTokenStore?.accessToken;
