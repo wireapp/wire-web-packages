@@ -289,8 +289,8 @@ type SendRequest = {
     abortController?: AbortController,
   ): Promise<AxiosResponse<T>> {
     const promise = isSynchronousRequest
-      ? this.requestQueue.add(() => this._sendRequest<T>(config, true, abortController))
-      : this._sendRequest<T>(config, true, abortController);
+      ? this.requestQueue.add(() => this._sendRequest<T>({config, abortController}))
+      : this._sendRequest<T>({config, abortController});
 
     try {
       return await promise;
