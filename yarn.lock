@@ -3022,15 +3022,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/changed@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@lerna-lite/changed@npm:3.9.2"
+"@lerna-lite/changed@npm:3.9.3":
+  version: 3.9.3
+  resolution: "@lerna-lite/changed@npm:3.9.3"
   dependencies:
-    "@lerna-lite/cli": 3.9.2
-    "@lerna-lite/core": 3.9.2
-    "@lerna-lite/list": 3.9.2
-    "@lerna-lite/listable": 3.9.2
-  checksum: 3bb94c8be90db0c593c019dcde874315166f1f3109015b380befb91d33adda124ea97422152bfba94acd12d3e9d53ca708c3665d013533ab30837135c2ccba56
+    "@lerna-lite/cli": 3.9.3
+    "@lerna-lite/core": 3.9.3
+    "@lerna-lite/list": 3.9.3
+    "@lerna-lite/listable": 3.9.3
+  checksum: a28fa70723bbd13234acafaa6287c603e5641dfc75b2bb5a623e61c93ec40591292773867da21aa4064f58e86804020e37f02159e0898ca4119b6977c038009f
   languageName: node
   linkType: hard
 
@@ -3168,17 +3168,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/filter-packages@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@lerna-lite/filter-packages@npm:3.9.2"
-  dependencies:
-    "@lerna-lite/core": 3.9.2
-    "@lerna-lite/npmlog": ^3.8.0
-    multimatch: ^7.0.0
-  checksum: a1c5590c2b0394b9cacb4378bb410bd6fe1a7d528bd5776fe74adf8b3de6103c2a27e117f5970a220b2e9e5cb60e10ff8def70a82f40c8df78559d071d794ac2
-  languageName: node
-  linkType: hard
-
 "@lerna-lite/filter-packages@npm:3.9.3":
   version: 3.9.3
   resolution: "@lerna-lite/filter-packages@npm:3.9.3"
@@ -3214,26 +3203,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@lerna-lite/list@npm:3.9.2"
+"@lerna-lite/list@npm:3.9.3":
+  version: 3.9.3
+  resolution: "@lerna-lite/list@npm:3.9.3"
   dependencies:
-    "@lerna-lite/cli": 3.9.2
-    "@lerna-lite/core": 3.9.2
-    "@lerna-lite/filter-packages": 3.9.2
-    "@lerna-lite/listable": 3.9.2
-  checksum: 9c08b8cad08ce531a84ce928e86f2dc44691f4256297a22128217eb5929ce9fa62f301ba2c8531e426c0e005cfbc681b7be1159ea5fc47098e9785e0e3c9caef
+    "@lerna-lite/cli": 3.9.3
+    "@lerna-lite/core": 3.9.3
+    "@lerna-lite/filter-packages": 3.9.3
+    "@lerna-lite/listable": 3.9.3
+  checksum: 0c7a0d0706097015d19f57d2694d509946e19070ee55b5bbfc8972a98a293687626bd7241410a3ad4880980d5770bf84e5b1c419a6fa01b47e6ba1d60964e6de
   languageName: node
   linkType: hard
 
-"@lerna-lite/listable@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@lerna-lite/listable@npm:3.9.2"
+"@lerna-lite/listable@npm:3.9.3":
+  version: 3.9.3
+  resolution: "@lerna-lite/listable@npm:3.9.3"
   dependencies:
-    "@lerna-lite/core": 3.9.2
+    "@lerna-lite/core": 3.9.3
     columnify: ^1.6.0
-    picocolors: ^1.1.0
-  checksum: b7bc969c701946ab6a13ce9b928ae79b86fd031024ce3689f146784fec7fae20f012e5a4176ed3e1cdd84da2f8778678178156c4aafadb2d14cedd9700515f8c
+    tinyrainbow: ^1.2.0
+  checksum: 9a9b1fc7436b0757d2d51c9449b23d60254e1f2b4ead0617949a0348ef2ae0b4d7762b0210a4c53464a4dabc023d9a2f3e21b7ad2c6e4d99acac5ae8ed3e4910
   languageName: node
   linkType: hard
 
@@ -17417,7 +17406,7 @@ __metadata:
     "@babel/core": ^7.19.6
     "@babel/eslint-parser": ^7.19.1
     "@emotion/eslint-plugin": ^11.10.0
-    "@lerna-lite/changed": 3.9.2
+    "@lerna-lite/changed": 3.9.3
     "@lerna-lite/cli": 3.9.2
     "@lerna-lite/publish": 3.9.2
     "@lerna-lite/run": 3.9.3
