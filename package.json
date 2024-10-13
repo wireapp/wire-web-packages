@@ -6,7 +6,7 @@
     "@lerna-lite/changed": "3.9.2",
     "@lerna-lite/cli": "3.9.2",
     "@lerna-lite/publish": "3.9.2",
-    "@lerna-lite/run": "3.9.2",
+    "@lerna-lite/run": "3.9.3",
     "@lerna-lite/version": "3.9.2",
     "@swc/core": "^1.3.10",
     "@swc/jest": "^0.2.23",
