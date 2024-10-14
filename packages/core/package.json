@@ -36,7 +36,6 @@
     "@swc/jest": "^0.2.23",
     "@types/jest": "^29.2.0",
     "@types/long": "^5.0.0",
-    "@types/rimraf": "4.0.5",
     "@types/tough-cookie": "4.0.5",
     "@types/uuid": "9.0.8",
     "commander": "12.1.0",
