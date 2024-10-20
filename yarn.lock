@@ -3174,14 +3174,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/publish@npm:3.9.3":
-  version: 3.9.3
-  resolution: "@lerna-lite/publish@npm:3.9.3"
+"@lerna-lite/publish@npm:3.10.0":
+  version: 3.10.0
+  resolution: "@lerna-lite/publish@npm:3.10.0"
   dependencies:
-    "@lerna-lite/cli": 3.9.3
-    "@lerna-lite/core": 3.9.3
-    "@lerna-lite/npmlog": 3.9.3
-    "@lerna-lite/version": 3.9.3
+    "@lerna-lite/cli": 3.10.0
+    "@lerna-lite/core": 3.10.0
+    "@lerna-lite/npmlog": 3.10.0
+    "@lerna-lite/version": 3.10.0
     "@npmcli/arborist": ^7.5.4
     "@npmcli/package-json": ^5.2.1
     byte-size: ^9.0.0
@@ -3201,9 +3201,9 @@ __metadata:
     ssri: ^11.0.0
     tar: ^6.2.1
     temp-dir: ^3.0.0
-    tinyglobby: ^0.2.7
+    tinyglobby: ^0.2.9
     tinyrainbow: ^1.2.0
-  checksum: 51d9dd4b26ad5d2f124385908af63d14ea423b66d876834e479bf5443996cc13236bf8bb77611b8d8a95d8cf112f0fefbc8a9f0eb9d625db2644de83dc317ef1
+  checksum: f034ad754db0a3b59d5004a25f225f2244b499b7bf3daaa5d959bdb08b57b7ce0c5ad4cdb724eb0f59eb28dcfc474e261cd3bea0087f2ccb2dce9cc47ac01d8a
   languageName: node
   linkType: hard
 
@@ -3260,47 +3260,6 @@ __metadata:
     uuid: ^10.0.0
     write-json-file: ^6.0.0
   checksum: 2a031d6bcf4cc8e45873e7ef39e90b68f9fcc3453ff981c831531a90a7ceeb7c018b6bb998136d4a6e3491dfe54805cfdd1a75a8660b602bf969242df69b89ba
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/version@npm:3.9.3":
-  version: 3.9.3
-  resolution: "@lerna-lite/version@npm:3.9.3"
-  dependencies:
-    "@lerna-lite/cli": 3.9.3
-    "@lerna-lite/core": 3.9.3
-    "@lerna-lite/npmlog": 3.9.3
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^21.0.2
-    conventional-changelog-angular: ^7.0.0
-    conventional-changelog-core: ^7.0.0
-    conventional-changelog-writer: ^7.0.1
-    conventional-commits-parser: ^5.0.0
-    conventional-recommended-bump: ^9.0.0
-    dedent: ^1.5.3
-    fs-extra: ^11.2.0
-    get-stream: ^9.0.1
-    git-url-parse: ^15.0.0
-    graceful-fs: ^4.2.11
-    is-stream: ^4.0.1
-    load-json-file: ^7.0.1
-    make-dir: ^5.0.0
-    minimatch: ^9.0.5
-    new-github-release-url: ^2.0.0
-    node-fetch: ^3.3.2
-    npm-package-arg: ^11.0.3
-    p-limit: ^6.1.0
-    p-map: ^7.0.2
-    p-pipe: ^4.0.0
-    p-reduce: ^3.0.0
-    pify: ^6.1.0
-    semver: ^7.6.3
-    slash: ^5.1.0
-    temp-dir: ^3.0.0
-    tinyrainbow: ^1.2.0
-    uuid: ^10.0.0
-    write-json-file: ^6.0.0
-  checksum: 3103a1b42df4d7b38dcbe2160ea8ff5d1b9ccb7f36fcf422f6b9b9d2ef0b4b75329f5c220ba3461a75d4d40fc17ecac6d1e92cd07cecfa6ef473f1a74d451929
   languageName: node
   linkType: hard
 
@@ -17220,7 +17179,7 @@ __metadata:
     "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": 3.9.3
     "@lerna-lite/cli": 3.10.0
-    "@lerna-lite/publish": 3.9.3
+    "@lerna-lite/publish": 3.10.0
     "@lerna-lite/run": 3.10.0
     "@lerna-lite/version": 3.10.0
     "@swc/core": ^1.3.10
@@ -18725,7 +18684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinyglobby@npm:^0.2.7, tinyglobby@npm:^0.2.9":
+"tinyglobby@npm:^0.2.9":
   version: 0.2.9
   resolution: "tinyglobby@npm:0.2.9"
   dependencies:
