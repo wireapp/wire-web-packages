@@ -5298,7 +5298,7 @@ __metadata:
     nock: 13.5.5
     rimraf: 6.0.1
     typescript: ^5.0.4
-    uuid: 9.0.1
+    uuid: 11.0.0
     zod: 3.23.8
   languageName: unknown
   linkType: soft
@@ -5516,7 +5516,7 @@ __metadata:
     rimraf: 6.0.1
     ts-node: ^10.9.1
     typescript: ^5.0.4
-    uuid: 9.0.1
+    uuid: 11.0.0
   peerDependencies:
     "@wireapp/store-engine": 5.x.x
   languageName: unknown
@@ -19430,12 +19430,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
+"uuid@npm:11.0.0":
+  version: 11.0.0
+  resolution: "uuid@npm:11.0.0"
   bin:
-    uuid: dist/bin/uuid
-  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
+    uuid: dist/esm/bin/uuid
+  checksum: 060b646193d035a610632aeaa5a6709e0687e7e8b4c4d92afd095c38a25cf5eaf3ceaab1eccf2bc6b07ff41de947321bc5b4fe513a0b4cc9d9978c6c848ed56e
   languageName: node
   linkType: hard
 
