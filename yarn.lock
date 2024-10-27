@@ -4082,11 +4082,11 @@ __metadata:
   linkType: hard
 
 "@types/axios@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "@types/axios@npm:0.14.0"
+  version: 0.14.4
+  resolution: "@types/axios@npm:0.14.4"
   dependencies:
     axios: "*"
-  checksum: 12a230b9404055d81804cb57fe4739b2317111b28a39e2477b2513250e8b85725e6f6ce509fc2a9494a6da60facb8d80df875fcd747f62f6c3abebc7db60ae66
+  checksum: 51defed1e76e3fa7e63ae999c2e8c7c253be9b1a1fa3006f4413a0c461234a7e9e7e5df1bb2f64be221617fa94ed2272345ef19724dd550ad01a090510714275
   languageName: node
   linkType: hard
 
