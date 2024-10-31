@@ -312,10 +312,10 @@ export function buildInCallEmojiMessage(payloadBundle: InCallEmojiMessage['conte
 }
 
 export function buildInCallHandRaiseMessage(payloadBundle: InCallHandRaiseMessage['content']): GenericMessage {
-  const {is_hand_up} = payloadBundle;
+  const {isHandUp} = payloadBundle;
 
   const handRaise = InCallHandRaise.create({
-    isHandUp: is_hand_up,
+    isHandUp: isHandUp,
   });
 
   return GenericMessage.create({

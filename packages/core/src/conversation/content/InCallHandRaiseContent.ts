@@ -17,8 +17,6 @@
  *
  */
 
-import {InCallHandRaiseType} from '../InCallHandRaiseType';
-
 export interface InCallHandRaiseContent {
-  is_hand_up: InCallHandRaiseType;
+  isHandUp: boolean;
 }
