@@ -28,4 +28,3 @@ export * from './message/PayloadBundle';
 export * from './message/Message.types';
 export * from './ReactionType';
 export * from './InCallEmojiType';
-export * from './InCallHandRaiseType';
