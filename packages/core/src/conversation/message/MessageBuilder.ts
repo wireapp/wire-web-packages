@@ -315,7 +315,7 @@ export function buildInCallHandRaiseMessage(payloadBundle: InCallHandRaiseMessag
   const {isHandUp} = payloadBundle;
 
   const handRaise = InCallHandRaise.create({
-    isHandUp: isHandUp,
+    isHandUp,
   });
 
   return GenericMessage.create({
