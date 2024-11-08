@@ -19,13 +19,37 @@
 
 import {Countly, type CountlyConsentFeatures} from './countly';
 
-type TelemetryConsentFeatures = CountlyConsentFeatures;
-
 declare global {
   interface Window {
     Countly: Countly;
   }
 }
+
+type TelemetryConsentFeatures = CountlyConsentFeatures;
+
+export type TelemetryEvent<SegmentationType = string | number | boolean> = {
+  /**
+   * The name of the event
+   */
+  name: string;
+  /**
+   * The number of events to be send
+   * @default 1
+   */
+  count?: number;
+  /**
+   * The sum to report with the event
+   */
+  sum?: number;
+  /**
+   * The duration expressed in seconds, meant for reporting with the event
+   */
+  duration?: number;
+  /**
+   * The an object with key/value pairs to report with the event as segments
+   */
+  segmentation?: Record<string, SegmentationType>;
+};
 
 /**
  * Configuration options for initializing the analytics library.
@@ -201,15 +225,15 @@ export const endSession = (): void => {
  * Events are a way to track any custom actions or other data you would like to track from your website.
  * You may also set segments to view a breakdown of the action by providing the segment values.
  *
- * @param {string} eventName - The name of the custom event.
- * @param {Record<string, SegmentationType>} [segmentation] - An optional object containing event segmentation data.
- * @template SegmentationType - The type of the segmentation data values (string, number, or boolean).
  */
-export const trackEvent = <SegmentationType = string | number | boolean>(
-  eventName: string,
-  segmentation?: Record<string, SegmentationType>,
-): void => {
-  window.Countly.q.push(['add_event', {key: eventName, segmentation}]);
+export const trackEvent = <SegmentationType = string | number | boolean>({
+  name,
+  count,
+  sum,
+  duration,
+  segmentation,
+}: TelemetryEvent<SegmentationType>): void => {
+  window.Countly.q.push(['add_event', {key: name, count, sum, dur: duration, segmentation}]);
 };
 
 /**
