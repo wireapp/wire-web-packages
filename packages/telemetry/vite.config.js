@@ -30,7 +30,7 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: (filename, entryName) => {
         if (filename === 'cjs') {
-          return `${entryName}.${filename}.js`;
+          return `${entryName}.cjs.js`;
         }
         return `${entryName}.js`;
       },
