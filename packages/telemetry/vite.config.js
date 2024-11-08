@@ -21,23 +21,24 @@ const injectCountlyPlugin = () => {
 
 export default defineConfig({
   build: {
+    target: 'esnext',
     lib: {
       entry: {
         index: './src/index.ts',
         embed: './src/embed.ts',
       },
-      formats: ['es'],
-      fileName: (_, entryName) => `${entryName}.js`,
+      formats: ['es', 'cjs'],
+      fileName: (filename, entryName) => {
+        if (filename === 'cjs') {
+          return `${entryName}.${filename}.js`;
+        }
+        return `${entryName}.js`;
+      },
     },
     rollupOptions: {
       external: ['countly-sdk-web/lib/countly.min.js'],
     },
     outDir: 'lib',
   },
-  plugins: [
-    injectCountlyPlugin(),
-    dts({
-      include: ['./src/index.ts', './src/embed.ts'],
-    }),
-  ],
+  plugins: [injectCountlyPlugin(), dts()],
 });

@@ -6,6 +6,13 @@
     "lib"
   ],
   "main": "./lib/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./lib/index.js",
+      "default": "./lib/index.cjs"
+    }
+  },
   "version": "0.0.1",
   "devDependencies": {
     "@types/node": "^22.0.0",
