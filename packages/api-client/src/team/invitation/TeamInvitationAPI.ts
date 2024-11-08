@@ -26,11 +26,11 @@ import {
   InvitationNotFoundError,
   InvitationMultipleError,
 } from './InvitationError';
+import {TeamMigrationPayload} from './TeamMigrationPayload';
 
 import {HttpClient, BackendErrorLabel, BackendError} from '../../http/';
 import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation/';
 import {TeamAPI} from '../team/';
-import {TeamMigrationPayload} from './TeamMigrationPayload';
 
 export class TeamInvitationAPI {
   public static readonly MAX_CHUNK_SIZE = 100;
