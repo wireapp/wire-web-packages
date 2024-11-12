@@ -27,6 +27,23 @@ declare global {
 
 type TelemetryConsentFeatures = CountlyConsentFeatures;
 
+const allConsentFeatures: TelemetryConsentFeatures[] = [
+  'sessions',
+  'events',
+  'views',
+  'scrolls',
+  'clicks',
+  'forms',
+  'crashes',
+  'attribution',
+  'users',
+  'star-rating',
+  'feedback',
+  'location',
+  'remote-config',
+  'apm',
+];
+
 export type TelemetryEvent<SegmentationType = string | number | boolean> = {
   /**
    * The name of the event
@@ -253,6 +270,25 @@ export const trackClicks = (): void => {
  */
 export const trackPageView = (location?: string): void => {
   window.Countly.q.push(['track_pageview', location]);
+};
+
+/**
+ * Adds all available consent features to the analytics library.
+ *
+ * Use this to inform provider of the all features the user has consented to.
+ */
+export const addAllConsentFeatures = (): void => {
+  window.Countly.q.push(['add_consent', allConsentFeatures]);
+};
+
+/**
+ * Removes all available consent features from the analytics library.
+ *
+ * Use this to inform provider of the all features the user has withdrawn consent for.
+ *
+ */
+export const removeAllConsentFeatures = (): void => {
+  window.Countly.q.push(['remove_consent', allConsentFeatures]);
 };
 
 /**
