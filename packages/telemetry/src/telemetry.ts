@@ -54,7 +54,7 @@ export type TelemetryEvent<SegmentationType = string | number | boolean> = {
 /**
  * Configuration options for initializing the analytics library.
  */
-interface InitilaizeConfig {
+interface InitializeConfig {
   /**
    * The version of the application.
    */
@@ -138,7 +138,7 @@ interface InitilaizeConfig {
  * Initializes the analytics library with the provided configuration.
  * @param {InitilaizeConfig} config - The configuration options.
  */
-export const initialize = (config: InitilaizeConfig): void => {
+export const initialize = (config: InitializeConfig): void => {
   if (!isLoaded()) {
     console.error('Telemetry script not loaded');
     return;
