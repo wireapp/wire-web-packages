@@ -24,7 +24,7 @@ import {gzip} from 'pako';
 
 import {EventEmitter} from 'events';
 
-import {TimeUtil} from '@wireapp/commons';
+import {LogFactory, TimeUtil} from '@wireapp/commons';
 import {PriorityQueue} from '@wireapp/priority-queue';
 
 import {
@@ -101,10 +101,7 @@ export class HttpClient extends EventEmitter {
 
     this.connectionState = ConnectionState.UNDEFINED;
 
-    this.logger = logdown('@wireapp/api-client/http/HttpClient', {
-      logger: console,
-      markdown: false,
-    });
+    this.logger = LogFactory.getLogger('@wireapp/api-client/http/HttpClient');
 
     this.requestQueue = new PriorityQueue({
       maxRetries: 0,
@@ -243,7 +240,7 @@ export class HttpClient extends EventEmitter {
     const accessToken = await this.postAccess(expiredAccessToken);
     this.logger.info(
       `Received updated access token. It will expire in "${accessToken.expires_in}" seconds.`,
-      JSON.stringify(ObfuscationUtil.obfuscateAccessToken(accessToken)),
+      ObfuscationUtil.obfuscateAccessToken(accessToken),
     );
     return this.accessTokenStore.updateToken(accessToken);
   }
