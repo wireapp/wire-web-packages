@@ -102,7 +102,7 @@ export class ReconnectingWebsocket {
   }
 
   private readonly internalOnError = (error: ErrorEvent) => {
-    this.logger.warn('WebSocket connection error', error);
+    this.logger.warn('WebSocket connection error', JSON.stringify({error}));
     if (this.onError) {
       this.onError(error);
     }

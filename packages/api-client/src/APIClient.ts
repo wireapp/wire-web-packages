@@ -200,7 +200,7 @@ export class APIClient extends EventEmitter {
   }
 
   private configureApis(backendFeatures: BackendFeatures): Apis {
-    this.logger.info('configuring APIs with config', backendFeatures);
+    this.logger.info('configuring APIs with config', JSON.stringify(backendFeatures));
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
     return {
       account: new AccountAPI(this.transport.http),
