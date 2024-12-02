@@ -28,11 +28,12 @@ import {
   MenuProps,
   GroupBase,
   OptionsOrGroups,
+  MenuListProps,
 } from 'react-select';
 
 import {Option} from './Select';
 
-import {CheckIcon} from '../Icon';
+import {CheckIcon, CloseIcon} from '../Icon';
 import {ArrowDown} from '../Icon/ArrowDown';
 import {Theme} from '../Layout';
 import {TabIndex} from '../types/enums';
@@ -133,6 +134,55 @@ export const Menu = (dataUieName: string, css?: CSSObject) => (props: MenuProps)
     </components.Menu>
   );
 };
+
+// eslint-disable-next-line react/display-name
+export const MenuList = (menuListHeading: string, dataUieName: string) => (props: MenuListProps) => {
+  const {selectProps, children} = props;
+
+  const handleClose = () => {
+    if (selectProps && selectProps.onMenuClose) {
+      selectProps.onMenuClose();
+    }
+  };
+
+  return (
+    <components.MenuList {...props}>
+      <div
+        {...(dataUieName && {
+          'data-uie-name': `menu-list-${dataUieName}`,
+        })}
+      >
+        <div
+          css={(theme: Theme) => ({
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: theme.fontSizes.medium,
+            fontWeight: 600,
+            padding: '8px 16px',
+          })}
+        >
+          {menuListHeading}
+          <button
+            onClick={handleClose}
+            css={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <CloseIcon width={16} height={16} />
+          </button>
+        </div>
+        {children}
+      </div>
+    </components.MenuList>
+  );
+};
+MenuList.displayName = 'MenuList';
 
 export const renderValue = value => {
   if (Array.isArray(value)) {
