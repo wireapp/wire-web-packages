@@ -5469,7 +5469,7 @@ __metadata:
     browser-sync: 3.0.3
     concurrently: 9.1.0
     cross-env: 7.0.3
-    dotenv: 16.4.5
+    dotenv: 16.4.6
     http-status-codes: 2.3.0
     jest: ^29.2.1
     logdown: 3.3.1
@@ -8841,10 +8841,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.4.5, dotenv@npm:^16.4.5":
-  version: 16.4.5
-  resolution: "dotenv@npm:16.4.5"
-  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
+"dotenv@npm:16.4.6":
+  version: 16.4.6
+  resolution: "dotenv@npm:16.4.6"
+  checksum: d29510d8716a2ca906ebb2d21dd5ee2e2b0af9e66ccb85a0c989022e16b82b8816887e14930a940fb0107d4da4aa8aad9c32c587d3052b900046e267725a4946
   languageName: node
   linkType: hard
 
@@ -8852,6 +8852,13 @@ __metadata:
   version: 14.3.2
   resolution: "dotenv@npm:14.3.2"
   checksum: 86c06758915d6facc35275f4a7fafc16705b6f3b44befaa8abca91367991efc8ff8db5437d3cc14778231d19fb97610fe82d60f8a53ba723cdb69fe4171439aa
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
   languageName: node
   linkType: hard
 
