@@ -79,6 +79,12 @@ export type PostMlsMessageResponse = {
 
 type ConversationGuestLinkStatus = {status: 'enabled' | 'disabled'};
 
+const apiBreakpoint = {
+  version2: 2,
+  // API V7 introduces new endpoints to conversations and users
+  version7: 7,
+};
+
 export class ConversationAPI {
   public static readonly MAX_CHUNK_SIZE = 500;
   public static readonly URL = {
@@ -153,7 +159,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       method: 'delete',
       url:
-        this.backendFeatures.version >= 7
+        this.backendFeatures.version >= apiBreakpoint.version7
           ? `${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${serviceId}`
           : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.BOTS}/${serviceId}`,
     };
@@ -336,7 +342,7 @@ export class ConversationAPI {
         data: {qualified_ids: chunk},
         method: 'post',
         url:
-          this.backendFeatures.version >= 2
+          this.backendFeatures.version >= apiBreakpoint.version2
             ? `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}`
             : `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.LIST}/${ConversationAPI.URL.V2}`,
       };
@@ -416,7 +422,7 @@ export class ConversationAPI {
       data: conversationData,
       method: 'post',
       url:
-        this.backendFeatures.version >= 7
+        this.backendFeatures.version >= apiBreakpoint.version7
           ? `${ConversationAPI.URL.ONE_2_ONE}-${ConversationAPI.URL.CONVERSATIONS}`
           : `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.ONE_2_ONE}`,
     };
@@ -432,7 +438,7 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       method: 'get',
       url:
-        this.backendFeatures.version >= 7
+        this.backendFeatures.version >= apiBreakpoint.version7
           ? `${ConversationAPI.URL.ONE_2_ONE}-${ConversationAPI.URL.CONVERSATIONS}/${domain}/${id}`
           : `${ConversationAPI.URL.CONVERSATIONS}/${ConversationAPI.URL.ONE_2_ONE}/${domain}/${id}`,
     };
@@ -493,7 +499,7 @@ export class ConversationAPI {
       },
       method: 'post',
       url:
-        this.backendFeatures.version >= 7
+        this.backendFeatures.version >= apiBreakpoint.version7
           ? `${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`
           : `${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.BOTS}}`,
     };

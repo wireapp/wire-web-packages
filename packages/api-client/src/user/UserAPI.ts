@@ -64,6 +64,12 @@ function isUsersResponse(object: any): object is UsersReponse {
   return object.found || object.failed || object.not_found;
 }
 
+const apiBreakpoint = {
+  version2: 2,
+  // API V7 introduces new endpoints to conversations and users
+  version7: 7,
+};
+
 export class UserAPI {
   public static readonly DEFAULT_USERS_CHUNK_SIZE = 50;
   public static readonly DEFAULT_USERS_PREKEY_BUNDLE_CHUNK_SIZE = 128;
@@ -490,7 +496,10 @@ export class UserAPI {
     const config: AxiosRequestConfig = {
       data: handles,
       method: 'post',
-      url: this.backendFeatures.version >= 7 ? `${UserAPI.URL.HANDLES}` : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}`,
+      url:
+        this.backendFeatures.version >= apiBreakpoint.version7
+          ? `${UserAPI.URL.HANDLES}`
+          : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}`,
     };
 
     const response = await this.client.sendJSON<string[]>(config);
@@ -506,7 +515,7 @@ export class UserAPI {
     const config: AxiosRequestConfig = {
       method: 'head',
       url:
-        this.backendFeatures.version >= 7
+        this.backendFeatures.version >= apiBreakpoint.version7
           ? `${UserAPI.URL.HANDLES}/${handle}`
           : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
     };
@@ -599,7 +608,7 @@ export class UserAPI {
       data: userIdList,
       method: 'post',
       url:
-        this.backendFeatures.version >= 2
+        this.backendFeatures.version >= apiBreakpoint.version2
           ? `${UserAPI.URL.USERS}/${UserAPI.URL.LIST_CLIENTS}`
           : `${UserAPI.URL.USERS}/${UserAPI.URL.LIST_CLIENTS}/${UserAPI.URL.V2}`,
     };
