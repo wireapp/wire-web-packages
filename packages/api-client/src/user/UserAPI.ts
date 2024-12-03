@@ -490,7 +490,7 @@ export class UserAPI {
     const config: AxiosRequestConfig = {
       data: handles,
       method: 'post',
-      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}`,
+      url: this.backendFeatures.version >= 7 ? `${UserAPI.URL.HANDLES}` : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}`,
     };
 
     const response = await this.client.sendJSON<string[]>(config);
@@ -505,7 +505,10 @@ export class UserAPI {
   public async headHandle(handle: string): Promise<void> {
     const config: AxiosRequestConfig = {
       method: 'head',
-      url: `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
+      url:
+        this.backendFeatures.version >= 7
+          ? `${UserAPI.URL.HANDLES}/${handle}`
+          : `${UserAPI.URL.USERS}/${UserAPI.URL.HANDLES}/${handle}`,
     };
 
     await this.client.sendJSON(config);
