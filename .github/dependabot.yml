@@ -8,6 +8,10 @@ updates:
       time: '16:00'
       timezone: 'Europe/Berlin'
     open-pull-requests-limit: 99
+    ignore:
+      # Freeze typescript minor and major versions updates
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
 
   # Github actions
   - package-ecosystem: 'github-actions'
