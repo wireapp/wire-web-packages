@@ -160,7 +160,7 @@ export class ConversationAPI {
       method: 'delete',
       url:
         this.backendFeatures.version >= apiBreakpoint.version7
-          ? `${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${serviceId}`
+          ? `/${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${serviceId}`
           : `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.BOTS}/${serviceId}`,
     };
 
@@ -500,7 +500,7 @@ export class ConversationAPI {
       method: 'post',
       url:
         this.backendFeatures.version >= apiBreakpoint.version7
-          ? `${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`
+          ? `/${ConversationAPI.URL.BOT}/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}`
           : `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.BOTS}}`,
     };
 
