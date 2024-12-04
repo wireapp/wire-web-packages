@@ -171,7 +171,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClient
    */
   public async getClient(userId: QualifiedId, clientId: string): Promise<PublicClient> {
-    const url = `//${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`;
+    const url = `/${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}/${clientId}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -190,7 +190,7 @@ export class UserAPI {
    */
   public async getClientPreKey(userId: QualifiedId, clientId: string): Promise<ClientPreKey> {
     const {id, domain} = userId;
-    const url = `//${UserAPI.URL.USERS}/${domain}/${id}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
+    const url = `/${UserAPI.URL.USERS}/${domain}/${id}/${UserAPI.URL.PRE_KEYS}/${clientId}`;
     const config: AxiosRequestConfig = {
       method: 'get',
       url,
@@ -206,7 +206,7 @@ export class UserAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/users/getUserClients
    */
   public async getClients(userId: QualifiedId): Promise<PublicClient[]> {
-    const url = `//${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`;
+    const url = `/${UserAPI.URL.USERS}/${userId.domain}/${userId.id}/${UserAPI.URL.CLIENTS}`;
 
     const config: AxiosRequestConfig = {
       method: 'get',
@@ -723,7 +723,7 @@ export class UserAPI {
     const config: AxiosRequestConfig = {
       data: {email},
       method: 'put',
-      url: `//${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.EMAIL}`,
+      url: `/${UserAPI.URL.USERS}/${userId}/${UserAPI.URL.EMAIL}`,
     };
     await this.client.sendJSON(config);
   }
