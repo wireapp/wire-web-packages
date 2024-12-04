@@ -32,11 +32,13 @@ import {
 } from 'react-select';
 
 import {Option} from './Select';
+import {menuListCloseButtonStyles, menuListHeadingContainerStyles} from './SelectComponents.styles';
 
 import {CheckIcon, CloseIcon} from '../Icon';
 import {ArrowDown} from '../Icon/ArrowDown';
 import {Theme} from '../Layout';
 import {TabIndex} from '../types/enums';
+
 // SelectContainer
 export const SelectContainer = (props: ContainerProps) => {
   return (
@@ -152,28 +154,9 @@ export const MenuList = (menuListHeading: string, dataUieName: string) => (props
           'data-uie-name': `menu-list-${dataUieName}`,
         })}
       >
-        <div
-          css={(theme: Theme) => ({
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: theme.fontSizes.medium,
-            fontWeight: 600,
-            padding: '8px 16px',
-          })}
-        >
+        <div css={(theme: Theme) => menuListHeadingContainerStyles(theme)}>
           {menuListHeading}
-          <button
-            onClick={handleClose}
-            css={{
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <button onClick={handleClose} css={menuListCloseButtonStyles} aria-label={`Close: ${menuListHeading}`}>
             <CloseIcon width={16} height={16} />
           </button>
         </div>
