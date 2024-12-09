@@ -28,7 +28,7 @@ interface RecurringTaskSchedulerStorage {
   delete: (key: string) => Promise<void>;
 }
 
-interface TaskParams {
+export interface TaskParams {
   every: number;
   task: () => Promise<unknown> | unknown;
   key: string;
