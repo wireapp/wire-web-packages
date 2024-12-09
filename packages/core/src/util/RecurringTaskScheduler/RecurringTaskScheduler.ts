@@ -69,7 +69,8 @@ export class RecurringTaskScheduler {
     }
 
     // If the task should be added on window focus event, we add it here
-    if (window && window.addEventListener && addTaskOnWindowFocusEvent) {
+
+    if (addTaskOnWindowFocusEvent && typeof window !== 'undefined' && typeof window.addEventListener !== undefined) {
       window.addEventListener('focus', taskConfig.task);
     }
   };
