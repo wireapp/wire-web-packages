@@ -32,12 +32,18 @@ interface TaskParams {
   every: number;
   task: () => Promise<unknown> | unknown;
   key: string;
+  addTaskOnWindowFocusEvent?: boolean;
 }
 
 export class RecurringTaskScheduler {
   constructor(private readonly storage: RecurringTaskSchedulerStorage) {}
 
-  public readonly registerTask = async ({every, task, key}: TaskParams): Promise<void> => {
+  public readonly registerTask = async ({
+    every,
+    task,
+    key,
+    addTaskOnWindowFocusEvent = false,
+  }: TaskParams): Promise<void> => {
     const firingDate = (await this.storage.get(key)) || Date.now() + every;
     await this.storage.set(key, firingDate);
 
@@ -60,6 +66,11 @@ export class RecurringTaskScheduler {
       LowPrecisionTaskScheduler.addTask({...taskConfig, intervalDelay: TimeUtil.TimeInMillis.MINUTE});
     } else {
       TaskScheduler.addTask(taskConfig);
+    }
+
+    // If the task should be added on window focus event, we add it here
+    if (window && window.addEventListener && addTaskOnWindowFocusEvent) {
+      window.addEventListener('focus', taskConfig.task);
     }
   };
 
