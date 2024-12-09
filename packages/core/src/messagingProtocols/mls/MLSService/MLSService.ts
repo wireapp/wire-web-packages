@@ -754,10 +754,21 @@ export class MLSService extends TypedEventEmitter<Events> {
    * @param clientId id of the client
    */
   public schedulePeriodicKeyPackagesBackendSync(clientId: string) {
+    const task = async () => {
+      this.logger.log('Executed Periodic check for key packages');
+      await this.verifyRemoteMLSKeyPackagesAmount(clientId);
+    };
+
+    // If we're in a browser, we can use the focus event to check
+    if (window && window.addEventListener) {
+      // Do this check on focus, as we might have missed the task while the app was in the background
+      window.addEventListener('focus', task);
+    }
+    // Schedule the task to run every day
     return this.recurringTaskScheduler.registerTask({
       every: TimeUtil.TimeInMillis.DAY,
       key: 'try-key-packages-backend-sync',
-      task: () => this.verifyRemoteMLSKeyPackagesAmount(clientId),
+      task,
     });
   }
 
