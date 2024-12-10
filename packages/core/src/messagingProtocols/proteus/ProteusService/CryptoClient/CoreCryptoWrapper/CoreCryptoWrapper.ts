@@ -83,7 +83,7 @@ export async function buildClient(
   });
 
   setLogger(coreCryptoLogger);
-  setMaxLogLevel(CoreCryptoLogLevel.Error);
+  setMaxLogLevel(CoreCryptoLogLevel.Info);
 
   return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
 }

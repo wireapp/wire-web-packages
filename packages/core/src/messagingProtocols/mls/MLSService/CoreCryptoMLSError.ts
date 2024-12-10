@@ -17,6 +17,21 @@
  *
  */
 
+const CORE_CRYPTO_ERROR_NAMES = {
+  ConversationAlreadyExists: 'ConversationAlreadyExists',
+  DuplicateMessage: 'DuplicateMessage',
+  BufferedFutureMessage: 'BufferedFutureMessage',
+  MessageEpochTooOld: 'MessageEpochTooOld',
+  SelfCommitIgnored: 'SelfCommitIgnored',
+  UnmergedPendingGroup: 'UnmergedPendingGroup',
+  StaleProposal: 'StaleProposal',
+  StaleCommit: 'StaleCommit',
+  Other: 'Other',
+  SessionNotFound: 'SessionNotFound',
+  RemoteIdentityChanged: 'RemoteIdentityChanged',
+  WrongEpoch: 'WrongEpoch',
+};
+
 export const CoreCryptoMLSError = {
   DECRYPTION: {
     WRONG_EPOCH: 'Incoming message is for the wrong epoch',
@@ -34,16 +49,29 @@ export const CoreCryptoMLSError = {
 } as const;
 
 export const isCoreCryptoMLSWrongEpochError = (error: unknown): boolean => {
-  return error instanceof Error && error.message === CoreCryptoMLSError.DECRYPTION.WRONG_EPOCH;
+  return (
+    error instanceof Error &&
+    (error.message === CoreCryptoMLSError.DECRYPTION.WRONG_EPOCH || error.name === CORE_CRYPTO_ERROR_NAMES.WrongEpoch)
+  );
 };
 
 export const isCoreCryptoMLSConversationAlreadyExistsError = (error: unknown): boolean => {
-  return error instanceof Error && error.message === CoreCryptoMLSError.CONVERSATION_ALREADY_EXISTS;
+  return (
+    error instanceof Error &&
+    (error.message === CoreCryptoMLSError.CONVERSATION_ALREADY_EXISTS ||
+      error.name === CORE_CRYPTO_ERROR_NAMES.ConversationAlreadyExists)
+  );
 };
 
 export const isCoreCryptoMLSOrphanWelcomeMessageError = (error: unknown): boolean => {
   return error instanceof Error && error.message === CoreCryptoMLSError.ORPHAN_WELCOME_MESSAGE;
 };
+
+const mlsDecryptionErrorNamesToIgnore: string[] = [
+  CORE_CRYPTO_ERROR_NAMES.StaleCommit,
+  CORE_CRYPTO_ERROR_NAMES.StaleProposal,
+  CORE_CRYPTO_ERROR_NAMES.DuplicateMessage,
+];
 
 const mlsDecryptionErrorsToIgnore: string[] = [
   CoreCryptoMLSError.DECRYPTION.ALREADY_DECRYPTED,
@@ -55,5 +83,8 @@ const mlsDecryptionErrorsToIgnore: string[] = [
 ];
 
 export const shouldMLSDecryptionErrorBeIgnored = (error: unknown): error is Error => {
-  return error instanceof Error && mlsDecryptionErrorsToIgnore.includes(error.message);
+  return (
+    error instanceof Error &&
+    (mlsDecryptionErrorsToIgnore.includes(error.message) || mlsDecryptionErrorNamesToIgnore.includes(error.name))
+  );
 };
