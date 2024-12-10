@@ -21,7 +21,8 @@ import {PreKey} from '@wireapp/api-client/lib/auth';
 import {Encoder} from 'bazinga64';
 import {deleteDB} from 'idb';
 
-import {CoreCrypto} from '@wireapp/core-crypto';
+import {LogFactory} from '@wireapp/commons';
+import {CoreCrypto, CoreCryptoLogLevel, setLogger} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
@@ -38,6 +39,24 @@ type Config = {
 
 type ClientConfig = Omit<Config, 'generateSecretKey' | 'wasmFilePath'> & {
   onWipe: () => Promise<void>;
+};
+
+const logger = LogFactory.getLogger('@wireapp/core/CoreCryptoWrapper');
+
+const logFunctions: Record<CoreCryptoLogLevel, Function> = {
+  [CoreCryptoLogLevel.Off]: logger.debug,
+  [CoreCryptoLogLevel.Trace]: logger.debug,
+  [CoreCryptoLogLevel.Debug]: logger.debug,
+  [CoreCryptoLogLevel.Info]: logger.info,
+  [CoreCryptoLogLevel.Warn]: logger.warn,
+  [CoreCryptoLogLevel.Error]: logger.error,
+};
+
+const coreCryptoLogger = {
+  log: (level: CoreCryptoLogLevel, message: string, context: string) => {
+    console.info(level, message, context);
+    logFunctions[level]({message, context});
+  },
 };
 
 export async function buildClient(
@@ -63,6 +82,9 @@ export async function buildClient(
     key: Encoder.toBase64(key.key).asString,
     wasmFilePath,
   });
+
+  setLogger(coreCryptoLogger);
+
   return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
 }
 
