@@ -54,7 +54,7 @@ const logFunctions: Record<CoreCryptoLogLevel, Function> = {
 
 const coreCryptoLogger = {
   log: (level: CoreCryptoLogLevel, message: string, context: string) => {
-    logFunctions[level]({message, context});
+    logFunctions[level].call(logger, {message, context});
   },
 };
 
