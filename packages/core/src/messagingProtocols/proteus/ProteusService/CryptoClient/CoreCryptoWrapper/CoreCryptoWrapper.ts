@@ -44,12 +44,12 @@ type ClientConfig = Omit<Config, 'generateSecretKey' | 'wasmFilePath'> & {
 const logger = LogFactory.getLogger('@wireapp/core/CoreCryptoWrapper');
 
 const logFunctions: Record<CoreCryptoLogLevel, Function> = {
-  [CoreCryptoLogLevel.Off]: logger.debug,
-  [CoreCryptoLogLevel.Trace]: logger.debug,
-  [CoreCryptoLogLevel.Debug]: logger.debug,
-  [CoreCryptoLogLevel.Info]: logger.info,
-  [CoreCryptoLogLevel.Warn]: logger.warn,
-  [CoreCryptoLogLevel.Error]: logger.error,
+  1: logger.debug,
+  2: logger.debug,
+  3: logger.debug,
+  4: logger.info,
+  5: logger.warn,
+  6: logger.error,
 };
 
 const coreCryptoLogger = {
