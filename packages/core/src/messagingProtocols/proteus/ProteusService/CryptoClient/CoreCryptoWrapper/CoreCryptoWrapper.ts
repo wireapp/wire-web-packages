@@ -22,7 +22,7 @@ import {Encoder} from 'bazinga64';
 import {deleteDB} from 'idb';
 
 import {LogFactory} from '@wireapp/commons';
-import {CoreCrypto, CoreCryptoLogLevel, setLogger} from '@wireapp/core-crypto';
+import {CoreCrypto, CoreCryptoLogLevel, setLogger, setMaxLogLevel} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
@@ -84,6 +84,7 @@ export async function buildClient(
   });
 
   setLogger(coreCryptoLogger);
+  setMaxLogLevel(CoreCryptoLogLevel.Error);
 
   return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
 }
