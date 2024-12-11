@@ -18,7 +18,7 @@
  */
 
 const CORE_CRYPTO_ERROR_NAMES = {
-  ConversationAlreadyExists: 'ConversationAlreadyExists',
+  MlsErrorConversationAlreadyExists: 'MlsErrorConversationAlreadyExists',
   DuplicateMessage: 'DuplicateMessage',
   BufferedFutureMessage: 'BufferedFutureMessage',
   MessageEpochTooOld: 'MessageEpochTooOld',
@@ -59,7 +59,7 @@ export const isCoreCryptoMLSConversationAlreadyExistsError = (error: unknown): b
   return (
     error instanceof Error &&
     (error.message === CoreCryptoMLSError.CONVERSATION_ALREADY_EXISTS ||
-      error.name === CORE_CRYPTO_ERROR_NAMES.ConversationAlreadyExists)
+      error.name === CORE_CRYPTO_ERROR_NAMES.MlsErrorConversationAlreadyExists)
   );
 };
 
