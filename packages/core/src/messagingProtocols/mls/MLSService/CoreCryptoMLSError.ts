@@ -17,7 +17,7 @@
  *
  */
 
-const CORE_CRYPTO_ERROR_NAMES = {
+export const CORE_CRYPTO_ERROR_NAMES = {
   MlsErrorConversationAlreadyExists: 'MlsErrorConversationAlreadyExists',
   DuplicateMessage: 'DuplicateMessage',
   BufferedFutureMessage: 'BufferedFutureMessage',
