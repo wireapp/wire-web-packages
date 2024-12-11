@@ -24,6 +24,7 @@ import {CoreCryptoError} from '@wireapp/core-crypto';
 import {DecryptionError} from '../../../../errors/DecryptionError';
 
 export const ProteusErrors = {
+  SessionNotFound: 102,
   InvalidMessage: 201,
   RemoteIdentityChanged: 204,
   InvalidSignature: 207,
@@ -40,16 +41,43 @@ const isCryptoboxError = (error: any): error is CryptoboxError => {
   return 'code' in error;
 };
 
+export const CORE_CRYPTO_PROTEUS_ERROR_NAMES = {
+  ProteusErrorSessionNotFound: 'ProteusErrorSessionNotFound',
+  ProteusErrorRemoteIdentityChanged: 'ProteusErrorRemoteIdentityChanged',
+  ProteusErrorDuplicateMessage: 'ProteusErrorDuplicateMessage',
+};
+
 type SenderInfo = {clientId: string; userId: QualifiedId};
+
+function getErrorCode(error: CoreCryptoError): number {
+  if (isCoreCryptoError(error) && error.proteusErrorCode) {
+    return error.proteusErrorCode;
+  }
+
+  if (error.name === CORE_CRYPTO_PROTEUS_ERROR_NAMES.ProteusErrorSessionNotFound) {
+    return ProteusErrors.SessionNotFound;
+  }
+
+  if (error.name === CORE_CRYPTO_PROTEUS_ERROR_NAMES.ProteusErrorRemoteIdentityChanged) {
+    return ProteusErrors.RemoteIdentityChanged;
+  }
+
+  if (error.name === CORE_CRYPTO_PROTEUS_ERROR_NAMES.ProteusErrorDuplicateMessage) {
+    return ProteusErrors.DuplicateMessage;
+  }
+
+  return ProteusErrors.Unknown;
+}
+
 export const generateDecryptionError = (senderInfo: SenderInfo, error: any): DecryptionError => {
   const {clientId, userId} = senderInfo;
   const sender = `${userId.id} (${clientId})`;
 
-  const coreCryptoCode = isCoreCryptoError(error) ? error.proteusErrorCode : null;
+  const coreCryptoCode = error instanceof CoreCryptoError ? getErrorCode(error) : null;
   const cryptoboxCode = isCryptoboxError(error) ? error.code : null;
   const code = coreCryptoCode ?? cryptoboxCode ?? ProteusErrors.Unknown;
 
-  const message = `Decryption error from ${sender} (${error.message})`;
+  const message = `Decryption error from ${sender} (name: ${error.name}) (message: ${error.message})`;
 
   return new DecryptionError(message, code);
 };
