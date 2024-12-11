@@ -27,8 +27,8 @@ export const CORE_CRYPTO_ERROR_NAMES = {
   MlsErrorStaleProposal: 'MlsErrorStaleProposal',
   MlsErrorStaleCommit: 'MlsErrorStaleCommit',
   MlsErrorOther: 'MlsErrorOther',
-  MlsErrorSessionNotFound: 'MlsErrorSessionNotFound',
-  MlsErrorRemoteIdentityChanged: 'MlsErrorRemoteIdentityChanged',
+  ProteusErrorSessionNotFound: 'ProteusErrorSessionNotFound',
+  ProteusErrorRemoteIdentityChanged: 'ProteusErrorRemoteIdentityChanged',
   MlsErrorWrongEpoch: 'MlsErrorWrongEpoch',
   MlsErrorOrphanWelcomeMessage: 'MlsErrorOrphanWelcomeMessage',
 };
