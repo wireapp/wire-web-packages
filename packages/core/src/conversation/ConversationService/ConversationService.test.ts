@@ -492,7 +492,7 @@ describe('ConversationService', () => {
       const mockMLSMessageAddEvent = createMLSMessageAddEventMock(conversationId);
 
       const wrongEpochError = new Error();
-      wrongEpochError.name = CORE_CRYPTO_ERROR_NAMES.WrongEpoch;
+      wrongEpochError.name = CORE_CRYPTO_ERROR_NAMES.MlsErrorWrongEpoch;
 
       jest.spyOn(mlsService, 'handleMLSMessageAddEvent').mockRejectedValueOnce(wrongEpochError);
 
@@ -525,7 +525,7 @@ describe('ConversationService', () => {
       const mockMLSMessageAddEvent = createMLSMessageAddEventMock(conversationId, SUBCONVERSATION_ID.CONFERENCE);
 
       const wrongEpochError = new Error();
-      wrongEpochError.name = CORE_CRYPTO_ERROR_NAMES.WrongEpoch;
+      wrongEpochError.name = CORE_CRYPTO_ERROR_NAMES.MlsErrorWrongEpoch;
 
       jest.spyOn(mlsService, 'handleMLSMessageAddEvent').mockRejectedValueOnce(wrongEpochError);
 
@@ -559,7 +559,7 @@ describe('ConversationService', () => {
       const mockMLSWelcomeMessageEvent = createMLSWelcomeMessageEventMock(conversationId);
 
       const orphanWelcomeMessageError = new Error();
-      orphanWelcomeMessageError.name = CORE_CRYPTO_ERROR_NAMES.OrphanWelcomeMessage;
+      orphanWelcomeMessageError.name = CORE_CRYPTO_ERROR_NAMES.MlsErrorOrphanWelcomeMessage;
 
       jest.spyOn(mlsService, 'handleMLSWelcomeMessageEvent').mockRejectedValueOnce(orphanWelcomeMessageError);
 

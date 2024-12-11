@@ -19,23 +19,22 @@
 
 export const CORE_CRYPTO_ERROR_NAMES = {
   MlsErrorConversationAlreadyExists: 'MlsErrorConversationAlreadyExists',
-  DuplicateMessage: 'DuplicateMessage',
-  BufferedFutureMessage: 'BufferedFutureMessage',
-  MessageEpochTooOld: 'MessageEpochTooOld',
-  SelfCommitIgnored: 'SelfCommitIgnored',
-  UnmergedPendingGroup: 'UnmergedPendingGroup',
-  StaleProposal: 'StaleProposal',
-  StaleCommit: 'StaleCommit',
-  Other: 'Other',
-  SessionNotFound: 'SessionNotFound',
-  RemoteIdentityChanged: 'RemoteIdentityChanged',
-  WrongEpoch: 'WrongEpoch',
-  OrphanWelcomeMessage: 'OrphanWelcomeMessage',
+  MlsErrorDuplicateMessage: 'MlsErrorDuplicateMessage',
+  MlsErrorBufferedFutureMessage: 'MlsErrorBufferedFutureMessage',
+  MlsErrorMessageEpochTooOld: 'MlsErrorMessageEpochTooOld',
+  MlsErrorSelfCommitIgnored: 'MlsErrorSelfCommitIgnored',
   MlsErrorUnmergedPendingGroup: 'MlsErrorUnmergedPendingGroup',
+  MlsErrorStaleProposal: 'MlsErrorStaleProposal',
+  MlsErrorStaleCommit: 'MlsErrorStaleCommit',
+  MlsErrorOther: 'MlsErrorOther',
+  MlsErrorSessionNotFound: 'MlsErrorSessionNotFound',
+  MlsErrorRemoteIdentityChanged: 'MlsErrorRemoteIdentityChanged',
+  MlsErrorWrongEpoch: 'MlsErrorWrongEpoch',
+  MlsErrorOrphanWelcomeMessage: 'MlsErrorOrphanWelcomeMessage',
 };
 
 export const isCoreCryptoMLSWrongEpochError = (error: unknown): boolean => {
-  return error instanceof Error && error.name === CORE_CRYPTO_ERROR_NAMES.WrongEpoch;
+  return error instanceof Error && error.name === CORE_CRYPTO_ERROR_NAMES.MlsErrorWrongEpoch;
 };
 
 export const isCoreCryptoMLSConversationAlreadyExistsError = (error: unknown): boolean => {
@@ -43,14 +42,14 @@ export const isCoreCryptoMLSConversationAlreadyExistsError = (error: unknown): b
 };
 
 export const isCoreCryptoMLSOrphanWelcomeMessageError = (error: unknown): boolean => {
-  return error instanceof Error && error.name === CORE_CRYPTO_ERROR_NAMES.OrphanWelcomeMessage;
+  return error instanceof Error && error.name === CORE_CRYPTO_ERROR_NAMES.MlsErrorOrphanWelcomeMessage;
 };
 
 const mlsDecryptionErrorNamesToIgnore: string[] = [
-  CORE_CRYPTO_ERROR_NAMES.StaleCommit,
-  CORE_CRYPTO_ERROR_NAMES.StaleProposal,
-  CORE_CRYPTO_ERROR_NAMES.DuplicateMessage,
-  CORE_CRYPTO_ERROR_NAMES.BufferedFutureMessage,
+  CORE_CRYPTO_ERROR_NAMES.MlsErrorStaleCommit,
+  CORE_CRYPTO_ERROR_NAMES.MlsErrorStaleProposal,
+  CORE_CRYPTO_ERROR_NAMES.MlsErrorDuplicateMessage,
+  CORE_CRYPTO_ERROR_NAMES.MlsErrorBufferedFutureMessage,
   CORE_CRYPTO_ERROR_NAMES.MlsErrorUnmergedPendingGroup,
 ];
 
