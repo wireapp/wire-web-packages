@@ -85,7 +85,7 @@ export abstract class MessageHandler {
     }
   }
 
-  public async setAdminRole(conversationId: string, userId: string): Promise<void> {
+  public async setAdminRole(conversationId: string, userId: QualifiedId): Promise<void> {
     return this.account!.service!.conversation.setMemberConversationRole(
       conversationId,
       userId,
@@ -93,7 +93,7 @@ export abstract class MessageHandler {
     );
   }
 
-  public async setMemberRole(conversationId: string, userId: string): Promise<void> {
+  public async setMemberRole(conversationId: string, userId: QualifiedId): Promise<void> {
     return this.account!.service!.conversation.setMemberConversationRole(
       conversationId,
       userId,
