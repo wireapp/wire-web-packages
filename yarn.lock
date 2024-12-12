@@ -5556,10 +5556,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:2.0.0":
-  version: 2.0.0
-  resolution: "@wireapp/core-crypto@npm:2.0.0"
-  checksum: afe932c0490a1f3d8e2054a2308e388b33fed5bef0a864479fa4e976da6b24a8a3ca14d87ac7f831166905b35d20a7847c7a036f745a802229821f47c4827437
+"@wireapp/core-crypto@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@wireapp/core-crypto@npm:3.0.0"
+  checksum: 815d109a11137f1c777b9c7d4835d8c9ded246cb79a456c24cfad17ced231f3987a3e6a8d3d98fa348f92d07656ccd6767a9b57ef5a7ba38b6ebff8262d14988
   languageName: node
   linkType: hard
 
@@ -5576,7 +5576,7 @@ __metadata:
     "@types/uuid": 9.0.8
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 2.0.0
+    "@wireapp/core-crypto": 3.0.0
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"
@@ -14741,11 +14741,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.3.7":
-  version: 3.3.7
-  resolution: "nanoid@npm:3.3.7"
+  version: 3.3.8
+  resolution: "nanoid@npm:3.3.8"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: d36c427e530713e4ac6567d488b489a36582ef89da1d6d4e3b87eded11eb10d7042a877958c6f104929809b2ab0bafa17652b076cdf84324aa75b30b722204f2
+  checksum: dfe0adbc0c77e9655b550c333075f51bb28cfc7568afbf3237249904f9c86c9aaaed1f113f0fddddba75673ee31c758c30c43d4414f014a52a7a626efc5958c9
   languageName: node
   linkType: hard
 
