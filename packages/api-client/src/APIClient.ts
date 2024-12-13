@@ -420,7 +420,9 @@ export class APIClient extends EventEmitter {
     try {
       const backendRemovalKey = (await this.api.client.getPublicKeys()).removal;
       return !!backendRemovalKey;
-    } catch {}
+    } catch (error) {
+      this.logger.warn('Could not retrieve back-end removal keys:', (error as BackendError).message);
+    }
 
     return false;
   }
