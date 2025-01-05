@@ -3099,17 +3099,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/publish@npm:3.10.1":
-  version: 3.10.1
-  resolution: "@lerna-lite/publish@npm:3.10.1"
+"@lerna-lite/publish@npm:3.11.0":
+  version: 3.11.0
+  resolution: "@lerna-lite/publish@npm:3.11.0"
   dependencies:
-    "@lerna-lite/cli": 3.10.1
-    "@lerna-lite/core": 3.10.1
-    "@lerna-lite/npmlog": 3.10.1
-    "@lerna-lite/version": 3.10.1
+    "@lerna-lite/cli": 3.11.0
+    "@lerna-lite/core": 3.11.0
+    "@lerna-lite/npmlog": 3.11.0
+    "@lerna-lite/version": 3.11.0
     "@npmcli/arborist": ^7.5.4
     "@npmcli/package-json": ^5.2.1
-    byte-size: ^9.0.0
+    byte-size: ^9.0.1
     columnify: ^1.6.0
     fs-extra: ^11.2.0
     has-unicode: ^2.0.1
@@ -3119,7 +3119,7 @@ __metadata:
     npm-package-arg: ^11.0.3
     npm-packlist: ^8.0.2
     npm-registry-fetch: ^17.1.0
-    p-map: ^7.0.2
+    p-map: ^7.0.3
     p-pipe: ^4.0.0
     pacote: ^18.0.6
     semver: ^7.6.3
@@ -3128,7 +3128,7 @@ __metadata:
     temp-dir: ^3.0.0
     tinyglobby: ^0.2.10
     tinyrainbow: ^1.2.0
-  checksum: 275a2f0bf133408a4df480799602bd6eb3ab66fad9e4edc455ed4a0d29ceb0203a1cf24f3e589b1b1d32ecad56813445fa4a8bbd4358d1b6315928b8d4ccd732
+  checksum: 99538bae9b46dcb604e04697a0184ad17ee4b44949a5279addc256ec46042a6144121c9a76babbee76d1136638beb32eddaaa621689259738f9e4afbf9526132
   languageName: node
   linkType: hard
 
@@ -3144,47 +3144,6 @@ __metadata:
     p-map: ^7.0.2
     tinyrainbow: ^1.2.0
   checksum: 7860a94456809afcb07fb193d1d4cd4167a3cb3089e212cb735bdbac51f50410590986b5ef91b170b4cd77949fedaf1fe64b8689426764efe55f21f8c97a4ee4
-  languageName: node
-  linkType: hard
-
-"@lerna-lite/version@npm:3.10.1":
-  version: 3.10.1
-  resolution: "@lerna-lite/version@npm:3.10.1"
-  dependencies:
-    "@lerna-lite/cli": 3.10.1
-    "@lerna-lite/core": 3.10.1
-    "@lerna-lite/npmlog": 3.10.1
-    "@octokit/plugin-enterprise-rest": ^6.0.1
-    "@octokit/rest": ^21.0.2
-    conventional-changelog-angular: ^7.0.0
-    conventional-changelog-core: ^7.0.0
-    conventional-changelog-writer: ^7.0.1
-    conventional-commits-parser: ^5.0.0
-    conventional-recommended-bump: ^9.0.0
-    dedent: ^1.5.3
-    fs-extra: ^11.2.0
-    get-stream: ^9.0.1
-    git-url-parse: ^16.0.0
-    graceful-fs: ^4.2.11
-    is-stream: ^4.0.1
-    load-json-file: ^7.0.1
-    make-dir: ^5.0.0
-    minimatch: ^9.0.5
-    new-github-release-url: ^2.0.0
-    node-fetch: ^3.3.2
-    npm-package-arg: ^11.0.3
-    p-limit: ^6.1.0
-    p-map: ^7.0.2
-    p-pipe: ^4.0.0
-    p-reduce: ^3.0.0
-    pify: ^6.1.0
-    semver: ^7.6.3
-    slash: ^5.1.0
-    temp-dir: ^3.0.0
-    tinyrainbow: ^1.2.0
-    uuid: ^11.0.3
-    write-json-file: ^6.0.0
-  checksum: 67c61c66194d662db9295e631c9e6e79d36d45ea7c674303e124db998e11279a167a3556a6072f9bab586e6664945fe6b5ac76c543af9ffc8c6aa35139da3ea9
   languageName: node
   linkType: hard
 
@@ -7428,10 +7387,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"byte-size@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "byte-size@npm:9.0.0"
-  checksum: 3c0c988dcb8eaee6364f42837b395fbff949b611d6b23a078a60b5b03d9e1a04841a1a2f471177a91971712f407e753d6ca9d46bb60f80c482b84e37b5a05193
+"byte-size@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "byte-size@npm:9.0.1"
+  peerDependencies:
+    "@75lb/nature": "*"
+  peerDependenciesMeta:
+    "@75lb/nature":
+      optional: true
+  checksum: 2a84d248da53563c21ced069fe4ff3e545831932b6b066c2aebf8f2cee2298979ff237d163410542277a661fe9ee94f4d2c09959992b4c94895dfda5ccded4b9
   languageName: node
   linkType: hard
 
@@ -16286,15 +16250,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-limit@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "p-limit@npm:6.1.0"
-  dependencies:
-    yocto-queue: ^1.1.1
-  checksum: 0c98d8fc1006b70fc7423232a47e8d026dc69279b06fe7ff8b4c0cc8023de2b6bb8991b609d93c3dec691a7a362ab0f0157df521d931a01fec192a5e404b9ee5
-  languageName: node
-  linkType: hard
-
 "p-limit@npm:^6.2.0":
   version: 6.2.0
   resolution: "p-limit@npm:6.2.0"
@@ -18386,7 +18341,7 @@ __metadata:
     "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": 3.11.0
     "@lerna-lite/cli": 3.11.0
-    "@lerna-lite/publish": 3.10.1
+    "@lerna-lite/publish": 3.11.0
     "@lerna-lite/run": 3.10.1
     "@lerna-lite/version": 3.11.0
     "@swc/core": ^1.3.10
