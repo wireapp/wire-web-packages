@@ -2237,9 +2237,9 @@ __metadata:
   linkType: hard
 
 "@faker-js/faker@npm:^9.0.0":
-  version: 9.3.0
-  resolution: "@faker-js/faker@npm:9.3.0"
-  checksum: 0ee845a9b7dc0d6bc5bd9b7d89fc0a86b31bf0b4a55128feab5dd24c0e8e0b5f80f9ab40f639bf259b3edf62370677c1ebfd420cd8e51d4ca69b94d2ff208ba9
+  version: 9.4.0
+  resolution: "@faker-js/faker@npm:9.4.0"
+  checksum: 9f24bc100ff18fa3e698f2e3d71a13f1a50ae5cec8c7e0a0db5a1dd412a5030a22d14c76a7fa11677a68b0569a082cf421dfdfe3aa694d1bcd551de8fbbfd747
   languageName: node
   linkType: hard
 
