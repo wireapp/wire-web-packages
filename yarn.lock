@@ -4861,12 +4861,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.5.13":
-  version: 8.5.13
-  resolution: "@types/ws@npm:8.5.13"
+"@types/ws@npm:8.5.14":
+  version: 8.5.14
+  resolution: "@types/ws@npm:8.5.14"
   dependencies:
     "@types/node": "*"
-  checksum: f17023ce7b89c6124249c90211803a4aaa02886e12bc2d0d2cd47fa665eeb058db4d871ce4397d8e423f6beea97dd56835dd3fdbb921030fe4d887601e37d609
+  checksum: b63d25146a0d2ebb9cb35e4b68c5a01d81b8f4657d62b0a0d9470df6a357798349a44064b2f84b8f98a553ba84d9a5ee302d3053feef02c7771010c55d290ca6
   languageName: node
   linkType: hard
 
@@ -5466,7 +5466,7 @@ __metadata:
     "@types/pako": 2
     "@types/spark-md5": 3.0.5
     "@types/tough-cookie": 4.0.5
-    "@types/ws": 8.5.13
+    "@types/ws": 8.5.14
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.51.0
