@@ -197,7 +197,7 @@ const dark: () => CSSObject = () => ({
   '--video-file-icon-stroke': COLOR_V2.RED_DARK_700,
 
   // Other File Icon
-  '--other-file-icon-bg': COLOR_V2.GRAY_20,
+  '--other-file-icon-bg': COLOR_V2.GRAY_10,
   '--other-file-icon-stroke': COLOR_V2.GRAY_60,
 });
 
