@@ -23,21 +23,19 @@ export const PresentationFileIcon = ({...props}: SVGIconProps) => {
   return (
     <SVGIcon realWidth={14} realHeight={16} fill="none" {...props}>
       <path
-        d="M1 2.5C1 1.39543 1.89543 0.5 3 0.5H11C12.1046 0.5 13 1.39543 13 2.5V11.5063C13 12.1626 12.7419 12.7926 12.2815 13.2603L10.8108 14.754C10.3409 15.2312 9.69916 15.5 9.02938 15.5H3C1.89543 15.5 1 14.6046 1 13.5V2.5Z"
         fill="var(--presentation-file-icon-bg)"
         stroke="var(--presentation-file-icon-stroke)"
+        d="M1 2.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9.006a2.5 2.5 0 0 1-.719 1.754l-1.47 1.494a2.5 2.5 0 0 1-1.782.746H3a2 2 0 0 1-2-2v-11Z"
       />
-      <path d="M13 11.5V11.5C10.7909 11.5 9 13.2909 9 15.5V15.5" stroke="var(--presentation-file-icon-stroke)" />
-      <path d="M5.5 9.5L5 11" stroke="var(--presentation-file-icon-stroke)" strokeLinecap="round" />
-      <path d="M8 9.5L8.5 11" stroke="var(--presentation-file-icon-stroke)" strokeLinecap="round" />
+      <path stroke="var(--presentation-file-icon-stroke)" d="M13 11.5a4 4 0 0 0-4 4M5.5 9.5 5 11M8 9.5l.5 1.5" />
       <rect
+        width="5.5"
+        height="3.971"
         x="4"
         y="5"
-        width="5.5"
-        height="3.97059"
-        rx="1"
         fill="var(--presentation-file-icon-bg)"
         stroke="var(--presentation-file-icon-stroke)"
+        rx="1"
       />
     </SVGIcon>
   );

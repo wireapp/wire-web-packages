@@ -23,16 +23,13 @@ export const DocumentFileIcon = ({...props}: SVGIconProps) => {
   return (
     <SVGIcon realWidth={14} realHeight={16} fill="none" {...props}>
       <path
-        d="M0.998901 2.49811C0.998901 1.39378 1.89414 0.498535 2.99848 0.498535H10.9971C12.1015 0.498535 12.9967 1.39378 12.9967 2.49811V11.5029C12.9967 12.1591 12.7387 12.7889 12.2783 13.2565L10.8079 14.7499C10.3381 15.2271 9.69648 15.4958 9.02683 15.4958H2.99848C1.89414 15.4958 0.998901 14.6006 0.998901 13.4962V2.49811Z"
         fill="var(--document-file-icon-bg)"
         stroke="var(--document-file-icon-stroke)"
+        d="M.999 2.498a2 2 0 0 1 2-2h7.998a2 2 0 0 1 2 2v9.005a2.5 2.5 0 0 1-.719 1.754l-1.47 1.493a2.5 2.5 0 0 1-1.781.746H2.998a2 2 0 0 1-2-2V2.498Z"
       />
-      <path d="M4.49817 4.99854H9.49732" stroke="var(--document-file-icon-stroke)" strokeLinecap="round" />
-      <path d="M4.49817 6.99805H9.49732" stroke="var(--document-file-icon-stroke)" strokeLinecap="round" />
-      <path d="M4.49817 8.99756H7.99758" stroke="var(--document-file-icon-stroke)" strokeLinecap="round" />
       <path
-        d="M12.9969 11.4971V11.4971C10.7881 11.4971 8.99756 13.2876 8.99756 15.4964V15.4964"
         stroke="var(--document-file-icon-stroke)"
+        d="M4.498 4.999h5M4.498 6.998h5M4.498 8.998h3.5M12.997 11.497a4 4 0 0 0-4 4"
       />
     </SVGIcon>
   );

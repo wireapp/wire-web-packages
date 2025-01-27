@@ -23,24 +23,16 @@ export const ImageFileIcon = ({...props}: SVGIconProps) => {
   return (
     <SVGIcon realWidth={14} realHeight={16} fill="none" {...props}>
       <path
-        d="M0.995605 2.5C0.995605 1.39543 1.89104 0.5 2.99561 0.5H10.9956C12.1002 0.5 12.9956 1.39543 12.9956 2.5V11.5063C12.9956 12.1626 12.7375 12.7926 12.2771 13.2603L10.8065 14.754C10.3365 15.2312 9.69477 15.5 9.02498 15.5H2.99561C1.89104 15.5 0.995605 14.6046 0.995605 13.5V2.5Z"
         fill="var(--image-file-icon-bg)"
         stroke="var(--image-file-icon-stroke)"
+        d="M.996 2.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9.006a2.5 2.5 0 0 1-.719 1.754l-1.47 1.494a2.5 2.5 0 0 1-1.782.746h-6.03a2 2 0 0 1-2-2v-11Z"
       />
+      <path stroke="var(--image-file-icon-stroke)" d="M12.996 11.5a4 4 0 0 0-4 4" />
+      <circle cx="6.496" cy="4.5" r="1" fill="var(--image-file-icon-bg)" stroke="var(--image-file-icon-stroke)" />
       <path
-        d="M12.9956 11.5V11.5C10.7865 11.5 8.99561 13.2909 8.99561 15.5V15.5"
-        stroke="var(--image-file-icon-stroke)"
-      />
-      <circle cx="6.49561" cy="4.5" r="1" fill="var(--image-file-icon-bg)" stroke="var(--image-file-icon-stroke)" />
-      <path
-        d="M6.33054 10.25L8.49561 6.5L10.6607 10.25H6.33054Z"
         fill="var(--image-file-icon-bg)"
         stroke="var(--image-file-icon-stroke)"
-      />
-      <path
-        d="M3.69657 10.25L4.99561 8L6.29464 10.25H3.69657Z"
-        fill="var(--image-file-icon-bg)"
-        stroke="var(--image-file-icon-stroke)"
+        d="M6.33 10.25 8.497 6.5l2.165 3.75H6.33ZM3.697 10.25 4.996 8l1.299 2.25H3.697Z"
       />
     </SVGIcon>
   );
