@@ -120,7 +120,6 @@ export * from './CodeInlineIcon';
 export * from './CodeBlockIcon';
 export * from './BlockquoteIcon';
 
-// File Icons
 export * from './Files/ArchiveFileIcon';
 export * from './Files/AudioFileIcon';
 export * from './Files/CodeFileIcon';
