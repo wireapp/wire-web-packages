@@ -21,7 +21,7 @@ import {SVGIcon, SVGIconProps} from '../SVGIcon';
 
 export const ImageFileIcon = ({...props}: SVGIconProps) => {
   return (
-    <SVGIcon realWidth={14} realHeight={16} {...props} fill="none">
+    <SVGIcon realWidth={14} realHeight={16} fill="none" {...props}>
       <path
         d="M0.995605 2.5C0.995605 1.39543 1.89104 0.5 2.99561 0.5H10.9956C12.1002 0.5 12.9956 1.39543 12.9956 2.5V11.5063C12.9956 12.1626 12.7375 12.7926 12.2771 13.2603L10.8065 14.754C10.3365 15.2312 9.69477 15.5 9.02498 15.5H2.99561C1.89104 15.5 0.995605 14.6046 0.995605 13.5V2.5Z"
         fill="#E5F1F3"

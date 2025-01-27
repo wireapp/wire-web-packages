@@ -21,18 +21,16 @@ import {SVGIcon, SVGIconProps} from '../SVGIcon';
 
 export const DocumentFileIcon = ({...props}: SVGIconProps) => {
   return (
-    <SVGIcon realWidth={14} realHeight={16} {...props} fill="none">
-      <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M0.998901 2.49811C0.998901 1.39378 1.89414 0.498535 2.99848 0.498535H10.9971C12.1015 0.498535 12.9967 1.39378 12.9967 2.49811V11.5029C12.9967 12.1591 12.7387 12.7889 12.2783 13.2565L10.8079 14.7499C10.3381 15.2271 9.69648 15.4958 9.02683 15.4958H2.99848C1.89414 15.4958 0.998901 14.6006 0.998901 13.4962V2.49811Z"
-          fill="#E7F0FA"
-          stroke="#043E78"
-        />
-        <path d="M4.49817 4.99854H9.49732" stroke="#043E78" strokeLinecap="round" />
-        <path d="M4.49817 6.99805H9.49732" stroke="#043E78" strokeLinecap="round" />
-        <path d="M4.49817 8.99756H7.99758" stroke="#043E78" strokeLinecap="round" />
-        <path d="M12.9969 11.4971V11.4971C10.7881 11.4971 8.99756 13.2876 8.99756 15.4964V15.4964" stroke="#043E78" />
-      </svg>
+    <SVGIcon realWidth={14} realHeight={16} fill="none" {...props}>
+      <path
+        d="M0.998901 2.49811C0.998901 1.39378 1.89414 0.498535 2.99848 0.498535H10.9971C12.1015 0.498535 12.9967 1.39378 12.9967 2.49811V11.5029C12.9967 12.1591 12.7387 12.7889 12.2783 13.2565L10.8079 14.7499C10.3381 15.2271 9.69648 15.4958 9.02683 15.4958H2.99848C1.89414 15.4958 0.998901 14.6006 0.998901 13.4962V2.49811Z"
+        fill="#E7F0FA"
+        stroke="#043E78"
+      />
+      <path d="M4.49817 4.99854H9.49732" stroke="#043E78" strokeLinecap="round" />
+      <path d="M4.49817 6.99805H9.49732" stroke="#043E78" strokeLinecap="round" />
+      <path d="M4.49817 8.99756H7.99758" stroke="#043E78" strokeLinecap="round" />
+      <path d="M12.9969 11.4971V11.4971C10.7881 11.4971 8.99756 13.2876 8.99756 15.4964V15.4964" stroke="#043E78" />
     </SVGIcon>
   );
 };
