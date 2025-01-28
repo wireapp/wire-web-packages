@@ -45,7 +45,7 @@ export type Option = {
   isDisabled?: boolean;
 };
 
-interface SelectProps<IsMulti extends boolean, Group extends GroupBase<Option>>
+export interface SelectProps<IsMulti extends boolean, Group extends GroupBase<Option>>
   extends StateManagerProps<Option, IsMulti, Group> {
   id: string;
   disabled?: boolean;
