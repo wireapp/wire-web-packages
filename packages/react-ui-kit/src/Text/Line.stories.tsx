@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,33 @@
  *
  */
 
-import * as React from 'react';
+import type {Meta, StoryObj} from '@storybook/react';
 
-import {Label, LabelLink} from './Label';
+import {Line} from './Line';
 
-import {THEME_ID} from '../Layout';
-import {matchComponent} from '../test/testUtil';
+import {COLOR} from '../Identity';
 
-/* eslint-disable jest/expect-expect */
+const meta = {
+  title: 'Typography/Line',
+  component: Line,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    color: {
+      control: 'color',
+    },
+  },
+} satisfies Meta<typeof Line>;
 
-describe('"InputLabel"', () => {
-  it('renders', () => matchComponent(<Label>Label</Label>));
-  it('renders (dark theme)', () => matchComponent(<Label>Label</Label>, THEME_ID.DARK));
-});
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-describe('"LabelLink"', () => {
-  it('renders', () => matchComponent(<LabelLink>LabelLink</LabelLink>));
-  it('renders (dark theme)', () => matchComponent(<LabelLink>LabelLink</LabelLink>, THEME_ID.DARK));
-});
+export const Default: Story = {};
+
+export const CustomColor: Story = {
+  args: {
+    color: COLOR.RED,
+  },
+};
