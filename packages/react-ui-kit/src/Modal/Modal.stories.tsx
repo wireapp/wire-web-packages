@@ -17,7 +17,7 @@
  *
  */
 
-import {useState} from 'react';
+import {ReactNode, useState} from 'react';
 
 import {Meta, StoryObj} from '@storybook/react';
 
@@ -37,11 +37,7 @@ const meta: Meta<typeof Modal> = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-const ModalDemo = ({
-  children,
-}: {
-  children: (isOpen: boolean, setIsOpen: (open: boolean) => void) => React.ReactNode;
-}) => {
+const ModalDemo = ({children}: {children: (isOpen: boolean, setIsOpen: (open: boolean) => void) => ReactNode}) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div style={{padding: '24px'}}>

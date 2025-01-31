@@ -17,6 +17,8 @@
  *
  */
 
+import {ReactNode} from 'react';
+
 import {Meta, StoryObj} from '@storybook/react';
 
 import {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS} from './Container';
@@ -31,7 +33,7 @@ const meta: Meta<typeof Container> = {
 export default meta;
 type Story = StoryObj<typeof Container>;
 
-const DemoContent = ({children}: {children: React.ReactNode}) => (
+const DemoContent = ({children}: {children: ReactNode}) => (
   <div
     style={{
       backgroundColor: COLOR.GRAY_LIGHTEN_72,

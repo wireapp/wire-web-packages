@@ -17,6 +17,8 @@
  *
  */
 
+import {ReactNode} from 'react';
+
 import {Meta, StoryObj} from '@storybook/react';
 
 import {Column, Columns} from './Column';
@@ -32,7 +34,7 @@ const meta: Meta<typeof Columns> = {
 export default meta;
 type Story = StoryObj<typeof Columns>;
 
-const Box = ({children}: {children: React.ReactNode}) => (
+const Box = ({children}: {children: ReactNode}) => (
   <div
     style={{
       backgroundColor: COLOR.GRAY_LIGHTEN_72,

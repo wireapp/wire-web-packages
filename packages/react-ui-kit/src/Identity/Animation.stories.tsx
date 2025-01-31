@@ -17,7 +17,7 @@
  *
  */
 
-import {useState} from 'react';
+import {ReactNode, useState} from 'react';
 
 import {Meta, StoryObj} from '@storybook/react';
 
@@ -50,7 +50,7 @@ const AnimationDemo = ({
   children,
 }: {
   title: string;
-  children: (isAnimating: boolean, toggle: () => void) => React.ReactNode;
+  children: (isAnimating: boolean, toggle: () => void) => ReactNode;
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const toggle = () => setIsAnimating(!isAnimating);
