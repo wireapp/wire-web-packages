@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.31.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.30.0...@wireapp/react-ui-kit@9.31.0) (2025-01-28)
+
+### Features
+
+* **react-ui-kit:** add folder, multiple files, and text file icons ([#6859](https://github.com/wireapp/wire-web-packages/issues/6859)) ([9f5e951](https://github.com/wireapp/wire-web-packages/commit/9f5e9515230069865b72585e814a728c35d340e2))
+
+# [9.30.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.3...@wireapp/react-ui-kit@9.30.0) (2025-01-28)
+
+### Features
+
+* **react-ui-kit:** cells file type icons [WPB-15686] ([#6857](https://github.com/wireapp/wire-web-packages/issues/6857)) ([7d22611](https://github.com/wireapp/wire-web-packages/commit/7d22611fb079f92a90c84b3b25f348247e4eb692))
+
 ## [9.29.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.2...@wireapp/react-ui-kit@9.29.3) (2025-01-21)
 
 ### Bug Fixes
