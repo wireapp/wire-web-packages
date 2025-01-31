@@ -24,7 +24,6 @@
     "@emotion/babel-preset-css-prop": "^11.12.0",
     "@emotion/jest": "11.13.0",
     "@emotion/react": "^11.10.4",
-    "@hot-loader/react-dom": "17.0.2",
     "@storybook/addon-essentials": "^8.5.2",
     "@storybook/addon-interactions": "^8.5.2",
     "@storybook/addon-onboarding": "^8.5.2",
@@ -50,8 +49,6 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-helmet": "6.1.0",
-    "react-hot-loader": "4.13.1",
-    "react-styleguidist": "13.1.4",
     "react-test-renderer": "18.3.1",
     "rimraf": "6.0.1",
     "storybook": "^8.5.2",
@@ -71,16 +68,14 @@
   },
   "scripts": {
     "build": "yarn clean && tsc",
-    "build:styleguide": "styleguidist build",
+    "build:storybook": "storybook build",
     "clean": "rimraf lib",
     "dist": "yarn build",
-    "start": "styleguidist server",
+    "start": "storybook dev -p 6006",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "test:update": "jest --updateSnapshot",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test:update": "jest --updateSnapshot"
   },
   "version": "9.29.3"
 }
