@@ -56,12 +56,6 @@ export const SingleButton: Story = {
   },
 };
 
-export const DisabledButton: Story = {
-  args: {
-    children: <ButtonGroup.Button icon={<PlusIcon height={12} width={12} />} disabled />,
-  },
-};
-
 export const WithIcons = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
     <ButtonGroup>
@@ -88,21 +82,6 @@ export const MixedContent = () => (
       <ButtonGroup.Button>Start</ButtonGroup.Button>
       <ButtonGroup.Button icon={<PlusIcon height={12} width={12} />} />
       <ButtonGroup.Button>End</ButtonGroup.Button>
-    </ButtonGroup>
-  </div>
-);
-
-export const States = () => (
-  <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
-    <ButtonGroup>
-      <ButtonGroup.Button>Normal</ButtonGroup.Button>
-      <ButtonGroup.Button disabled>Disabled</ButtonGroup.Button>
-    </ButtonGroup>
-    <ButtonGroup>
-      <ButtonGroup.Button icon={<PlusIcon height={12} width={12} />}>Active</ButtonGroup.Button>
-      <ButtonGroup.Button icon={<PlusIcon height={12} width={12} />} disabled>
-        Disabled
-      </ButtonGroup.Button>
     </ButtonGroup>
   </div>
 );
