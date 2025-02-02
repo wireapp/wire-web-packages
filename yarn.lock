@@ -18556,7 +18556,7 @@ __metadata:
     "@babel/eslint-parser": ^7.19.1
     "@emotion/eslint-plugin": ^11.10.0
     "@lerna-lite/changed": 3.11.0
-    "@lerna-lite/cli": 3.11.0
+    "@lerna-lite/cli": 3.12.0
     "@lerna-lite/publish": 3.12.0
     "@lerna-lite/run": 3.11.0
     "@lerna-lite/version": 3.11.0
