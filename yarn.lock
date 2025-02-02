@@ -6066,7 +6066,7 @@ __metadata:
     fake-indexeddb: ^5.0.2
     hash.js: 1.1.7
     http-status-codes: 2.3.0
-    idb: 8.0.1
+    idb: 8.0.2
     jest: ^29.2.1
     jest-websocket-mock: 2.5.0
     logdown: 3.3.1
@@ -12357,10 +12357,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb@npm:8.0.1":
-  version: 8.0.1
-  resolution: "idb@npm:8.0.1"
-  checksum: 1ba2a1896920bcbfa5b7f826e2d152b0af46415711b74f32649322885c32b94a93fe6b0b78187edda5e77ca77790b74d0e7324a7b14893e0bd4842efcc9bedc2
+"idb@npm:8.0.2":
+  version: 8.0.2
+  resolution: "idb@npm:8.0.2"
+  checksum: 3523f83bf367610dd52c6151242411c86f727c906b148f3e56a11cabedd861725bf87cbcf0be93c9b1f0fd66d790188312ae4f2940779bd8e34abb936420879e
   languageName: node
   linkType: hard
 
