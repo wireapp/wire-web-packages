@@ -20,7 +20,7 @@
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const PlayIcon = (props: SVGIconProps) => (
-  <SVGIcon realWidth={12} realHeight={12} {...props}>
-    <path fill="#000" fillRule="evenodd" d="M4 15.657 16 8 4 .343v15.314Z" clipRule="evenodd" />
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path fillRule="evenodd" d="M4 15.657 16 8 4 .343v15.314Z" clipRule="evenodd" />
   </SVGIcon>
 );
