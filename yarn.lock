@@ -6009,7 +6009,7 @@ __metadata:
     http-status-codes: 2.3.0
     jest: ^29.2.1
     logdown: 3.3.1
-    nock: 14.0.0
+    nock: 14.0.1
     pako: 2.1.0
     react: 18.3.1
     react-dom: 18.3.1
@@ -6132,7 +6132,7 @@ __metadata:
     jest-websocket-mock: 2.5.0
     logdown: 3.3.1
     long: ^5.2.0
-    nock: 14.0.0
+    nock: 14.0.1
     rimraf: 6.0.1
     typescript: ^5.0.4
     uuid: 9.0.1
@@ -15007,14 +15007,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.0":
-  version: 14.0.0
-  resolution: "nock@npm:14.0.0"
+"nock@npm:14.0.1":
+  version: 14.0.1
+  resolution: "nock@npm:14.0.1"
   dependencies:
     "@mswjs/interceptors": ^0.37.3
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: 73be448598fc72e935e4a328c6f11ed3da185b4bdf7e3880c4fb0c59197127fea0ea1d893aa042c778f3d71a7a77f9c23c3392ffd2de2ee38c1a49015a3c1059
+  checksum: 7c8fd87b9a098c4d6a5c219e6c81af09e81878d5fd76ed8b42fc8ab0404985caf53f1eb54a175f6cd73c3981af2b6f75d0d708e247585d399f507318d529ddb7
   languageName: node
   linkType: hard
 
