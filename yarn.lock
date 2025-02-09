@@ -5365,13 +5365,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.25":
+"@types/react@npm:*":
   version: 18.3.12
   resolution: "@types/react@npm:18.3.12"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^3.0.2
   checksum: 4ab1577a8c2105a5e316536f724117c90eee5f4bd5c137fc82a2253d8c1fd299dedaa07e8dfc95d6e2f04a4be3cb8b0e1b06098c6233ebd55c508d88099395b7
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^19.0.8":
+  version: 19.0.8
+  resolution: "@types/react@npm:19.0.8"
+  dependencies:
+    csstype: ^3.0.2
+  checksum: 80dd2e7fa4b3e0ea2d883c21317563f4af1c4d90a6250c8bcbc052079304dc3335369267026004ed5d7cac09c7b0026e02e71ae5cca3150643507e353219fe47
   languageName: node
   linkType: hard
 
@@ -6116,7 +6125,7 @@ __metadata:
     logdown: 3.3.1
     nock: 14.0.1
     pako: 2.1.0
-    react: 18.3.1
+    react: 19.0.0
     react-dom: 18.3.1
     reconnecting-websocket: 4.4.0
     rimraf: 6.0.1
@@ -6419,7 +6428,7 @@ __metadata:
     "@types/color": 3.0.6
     "@types/jest": ^29.2.0
     "@types/node": ^22.0.0
-    "@types/react": ^18.0.25
+    "@types/react": ^19.0.8
     "@types/react-dom": ^18.0.8
     "@types/webpack-env": 1.18.8
     babel-jest: 29.7.0
@@ -6427,7 +6436,7 @@ __metadata:
     color: 4.2.3
     emotion-normalize: 11.0.1
     jest: ^29.2.1
-    react: 18.3.1
+    react: 19.0.0
     react-dom: 18.3.1
     react-helmet: 6.1.0
     react-select: 5.7.7
@@ -16996,7 +17005,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.3.1, react@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
+"react@npm:19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0"
+  checksum: 86de15d85b2465feb40297a90319c325cb07cf27191a361d47bcfe8c6126c973d660125aa67b8f4cbbe39f15a2f32efd0c814e98196d8e5b68c567ba40a399c6
+  languageName: node
+  linkType: hard
+
+"react@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
