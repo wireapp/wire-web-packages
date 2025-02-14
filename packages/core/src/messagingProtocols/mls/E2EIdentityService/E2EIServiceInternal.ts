@@ -17,11 +17,13 @@
  *
  */
 
+import {Conversation} from '@wireapp/api-client/lib/conversation';
+
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory} from '@wireapp/commons';
 
 import {AcmeService} from './Connection/AcmeServer';
-import {AcmeDirectory, Ciphersuite, CoreCrypto, E2eiEnrollment} from './E2EIService.types';
+import {AcmeDirectory, Ciphersuite, CoreCrypto, CredentialType, E2eiEnrollment} from './E2EIService.types';
 import {isResponseStatusValid} from './Helper';
 import {createNewAccount} from './Steps/Account';
 import {getAuthorizationChallenges} from './Steps/Authorization';
@@ -78,7 +80,8 @@ export class E2EIServiceInternal {
     const challengeData = {challenge: oidcChallenge, keyAuth: keyauth};
 
     // store auth data for continuing the flow later on (in case we are redirected to the identity provider)
-    const handle = await this.coreCryptoClient.e2eiEnrollmentStash(identity);
+    const handle = await this.coreCryptoClient.transaction(cx => cx.e2eiEnrollmentStash(identity));
+
     const enrollmentData = {
       handle,
       ...enrollmentChallenges,
@@ -95,7 +98,7 @@ export class E2EIServiceInternal {
 
   private async continueCertificateGeneration(oAuthToken: string, enrollmentData: EnrollmentFlowData) {
     const handle = enrollmentData.handle;
-    const identity = await this.coreCryptoClient.e2eiEnrollmentStashPop(handle);
+    const identity = await this.coreCryptoClient.transaction(cx => cx.e2eiEnrollmentStashPop(handle));
     return this.getRotateBundle(identity, oAuthToken, enrollmentData);
   }
 
@@ -105,19 +108,11 @@ export class E2EIServiceInternal {
     const {user} = this.initialData;
 
     return hasActiveCertificate
-      ? this.coreCryptoClient.e2eiNewRotateEnrollment(
-          this.certificateTtl,
-          ciphersuite,
-          user.displayName,
-          user.handle,
-          user.teamId,
+      ? this.coreCryptoClient.transaction(cx =>
+          cx.e2eiNewRotateEnrollment(this.certificateTtl, ciphersuite, user.displayName, user.handle, user.teamId),
         )
-      : this.coreCryptoClient.e2eiNewActivationEnrollment(
-          user.displayName,
-          user.handle,
-          this.certificateTtl,
-          ciphersuite,
-          user.teamId,
+      : this.coreCryptoClient.transaction(cx =>
+          cx.e2eiNewActivationEnrollment(user.displayName, user.handle, this.certificateTtl, ciphersuite, user.teamId),
         );
   }
 
@@ -198,6 +193,8 @@ export class E2EIServiceInternal {
     identity: E2eiEnrollment,
     oAuthIdToken: string,
     enrollmentData: UnidentifiedEnrollmentFlowData,
+    getAllConversations: () => Promise<Conversation[]>,
+    cipherSuite: Ciphersuite,
   ) {
     // Step 7: Do OIDC client challenge
     const oidcData = await doWireOidcChallenge({
@@ -256,6 +253,19 @@ export class E2EIServiceInternal {
     }
 
     // Step 10: Initialize MLS with the certificate
-    return this.coreCryptoClient.e2eiRotateAll(identity, certificate, this.keyPackagesAmount);
+    return this.coreCryptoClient.transaction(async cx => {
+      const conversations = await getAllConversations();
+      await cx.saveX509Credential(identity, certificate);
+      conversations.forEach(async conversation => {
+        if (Boolean(conversation.group_id?.length)) {
+          const idAsBytes = new TextEncoder().encode(conversation.group_id);
+          await cx.e2eiRotate(idAsBytes);
+        } else {
+          this.logger.error('No group id found in conversation');
+        }
+      });
+
+      const keyPackages = await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
+    });
   }
 }

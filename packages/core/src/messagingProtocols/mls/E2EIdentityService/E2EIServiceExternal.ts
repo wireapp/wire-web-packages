@@ -73,7 +73,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   }
 
   public async getConversationState(conversationId: Uint8Array): Promise<E2eiConversationState> {
-    return this.coreCryptoClient.e2eiConversationState(conversationId);
+    return this.coreCryptoClient.transaction(cx => cx.e2eiConversationState(conversationId));
   }
 
   public isE2EIEnabled(): Promise<boolean> {
@@ -191,7 +191,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
   private async registerLocalCertificateRoot(acmeService: AcmeService): Promise<string> {
     const localCertificateRoot = await acmeService.getLocalCertificateRoot();
-    await this.coreCryptoClient.e2eiRegisterAcmeCA(localCertificateRoot);
+    await this.coreCryptoClient.transaction(cx => cx.e2eiRegisterAcmeCA(localCertificateRoot));
 
     return localCertificateRoot;
   }
@@ -222,7 +222,9 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
 
   private async registerCrossSignedCertificates(acmeService: AcmeService): Promise<void> {
     const certificates = await acmeService.getFederationCrossSignedCertificates();
-    await Promise.all(certificates.map(cert => this.coreCryptoClient.e2eiRegisterIntermediateCA(cert)));
+    await Promise.all(
+      certificates.map(cert => this.coreCryptoClient.transaction(cx => cx.e2eiRegisterIntermediateCA(cert))),
+    );
   }
 
   /**
@@ -299,7 +301,9 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
   }
 
   private async validateCrl(url: string, crl: Uint8Array, onDirty: () => void): Promise<void> {
-    const {expiration: expirationTimestampSeconds, dirty} = await this.coreCryptoClient.e2eiRegisterCRL(url, crl);
+    const {expiration: expirationTimestampSeconds, dirty} = await this.coreCryptoClient.transaction(cx =>
+      cx.e2eiRegisterCRL(url, crl),
+    );
 
     const expirationTimestamp = expirationTimestampSeconds && expirationTimestampSeconds * TimeInMillis.SECOND;
 
