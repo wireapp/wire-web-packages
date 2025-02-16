@@ -6273,7 +6273,7 @@ __metadata:
     reconnecting-websocket: 4.4.0
     rimraf: 6.0.1
     spark-md5: 3.0.2
-    tough-cookie: 4.1.4
+    tough-cookie: 5.1.1
     ts-node: ^10.9.1
     typescript: ^5.0.4
     webpack: ^5.74.0
@@ -19424,6 +19424,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tldts-core@npm:^6.1.77":
+  version: 6.1.77
+  resolution: "tldts-core@npm:6.1.77"
+  checksum: 7af3ab163d130172335cf024531b971ddf0ec327dd36f4b5cc090b252b8f7677be6a0e48b2de9d78b4a1d171ac85ed3a12610fe8d562dffd8720e0afebb1b7e4
+  languageName: node
+  linkType: hard
+
+"tldts@npm:^6.1.32":
+  version: 6.1.77
+  resolution: "tldts@npm:6.1.77"
+  dependencies:
+    tldts-core: ^6.1.77
+  bin:
+    tldts: bin/cli.js
+  checksum: adbadd1142724b0da9018098653c60fa546934f5f84b301a17d2071e3244345d56fc7f115fe94e5194f909aaabbcc105d741b3d8725582a266245cd0d84a1e28
+  languageName: node
+  linkType: hard
+
 "tmp@npm:^0.2.1":
   version: 0.2.1
   resolution: "tmp@npm:0.2.1"
@@ -19488,15 +19506,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tough-cookie@npm:4.1.4":
-  version: 4.1.4
-  resolution: "tough-cookie@npm:4.1.4"
+"tough-cookie@npm:5.1.1":
+  version: 5.1.1
+  resolution: "tough-cookie@npm:5.1.1"
   dependencies:
-    psl: ^1.1.33
-    punycode: ^2.1.1
-    universalify: ^0.2.0
-    url-parse: ^1.5.3
-  checksum: 5815059f014c31179a303c673f753f7899a6fce94ac93712c88ea5f3c26e0c042b5f0c7a599a00f8e0feeca4615dba75c3dffc54f3c1a489978aa8205e09307c
+    tldts: ^6.1.32
+  checksum: 051d2d09df12448642928de9e1da7c296ae1019c6531e87f45f51fd29e8f235efbe94ef6502b37e874df72047c13a34da8816f2c05c7c358ead27ef4fbbd8117
   languageName: node
   linkType: hard
 
