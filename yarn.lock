@@ -4209,17 +4209,17 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-interactions@npm:^8.5.2":
-  version: 8.5.3
-  resolution: "@storybook/addon-interactions@npm:8.5.3"
+  version: 8.5.6
+  resolution: "@storybook/addon-interactions@npm:8.5.6"
   dependencies:
     "@storybook/global": ^5.0.0
-    "@storybook/instrumenter": 8.5.3
-    "@storybook/test": 8.5.3
+    "@storybook/instrumenter": 8.5.6
+    "@storybook/test": 8.5.6
     polished: ^4.2.2
     ts-dedent: ^2.2.0
   peerDependencies:
-    storybook: ^8.5.3
-  checksum: 62255bb27cbf5d98e5f0dd3baca95861238380cc9ece2d24f164127e5cf718039fe03bd2c97c08cb25fd277fa91668efbd2aa2faab7ff423abe0760dae391f31
+    storybook: ^8.5.6
+  checksum: 4a278d8928481559ec46ca586e1d3957d554b93e645722f47f36fce7ed904fe1c15e949f48130b73fe44201900c24c324fc4bb2452474dc3124c986a434245e8
   languageName: node
   linkType: hard
 
@@ -4435,18 +4435,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/instrumenter@npm:8.5.3":
-  version: 8.5.3
-  resolution: "@storybook/instrumenter@npm:8.5.3"
-  dependencies:
-    "@storybook/global": ^5.0.0
-    "@vitest/utils": ^2.1.1
-  peerDependencies:
-    storybook: ^8.5.3
-  checksum: 6839904c763629214942654de0951143af1b20ded79924b6d95106c2d4aae7f201e5e17f3add58b1b1ad82a835a6c5af6b6ba1e1a419c1a36342e3c841f5fdcc
-  languageName: node
-  linkType: hard
-
 "@storybook/instrumenter@npm:8.5.6":
   version: 8.5.6
   resolution: "@storybook/instrumenter@npm:8.5.6"
@@ -4576,25 +4564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/test@npm:8.5.3":
-  version: 8.5.3
-  resolution: "@storybook/test@npm:8.5.3"
-  dependencies:
-    "@storybook/csf": 0.1.12
-    "@storybook/global": ^5.0.0
-    "@storybook/instrumenter": 8.5.3
-    "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": 6.5.0
-    "@testing-library/user-event": 14.5.2
-    "@vitest/expect": 2.0.5
-    "@vitest/spy": 2.0.5
-  peerDependencies:
-    storybook: ^8.5.3
-  checksum: 4dd74bc1afa8c63208f106099be7b3b27de27e3ff49dfbd4f3c535d094db045e9936d53513e00afeecc5c96017eda7321efd362cc12f393be6dce71056a6df12
-  languageName: node
-  linkType: hard
-
-"@storybook/test@npm:^8.5.2":
+"@storybook/test@npm:8.5.6, @storybook/test@npm:^8.5.2":
   version: 8.5.6
   resolution: "@storybook/test@npm:8.5.6"
   dependencies:
