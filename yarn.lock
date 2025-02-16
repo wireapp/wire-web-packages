@@ -4236,11 +4236,11 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-onboarding@npm:^8.5.2":
-  version: 8.5.3
-  resolution: "@storybook/addon-onboarding@npm:8.5.3"
+  version: 8.5.6
+  resolution: "@storybook/addon-onboarding@npm:8.5.6"
   peerDependencies:
-    storybook: ^8.5.3
-  checksum: 4ae00f7fb7a9fbe7f9963a4955963b9aae39550904e3c342ec913673de1d2e885db884e73f66964a3a782958acc13555189d5a50e55cafe8af06456ea262ef05
+    storybook: ^8.5.6
+  checksum: 63b33f5cdf2fa4a85da263f31ff34cec6dcc7b2f409b8fd104bb2f21c09898b9fd8a269278353b9f3e3a020c988ac05a9b1bd6a80c0c9195ab9fc87943eefc24
   languageName: node
   linkType: hard
 
