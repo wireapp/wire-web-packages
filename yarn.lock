@@ -14384,9 +14384,9 @@ __metadata:
   linkType: hard
 
 "long@npm:*, long@npm:^5.0.0, long@npm:^5.2.0":
-  version: 5.2.4
-  resolution: "long@npm:5.2.4"
-  checksum: abffed049d2192a94415dc5d19e471a26d6753ba8b021dcef98b5424eec93cf6f293489524303f025dcdabae83bc07fc38acca34c060356f38449cd246f2646c
+  version: 5.3.0
+  resolution: "long@npm:5.3.0"
+  checksum: a05c01f0a4e135c9ea2b969c14377dafb7060df04e6269a06e8842509bfd5a13490c377f63b15efd0f8d04358c452017f9fc384c747b6a64da2c1c7617f53894
   languageName: node
   linkType: hard
 
