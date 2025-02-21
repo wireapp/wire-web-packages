@@ -51,6 +51,7 @@ const mlsDecryptionErrorNamesToIgnore: string[] = [
   CORE_CRYPTO_ERROR_NAMES.MlsErrorDuplicateMessage,
   CORE_CRYPTO_ERROR_NAMES.MlsErrorBufferedFutureMessage,
   CORE_CRYPTO_ERROR_NAMES.MlsErrorUnmergedPendingGroup,
+  CORE_CRYPTO_ERROR_NAMES.MlsErrorOther,
 ];
 
 export const shouldMLSDecryptionErrorBeIgnored = (error: unknown): error is Error => {
