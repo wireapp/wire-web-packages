@@ -68,7 +68,6 @@ export class AuthAPI {
       },
       method: 'post',
       url: `${AuthAPI.URL.COOKIES}/${AuthAPI.URL.REMOVE}`,
-      withCredentials: true,
     };
 
     await this.client.sendJSON(config);
@@ -90,7 +89,6 @@ export class AuthAPI {
         persist: loginData.clientType === ClientType.PERMANENT,
       },
       url: AuthAPI.URL.LOGIN,
-      withCredentials: true,
     };
 
     const response = await this.client.sendJSON<AccessTokenData>(config);
@@ -112,7 +110,6 @@ export class AuthAPI {
       data: userAccount,
       method: 'post',
       url: AuthAPI.URL.REGISTER,
-      withCredentials: true,
     };
 
     const response = await this.client.sendJSON<User>(config);
