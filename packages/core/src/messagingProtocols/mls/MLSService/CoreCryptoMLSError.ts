@@ -51,9 +51,20 @@ const mlsDecryptionErrorNamesToIgnore: string[] = [
   CORE_CRYPTO_ERROR_NAMES.MlsErrorDuplicateMessage,
   CORE_CRYPTO_ERROR_NAMES.MlsErrorBufferedFutureMessage,
   CORE_CRYPTO_ERROR_NAMES.MlsErrorUnmergedPendingGroup,
-  CORE_CRYPTO_ERROR_NAMES.MlsErrorOther,
 ];
 
+// This error is thrown when we receive a commit for which we have not yet received all the proposals.
+// This is a normal situation and we should ignore this error.
+// This error will get a proper name in the future.
+const isOtherErrorToIgnore = (error: Error): boolean => {
+  return (
+    error.name === CORE_CRYPTO_ERROR_NAMES.MlsErrorOther &&
+    error.message.startsWith('Incoming message is a commit for which we have not yet received all the proposals')
+  );
+};
+
 export const shouldMLSDecryptionErrorBeIgnored = (error: unknown): error is Error => {
-  return error instanceof Error && mlsDecryptionErrorNamesToIgnore.includes(error.name);
+  return (
+    error instanceof Error && (mlsDecryptionErrorNamesToIgnore.includes(error.name) || isOtherErrorToIgnore(error))
+  );
 };
