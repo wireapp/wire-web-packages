@@ -10745,8 +10745,8 @@ __metadata:
   linkType: hard
 
 "eslint-import-resolver-typescript@npm:^3.5.2":
-  version: 3.8.0
-  resolution: "eslint-import-resolver-typescript@npm:3.8.0"
+  version: 3.8.3
+  resolution: "eslint-import-resolver-typescript@npm:3.8.3"
   dependencies:
     "@nolyfill/is-core-module": 1.0.39
     debug: ^4.3.7
@@ -10754,7 +10754,7 @@ __metadata:
     get-tsconfig: ^4.10.0
     is-bun-module: ^1.0.2
     stable-hash: ^0.0.4
-    tinyglobby: ^0.2.10
+    tinyglobby: ^0.2.12
   peerDependencies:
     eslint: "*"
     eslint-plugin-import: "*"
@@ -10764,7 +10764,7 @@ __metadata:
       optional: true
     eslint-plugin-import-x:
       optional: true
-  checksum: 866f7eba778ca7ddbd99a468c7ad94b132d25b5c0426123da242159f4e9a07de0963fb8d68f71d4ddab9a595005acd36b79453efb91370ddf0449f12a551f62b
+  checksum: 5d26f0147905a96428955ea2e88a16c0ba7cebb44a006b8fe5ea3d6c0d3046a0c55ce69407705d617f3d50d00110ed4fab11bcdb982fbfa53af646bf44b7292d
   languageName: node
   linkType: hard
 
@@ -19834,7 +19834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinyglobby@npm:^0.2.11":
+"tinyglobby@npm:^0.2.11, tinyglobby@npm:^0.2.12":
   version: 0.2.12
   resolution: "tinyglobby@npm:0.2.12"
   dependencies:
