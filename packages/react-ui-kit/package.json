@@ -9,7 +9,7 @@
   "homepage": "https://wire-react-ui-kit.netlify.app/",
   "dependencies": {
     "@types/color": "3.0.6",
-    "color": "4.2.3",
+    "color": "5.0.0",
     "emotion-normalize": "11.0.1",
     "react-select": "5.7.7",
     "react-transition-group": "4.4.5"
