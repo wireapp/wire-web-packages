@@ -4674,11 +4674,11 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-onboarding@npm:^8.5.2":
-  version: 8.5.6
-  resolution: "@storybook/addon-onboarding@npm:8.5.6"
+  version: 8.5.8
+  resolution: "@storybook/addon-onboarding@npm:8.5.8"
   peerDependencies:
-    storybook: ^8.5.6
-  checksum: 63b33f5cdf2fa4a85da263f31ff34cec6dcc7b2f409b8fd104bb2f21c09898b9fd8a269278353b9f3e3a020c988ac05a9b1bd6a80c0c9195ab9fc87943eefc24
+    storybook: ^8.5.8
+  checksum: 7504f780705c151502b68ef381d7c18ba654990182140489560aa2b5f687304b0d1d94a929893ed847b2dab3e139a0a10e35000ab0059333acde85d013a5d976
   languageName: node
   linkType: hard
 
