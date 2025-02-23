@@ -4520,13 +4520,13 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-themes@npm:^8.5.2":
-  version: 8.5.6
-  resolution: "@storybook/addon-themes@npm:8.5.6"
+  version: 8.5.8
+  resolution: "@storybook/addon-themes@npm:8.5.8"
   dependencies:
     ts-dedent: ^2.0.0
   peerDependencies:
-    storybook: ^8.5.6
-  checksum: febc92e15b3d71c2281c80a4acad7da13703173f1c40994257cd573d9a568559ec8f924a6a043f972ed07d1aad233237819116daa740e08f0f13a27d3cbe5546
+    storybook: ^8.5.8
+  checksum: 55f32efe0a8e6c3c7935b4466fc606bc94529d52e4c51e4d4891d61b3d647b1cd7eb7ce7fc2c5efa1c35628220b52ef347ab366e1e12588a7d179730218a09ef
   languageName: node
   linkType: hard
 
