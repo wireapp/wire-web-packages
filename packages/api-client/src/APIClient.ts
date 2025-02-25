@@ -39,6 +39,7 @@ import {
 import {CookieStore} from './auth/CookieStore';
 import {parseAccessToken} from './auth/parseAccessToken';
 import {BroadcastAPI} from './broadcast/';
+import {CellsAPI} from './cells/CellsAPI';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
@@ -96,6 +97,7 @@ type Apis = {
   asset: AssetAPI;
   auth: AuthAPI;
   broadcast: BroadcastAPI;
+  cells: CellsAPI;
   client: ClientAPI;
   connection: ConnectionAPI;
   conversation: ConversationAPI;
@@ -144,6 +146,7 @@ export type BackendVersionResponse = {
   development?: number[];
   domain: string;
 };
+
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
@@ -207,6 +210,18 @@ export class APIClient extends EventEmitter {
       auth: new AuthAPI(this.transport.http),
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
+      cells: new CellsAPI(
+        new HttpClient(
+          this.config.cells
+            ? {
+                ...this.config,
+                urls: {...this.config.urls, rest: this.config.cells.pydio.url + this.config.cells.pydio.segment},
+                headers: {...this.config.headers, Authorization: `Bearer ${this.config.cells.pydio.apiKey}`},
+              }
+            : this.config,
+          this.accessTokenStore,
+        ),
+      ),
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),

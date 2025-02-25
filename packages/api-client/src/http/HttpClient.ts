@@ -61,7 +61,7 @@ export interface HttpClient {
 const FILE_SIZE_100_MB = 104857600;
 
 export class HttpClient extends EventEmitter {
-  private readonly client: AxiosInstance;
+  public readonly client: AxiosInstance;
   private readonly logger: logdown.Logger;
   private connectionState: ConnectionState;
   private readonly requestQueue: PriorityQueue;
@@ -70,7 +70,7 @@ export class HttpClient extends EventEmitter {
   private versionPrefix = '';
 
   constructor(
-    private readonly config: Config,
+    public readonly config: Config,
     public accessTokenStore: AccessTokenStore,
   ) {
     super();
