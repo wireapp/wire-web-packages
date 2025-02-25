@@ -19,7 +19,7 @@
 
 import {PutObjectCommand, S3Client, S3ServiceException} from '@aws-sdk/client-s3';
 
-import {CellsStorageServiceError} from './CellStorageService';
+import {CellsStorageError} from './CellsStorage';
 import {S3Service} from './S3Service';
 
 jest.mock('@aws-sdk/client-s3');
@@ -87,9 +87,7 @@ describe('S3Service', () => {
 
       mockSend.mockRejectedValueOnce(error);
 
-      await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(
-        CellsStorageServiceError,
-      );
+      await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(CellsStorageError);
 
       mockSend.mockRejectedValueOnce(error);
       await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(
@@ -104,9 +102,7 @@ describe('S3Service', () => {
 
       mockSend.mockRejectedValueOnce(error);
 
-      await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(
-        CellsStorageServiceError,
-      );
+      await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(CellsStorageError);
 
       mockSend.mockRejectedValueOnce(error);
       await expect(service.putObject({filePath: testFilePath, file: testFile})).rejects.toThrow(

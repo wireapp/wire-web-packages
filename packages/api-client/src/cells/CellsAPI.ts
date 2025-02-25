@@ -20,16 +20,16 @@
 import {NodeServiceApi, RestNode, RestNodeCollection} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
-import {CellsStorageService} from './CellStorageService/CellStorageService';
-import {S3Service} from './CellStorageService/S3Service';
+import {CellsStorage} from './CellsStorage/CellsStorage';
+import {S3Service} from './CellsStorage/S3Service';
 
 import {HttpClient} from '../http';
 
 export class CellsAPI {
-  private readonly storageService: CellsStorageService;
+  private readonly storageService: CellsStorage;
   private readonly client: NodeServiceApi;
 
-  constructor(httpClient: HttpClient, storageService?: CellsStorageService) {
+  constructor(httpClient: HttpClient, storageService?: CellsStorage) {
     this.storageService = storageService || new S3Service(httpClient.config.cells!.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);

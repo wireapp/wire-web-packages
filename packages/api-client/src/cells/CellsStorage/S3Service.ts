@@ -20,7 +20,7 @@
 import {S3Client, PutObjectCommand, S3ServiceException} from '@aws-sdk/client-s3';
 import {AwsCredentialIdentity} from '@smithy/types';
 
-import {CellsStorageService, CellsStorageServiceError} from './CellStorageService';
+import {CellsStorage, CellsStorageError} from './CellsStorage';
 
 interface S3ServiceConfig {
   apiKey: string;
@@ -29,7 +29,7 @@ interface S3ServiceConfig {
   region: string;
 }
 
-export class S3Service implements CellsStorageService {
+export class S3Service implements CellsStorage {
   private client: S3Client;
   private bucket: string;
 
@@ -74,12 +74,12 @@ export class S3Service implements CellsStorageService {
       await this.client.send(command);
     } catch (caught) {
       if (caught instanceof S3ServiceException && caught.name === 'EntityTooLarge') {
-        throw new CellsStorageServiceError(
+        throw new CellsStorageError(
           'The object was too large. To upload objects larger than 5GB, use the S3 console (160GB max) or the multipart upload API (5TB max).',
           caught,
         );
       } else if (caught instanceof S3ServiceException) {
-        throw new CellsStorageServiceError(
+        throw new CellsStorageError(
           `Error from S3 while uploading object to ${this.bucket}. ${caught.name}: ${caught.message}`,
           caught,
         );

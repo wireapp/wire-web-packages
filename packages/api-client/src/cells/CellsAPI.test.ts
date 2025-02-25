@@ -22,8 +22,8 @@ import {NodeServiceApi, RestNode, RestNodeCollection} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
 import {CellsAPI} from './CellsAPI';
-import {CellsStorageService} from './CellStorageService/CellStorageService';
-import {S3Service} from './CellStorageService/S3Service';
+import {CellsStorage} from './CellsStorage/CellsStorage';
+import {S3Service} from './CellsStorage/S3Service';
 
 import {HttpClient} from '../http';
 
@@ -34,7 +34,7 @@ jest.mock('./CellsStorage/S3Service');
 describe('CellsAPI', () => {
   let cellsAPI: CellsAPI;
   let mockHttpClient: jest.Mocked<HttpClient>;
-  let mockStorageService: jest.Mocked<CellsStorageService>;
+  let mockStorage: jest.Mocked<CellsStorage>;
   let mockNodeServiceApi: jest.Mocked<NodeServiceApi>;
   let testFile: File;
 
@@ -57,9 +57,9 @@ describe('CellsAPI', () => {
       client: {},
     } as unknown as jest.Mocked<HttpClient>;
 
-    mockStorageService = {
+    mockStorage = {
       putObject: jest.fn().mockResolvedValue(undefined),
-    } as unknown as jest.Mocked<CellsStorageService>;
+    } as unknown as jest.Mocked<CellsStorage>;
 
     mockNodeServiceApi = {
       createCheck: jest.fn(),
@@ -73,7 +73,7 @@ describe('CellsAPI', () => {
 
     testFile = new File([TEST_FILE_CONTENT], TEST_FILE_NAME, {type: TEST_FILE_TYPE}) as File;
 
-    cellsAPI = new CellsAPI(mockHttpClient, mockStorageService);
+    cellsAPI = new CellsAPI(mockHttpClient, mockStorage);
   });
 
   it('initializes with provided storage service and creates NodeServiceApi', () => {
@@ -117,7 +117,7 @@ describe('CellsAPI', () => {
         FindAvailablePath: true,
       });
 
-      expect(mockStorageService.putObject).toHaveBeenCalledWith({
+      expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: `/${TEST_FILE_PATH}`,
         file: testFile,
         metadata: {
@@ -144,7 +144,7 @@ describe('CellsAPI', () => {
 
       await cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile});
 
-      expect(mockStorageService.putObject).toHaveBeenCalledWith({
+      expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: nextPath,
         file: testFile,
         metadata: {
@@ -171,7 +171,7 @@ describe('CellsAPI', () => {
 
       await cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile, autoRename: false});
 
-      expect(mockStorageService.putObject).toHaveBeenCalledWith({
+      expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: `/${TEST_FILE_PATH}`,
         file: testFile,
         metadata: {
@@ -201,7 +201,7 @@ describe('CellsAPI', () => {
       );
 
       const errorMessage = 'Storage error';
-      mockStorageService.putObject.mockRejectedValueOnce(new Error(errorMessage));
+      mockStorage.putObject.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
     });

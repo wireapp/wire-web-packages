@@ -17,7 +17,7 @@
  *
  */
 
-export interface CellsStorageService {
+export interface CellsStorage {
   putObject({
     filePath,
     file,
@@ -29,12 +29,12 @@ export interface CellsStorageService {
   }): Promise<void>;
 }
 
-export class CellsStorageServiceError extends Error {
+export class CellsStorageError extends Error {
   constructor(
     message: string,
     public readonly cause?: Error,
   ) {
     super(message);
-    this.name = 'StorageServiceError';
+    this.name = 'CellsStorageError';
   }
 }
