@@ -13,10 +13,10 @@
     "./lib/shims/node/websocket": "./lib/shims/browser/websocket.js"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.750.0",
-    "@aws-sdk/credential-providers": "^3.750.0",
-    "@aws-sdk/lib-storage": "^3.750.0",
-    "@aws-sdk/s3-request-presigner": "^3.750.0",
+    "@aws-sdk/client-s3": "3.750.0",
+    "@aws-sdk/credential-providers": "3.750.0",
+    "@aws-sdk/lib-storage": "3.750.0",
+    "@aws-sdk/s3-request-presigner": "3.750.0",
     "@wireapp/commons": "workspace:^",
     "@wireapp/priority-queue": "workspace:^",
     "@wireapp/protocol-messaging": "1.51.0",
@@ -29,7 +29,7 @@
     "reconnecting-websocket": "4.4.0",
     "spark-md5": "3.0.2",
     "tough-cookie": "4.1.4",
-    "uuid": "^11.1.0",
+    "uuid": "11.1.0",
     "ws": "8.18.1",
     "zod": "3.24.2"
   },
