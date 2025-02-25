@@ -73,7 +73,11 @@ describe('CellsAPI', () => {
 
     testFile = new File([TEST_FILE_CONTENT], TEST_FILE_NAME, {type: TEST_FILE_TYPE}) as File;
 
-    cellsAPI = new CellsAPI(mockHttpClient, mockStorage);
+    cellsAPI = new CellsAPI({
+      httpClient: mockHttpClient,
+      storageService: mockStorage,
+      cellsConfig: mockHttpClient.config.cells,
+    });
   });
 
   it('initializes with provided storage service and creates NodeServiceApi', () => {
@@ -83,7 +87,7 @@ describe('CellsAPI', () => {
   it('creates a default S3Service if none is provided', () => {
     (S3Service as jest.Mock).mockClear();
 
-    new CellsAPI(mockHttpClient);
+    new CellsAPI({httpClient: mockHttpClient, cellsConfig: mockHttpClient.config.cells});
 
     expect(S3Service).toHaveBeenCalledTimes(1);
     expect(S3Service).toHaveBeenCalledWith(mockHttpClient.config.cells!.s3);
@@ -95,7 +99,9 @@ describe('CellsAPI', () => {
       client: {},
     } as unknown as HttpClient;
 
-    expect(() => new CellsAPI(httpClientWithoutConfig)).toThrow();
+    expect(
+      () => new CellsAPI({httpClient: httpClientWithoutConfig, cellsConfig: httpClientWithoutConfig.config.cells}),
+    ).toThrow();
   });
 
   describe('uploadFile', () => {

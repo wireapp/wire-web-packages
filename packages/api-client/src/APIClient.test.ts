@@ -30,8 +30,7 @@ import {BackendErrorLabel, StatusCode} from './http';
 import {Self, SelfAPI} from './self';
 import {UserAPI} from './user/UserAPI';
 
-const testConfig: Config = {
-  urls: APIClient.BACKEND.PRODUCTION,
+const cellsConfig = {
   cells: {
     s3: {
       apiKey: 'test-api-key',
@@ -45,7 +44,7 @@ const testConfig: Config = {
       apiKey: 'test-pydio-api-key',
     },
   },
-};
+} as Config;
 
 describe('APIClient', () => {
   const baseUrl = APIClient.BACKEND.PRODUCTION.rest;
@@ -81,7 +80,7 @@ describe('APIClient', () => {
 
   describe('constructor', () => {
     it('constructs a client with production backend and StoreEngine by default', () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       expect(client.transport.http['client'].defaults.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
@@ -93,7 +92,7 @@ describe('APIClient', () => {
     });
 
     it('constructs URLs when only the StoreEngine is provided', () => {
-      const client = new APIClient();
+      const client = new APIClient({...cellsConfig});
       expect(client.transport.http['client'].defaults.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
@@ -104,7 +103,7 @@ describe('APIClient', () => {
       nock(baseUrl)
         .get('/api-version')
         .reply(200, {supported: [0, 1]});
-      const client = new APIClient();
+      const client = new APIClient({...cellsConfig});
       let errorMessage;
       try {
         await client.useVersion(2, 3);
@@ -117,7 +116,7 @@ describe('APIClient', () => {
 
     it("uses version 0 if backend doesn't support /api-version endpoint", async () => {
       nock(baseUrl).get('/api-version').reply(404);
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {version} = await client.useVersion(0, 3);
       expect(version).toBe(0);
     });
@@ -126,7 +125,7 @@ describe('APIClient', () => {
       nock(baseUrl)
         .get('/api-version')
         .reply(200, {supported: [0, 1]});
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2);
       expect(version).toBe(1);
       expect(isFederated).toBe(false);
@@ -137,7 +136,7 @@ describe('APIClient', () => {
       nock(baseUrl)
         .get('/api-version')
         .reply(200, {supported: [0, 1], development: [2]});
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2, true);
       expect(version).toBe(2);
       expect(isFederated).toBe(false);
@@ -148,7 +147,7 @@ describe('APIClient', () => {
       nock(baseUrl)
         .get('/api-version')
         .reply(200, {supported: [0, 1], development: [2]});
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2, false);
       expect(version).toBe(1);
       expect(isFederated).toBe(false);
@@ -159,7 +158,7 @@ describe('APIClient', () => {
       nock(baseUrl)
         .get('/api-version')
         .reply(200, {supported: [0, 1], development: [2]});
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {version, isFederated, federationEndpoints} = await client.useVersion(0, 1, true);
       expect(version).toBe(1);
       expect(isFederated).toBe(false);
@@ -169,7 +168,7 @@ describe('APIClient', () => {
     it('returns the backend federation state', async () => {
       const response: BackendVersionResponse = {supported: [0, 1], federation: true};
       nock(baseUrl).get('/api-version').reply(200, response);
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const {isFederated} = await client.useVersion(0, 2);
       expect(isFederated).toBe(true);
     });
@@ -249,7 +248,7 @@ describe('APIClient', () => {
     });
 
     it('creates a context from a successful login', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const context = await client.login(loginData);
       expect(context.userId).toBe(accessTokenData.user);
       expect(client['accessTokenStore'].accessToken?.access_token).toBe(accessTokenData.access_token);
@@ -257,7 +256,7 @@ describe('APIClient', () => {
 
     // eslint-disable-next-line jest/expect-expect
     it('can login after a logout', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       await client.login(loginData);
       return client.logout();
     });
@@ -275,7 +274,7 @@ describe('APIClient', () => {
 
       nock(baseUrl).post(AuthAPI.URL.ACCESS).reply(StatusCode.OK, accessTokenData);
 
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const context = await client.login(loginData);
       expect(context.userId).toBe(accessTokenData.user);
       // Make access token invalid
@@ -293,7 +292,7 @@ describe('APIClient', () => {
 
     // eslint-disable-next-line jest/expect-expect
     it('can logout a user', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
 
       client.context = await client['createContext']('3721e5d3-558d-45ac-b476-b4a64a8f74c1', ClientType.TEMPORARY);
 
@@ -301,7 +300,7 @@ describe('APIClient', () => {
     });
 
     it('ignores errors', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
       const testError = new Error('Test rejection');
 
       jest.spyOn(client.api.auth, 'postLogout').mockReturnValue(Promise.reject(testError));
@@ -314,7 +313,7 @@ describe('APIClient', () => {
     });
 
     it('skips request when told to', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
 
       jest.spyOn(client.api.auth, 'postLogout');
       jest.spyOn(client, 'disconnect').mockReturnValue();
@@ -344,7 +343,7 @@ describe('APIClient', () => {
     });
 
     it('automatically gets an access token after registration', async () => {
-      const client = new APIClient(testConfig);
+      const client = new APIClient({...cellsConfig});
 
       const context = await client.register(registerData);
       expect(context.userId).toBe(registerData.id);

@@ -23,14 +23,23 @@ import {v4 as uuidv4} from 'uuid';
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
 
+import {Config} from '../Config';
 import {HttpClient} from '../http';
 
 export class CellsAPI {
   private readonly storageService: CellsStorage;
   private readonly client: NodeServiceApi;
 
-  constructor(httpClient: HttpClient, storageService?: CellsStorage) {
-    this.storageService = storageService || new S3Service(httpClient.config.cells!.s3);
+  constructor({
+    httpClient,
+    storageService,
+    cellsConfig,
+  }: {
+    httpClient: HttpClient;
+    storageService?: CellsStorage;
+    cellsConfig: Config['cells'];
+  }) {
+    this.storageService = storageService || new S3Service(cellsConfig!.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
   }

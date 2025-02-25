@@ -210,9 +210,9 @@ export class APIClient extends EventEmitter {
       auth: new AuthAPI(this.transport.http),
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
-      cells: new CellsAPI(
-        new HttpClient(
-          this.config.cells && this.config.cells.pydio
+      cells: new CellsAPI({
+        httpClient: new HttpClient(
+          this.config.cells
             ? {
                 ...this.config,
                 urls: {...this.config.urls, rest: this.config.cells.pydio.url + this.config.cells.pydio.segment},
@@ -221,7 +221,8 @@ export class APIClient extends EventEmitter {
             : this.config,
           this.accessTokenStore,
         ),
-      ),
+        cellsConfig: this.config.cells,
+      }),
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
