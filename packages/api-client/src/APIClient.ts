@@ -212,7 +212,7 @@ export class APIClient extends EventEmitter {
       broadcast: new BroadcastAPI(this.transport.http),
       cells: new CellsAPI(
         new HttpClient(
-          this.config.cells
+          this.config.cells && this.config.cells.pydio
             ? {
                 ...this.config,
                 urls: {...this.config.urls, rest: this.config.cells.pydio.url + this.config.cells.pydio.segment},

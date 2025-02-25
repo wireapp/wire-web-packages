@@ -30,6 +30,10 @@ export class CellsAPI {
   private readonly client: NodeServiceApi;
 
   constructor(httpClient: HttpClient, storageService?: CellsStorage) {
+    if (!storageService && (!httpClient.config.cells || !httpClient.config.cells.s3)) {
+      throw new Error('CellsAPI requires either a storage service or a valid cells S3 configuration');
+    }
+
     this.storageService = storageService || new S3Service(httpClient.config.cells!.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
