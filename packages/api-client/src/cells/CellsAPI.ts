@@ -20,16 +20,16 @@
 import {NodeServiceApi, RestNode, RestNodeCollection} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
-import {S3Service} from './S3Service';
-import {StorageService} from './StorageService';
+import {CellsStorageService} from './CellStorageService/CellStorageService';
+import {S3Service} from './CellStorageService/S3Service';
 
 import {HttpClient} from '../http';
 
 export class CellsAPI {
-  private readonly storageService: StorageService;
+  private readonly storageService: CellsStorageService;
   private readonly client: NodeServiceApi;
 
-  constructor(httpClient: HttpClient, storageService?: StorageService) {
+  constructor(httpClient: HttpClient, storageService?: CellsStorageService) {
     this.storageService = storageService || new S3Service(httpClient.config.cells!.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
@@ -81,33 +81,5 @@ export class CellsAPI {
 
   async deleteFile(path: string): Promise<void> {
     await this.client.performAction('delete', {Nodes: [{Path: path}]});
-  }
-
-  async createFile({name, path = ''}: {name: string; path?: string}): Promise<void> {
-    await this.client.create({
-      Inputs: [
-        {
-          Type: 'LEAF',
-          Locator: {Path: `${path}/${name.normalize('NFC')}`},
-          DraftMode: true,
-          ResourceUuid: uuidv4(),
-          VersionId: uuidv4(),
-        },
-      ],
-    });
-  }
-
-  async createFolder({name, path = ''}: {name: string; path?: string}): Promise<void> {
-    await this.client.create({
-      Inputs: [
-        {
-          Type: 'COLLECTION',
-          Locator: {Path: `${path}/${name.normalize('NFC')}`},
-          DraftMode: true,
-          ResourceUuid: uuidv4(),
-          VersionId: '',
-        },
-      ],
-    });
   }
 }
