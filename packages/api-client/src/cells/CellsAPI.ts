@@ -33,13 +33,13 @@ export class CellsAPI {
   constructor({
     httpClient,
     storageService,
-    cellsConfig,
+    config,
   }: {
     httpClient: HttpClient;
     storageService?: CellsStorage;
-    cellsConfig: Config['cells'];
+    config: Config['cells'];
   }) {
-    this.storageService = storageService || new S3Service(cellsConfig!.s3);
+    this.storageService = storageService || new S3Service(config!.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
   }

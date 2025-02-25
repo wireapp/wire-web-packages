@@ -221,7 +221,7 @@ export class APIClient extends EventEmitter {
             : this.config,
           this.accessTokenStore,
         ),
-        cellsConfig: this.config.cells,
+        config: this.config.cells,
       }),
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
