@@ -25,6 +25,7 @@ import {CellsAPI} from './CellsAPI';
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
 
+import {Config} from '../Config';
 import {HttpClient} from '../http';
 
 jest.mock('cells-sdk-ts');
@@ -37,22 +38,30 @@ describe('CellsAPI', () => {
   let mockStorage: jest.Mocked<CellsStorage>;
   let mockNodeServiceApi: jest.Mocked<NodeServiceApi>;
   let testFile: File;
+  let mockConfig: Config['cells'];
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     (uuidv4 as jest.Mock).mockReturnValue(MOCKED_UUID);
 
+    mockConfig = {
+      s3: {
+        apiKey: 'test-api-key',
+        bucket: 'test-bucket',
+        endpoint: 'test-endpoint',
+        region: 'test-region',
+      },
+      pydio: {
+        url: 'test-url',
+        segment: 'test-segment',
+        apiKey: 'test-api-key',
+      },
+    };
+
     mockHttpClient = {
       config: {
-        cells: {
-          s3: {
-            apiKey: 'test-api-key',
-            bucket: 'test-bucket',
-            endpoint: 'test-endpoint',
-            region: 'test-region',
-          },
-        },
+        cells: mockConfig,
       },
       client: {},
     } as unknown as jest.Mocked<HttpClient>;
@@ -76,7 +85,7 @@ describe('CellsAPI', () => {
     cellsAPI = new CellsAPI({
       httpClient: mockHttpClient,
       storageService: mockStorage,
-      config: mockHttpClient.config.cells,
+      config: mockConfig,
     });
   });
 
@@ -87,10 +96,10 @@ describe('CellsAPI', () => {
   it('creates a default S3Service if none is provided', () => {
     (S3Service as jest.Mock).mockClear();
 
-    new CellsAPI({httpClient: mockHttpClient, config: mockHttpClient.config.cells});
+    new CellsAPI({httpClient: mockHttpClient, config: mockConfig});
 
     expect(S3Service).toHaveBeenCalledTimes(1);
-    expect(S3Service).toHaveBeenCalledWith(mockHttpClient.config.cells!.s3);
+    expect(S3Service).toHaveBeenCalledWith(mockConfig!.s3);
   });
 
   it('throws error when cells configuration is missing', () => {
@@ -99,9 +108,7 @@ describe('CellsAPI', () => {
       client: {},
     } as unknown as HttpClient;
 
-    expect(
-      () => new CellsAPI({httpClient: httpClientWithoutConfig, config: httpClientWithoutConfig.config.cells}),
-    ).toThrow();
+    expect(() => new CellsAPI({httpClient: httpClientWithoutConfig, config: mockConfig})).toThrow();
   });
 
   describe('uploadFile', () => {

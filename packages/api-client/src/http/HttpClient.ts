@@ -70,7 +70,7 @@ export class HttpClient extends EventEmitter {
   private versionPrefix = '';
 
   constructor(
-    public readonly config: Config,
+    private readonly config: Config,
     public accessTokenStore: AccessTokenStore,
   ) {
     super();
