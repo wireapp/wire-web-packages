@@ -364,7 +364,6 @@ class MockFile {
     this.size = this.content.length;
   }
 
-  // Stub methods to match File interface
   arrayBuffer(): Promise<ArrayBuffer> {
     return Promise.resolve(new ArrayBuffer(0));
   }
