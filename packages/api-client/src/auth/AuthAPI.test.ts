@@ -19,10 +19,11 @@
 
 import {APIClient} from '../APIClient';
 import {ClientType} from '../client/ClientType';
+import {mockTestConfig} from '../Config';
 import {StatusCode} from '../http';
 
 describe('AuthAPI', () => {
-  const apiClient = new APIClient();
+  const apiClient = new APIClient(mockTestConfig);
 
   it('sets the client to permanent', async () => {
     const data = {

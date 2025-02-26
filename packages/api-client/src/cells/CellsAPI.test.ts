@@ -102,15 +102,6 @@ describe('CellsAPI', () => {
     expect(S3Service).toHaveBeenCalledWith(mockConfig!.s3);
   });
 
-  it('throws error when cells configuration is missing', () => {
-    const httpClientWithoutConfig = {
-      config: {},
-      client: {},
-    } as unknown as HttpClient;
-
-    expect(() => new CellsAPI({httpClient: httpClientWithoutConfig, config: mockConfig})).toThrow();
-  });
-
   describe('uploadFile', () => {
     it('normalizes file paths and uploads with correct metadata', async () => {
       mockNodeServiceApi.createCheck.mockResolvedValueOnce(

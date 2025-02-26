@@ -36,3 +36,24 @@ export interface Config {
   };
   headers?: Record<string, string>;
 }
+
+export const mockTestConfig: Config = {
+  urls: {
+    rest: 'https://test.zinfra.io',
+    ws: '',
+    name: 'test',
+  },
+  cells: {
+    s3: {
+      apiKey: 'test-api-key',
+      bucket: 'test-bucket',
+      endpoint: 'test-endpoint',
+      region: 'test-region',
+    },
+    pydio: {
+      url: 'https://test-pydio.wire.com',
+      segment: '/cells/api',
+      apiKey: 'test-pydio-api-key',
+    },
+  },
+};
