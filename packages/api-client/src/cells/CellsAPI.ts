@@ -61,7 +61,7 @@ export class CellsAPI {
     filePath: string;
     file: File;
     autoRename?: boolean;
-  }): Promise<void> {
+  }): Promise<{uuid: string; versionId: string}> {
     let path = `/${filePath}`.normalize('NFC');
 
     const result = await this.client.createCheck({
@@ -80,6 +80,19 @@ export class CellsAPI {
     };
 
     await this.storageService.putObject({filePath: path, file, metadata});
+
+    const node = result.data?.Results?.[0].Node;
+    const uuid = node?.Uuid;
+    const versionId = node?.VersionMeta?.VersionId;
+
+    if (!uuid || !versionId) {
+      throw new Error('Failed to upload file draft');
+    }
+
+    return {
+      uuid,
+      versionId,
+    };
   }
 
   async promoteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
