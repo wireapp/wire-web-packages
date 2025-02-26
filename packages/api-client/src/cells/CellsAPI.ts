@@ -22,6 +22,7 @@ import {
   RestDeleteVersionResponse,
   RestNode,
   RestNodeCollection,
+  RestPerformActionResponse,
   RestPromoteVersionResponse,
   RestPublicLinkDeleteSuccess,
   RestShareLink,
@@ -93,8 +94,10 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFile(path: string): Promise<void> {
-    await this.client.performAction('delete', {Nodes: [{Path: path}]});
+  async deleteFile(path: string): Promise<RestPerformActionResponse> {
+    const result = await this.client.performAction('delete', {Nodes: [{Path: path}]});
+
+    return result.data;
   }
 
   async getFile(id: string): Promise<RestNode> {
