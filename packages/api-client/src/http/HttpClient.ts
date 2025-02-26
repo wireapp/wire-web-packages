@@ -77,6 +77,7 @@ export class HttpClient extends EventEmitter {
 
     this.client = axios.create({
       baseURL: this.config.urls.rest,
+      headers: this.config.headers,
     });
     axiosRetry(this.client, {
       retries: Infinity,
