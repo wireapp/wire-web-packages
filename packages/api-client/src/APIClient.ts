@@ -207,6 +207,7 @@ export class APIClient extends EventEmitter {
 
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
 
+    // To not mark "cells" as optional, we use the mock config for APIClient instances that are not using the cells feature.
     const cellsConfig = this.config.cells || cellsConfigMock;
 
     return {
