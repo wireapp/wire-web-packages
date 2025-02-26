@@ -18,7 +18,6 @@
  */
 
 import {S3Client, PutObjectCommand, S3ServiceException} from '@aws-sdk/client-s3';
-import {AwsCredentialIdentity} from '@smithy/types';
 
 import {CellsStorage, CellsStorageError} from './CellsStorage';
 
@@ -36,18 +35,14 @@ export class S3Service implements CellsStorage {
   constructor({apiKey, bucket, endpoint, region}: S3ServiceConfig) {
     this.bucket = bucket;
 
-    const provider = async (): Promise<AwsCredentialIdentity> => {
-      return {
-        accessKeyId: apiKey,
-        secretAccessKey: 'gatewaysecret',
-      };
-    };
-
     this.client = new S3Client({
       endpoint,
       forcePathStyle: true,
       region,
-      credentials: provider,
+      credentials: async () => ({
+        accessKeyId: apiKey,
+        secretAccessKey: 'gatewaysecret',
+      }),
       requestChecksumCalculation: 'WHEN_REQUIRED',
     });
   }
