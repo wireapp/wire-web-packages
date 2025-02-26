@@ -18,11 +18,10 @@
  */
 
 import {APIClient} from '../APIClient';
-import {mockTestConfig} from '../Config';
 import {StatusCode} from '../http';
 
 describe('"AssetAPI"', () => {
-  const apiClient = new APIClient(mockTestConfig);
+  const apiClient = new APIClient();
 
   it('adds token parameters', async () => {
     jest.spyOn(apiClient.transport.http, 'sendRequest').mockReturnValue(

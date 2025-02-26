@@ -97,7 +97,7 @@ type Apis = {
   asset: AssetAPI;
   auth: AuthAPI;
   broadcast: BroadcastAPI;
-  cells: CellsAPI;
+  cells?: CellsAPI;
   client: ClientAPI;
   connection: ConnectionAPI;
   conversation: ConversationAPI;
@@ -210,19 +210,19 @@ export class APIClient extends EventEmitter {
       auth: new AuthAPI(this.transport.http),
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
-      cells: new CellsAPI({
-        httpClient: new HttpClient(
-          this.config.cells
-            ? {
+      cells: this.config.cells
+        ? new CellsAPI({
+            httpClient: new HttpClient(
+              {
                 ...this.config,
                 urls: {...this.config.urls, rest: this.config.cells.pydio.url + this.config.cells.pydio.segment},
                 headers: {...this.config.headers, Authorization: `Bearer ${this.config.cells.pydio.apiKey}`},
-              }
-            : this.config,
-          this.accessTokenStore,
-        ),
-        config: this.config.cells,
-      }),
+              },
+              this.accessTokenStore,
+            ),
+            config: this.config.cells,
+          })
+        : undefined,
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
