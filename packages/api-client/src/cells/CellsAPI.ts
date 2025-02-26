@@ -83,7 +83,7 @@ export class CellsAPI {
 
     const node = result.data?.Results?.[0].Node;
     const uuid = node?.Uuid;
-    const versionId = node?.VersionMeta?.VersionId;
+    const versionId = node?.Versions?.[0]?.VersionId;
 
     if (!uuid || !versionId) {
       throw new Error('Failed to upload file draft');
