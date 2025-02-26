@@ -25,8 +25,8 @@ import {CellsAPI} from './CellsAPI';
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
 
-import {Config} from '../Config';
 import {HttpClient} from '../http';
+import {cellsConfigMock} from '../mocks/cells';
 
 jest.mock('cells-sdk-ts');
 jest.mock('uuid');
@@ -38,30 +38,15 @@ describe('CellsAPI', () => {
   let mockStorage: jest.Mocked<CellsStorage>;
   let mockNodeServiceApi: jest.Mocked<NodeServiceApi>;
   let testFile: File;
-  let mockConfig: Config['cells'];
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     (uuidv4 as jest.Mock).mockReturnValue(MOCKED_UUID);
 
-    mockConfig = {
-      s3: {
-        apiKey: 'test-api-key',
-        bucket: 'test-bucket',
-        endpoint: 'test-endpoint',
-        region: 'test-region',
-      },
-      pydio: {
-        url: 'test-url',
-        segment: 'test-segment',
-        apiKey: 'test-api-key',
-      },
-    };
-
     mockHttpClient = {
       config: {
-        cells: mockConfig,
+        cells: cellsConfigMock,
       },
       client: {},
     } as unknown as jest.Mocked<HttpClient>;
@@ -89,7 +74,7 @@ describe('CellsAPI', () => {
     cellsAPI = new CellsAPI({
       httpClient: mockHttpClient,
       storageService: mockStorage,
-      config: mockConfig,
+      config: cellsConfigMock,
     });
   });
 
@@ -100,10 +85,10 @@ describe('CellsAPI', () => {
   it('creates a default S3Service if none is provided', () => {
     (S3Service as jest.Mock).mockClear();
 
-    new CellsAPI({httpClient: mockHttpClient, config: mockConfig});
+    new CellsAPI({httpClient: mockHttpClient, config: cellsConfigMock});
 
     expect(S3Service).toHaveBeenCalledTimes(1);
-    expect(S3Service).toHaveBeenCalledWith(mockConfig!.s3);
+    expect(S3Service).toHaveBeenCalledWith(cellsConfigMock.s3);
   });
 
   describe('uploadFileDraft', () => {
