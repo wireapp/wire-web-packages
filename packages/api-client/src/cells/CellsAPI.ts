@@ -46,9 +46,9 @@ export class CellsAPI {
   }: {
     httpClient: HttpClient;
     storageService?: CellsStorage;
-    config: Config['cells'];
+    config: NonNullable<Config['cells']>;
   }) {
-    this.storageService = storageService || new S3Service(config!.s3);
+    this.storageService = storageService || new S3Service(config.s3);
 
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
   }

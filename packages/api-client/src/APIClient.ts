@@ -48,6 +48,7 @@ import {Backend} from './env/';
 import {GenericAPI} from './generic';
 import {GiphyAPI} from './giphy/';
 import {BackendError, HttpClient} from './http/';
+import {cellsConfigMock} from './mocks/cells';
 import {NotificationAPI} from './notification/';
 import {OAuthAPI} from './oauth/OAuthAPI';
 import {ObfuscationUtil} from './obfuscation/';
@@ -80,9 +81,9 @@ enum TOPIC {
   ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
-const defaultConfig: Config = {
+const defaultConfig = {
   urls: Backend.PRODUCTION,
-};
+} as Config;
 
 export interface APIClient {
   on(event: TOPIC.ON_LOGOUT, listener: (error: InvalidTokenError) => void): this;
@@ -97,7 +98,7 @@ type Apis = {
   asset: AssetAPI;
   auth: AuthAPI;
   broadcast: BroadcastAPI;
-  cells?: CellsAPI;
+  cells: CellsAPI;
   client: ClientAPI;
   connection: ConnectionAPI;
   conversation: ConversationAPI;
@@ -203,26 +204,28 @@ export class APIClient extends EventEmitter {
 
   private configureApis(backendFeatures: BackendFeatures): Apis {
     this.logger.info('configuring APIs with config', backendFeatures);
+
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
+
+    const cellsConfig = this.config.cells || cellsConfigMock;
+
     return {
       account: new AccountAPI(this.transport.http),
       asset: assetAPI,
       auth: new AuthAPI(this.transport.http),
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
-      cells: this.config.cells
-        ? new CellsAPI({
-            httpClient: new HttpClient(
-              {
-                ...this.config,
-                urls: {...this.config.urls, rest: this.config.cells.pydio.url + this.config.cells.pydio.segment},
-                headers: {...this.config.headers, Authorization: `Bearer ${this.config.cells.pydio.apiKey}`},
-              },
-              this.accessTokenStore,
-            ),
-            config: this.config.cells,
-          })
-        : undefined,
+      cells: new CellsAPI({
+        httpClient: new HttpClient(
+          {
+            ...this.config,
+            urls: {...this.config.urls, rest: cellsConfig.pydio.url + cellsConfig.pydio.segment},
+            headers: {...this.config.headers, Authorization: `Bearer ${cellsConfig.pydio.apiKey}`},
+          },
+          this.accessTokenStore,
+        ),
+        config: cellsConfig,
+      }),
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
