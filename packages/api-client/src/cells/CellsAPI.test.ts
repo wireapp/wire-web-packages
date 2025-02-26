@@ -18,7 +18,7 @@
  */
 
 import {AxiosResponse} from 'axios';
-import {NodeServiceApi, RestNode, RestNodeCollection} from 'cells-sdk-ts';
+import {NodeServiceApi, RestNode, RestNodeCollection, RestPublicLinkDeleteSuccess, RestShareLink} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
 import {CellsAPI} from './CellsAPI';
@@ -76,6 +76,10 @@ describe('CellsAPI', () => {
       lookup: jest.fn(),
       performAction: jest.fn(),
       create: jest.fn(),
+      promoteVersion: jest.fn(),
+      deleteVersion: jest.fn(),
+      deletePublicLink: jest.fn(),
+      createPublicLink: jest.fn(),
     } as unknown as jest.Mocked<NodeServiceApi>;
 
     (NodeServiceApi as jest.Mock).mockImplementation(() => mockNodeServiceApi);
@@ -102,7 +106,7 @@ describe('CellsAPI', () => {
     expect(S3Service).toHaveBeenCalledWith(mockConfig!.s3);
   });
 
-  describe('uploadFile', () => {
+  describe('uploadFileDraft', () => {
     it('normalizes file paths and uploads with correct metadata', async () => {
       mockNodeServiceApi.createCheck.mockResolvedValueOnce(
         createMockResponse({
@@ -114,7 +118,7 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile});
+      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile});
 
       expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
         Inputs: [{Type: 'LEAF', Locator: {Path: `/${TEST_FILE_PATH}`}}],
@@ -146,7 +150,7 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile});
+      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile});
 
       expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: nextPath,
@@ -173,7 +177,7 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile, autoRename: false});
+      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile, autoRename: false});
 
       expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: `/${TEST_FILE_PATH}`,
@@ -190,7 +194,7 @@ describe('CellsAPI', () => {
       const errorMessage = 'API error';
       mockNodeServiceApi.createCheck.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
+      await expect(cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
     });
 
     it('propagates errors from StorageService', async () => {
@@ -207,7 +211,7 @@ describe('CellsAPI', () => {
       const errorMessage = 'Storage error';
       mockStorage.putObject.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.uploadFile({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
+      await expect(cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
     });
 
     it('handles empty file path by using root path', async () => {
@@ -221,7 +225,7 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFile({filePath: '', file: testFile});
+      await cellsAPI.uploadFileDraft({filePath: '', file: testFile});
 
       expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
         Inputs: [{Type: 'LEAF', Locator: {Path: '/'}}],
@@ -332,6 +336,199 @@ describe('CellsAPI', () => {
       mockNodeServiceApi.performAction.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(cellsAPI.deleteFile(nonExistentPath)).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('promoteFileDraft', () => {
+    it('promotes a file draft with the correct parameters', async () => {
+      const uuid = 'file-uuid';
+      const versionId = 'version-uuid';
+      const mockResponse = {
+        Success: true,
+        Node: {
+          Uuid: uuid,
+          Path: '/test.txt',
+        },
+      };
+
+      mockNodeServiceApi.promoteVersion.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.promoteFileDraft({uuid, versionId});
+
+      expect(mockNodeServiceApi.promoteVersion).toHaveBeenCalledWith(uuid, versionId, {Publish: true});
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when promotion fails', async () => {
+      const uuid = 'file-uuid';
+      const versionId = 'version-uuid';
+      const errorMessage = 'Promotion failed';
+
+      mockNodeServiceApi.promoteVersion.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.promoteFileDraft({uuid, versionId})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty UUID or versionId', async () => {
+      const emptyUuid = '';
+      const versionId = 'version-uuid';
+      const errorMessage = 'Invalid UUID';
+
+      mockNodeServiceApi.promoteVersion.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.promoteFileDraft({uuid: emptyUuid, versionId})).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('deleteFileDraft', () => {
+    it('deletes a file draft with the correct parameters', async () => {
+      const uuid = 'file-uuid';
+      const versionId = 'version-uuid';
+      const mockResponse = {
+        Success: true,
+        Uuid: uuid,
+      };
+
+      mockNodeServiceApi.deleteVersion.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.deleteFileDraft({uuid, versionId});
+
+      expect(mockNodeServiceApi.deleteVersion).toHaveBeenCalledWith(uuid, versionId);
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when deletion fails', async () => {
+      const uuid = 'file-uuid';
+      const versionId = 'version-uuid';
+      const errorMessage = 'Version deletion failed';
+
+      mockNodeServiceApi.deleteVersion.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.deleteFileDraft({uuid, versionId})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty UUID or versionId', async () => {
+      const uuid = 'file-uuid';
+      const emptyVersionId = '';
+      const errorMessage = 'Invalid Version ID';
+
+      mockNodeServiceApi.deleteVersion.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.deleteFileDraft({uuid, versionId: emptyVersionId})).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('deleteFilePublicLink', () => {
+    it('deletes a file public link with the correct UUID', async () => {
+      const uuid = 'file-uuid';
+      const mockResponse = {} as RestPublicLinkDeleteSuccess;
+
+      mockNodeServiceApi.deletePublicLink.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.deleteFilePublicLink({uuid});
+
+      expect(mockNodeServiceApi.deletePublicLink).toHaveBeenCalledWith(uuid);
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when link deletion fails', async () => {
+      const uuid = 'file-uuid';
+      const errorMessage = 'Public link deletion failed';
+
+      mockNodeServiceApi.deletePublicLink.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.deleteFilePublicLink({uuid})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty UUID', async () => {
+      const emptyUuid = '';
+      const errorMessage = 'Invalid UUID';
+
+      mockNodeServiceApi.deletePublicLink.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.deleteFilePublicLink({uuid: emptyUuid})).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('getFilePublicLink', () => {
+    it('creates a public link for a file not already shared', async () => {
+      const uuid = 'file-uuid';
+      const label = 'Test Label';
+      const alreadyShared = false;
+      const mockResponse = {
+        Link: {
+          Uuid: uuid,
+          Label: label,
+          LinkHash: 'hash123',
+          LinkUrl: 'https://example.com/link',
+          Permissions: ['Preview', 'Download'],
+        },
+      } as RestShareLink;
+
+      mockNodeServiceApi.createPublicLink.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.getFilePublicLink({uuid, label, alreadyShared});
+
+      expect(mockNodeServiceApi.deletePublicLink).not.toHaveBeenCalled();
+      expect(mockNodeServiceApi.createPublicLink).toHaveBeenCalledWith(uuid, {
+        Link: {
+          Label: label,
+          Permissions: ['Preview', 'Download'],
+        },
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('deletes existing link before creating new one when already shared', async () => {
+      const uuid = 'file-uuid';
+      const label = 'Test Label';
+      const alreadyShared = true;
+      const deleteResponse = {} as RestPublicLinkDeleteSuccess;
+      const createResponse = {
+        Link: {
+          Uuid: uuid,
+          Label: label,
+          LinkHash: 'hash123',
+          LinkUrl: 'https://example.com/link',
+          Permissions: ['Preview', 'Download'],
+        },
+      } as RestShareLink;
+
+      mockNodeServiceApi.deletePublicLink.mockResolvedValueOnce(createMockResponse(deleteResponse));
+      mockNodeServiceApi.createPublicLink.mockResolvedValueOnce(createMockResponse(createResponse));
+
+      const result = await cellsAPI.getFilePublicLink({uuid, label, alreadyShared});
+
+      expect(mockNodeServiceApi.deletePublicLink).toHaveBeenCalledWith(uuid);
+      expect(mockNodeServiceApi.createPublicLink).toHaveBeenCalledWith(uuid, {
+        Link: {
+          Label: label,
+          Permissions: ['Preview', 'Download'],
+        },
+      });
+      expect(result).toEqual(createResponse);
+    });
+
+    it('propagates errors when link creation fails', async () => {
+      const uuid = 'file-uuid';
+      const label = 'Test Label';
+      const alreadyShared = false;
+      const errorMessage = 'Link creation failed';
+
+      mockNodeServiceApi.createPublicLink.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.getFilePublicLink({uuid, label, alreadyShared})).rejects.toThrow(errorMessage);
+    });
+
+    it('propagates errors when link deletion fails before creation', async () => {
+      const uuid = 'file-uuid';
+      const label = 'Test Label';
+      const alreadyShared = true;
+      const errorMessage = 'Link deletion failed';
+
+      mockNodeServiceApi.deletePublicLink.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.getFilePublicLink({uuid, label, alreadyShared})).rejects.toThrow(errorMessage);
     });
   });
 });

@@ -17,7 +17,15 @@
  *
  */
 
-import {NodeServiceApi, RestNode, RestNodeCollection} from 'cells-sdk-ts';
+import {
+  NodeServiceApi,
+  RestDeleteVersionResponse,
+  RestNode,
+  RestNodeCollection,
+  RestPromoteVersionResponse,
+  RestPublicLinkDeleteSuccess,
+  RestShareLink,
+} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
@@ -44,7 +52,7 @@ export class CellsAPI {
     this.client = new NodeServiceApi(undefined, undefined, httpClient.client);
   }
 
-  async uploadFile({
+  async uploadFileDraft({
     filePath,
     file,
     autoRename = true,
@@ -73,6 +81,22 @@ export class CellsAPI {
     await this.storageService.putObject({filePath: path, file, metadata});
   }
 
+  async promoteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
+    const result = await this.client.promoteVersion(uuid, versionId, {Publish: true});
+
+    return result.data;
+  }
+
+  async deleteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestDeleteVersionResponse> {
+    const result = await this.client.deleteVersion(uuid, versionId);
+
+    return result.data;
+  }
+
+  async deleteFile(path: string): Promise<void> {
+    await this.client.performAction('delete', {Nodes: [{Path: path}]});
+  }
+
   async getFile(id: string): Promise<RestNode> {
     const result = await this.client.getByUuid(id);
 
@@ -88,7 +112,32 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFile(path: string): Promise<void> {
-    await this.client.performAction('delete', {Nodes: [{Path: path}]});
+  async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
+    const result = await this.client.deletePublicLink(uuid);
+
+    return result.data;
+  }
+
+  async getFilePublicLink({
+    uuid,
+    label,
+    alreadyShared,
+  }: {
+    uuid: string;
+    label: string;
+    alreadyShared: boolean;
+  }): Promise<RestShareLink> {
+    if (alreadyShared) {
+      await this.deleteFilePublicLink({uuid});
+    }
+
+    const result = await this.client.createPublicLink(uuid, {
+      Link: {
+        Label: label,
+        Permissions: ['Preview', 'Download'],
+      },
+    });
+
+    return result.data;
   }
 }
