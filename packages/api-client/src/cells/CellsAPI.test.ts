@@ -111,10 +111,15 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile});
+      await cellsAPI.uploadFileDraft({
+        uuid: MOCKED_UUID,
+        versionId: MOCKED_UUID,
+        filePath: TEST_FILE_PATH,
+        file: testFile,
+      });
 
       expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
-        Inputs: [{Type: 'LEAF', Locator: {Path: `/${TEST_FILE_PATH}`}}],
+        Inputs: [{Type: 'LEAF', Locator: {Path: `/${TEST_FILE_PATH}`, Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
         FindAvailablePath: true,
       });
 
@@ -143,7 +148,12 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile});
+      await cellsAPI.uploadFileDraft({
+        uuid: MOCKED_UUID,
+        versionId: MOCKED_UUID,
+        filePath: TEST_FILE_PATH,
+        file: testFile,
+      });
 
       expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: nextPath,
@@ -170,7 +180,13 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile, autoRename: false});
+      await cellsAPI.uploadFileDraft({
+        uuid: MOCKED_UUID,
+        versionId: MOCKED_UUID,
+        filePath: TEST_FILE_PATH,
+        file: testFile,
+        autoRename: false,
+      });
 
       expect(mockStorage.putObject).toHaveBeenCalledWith({
         filePath: `/${TEST_FILE_PATH}`,
@@ -187,7 +203,9 @@ describe('CellsAPI', () => {
       const errorMessage = 'API error';
       mockNodeServiceApi.createCheck.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
+      await expect(
+        cellsAPI.uploadFileDraft({uuid: MOCKED_UUID, versionId: MOCKED_UUID, filePath: TEST_FILE_PATH, file: testFile}),
+      ).rejects.toThrow(errorMessage);
     });
 
     it('propagates errors from StorageService', async () => {
@@ -204,7 +222,9 @@ describe('CellsAPI', () => {
       const errorMessage = 'Storage error';
       mockStorage.putObject.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.uploadFileDraft({filePath: TEST_FILE_PATH, file: testFile})).rejects.toThrow(errorMessage);
+      await expect(
+        cellsAPI.uploadFileDraft({uuid: MOCKED_UUID, versionId: MOCKED_UUID, filePath: TEST_FILE_PATH, file: testFile}),
+      ).rejects.toThrow(errorMessage);
     });
 
     it('handles empty file path by using root path', async () => {
@@ -218,10 +238,10 @@ describe('CellsAPI', () => {
         }),
       );
 
-      await cellsAPI.uploadFileDraft({filePath: '', file: testFile});
+      await cellsAPI.uploadFileDraft({uuid: MOCKED_UUID, versionId: MOCKED_UUID, filePath: '', file: testFile});
 
       expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
-        Inputs: [{Type: 'LEAF', Locator: {Path: '/'}}],
+        Inputs: [{Type: 'LEAF', Locator: {Path: '/', Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
         FindAvailablePath: true,
       });
     });
