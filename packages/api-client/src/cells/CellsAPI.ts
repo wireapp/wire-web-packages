@@ -29,7 +29,6 @@ import {
   RestShareLink,
   RestVersion,
 } from 'cells-sdk-ts';
-import {v4 as uuidv4} from 'uuid';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
@@ -56,10 +55,14 @@ export class CellsAPI {
   }
 
   async uploadFileDraft({
+    uuid,
+    versionId,
     filePath,
     file,
     autoRename = true,
   }: {
+    uuid: string;
+    versionId: string;
     filePath: string;
     file: File;
     autoRename?: boolean;
@@ -67,7 +70,7 @@ export class CellsAPI {
     let path = `/${filePath}`.normalize('NFC');
 
     const result = await this.client.createCheck({
-      Inputs: [{Type: 'LEAF', Locator: {Path: path}}],
+      Inputs: [{Type: 'LEAF', Locator: {Path: path, Uuid: uuid}, VersionId: versionId}],
       FindAvailablePath: true,
     });
 
@@ -77,8 +80,8 @@ export class CellsAPI {
 
     const metadata = {
       'Draft-Mode': 'true',
-      'Create-Resource-Uuid': uuidv4(),
-      'Create-Version-Id': uuidv4(),
+      'Create-Resource-Uuid': uuid,
+      'Create-Version-Id': versionId,
     };
 
     await this.storageService.putObject({filePath: path, file, metadata});
