@@ -19,6 +19,7 @@
 
 import {
   NodeServiceApi,
+  RestCreateCheckResponse,
   RestDeleteVersionResponse,
   RestNode,
   RestNodeCollection,
@@ -61,7 +62,7 @@ export class CellsAPI {
     filePath: string;
     file: File;
     autoRename?: boolean;
-  }): Promise<{uuid: string; versionId: string}> {
+  }): Promise<RestCreateCheckResponse> {
     let path = `/${filePath}`.normalize('NFC');
 
     const result = await this.client.createCheck({
@@ -81,18 +82,7 @@ export class CellsAPI {
 
     await this.storageService.putObject({filePath: path, file, metadata});
 
-    const node = result.data?.Results?.[0].Node;
-    const uuid = node?.Uuid;
-    const versionId = node?.Versions?.[0]?.VersionId;
-
-    if (!uuid || !versionId) {
-      throw new Error('Failed to upload file draft');
-    }
-
-    return {
-      uuid,
-      versionId,
-    };
+    return result.data;
   }
 
   async promoteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
@@ -111,6 +101,30 @@ export class CellsAPI {
     const result = await this.client.performAction('delete', {Nodes: [{Path: path}]});
 
     return result.data;
+  }
+
+  async lookupFileByPath(path: string): Promise<RestNode | undefined> {
+    const result = await this.client.lookup({Locators: {Many: [{Path: path}]}});
+
+    const node = result.data.Nodes?.[0];
+
+    if (!node) {
+      throw new Error(`File not found: ${path}`);
+    }
+
+    return node;
+  }
+
+  async lookupFileByUuid(uuid: string): Promise<RestNode | undefined> {
+    const result = await this.client.lookup({Locators: {Many: [{Uuid: uuid}]}});
+
+    const node = result.data.Nodes?.[0];
+
+    if (!node) {
+      throw new Error(`File not found: ${uuid}`);
+    }
+
+    return node;
   }
 
   async getFile(id: string): Promise<RestNode> {

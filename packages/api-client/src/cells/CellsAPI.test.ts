@@ -435,6 +435,90 @@ describe('CellsAPI', () => {
     });
   });
 
+  describe('lookupFileByPath', () => {
+    it('retrieves a file by its path', async () => {
+      const filePath = `/${TEST_FILE_PATH}`;
+      const mockNode: RestNode = {
+        Path: filePath,
+        Uuid: 'file-uuid',
+      } as RestNode;
+      const mockResponse: RestNodeCollection = {
+        Nodes: [mockNode],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.lookupFileByPath(filePath);
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Locators: {Many: [{Path: filePath}]},
+      });
+      expect(result).toEqual(mockNode);
+    });
+
+    it('throws an error when file with path is not found', async () => {
+      const filePath = '/non-existent-file.txt';
+      const mockResponse: RestNodeCollection = {
+        Nodes: [],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      await expect(cellsAPI.lookupFileByPath(filePath)).rejects.toThrow(`File not found: ${filePath}`);
+    });
+
+    it('propagates errors from the NodeServiceApi', async () => {
+      const filePath = `/${TEST_FILE_PATH}`;
+      const errorMessage = 'API error';
+
+      mockNodeServiceApi.lookup.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.lookupFileByPath(filePath)).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('lookupFileByUuid', () => {
+    it('retrieves a file by its UUID', async () => {
+      const fileUuid = 'file-uuid';
+      const mockNode: RestNode = {
+        Path: `/${TEST_FILE_PATH}`,
+        Uuid: fileUuid,
+      } as RestNode;
+      const mockResponse: RestNodeCollection = {
+        Nodes: [mockNode],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.lookupFileByUuid(fileUuid);
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Locators: {Many: [{Uuid: fileUuid}]},
+      });
+      expect(result).toEqual(mockNode);
+    });
+
+    it('throws an error when file with UUID is not found', async () => {
+      const fileUuid = 'non-existent-uuid';
+      const mockResponse: RestNodeCollection = {
+        Nodes: [],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      await expect(cellsAPI.lookupFileByUuid(fileUuid)).rejects.toThrow(`File not found: ${fileUuid}`);
+    });
+
+    it('propagates errors from the NodeServiceApi', async () => {
+      const fileUuid = 'file-uuid';
+      const errorMessage = 'API error';
+
+      mockNodeServiceApi.lookup.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.lookupFileByUuid(fileUuid)).rejects.toThrow(errorMessage);
+    });
+  });
+
   describe('getFilePublicLink', () => {
     it('creates a public link for a file not already shared', async () => {
       const uuid = 'file-uuid';
