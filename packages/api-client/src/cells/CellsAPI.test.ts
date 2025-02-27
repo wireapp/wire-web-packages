@@ -18,7 +18,14 @@
  */
 
 import {AxiosResponse} from 'axios';
-import {NodeServiceApi, RestNode, RestNodeCollection, RestPublicLinkDeleteSuccess, RestShareLink} from 'cells-sdk-ts';
+import {
+  NodeServiceApi,
+  RestNode,
+  RestNodeCollection,
+  RestPublicLinkDeleteSuccess,
+  RestShareLink,
+  RestVersion,
+} from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
 import {CellsAPI} from './CellsAPI';
@@ -65,6 +72,7 @@ describe('CellsAPI', () => {
       deleteVersion: jest.fn(),
       deletePublicLink: jest.fn(),
       createPublicLink: jest.fn(),
+      nodeVersions: jest.fn(),
     } as unknown as jest.Mocked<NodeServiceApi>;
 
     (NodeServiceApi as jest.Mock).mockImplementation(() => mockNodeServiceApi);
@@ -516,6 +524,54 @@ describe('CellsAPI', () => {
       mockNodeServiceApi.lookup.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(cellsAPI.lookupFileByUuid(fileUuid)).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('getFileVersions', () => {
+    it('retrieves versions for a file by UUID', async () => {
+      const fileUuid = 'file-uuid';
+      const mockVersions = [
+        {
+          VersionId: 'version-uuid-1',
+        },
+        {
+          VersionId: 'version-uuid-2',
+        },
+      ] as unknown as RestVersion[];
+
+      const mockResponse = {
+        Versions: mockVersions,
+      };
+
+      mockNodeServiceApi.nodeVersions = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.getFileVersions(fileUuid);
+
+      expect(mockNodeServiceApi.nodeVersions).toHaveBeenCalledWith(fileUuid, {FilterBy: 'VersionsAll'});
+      expect(result).toEqual(mockVersions);
+    });
+
+    it('returns undefined when file has no versions', async () => {
+      const fileUuid = 'file-uuid';
+      const mockResponse = {
+        Versions: undefined,
+      };
+
+      mockNodeServiceApi.nodeVersions = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.getFileVersions(fileUuid);
+
+      expect(mockNodeServiceApi.nodeVersions).toHaveBeenCalledWith(fileUuid, {FilterBy: 'VersionsAll'});
+      expect(result).toBeUndefined();
+    });
+
+    it('propagates errors from the NodeServiceApi', async () => {
+      const fileUuid = 'file-uuid';
+      const errorMessage = 'Failed to retrieve versions';
+
+      mockNodeServiceApi.nodeVersions = jest.fn().mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.getFileVersions(fileUuid)).rejects.toThrow(errorMessage);
     });
   });
 

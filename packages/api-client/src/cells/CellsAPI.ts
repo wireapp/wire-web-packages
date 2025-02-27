@@ -27,6 +27,7 @@ import {
   RestPromoteVersionResponse,
   RestPublicLinkDeleteSuccess,
   RestShareLink,
+  RestVersion,
 } from 'cells-sdk-ts';
 import {v4 as uuidv4} from 'uuid';
 
@@ -125,6 +126,12 @@ export class CellsAPI {
     }
 
     return node;
+  }
+
+  async getFileVersions(uuid: string): Promise<RestVersion[] | undefined> {
+    const result = await this.client.nodeVersions(uuid, {FilterBy: 'VersionsAll'});
+
+    return result.data.Versions;
   }
 
   async getFile(id: string): Promise<RestNode> {
