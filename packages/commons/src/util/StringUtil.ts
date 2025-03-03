@@ -39,7 +39,7 @@ const maxSize = 10_000;
 export function serializeArgs(args: any[]): any[] {
   return args.map(arg => {
     if (typeof arg === 'string') {
-      return arg.length > 10000 ? `${arg.slice(0, maxSize - 15)}... [truncated]` : arg;
+      return arg.length > maxSize ? `${arg.slice(0, maxSize - 15)}... [truncated]` : arg;
     }
 
     if (typeof arg === 'object' && arg !== null) {
