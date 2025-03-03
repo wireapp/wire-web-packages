@@ -85,4 +85,39 @@ describe('StringUtil', () => {
       expect(expected).toEqual(actual);
     });
   });
+
+  describe('serializeArgs - Memory and Circular Reference Handling', () => {
+    jest.setTimeout(60000); // Increase timeout to handle large cases
+
+    test('should not throw an error for a circular object', () => {
+      const circularObj: any = {};
+      circularObj.self = circularObj; // Create a circular reference
+
+      expect(() => {
+        const result = StringUtil.serializeArgs([circularObj]);
+        expect(result[0]).toContain('[Circular]');
+      }).not.toThrow();
+    });
+
+    test('should not throw an error for a very large string', () => {
+      const largeString = 'a'.repeat(500_000_000); // 500MB string
+
+      expect(() => {
+        const result = StringUtil.serializeArgs([largeString]);
+        expect(result[0]).toContain('... [truncated]'); // Check if truncated
+      }).not.toThrow();
+    });
+
+    test('should correctly serialize a large but valid object', () => {
+      const largeObject: any = {};
+      for (let i = 0; i < 1e5; i++) {
+        largeObject[`key${i}`] = 'value';
+      }
+
+      expect(() => {
+        const result = StringUtil.serializeArgs([largeObject]);
+        expect(typeof result[0]).toBe('string'); // Ensure it's serialized
+      }).not.toThrow();
+    });
+  });
 });

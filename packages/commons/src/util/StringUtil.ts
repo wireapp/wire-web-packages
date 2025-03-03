@@ -36,5 +36,33 @@ export function bytesToUUID(uuid: Buffer | Uint8Array): string {
 }
 
 export function serializeArgs(args: any[]): any[] {
-  return args.map(arg => (typeof arg === 'object' && arg !== null ? JSON.stringify(arg) : arg));
+  return args.map(arg => {
+    if (typeof arg === 'string') {
+      return arg.length > 10000 ? `${arg.slice(0, 10000)}... [truncated]` : arg;
+    }
+
+    if (typeof arg === 'object' && arg !== null) {
+      try {
+        return JSON.stringify(arg, getCircularReplacer());
+      } catch (e) {
+        return '[Unserializable Object]';
+      }
+    }
+
+    return arg;
+  });
+}
+
+// Helper function to prevent circular references
+function getCircularReplacer() {
+  const seen = new WeakSet();
+  return (_key: string, value: any) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+    }
+    return value;
+  };
 }
