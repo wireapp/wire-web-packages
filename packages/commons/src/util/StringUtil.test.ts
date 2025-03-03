@@ -86,38 +86,60 @@ describe('StringUtil', () => {
     });
   });
 
-  describe('serializeArgs - Memory and Circular Reference Handling', () => {
-    jest.setTimeout(60000); // Increase timeout to handle large cases
+  describe('serializeArgs - Browser Safe Tests', () => {
+    jest.setTimeout(30000);
 
-    test('should not throw an error for a circular object', () => {
+    test('should truncate a very large string', () => {
+      const largeString = 'a'.repeat(1_000_000); // 1MB string (should truncate)
+
+      const result = StringUtil.serializeArgs([largeString]);
+
+      expect(result[0].length).toBeLessThanOrEqual(10_010); // Should truncate
+      expect(result[0]).toContain('... [truncated]');
+    });
+
+    test('should handle circular references', () => {
       const circularObj: any = {};
-      circularObj.self = circularObj; // Create a circular reference
+      circularObj.self = circularObj; // Create circular reference
 
-      expect(() => {
-        const result = StringUtil.serializeArgs([circularObj]);
-        expect(result[0]).toContain('[Circular]');
-      }).not.toThrow();
+      const result = StringUtil.serializeArgs([circularObj]);
+
+      expect(result[0]).toContain('[Circular]'); // Should replace circular references
+      expect(() => JSON.parse(result[0])).not.toThrow(); // Should be valid JSON
     });
 
-    test('should not throw an error for a very large string', () => {
-      const largeString = 'a'.repeat(500_000_000); // 500MB string
-
-      expect(() => {
-        const result = StringUtil.serializeArgs([largeString]);
-        expect(result[0]).toContain('... [truncated]'); // Check if truncated
-      }).not.toThrow();
-    });
-
-    test('should correctly serialize a large but valid object', () => {
+    test('should serialize a large object safely', () => {
       const largeObject: any = {};
-      for (let i = 0; i < 1e5; i++) {
+      for (let i = 0; i < 100_000; i++) {
+        // 100k properties
         largeObject[`key${i}`] = 'value';
       }
 
-      expect(() => {
-        const result = StringUtil.serializeArgs([largeObject]);
-        expect(typeof result[0]).toBe('string'); // Ensure it's serialized
-      }).not.toThrow();
+      const result = StringUtil.serializeArgs([largeObject]);
+
+      expect(typeof result[0]).toBe('string'); // Should still be a valid JSON string
+      expect(result[0].length).toBeLessThanOrEqual(1_000_010); // Should be within the truncation limit
+    });
+
+    test('should serialize a normal object correctly', () => {
+      const obj = {a: 1, b: 'test', c: [1, 2, 3]};
+
+      const result = StringUtil.serializeArgs([obj]);
+
+      expect(() => JSON.parse(result[0])).not.toThrow(); // Should be valid JSON
+      expect(JSON.parse(result[0])).toEqual(obj); // Should match original object
+    });
+
+    test('should return "[Unserializable Object]" for unsupported values', () => {
+      const unserializable = {
+        toJSON: () => {
+          throw new Error('Cannot serialize');
+        },
+      };
+
+      const result = StringUtil.serializeArgs([unserializable]);
+
+      expect(result[0]).toBe('[Unserializable Object]'); // Should return error placeholder
     });
   });
 });
