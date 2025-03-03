@@ -33,6 +33,7 @@ export enum THEME_ID {
 }
 
 export interface Theme extends ETheme {
+  themeID: THEME_ID;
   fontSizes: {
     extraSmall: string;
     small: string;
@@ -118,6 +119,7 @@ export interface Theme extends ETheme {
 
 export const themes: {[themeId in THEME_ID]: Theme} = {
   [THEME_ID.DEFAULT]: {
+    themeID: THEME_ID.DEFAULT,
     fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
@@ -194,6 +196,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.LIGHT]: {
+    themeID: THEME_ID.LIGHT,
     fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
@@ -270,6 +273,7 @@ export const themes: {[themeId in THEME_ID]: Theme} = {
     },
   },
   [THEME_ID.DARK]: {
+    themeID: THEME_ID.DARK,
     fontSizes,
     Button: {
       primaryBg: 'var(--accent-color)',
