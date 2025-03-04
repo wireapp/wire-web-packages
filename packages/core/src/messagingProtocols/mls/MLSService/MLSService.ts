@@ -28,7 +28,6 @@ import {Converter, Decoder, Encoder} from 'bazinga64';
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory, TimeUtil, TypedEventEmitter} from '@wireapp/commons';
 import {
-  AddProposalArgs,
   Ciphersuite,
   CommitBundle,
   ConversationConfiguration,
@@ -38,15 +37,12 @@ import {
   DecryptedMessage,
   MlsTransport,
   MlsTransportResponse,
-  ProposalArgs,
-  ProposalType,
-  RemoveProposalArgs,
+  NewCrlDistributionPoints,
 } from '@wireapp/core-crypto';
 import {PriorityQueue} from '@wireapp/priority-queue';
 
 import {ClientMLSError, ClientMLSErrorLabel} from './ClientMLSError';
 import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
-import {NewCrlDistributionPointsPayload} from './MLSService.types';
 
 import {AddUsersFailure, AddUsersFailureReasons, KeyPackageClaimUser} from '../../../conversation';
 import {sendMessage} from '../../../conversation/message/messageSender';
@@ -126,10 +122,10 @@ export class MLSService extends TypedEventEmitter<Events> {
       sendCommitBundle: async commitBundle => {
         return await this.apiClient.api.conversation.postMlsCommitBundle(commitBundle);
       },
-      sendMessage,
+      sendMessage: async message => {},
     };
 
-    this.coreCryptoClient;
+    void this.coreCryptoClient.provideTransport(mlsTransport);
   }
 
   /**
@@ -171,10 +167,8 @@ export class MLSService extends TypedEventEmitter<Events> {
       ...filteredMLSConfig,
     };
 
-    await this.coreCryptoClient.mlsInit(
-      generateMLSDeviceId(userId, client.id),
-      this.config.ciphersuites,
-      this.config.nbKeyPackages,
+    await this.coreCryptoClient.transaction(cx =>
+      cx.mlsInit(generateMLSDeviceId(userId, client.id), this.config.ciphersuites, this.config.nbKeyPackages),
     );
 
     await this.coreCryptoClient.registerCallbacks({
@@ -270,9 +264,10 @@ export class MLSService extends TypedEventEmitter<Events> {
 
     //TODO: handle federation error when sending a commit bundle to backend like we do in ProteusService
     const response = await this.processCommitAction(groupIdBytes, async () => {
-      const commitBundle = await this.coreCryptoClient.addClientsToConversation(groupIdBytes, keyPackages);
-      this.dispatchNewCrlDistributionPoints(commitBundle);
-      return commitBundle;
+      const crlNewDistributionPoints = await this.coreCryptoClient.transaction(cx =>
+        cx.addClientsToConversation(groupIdBytes, keyPackages),
+      );
+      this.dispatchNewCrlDistributionPoints(crlNewDistributionPoints);
     });
 
     const failedUsers = response.failed;
@@ -378,10 +373,12 @@ export class MLSService extends TypedEventEmitter<Events> {
     const credentialType = await this.getCredentialType();
     const generateCommit = async () => {
       const groupInfo = await getGroupInfo();
-      const joinRequest = await this.coreCryptoClient.joinByExternalCommit(groupInfo, credentialType);
+      const joinRequest = await this.coreCryptoClient.transaction(cx =>
+        cx.joinByExternalCommit(groupInfo, credentialType),
+      );
       this.dispatchNewCrlDistributionPoints(joinRequest);
-      const {conversationId, ...commitBundle} = joinRequest;
-      return {groupId: conversationId, commitBundle};
+      const {id, ...commitBundle} = joinRequest;
+      return {groupId: id, commitBundle};
     };
     const {commitBundle, groupId} = await generateCommit();
     const mlsResponse = await this.uploadCommitBundle(groupId, commitBundle, {
@@ -404,8 +401,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return Encoder.toBase64(key).asString;
   }
 
-  private dispatchNewCrlDistributionPoints(payload: NewCrlDistributionPointsPayload) {
-    const {crlNewDistributionPoints} = payload;
+  private dispatchNewCrlDistributionPoints(crlNewDistributionPoints: NewCrlDistributionPoints) {
     if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
       this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
     }
@@ -679,12 +675,16 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async clientValidKeypackagesCount(): Promise<number> {
     const credentialType = await this.getCredentialType();
-    return this.coreCryptoClient.clientValidKeypackagesCount(this.config.defaultCiphersuite, credentialType);
+    return this.coreCryptoClient.transaction(cx =>
+      cx.clientValidKeypackagesCount(this.config.defaultCiphersuite, credentialType),
+    );
   }
 
   public async clientKeypackages(amountRequested: number): Promise<Uint8Array[]> {
     const credentialType = await this.getCredentialType();
-    return this.coreCryptoClient.clientKeypackages(this.config.defaultCiphersuite, credentialType, amountRequested);
+    return this.coreCryptoClient.transaction(cx =>
+      cx.clientKeypackages(this.config.defaultCiphersuite, credentialType, amountRequested),
+    );
   }
 
   /**
@@ -1017,7 +1017,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       {user, clientId: client.id, discoveryUrl},
     );
 
-    const rotateBundle = await e2eiServiceInternal.generateCertificate(
+    const keyPackages = await e2eiServiceInternal.generateCertificate(
       getOAuthToken,
       isCertificateRenewal,
       this.config.defaultCiphersuite,
@@ -1030,7 +1030,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       await this.uploadMLSPublicKeys(client);
     }
     // replace old key packages with new key packages with x509 certificate
-    await this.replaceKeyPackages(client.id, rotateBundle.newKeyPackages);
+    await this.replaceKeyPackages(client.id, keyPackages);
     // Verify that we have enough key packages
     await this.verifyRemoteMLSKeyPackagesAmount(client.id);
     // Update keying material

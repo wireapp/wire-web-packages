@@ -61,7 +61,12 @@ export class E2EIServiceInternal {
    * @param getOAuthToken function called when the process needs an oauth token
    * @param refresh should the process refresh the current certificate or get a new one
    */
-  public async generateCertificate(getOAuthToken: getTokenCallback, refresh: boolean, ciphersuite: Ciphersuite) {
+  public async generateCertificate(
+    getOAuthToken: getTokenCallback,
+    refresh: boolean,
+    getAllConversations: () => Promise<Conversation[]>,
+    ciphersuite: Ciphersuite,
+  ) {
     const stashedEnrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
 
     if (stashedEnrollmentData) {
@@ -70,7 +75,7 @@ export class E2EIServiceInternal {
       if (!oAuthToken) {
         throw new Error('No OAuthToken received for in progress enrollment process');
       }
-      return this.continueCertificateGeneration(oAuthToken, stashedEnrollmentData);
+      return this.continueCertificateGeneration(oAuthToken, stashedEnrollmentData, getAllConversations, ciphersuite);
     }
 
     // We first get the challenges needed to validate the user identity
@@ -93,13 +98,18 @@ export class E2EIServiceInternal {
     if (!oAuthToken) {
       throw new Error('No OAuthToken received for in initial enrollment process');
     }
-    return this.continueCertificateGeneration(oAuthToken, enrollmentData);
+    return this.continueCertificateGeneration(oAuthToken, enrollmentData, getAllConversations, ciphersuite);
   }
 
-  private async continueCertificateGeneration(oAuthToken: string, enrollmentData: EnrollmentFlowData) {
+  private async continueCertificateGeneration(
+    oAuthToken: string,
+    enrollmentData: EnrollmentFlowData,
+    getAllConversations: () => Promise<Conversation[]>,
+    cipherSuite: Ciphersuite,
+  ) {
     const handle = enrollmentData.handle;
     const identity = await this.coreCryptoClient.transaction(cx => cx.e2eiEnrollmentStashPop(handle));
-    return this.getRotateBundle(identity, oAuthToken, enrollmentData);
+    return this.getKeyPackages(identity, oAuthToken, enrollmentData, getAllConversations, cipherSuite);
   }
 
   // ############ Internal Functions ############
@@ -187,9 +197,9 @@ export class E2EIServiceInternal {
    * Stores the received certificate data in local storage for later use
    *
    * @param oAuthIdToken
-   * @returns RotateBundle
+   * @returns KeyPackages
    */
-  private async getRotateBundle(
+  private async getKeyPackages(
     identity: E2eiEnrollment,
     oAuthIdToken: string,
     enrollmentData: UnidentifiedEnrollmentFlowData,
@@ -265,7 +275,7 @@ export class E2EIServiceInternal {
         }
       });
 
-      const keyPackages = await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
+      return await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
     });
   }
 }

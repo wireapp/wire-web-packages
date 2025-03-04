@@ -21,7 +21,6 @@ import {
   E2eiEnrollment,
   Ciphersuite,
   CoreCrypto,
-  RotateBundle,
   WireIdentity,
   E2eiConversationState,
   DeviceStatus,

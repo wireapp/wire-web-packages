@@ -20,7 +20,7 @@
 import {TimeInMillis} from '@wireapp/commons/lib/util/TimeUtil';
 import axios from 'axios';
 
-import {CoreCrypto, CredentialType, WireIdentity} from '@wireapp/core-crypto';
+import {CoreCrypto, CoreCryptoContext, CredentialType, WireIdentity} from '@wireapp/core-crypto';
 
 import {E2EIServiceExternal} from './E2EIServiceExternal';
 
@@ -32,14 +32,17 @@ import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {MLSService} from '../MLSService';
 
 async function buildE2EIService(dbName = 'core-test-db') {
-  const coreCrypto = {
-    getUserIdentities: jest.fn(),
-    getClientIds: jest.fn().mockResolvedValue([]),
+  const transactionContext = {
     e2eiIsPKIEnvSetup: jest.fn(),
     e2eiRegisterAcmeCA: jest.fn(),
     e2eiRegisterIntermediateCA: jest.fn(),
-  } as unknown as jest.Mocked<CoreCrypto>;
+  } as unknown as jest.Mocked<CoreCryptoContext>;
 
+  const coreCrypto = {
+    getUserIdentities: jest.fn(),
+    getClientIds: jest.fn().mockResolvedValue([]),
+    transaction: jest.fn().mockImplementation(() => transactionContext),
+  } as unknown as jest.Mocked<CoreCrypto>;
   const clientService = {} as jest.Mocked<ClientService>;
 
   const mockedDb = await openDB(dbName);
