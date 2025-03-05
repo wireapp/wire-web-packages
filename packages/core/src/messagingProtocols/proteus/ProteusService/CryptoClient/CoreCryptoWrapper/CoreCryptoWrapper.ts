@@ -90,12 +90,13 @@ export async function buildClient(
 
 export class CoreCryptoWrapper implements CryptoClient {
   private readonly prekeyTracker: PrekeyTracker;
-  public readonly version: string = CCVersion();
+  public readonly version: string;
 
   constructor(
     private readonly coreCrypto: CoreCrypto,
-    private readonly config: ClientConfig,
+    config: ClientConfig,
   ) {
+    this.version = CCVersion();
     this.prekeyTracker = new PrekeyTracker(this, config);
   }
 
@@ -187,37 +188,7 @@ export class CoreCryptoWrapper implements CryptoClient {
     await this.coreCrypto.transaction(cx => cx.proteusSessionFromPrekey(sessionId, Uint8Array.from(fakePrekey)));
   }
 
-  async debugResetIdentity() {
-    await this.coreCrypto.wipe();
-  }
-
   async migrateFromCryptobox(dbName: string) {
     return this.coreCrypto.transaction(cx => cx.proteusCryptoboxMigrate(dbName));
-  }
-
-  /**
-   * Will call the callback once corecrypto is ready.
-   * @param callback - Function to be called once corecrypto is ready.
-   * @see https://github.com/wireapp/wire-web-packages/pull/4972
-   */
-  private onReady(callback: () => Promise<void>) {
-    if (!this.coreCrypto.isLocked()) {
-      return callback();
-    }
-
-    return new Promise<void>(resolve => {
-      const intervalId = setInterval(async () => {
-        if (!this.coreCrypto.isLocked()) {
-          clearInterval(intervalId);
-          await callback();
-          return resolve();
-        }
-      }, 100);
-    });
-  }
-
-  async wipe() {
-    await this.config.onWipe();
-    await this.onReady(() => this.coreCrypto.wipe());
   }
 }

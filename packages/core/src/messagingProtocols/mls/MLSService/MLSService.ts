@@ -171,13 +171,6 @@ export class MLSService extends TypedEventEmitter<Events> {
       cx.mlsInit(generateMLSDeviceId(userId, client.id), this.config.ciphersuites, this.config.nbKeyPackages),
     );
 
-    await this.coreCryptoClient.registerCallbacks({
-      // All authorization/membership rules are enforced on backend
-      clientIsExistingGroupUser: async () => true,
-      authorize: async () => true,
-      userAuthorize: async () => true,
-    });
-
     const isFreshMLSSelfClient = !this.isInitializedMLSClient(client);
     const shouldinitIdentity = !(isFreshMLSSelfClient && skipInitIdentity);
 

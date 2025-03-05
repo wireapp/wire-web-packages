@@ -155,6 +155,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
           clientId: id.client,
           qualifiedUserId: userId,
           credentialType: CredentialType.Basic,
+          x509Identity: undefined,
         }));
 
       mappedUserIdentities.set(stringifyQualifiedId(userId), [...identities, ...basicMLSDevices]);
