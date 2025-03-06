@@ -294,7 +294,7 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.getAllFiles({path: TEST_FILE_PATH});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Path: '/*'}]},
+        Locators: {Many: [{Path: `${TEST_FILE_PATH}/*`}]},
         Flags: ['WithVersionsAll'],
       });
       expect(result).toEqual(mockCollection);

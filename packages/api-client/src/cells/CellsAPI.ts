@@ -84,7 +84,7 @@ export class CellsAPI {
       'Create-Version-Id': versionId,
     };
 
-    await this.storageService.putObject({filePath, file, metadata});
+    await this.storageService.putObject({path: filePath, file, metadata});
 
     return result.data;
   }
