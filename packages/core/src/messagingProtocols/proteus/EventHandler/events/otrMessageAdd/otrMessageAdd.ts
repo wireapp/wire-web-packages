@@ -20,7 +20,7 @@
 import {ConversationOtrMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {Decoder} from 'bazinga64';
 
-import {ClientAction, GenericMessage} from '@wireapp/protocol-messaging';
+import {ClientAction, GenericMessage} from '@pydio/protocol-messaging';
 
 import {GenericMessageType} from '../../../../../conversation';
 import {DecryptionError} from '../../../../../errors/DecryptionError';

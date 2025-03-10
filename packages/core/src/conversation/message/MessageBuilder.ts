@@ -43,7 +43,7 @@ import {
   Cleared,
   ICalling,
   InCallHandRaise,
-} from '@wireapp/protocol-messaging';
+} from '@pydio/protocol-messaging';
 
 import {
   ButtonActionConfirmationMessage,

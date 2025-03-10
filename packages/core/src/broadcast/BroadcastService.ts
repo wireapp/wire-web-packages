@@ -20,7 +20,7 @@
 import {MessageSendingStatus, QualifiedUserClients} from '@wireapp/api-client/lib/conversation';
 
 import {APIClient} from '@wireapp/api-client';
-import {GenericMessage} from '@wireapp/protocol-messaging';
+import {GenericMessage} from '@pydio/protocol-messaging';
 
 import {sendMessage} from '../conversation/message/messageSender';
 import {MessageService} from '../conversation/message/MessageService';

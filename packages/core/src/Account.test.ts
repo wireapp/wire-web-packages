@@ -33,7 +33,7 @@ import {v4 as uuidv4} from 'uuid';
 
 import {APIClient} from '@wireapp/api-client';
 import {AccentColor, ValidationUtil} from '@wireapp/commons';
-import {GenericMessage, Text} from '@wireapp/protocol-messaging';
+import {GenericMessage, Text} from '@pydio/protocol-messaging';
 
 import {Account, ConnectionState} from './Account';
 import {NotificationSource} from './notification';

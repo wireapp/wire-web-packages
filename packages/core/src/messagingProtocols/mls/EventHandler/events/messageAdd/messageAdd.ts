@@ -20,7 +20,7 @@
 import {ConversationMLSMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {Decoder} from 'bazinga64';
 
-import {GenericMessage} from '@wireapp/protocol-messaging';
+import {GenericMessage} from '@pydio/protocol-messaging';
 
 import {HandledEventPayload} from '../../../../../notification';
 import {MLSService, optionalToUint8Array} from '../../../MLSService/MLSService';
