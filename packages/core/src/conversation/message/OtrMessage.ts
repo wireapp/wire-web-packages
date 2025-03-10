@@ -149,11 +149,6 @@ export interface DeleteMessage extends BasePayloadBundle {
   type: PayloadBundleType.MESSAGE_DELETE;
 }
 
-export interface MultipartMessage extends BasePayloadBundle {
-  content: MultipartContent;
-  type: PayloadBundleType.MULTIPART;
-}
-
 export type OtrMessage =
   | ButtonActionMessage
   | ButtonActionConfirmationMessage
