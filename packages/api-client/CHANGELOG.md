@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.24.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.23.0...@wireapp/api-client@27.24.0) (2025-03-10)
+
+### Features
+
+* **api-client/cells:** update cells sdk to alpha 07 + searchFiles method ([#6977](https://github.com/wireapp/wire-web-packages/issues/6977)) ([16bbf20](https://github.com/wireapp/wire-web-packages/commit/16bbf20f08abe0d9383b64824ae3f69d1be2fdb5))
+
+# [27.23.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.22.0...@wireapp/api-client@27.23.0) (2025-03-07)
+
+### Features
+
+* **api-client/cells:** replace path with uuid in the deleteFile method ([#6975](https://github.com/wireapp/wire-web-packages/issues/6975)) ([b70a502](https://github.com/wireapp/wire-web-packages/commit/b70a5020a1dd672f313374fccb151d0636fc5a23))
+
+# [27.22.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.21.0...@wireapp/api-client@27.22.0) (2025-03-06)
+
+### Features
+
+* **api-client/cells:** update cells sdk to v0.1.1-alpha06 ([#6972](https://github.com/wireapp/wire-web-packages/issues/6972)) ([36cd403](https://github.com/wireapp/wire-web-packages/commit/36cd403a2e764fe85312b95652fe03ea3b3c715a))
+
+# [27.21.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.20.2...@wireapp/api-client@27.21.0) (2025-03-06)
+
+### Features
+
+* **api-client/cells:** add path parameter for getAllFiles method ([#6970](https://github.com/wireapp/wire-web-packages/issues/6970)) ([5aaf087](https://github.com/wireapp/wire-web-packages/commit/5aaf087590379a429671b1b1833ecf5c7217d7f1))
+
+## [27.20.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.20.1...@wireapp/api-client@27.20.2) (2025-03-04)
+
+### Bug Fixes
+
+* **api-client/cells:** tests ([#6967](https://github.com/wireapp/wire-web-packages/issues/6967)) ([fd6cd69](https://github.com/wireapp/wire-web-packages/commit/fd6cd691fb4a85981b89b66e8c5bdd68f2daaf22))
+* **api-client/cells:** upload path ([#6966](https://github.com/wireapp/wire-web-packages/issues/6966)) ([aa01284](https://github.com/wireapp/wire-web-packages/commit/aa01284528bce08a9153a41db8ba00d5f1bfcaa3))
+
+## [27.20.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.20.0...@wireapp/api-client@27.20.1) (2025-03-03)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.20.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.19.2...@wireapp/api-client@27.20.0) (2025-02-28)
+
+### Features
+
+* **api-client:** cells api [WPB-16108] ([#6960](https://github.com/wireapp/wire-web-packages/issues/6960)) ([615244f](https://github.com/wireapp/wire-web-packages/commit/615244f1952b7f62fada15a530bec48a81f7284a))
+
+## [27.19.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.19.1...@wireapp/api-client@27.19.2) (2025-02-26)
+
+### Bug Fixes
+
+* update DomainRedirectPayload type ([#6961](https://github.com/wireapp/wire-web-packages/issues/6961)) ([7b22faa](https://github.com/wireapp/wire-web-packages/commit/7b22faa334c579526f06b9c8e4f9596ce0c31d7b))
+
+## [27.19.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.19.0...@wireapp/api-client@27.19.1) (2025-02-24)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.19.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.6...@wireapp/api-client@27.19.0) (2025-02-21)
+
+### Features
+
+* add API wrapper for GET getDomainRegistration [WPB-14366] ([#6771](https://github.com/wireapp/wire-web-packages/issues/6771)) ([4e6290c](https://github.com/wireapp/wire-web-packages/commit/4e6290cc610f09f92f142368ec1851e9fd80228d))
+
+## [27.18.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.5...@wireapp/api-client@27.18.6) (2025-02-18)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.18.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.4...@wireapp/api-client@27.18.5) (2025-02-14)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.18.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.3...@wireapp/api-client@27.18.4) (2025-01-28)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.18.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.2...@wireapp/api-client@27.18.3) (2025-01-21)
+
+### Bug Fixes
+
+* removed unwanted curly bracket from conv API URL [WPB-11925] ([#6838](https://github.com/wireapp/wire-web-packages/issues/6838)) ([d600315](https://github.com/wireapp/wire-web-packages/commit/d600315183f5fe55e46b9cc633dd07f9515a1336))
+
+## [27.18.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.1...@wireapp/api-client@27.18.2) (2025-01-21)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.18.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.18.0...@wireapp/api-client@27.18.1) (2025-01-16)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.18.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.17.0...@wireapp/api-client@27.18.0) (2025-01-02)
+
+### Features
+
+* markdown preview events ([#6773](https://github.com/wireapp/wire-web-packages/issues/6773)) ([7e0745b](https://github.com/wireapp/wire-web-packages/commit/7e0745b182f8a468af6651628b60f28a090a2acd))
+
 # [27.17.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.16.1...@wireapp/api-client@27.17.0) (2024-12-16)
 
 ### Features

@@ -31,5 +31,13 @@
     "jsx-a11y/label-has-associated-control": "warn",
     "jsx-a11y/heading-has-content": "warn",
     "@typescript-eslint/no-floating-promises": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/stories/**/*", "*.stories.*"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ]
 }

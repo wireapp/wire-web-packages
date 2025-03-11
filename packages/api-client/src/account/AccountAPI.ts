@@ -20,11 +20,10 @@
 import {AxiosRequestConfig} from 'axios';
 
 import {CustomBackendNotFoundError} from './AccountError';
-import {BackendConfig} from './BackendConfig';
 import {BackendConfigData} from './BackendConfigData';
 import {CallConfigData} from './CallConfigData';
 import {DomainData} from './DomainData';
-import {DomainRedirect, DomainRedirectType} from './DomainRedirect';
+import {DomainRedirectPayload} from './DomainRedirect';
 import {SSOSettings} from './SSOSettings';
 
 import {HttpClient, BackendErrorLabel, BackendError} from '../http';
@@ -226,52 +225,16 @@ export class AccountAPI {
     return response.data;
   }
 
-  public async getDomainRegistration(email: string): Promise<DomainRedirect> {
-    return new Promise(resolve => {
-      if (email.includes('no-reg')) {
-        resolve({
-          type: DomainRedirectType.CLOUD_NO_REGISTRATION,
-        });
-      } else if (email.includes('locked')) {
-        resolve({
-          type: DomainRedirectType.CLOUD,
-        });
-      } else if (email.includes('backend')) {
-        resolve({
-          type: DomainRedirectType.CUSTOM_BACKEND,
-          payload: {
-            backend: {
-              url: 'anta.wire.link',
-            },
-          },
-        });
-      } else if (email.includes('sso')) {
-        resolve({
-          type: DomainRedirectType.SSO,
-          payload: {
-            sso: {
-              code: 'test',
-            },
-          },
-        });
-      } else {
-        resolve({type: DomainRedirectType.CLOUD});
-      }
-    });
-  }
+  public async getDomainRegistration(email: string): Promise<DomainRedirectPayload> {
+    const config: AxiosRequestConfig = {
+      data: {
+        email,
+      },
+      method: 'post',
+      url: AccountAPI.URL.GET_DOMAIN_REGISTRATION,
+    };
 
-  public async getBackendConfig(url: string): Promise<BackendConfig> {
-    return new Promise(resolve => {
-      resolve({
-        backendName: 'Anta',
-        webAppURL: 'https://webapp.anta.wire.link/',
-        backendURL: `https://nginz-https.${url}`,
-        backendWSURL: `wss://nginz-ssl.${url}`,
-        blacklistURL: `wss://nginz-ssl.${url}`,
-        teamsURL: `https://teams.${url}`,
-        accountURL: `https://account.${url}`,
-        websiteURL: `https://webapp.${url}`,
-      });
-    });
+    const response = await this.client.sendJSON<DomainRedirectPayload>(config);
+    return response.data;
   }
 }

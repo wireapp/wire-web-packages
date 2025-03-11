@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.40.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.39.2...@wireapp/react-ui-kit@9.40.0) (2025-03-07)
+
+### Features
+
+* **react-ui-kit/icon:** add CollectionIcon ([#6974](https://github.com/wireapp/wire-web-packages/issues/6974)) ([9d94897](https://github.com/wireapp/wire-web-packages/commit/9d94897f91d4e536b5f8683583d5bb9df0d33f5d))
+
+## [9.39.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.39.1...@wireapp/react-ui-kit@9.39.2) (2025-03-06)
+
+### Bug Fixes
+
+* use isGroup as a function and pass options ([#6973](https://github.com/wireapp/wire-web-packages/issues/6973)) ([58b49c7](https://github.com/wireapp/wire-web-packages/commit/58b49c7bbed80592152f0cbf3cd97a84786ce5a5))
+
+## [9.39.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.39.0...@wireapp/react-ui-kit@9.39.1) (2025-03-06)
+
+### Bug Fixes
+
+* **react-ui-kit:** update CloseDetachedWindowIcon SVG attributes ([#6971](https://github.com/wireapp/wire-web-packages/issues/6971)) ([fdc524b](https://github.com/wireapp/wire-web-packages/commit/fdc524bba647fb0c0fdcf0251405911fe5b1233d))
+
+# [9.39.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.38.0...@wireapp/react-ui-kit@9.39.0) (2025-03-05)
+
+### Features
+
+* **react-ui-kit:** close detached window icon [WPB-16170] ([#6968](https://github.com/wireapp/wire-web-packages/issues/6968)) ([cbae9b3](https://github.com/wireapp/wire-web-packages/commit/cbae9b3cb07ca21af06730f358b4429c39275184))
+
+# [9.38.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.37.0...@wireapp/react-ui-kit@9.38.0) (2025-02-28)
+
+### Features
+
+* **react-ui-kit:** open detached window icon [WPB-16170] ([#6963](https://github.com/wireapp/wire-web-packages/issues/6963)) ([0566587](https://github.com/wireapp/wire-web-packages/commit/0566587be3ae54a33da0085247ae0fdfd29b9ed0))
+
+# [9.37.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.36.1...@wireapp/react-ui-kit@9.37.0) (2025-02-18)
+
+### Features
+
+* **react-ui-kit:** save icon ([#6928](https://github.com/wireapp/wire-web-packages/issues/6928)) ([a69fb61](https://github.com/wireapp/wire-web-packages/commit/a69fb6112218546301cd5a56809dabaab2b6c302))
+
+## [9.36.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.36.0...@wireapp/react-ui-kit@9.36.1) (2025-02-14)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.36.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.35.0...@wireapp/react-ui-kit@9.36.0) (2025-02-07)
+
+### Features
+
+* **react-ui-kit:** alert icon ([#6881](https://github.com/wireapp/wire-web-packages/issues/6881)) ([8a8987f](https://github.com/wireapp/wire-web-packages/commit/8a8987f60d3a85de47f9643fdf219cb76c056fb1))
+
+# [9.35.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.34.0...@wireapp/react-ui-kit@9.35.0) (2025-02-05)
+
+### Features
+
+* **react-ui-kit:** pause icon ([#6880](https://github.com/wireapp/wire-web-packages/issues/6880)) ([1c49be2](https://github.com/wireapp/wire-web-packages/commit/1c49be2aa1bf61bf32baaed372c7a4e0e7f62a58))
+
+# [9.34.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.33.1...@wireapp/react-ui-kit@9.34.0) (2025-02-04)
+
+### Features
+
+* **react-ui-kit:** play icon [WPB-15809] ([#6879](https://github.com/wireapp/wire-web-packages/issues/6879)) ([5116681](https://github.com/wireapp/wire-web-packages/commit/511668170ed549f2ee48d33c0012b2a4379e945a))
+
+## [9.33.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.33.0...@wireapp/react-ui-kit@9.33.1) (2025-02-03)
+
+### Bug Fixes
+
+* **react-ui-kit:** Adjust the behavior of eye icon on password input (WPB-15930) ([#6878](https://github.com/wireapp/wire-web-packages/issues/6878)) ([6ecfa54](https://github.com/wireapp/wire-web-packages/commit/6ecfa543a4186c4eac777ebc34fd1ffb4d95c15f))
+
+# [9.33.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.32.0...@wireapp/react-ui-kit@9.33.0) (2025-02-03)
+
+### Features
+
+* **react-ui-kit:** storybook ([#6860](https://github.com/wireapp/wire-web-packages/issues/6860)) ([d4f7214](https://github.com/wireapp/wire-web-packages/commit/d4f72145e8bff3d8baa8ace1c3add69b4ae2a23b))
+
+# [9.32.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.31.0...@wireapp/react-ui-kit@9.32.0) (2025-01-31)
+
+### Features
+
+* **react-ui-kit:** add menuListHeading inside Select [WPB-3307] ([#6714](https://github.com/wireapp/wire-web-packages/issues/6714)) ([978b71b](https://github.com/wireapp/wire-web-packages/commit/978b71bdbebec295865499fcbc749b4ab6e8a6c3))
+
+# [9.31.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.30.0...@wireapp/react-ui-kit@9.31.0) (2025-01-28)
+
+### Features
+
+* **react-ui-kit:** add folder, multiple files, and text file icons ([#6859](https://github.com/wireapp/wire-web-packages/issues/6859)) ([9f5e951](https://github.com/wireapp/wire-web-packages/commit/9f5e9515230069865b72585e814a728c35d340e2))
+
+# [9.30.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.3...@wireapp/react-ui-kit@9.30.0) (2025-01-28)
+
+### Features
+
+* **react-ui-kit:** cells file type icons [WPB-15686] ([#6857](https://github.com/wireapp/wire-web-packages/issues/6857)) ([7d22611](https://github.com/wireapp/wire-web-packages/commit/7d22611fb079f92a90c84b3b25f348247e4eb692))
+
+## [9.29.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.2...@wireapp/react-ui-kit@9.29.3) (2025-01-21)
+
+### Bug Fixes
+
+* **react-ui-kit:** link icon path ([#6837](https://github.com/wireapp/wire-web-packages/issues/6837)) ([458b4ca](https://github.com/wireapp/wire-web-packages/commit/458b4cad79c396c2a41350f228170741a7afde0e))
+
+## [9.29.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.1...@wireapp/react-ui-kit@9.29.2) (2025-01-17)
+
+### Bug Fixes
+
+* **CodeBlockIcon:** svg path ([#6820](https://github.com/wireapp/wire-web-packages/issues/6820)) ([96651b9](https://github.com/wireapp/wire-web-packages/commit/96651b9ccc554124cbbf0b7076f79858e7a2d6ec))
+
+## [9.29.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.29.0...@wireapp/react-ui-kit@9.29.1) (2025-01-16)
+
+### Bug Fixes
+
+* **react-ui-kit:** CodeBlockIcon ([#6819](https://github.com/wireapp/wire-web-packages/issues/6819)) ([b864e0e](https://github.com/wireapp/wire-web-packages/commit/b864e0ebb697f0c80105a4bba1284747187265fc))
+
+# [9.29.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.28.1...@wireapp/react-ui-kit@9.29.0) (2025-01-16)
+
+### Features
+
+* add Blockquote and CodeBlock icons ([#6818](https://github.com/wireapp/wire-web-packages/issues/6818)) ([9e4ac40](https://github.com/wireapp/wire-web-packages/commit/9e4ac40f88797cadd120bc5b0c24403b3b5573e9))
+
 ## [9.28.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.28.0...@wireapp/react-ui-kit@9.28.1) (2024-12-09)
 
 **Note:** Version bump only for package @wireapp/react-ui-kit

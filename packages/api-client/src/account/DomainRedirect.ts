@@ -17,25 +17,36 @@
  *
  */
 
-export enum DomainRedirectType {
-  CLOUD,
-  CLOUD_NO_REGISTRATION,
-  SSO,
-  CUSTOM_BACKEND,
+// All the domain_redirect values are explained in the following confluence page:
+// https://wearezeta.atlassian.net/wiki/spaces/ENGINEERIN/pages/1570832467/Email+domain+registration+and+configuration
+export enum DomainRedirect {
+  NONE = 'none',
+  LOCKED = 'locked',
+  SSO = 'sso',
+  BACKEND = 'backend',
+  NO_REGISTRATION = 'no-registration',
+  PRE_AUTHORIZED = 'pre-authorized',
 }
 
-export type DomainRedirect =
+export type DomainRedirectPayload =
   | {
-      type: DomainRedirectType.CLOUD;
+      domain_redirect: DomainRedirect.NONE;
+      due_to_existing_account: boolean;
     }
   | {
-      type: DomainRedirectType.CLOUD_NO_REGISTRATION;
+      domain_redirect: DomainRedirect.LOCKED;
     }
   | {
-      type: DomainRedirectType.SSO;
-      payload: {sso: {code: string}};
+      domain_redirect: DomainRedirect.NO_REGISTRATION;
     }
   | {
-      type: DomainRedirectType.CUSTOM_BACKEND;
-      payload: {backend: {url: string}};
+      domain_redirect: DomainRedirect.PRE_AUTHORIZED;
+    }
+  | {
+      domain_redirect: DomainRedirect.SSO;
+      sso_code: string;
+    }
+  | {
+      domain_redirect: DomainRedirect.BACKEND;
+      backend_url: string;
     };

@@ -13,7 +13,7 @@
       "default": "./lib/index.cjs"
     }
   },
-  "version": "0.1.5",
+  "version": "0.3.1",
   "devDependencies": {
     "@types/node": "^22.0.0",
     "rimraf": "6.0.1",
@@ -26,6 +26,6 @@
     "clean": "rimraf lib"
   },
   "dependencies": {
-    "countly-sdk-web": "24.11.2"
+    "countly-sdk-web": "24.11.4"
   }
 }
