@@ -21,7 +21,7 @@ import {AxiosRequestConfig} from 'axios';
 
 import {
   DomainVerificationChallenge,
-  RegisteredDomain,
+  GetAllRegisteredDomains,
   TeamInviteConfig,
   VerifyChallenge,
   VerifyChallengeRequest,
@@ -96,7 +96,7 @@ export class SSOAPI {
     return response.data;
   }
 
-  public async updateTeamInvite({domain, sso, team, teamInvite}: TeamInviteConfig): Promise<void> {
+  public async updateTeamInvite({domain, sso, team, teamInvite}: TeamInviteConfig): Promise<unknown> {
     const config: AxiosRequestConfig = {
       data: {
         sso,
@@ -107,16 +107,17 @@ export class SSOAPI {
       url: `${SSOAPI.URL.DOMAIN_VERIFICATION}/${domain}/${SSOAPI.URL.TEAM}`,
     };
 
-    await this.client.sendJSON(config);
+    const response = await this.client.sendJSON(config);
+    return response.data;
   }
 
-  public async getAllRegisteredDomains(teamId: string): Promise<RegisteredDomain[]> {
+  public async getAllRegisteredDomains(teamId: string): Promise<GetAllRegisteredDomains> {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${TeamAPI.URL.TEAMS}/${teamId}/${SSOAPI.URL.REGISTERED_DOMAINS}`,
     };
 
-    const response = await this.client.sendJSON<RegisteredDomain[]>(config);
+    const response = await this.client.sendJSON<GetAllRegisteredDomains>(config);
     return response.data;
   }
 
