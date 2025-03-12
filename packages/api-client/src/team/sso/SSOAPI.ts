@@ -96,7 +96,7 @@ export class SSOAPI {
     return response.data;
   }
 
-  public async updateTeamInvite({domain, sso, team, teamInvite}: TeamInviteConfig): Promise<unknown> {
+  public async updateTeamInvite({domain, sso, team, teamInvite}: TeamInviteConfig): Promise<void> {
     const config: AxiosRequestConfig = {
       data: {
         sso,
@@ -107,8 +107,7 @@ export class SSOAPI {
       url: `${SSOAPI.URL.DOMAIN_VERIFICATION}/${domain}/${SSOAPI.URL.TEAM}`,
     };
 
-    const response = await this.client.sendJSON(config);
-    return response.data;
+    await this.client.sendJSON(config);
   }
 
   public async getAllRegisteredDomains(teamId: string): Promise<GetAllRegisteredDomains> {
