@@ -27,11 +27,15 @@ import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import Long from 'long';
 
 import {APIClient} from '@wireapp/api-client';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 
+import {createId} from './MessageBuilder';
 import {flattenUserMap} from './UserClientsUtil';
 
+import {encryptAsset} from '../../cryptography/AssetCryptography';
 import type {EncryptionResult, ProteusService} from '../../messagingProtocols/proteus';
 import {isQualifiedIdArray} from '../../util';
+import {GenericMessageType} from '../GenericMessageType';
 
 type ClientMismatchError = AxiosError<MessageSendingStatus>;
 
@@ -65,10 +69,14 @@ export class MessageService {
       onClientMismatch?: (mismatch: MessageSendingStatus) => void | boolean | Promise<boolean>;
     } = {},
   ): Promise<MessageSendingStatus & {canceled?: boolean; failed?: QualifiedId[]}> {
-    const encryptionResults = await this.proteusService.encrypt(plainText, recipients);
+    const {text, assetData} = this.shouldSendAsExternal(plainText, recipients)
+      ? await this.generateExternalPayload(plainText)
+      : {text: plainText, assetData: options.assetData};
+
+    const encryptionResults = await this.proteusService.encrypt(text, recipients);
 
     const send = async ({payloads, unknowns, failed}: EncryptionResult): Promise<MessageSendingStatus> => {
-      const result = await this.sendOtrMessage(sendingClientId, payloads, options);
+      const result = await this.sendOtrMessage(sendingClientId, payloads, {...options, assetData});
       const extras = {failed, deleted: unknowns ?? {}};
       return deepmerge(result, extras) as MessageSendingStatus & {failed?: QualifiedId[]};
     };
@@ -87,6 +95,40 @@ export class MessageService {
       const reEncryptedPayload = await this.reencryptAfterMismatch(mismatch, encryptionResults, plainText);
       return send(reEncryptedPayload);
     }
+  }
+
+  private async generateExternalPayload(plainText: Uint8Array): Promise<{text: Uint8Array; assetData: Uint8Array}> {
+    const asset = await encryptAsset({plainText});
+    const {cipherText, keyBytes, sha256} = asset;
+
+    const externalMessage = {
+      otrKey: new Uint8Array(keyBytes),
+      sha256: new Uint8Array(sha256),
+    };
+
+    const genericMessage = GenericMessage.create({
+      [GenericMessageType.EXTERNAL]: externalMessage,
+      messageId: createId(),
+    });
+
+    return {text: GenericMessage.encode(genericMessage).finish(), assetData: cipherText};
+  }
+
+  private shouldSendAsExternal(
+    plainText: Uint8Array,
+    preKeyBundles: QualifiedUserClients | QualifiedUserPreKeyBundleMap,
+  ): boolean {
+    const EXTERNAL_MESSAGE_THRESHOLD_BYTES = 200 * 1024;
+
+    let clientCount = 0;
+    for (const user in preKeyBundles) {
+      clientCount += Object.keys(preKeyBundles[user]).length;
+    }
+
+    const messageInBytes = new Uint8Array(plainText).length;
+    const estimatedPayloadInBytes = clientCount * messageInBytes;
+
+    return estimatedPayloadInBytes > EXTERNAL_MESSAGE_THRESHOLD_BYTES;
   }
 
   private async sendOtrMessage(
