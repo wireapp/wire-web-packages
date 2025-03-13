@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.41.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.40.1...@wireapp/react-ui-kit@9.41.0) (2025-03-12)
+
+### Features
+
+* add channel, shield and lock icons ([#6981](https://github.com/wireapp/wire-web-packages/issues/6981)) ([5505eb4](https://github.com/wireapp/wire-web-packages/commit/5505eb4170a5cd191e75af9ab616b6ec216d573c))
+
+## [9.40.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.40.0...@wireapp/react-ui-kit@9.40.1) (2025-03-12)
+
+### Bug Fixes
+
+* **react-ui-kit:** collection icon path ([#6980](https://github.com/wireapp/wire-web-packages/issues/6980)) ([9ea01eb](https://github.com/wireapp/wire-web-packages/commit/9ea01ebb20de9299558928afb74cf0ff95b13f9f))
+
 # [9.40.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.39.2...@wireapp/react-ui-kit@9.40.0) (2025-03-07)
 
 ### Features

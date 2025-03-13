@@ -7530,7 +7530,7 @@ __metadata:
     axios: 1.7.9
     axios-retry: 4.5.0
     browser-sync: 3.0.3
-    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha06"
+    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha07"
     concurrently: 9.1.2
     cross-env: 7.0.3
     dotenv: 16.4.7
@@ -9389,12 +9389,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cells-sdk-ts@https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha06":
+"cells-sdk-ts@https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha07":
   version: 0.1.0
-  resolution: "cells-sdk-ts@https://github.com/pydio/cells-sdk-ts.git#commit=25b77634d26e00c19883bab5ed51a19ee7657594"
+  resolution: "cells-sdk-ts@https://github.com/pydio/cells-sdk-ts.git#commit=689ae7e4e0d48eec2eaf945bf3fc1875f6e0458d"
   dependencies:
     axios: ^1.6.0
-  checksum: a95b5b6e777285daf38180d0c877be48c54161810bcf3e58bb52de87d54bdd677fb5f98c3217c6b705ae4e0390e71c7fedb9a1c3ba8e59de3d42b6fa567b5db7
+  checksum: 576f4444341790f63fe81705e907ab54db10c2cb1e0aa4bc13a5397e66d818c444b559ed36a219edaf787f2f8936bc749ab7fe21d136b7f23f6a666310d55bc3
   languageName: node
   linkType: hard
 
