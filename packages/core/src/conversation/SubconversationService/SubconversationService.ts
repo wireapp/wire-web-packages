@@ -184,7 +184,7 @@ export class SubconversationService extends TypedEventEmitter<Events> {
       return null;
     }
 
-    //we don't want to react to avs callbacks when conversation was not yet established
+    // we don't want to react to avs callbacks when conversation was not yet established
     const doesMLSGroupExist = await this.mlsService.conversationExists(subconversationGroupId);
     if (!doesMLSGroupExist) {
       return null;
@@ -206,6 +206,8 @@ export class SubconversationService extends TypedEventEmitter<Events> {
   public async subscribeToEpochUpdates(
     parentConversationId: QualifiedId,
     parentConversationGroupId: string,
+    initialEpoch: number,
+    subconversationGroupId: string,
     findConversationByGroupId: (groupId: string) => QualifiedId | undefined,
     onEpochUpdate: (info: {
       members: SubconversationEpochInfoMember[];
@@ -214,12 +216,14 @@ export class SubconversationService extends TypedEventEmitter<Events> {
       keyLength: number;
     }) => void,
   ): Promise<() => void> {
-    const {epoch: initialEpoch, groupId: subconversationGroupId} = await this.joinConferenceSubconversation(
-      parentConversationId,
-      parentConversationGroupId,
-    );
-
     const forwardNewEpoch = async ({groupId}: {groupId: string; epoch: number}) => {
+      console.info('bardia forward new epoch is called', {
+        groupId,
+        subconversationGroupId,
+        initialEpoch,
+        parentConversationId,
+        parentConversationGroupId,
+      });
       if (groupId !== subconversationGroupId) {
         // if the epoch update did not happen in the subconversation directly, check if it happened in the parent conversation
         const parentConversationId = findConversationByGroupId(groupId);

@@ -486,6 +486,8 @@ describe('SubconversationService', () => {
       const unsubscribe = await subconversationService.subscribeToEpochUpdates(
         parentConversationId,
         parentConversationGroupId,
+        mockedInitialEpoch,
+        subconversationGroupId,
         findConversationByGroupId,
         onEpochUpdateCallback,
       );
