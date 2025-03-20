@@ -32,6 +32,7 @@ import {CellsAPI} from './CellsAPI';
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
 
+import {AccessTokenStore} from '../auth/AccessTokenStore';
 import {HttpClient} from '../http';
 import {cellsConfigMock} from '../mocks/cells';
 
@@ -81,7 +82,7 @@ describe('CellsAPI', () => {
     testFile = new File([TEST_FILE_CONTENT], TEST_FILE_NAME, {type: TEST_FILE_TYPE}) as File;
 
     cellsAPI = new CellsAPI({
-      accessTokenStore: {} as any,
+      accessTokenStore: {} as AccessTokenStore,
       httpClientConfig: {
         urls: {
           rest: cellsConfigMock.pydio.url + cellsConfigMock.pydio.segment,
@@ -102,7 +103,7 @@ describe('CellsAPI', () => {
     (S3Service as jest.Mock).mockClear();
 
     const api = new CellsAPI({
-      accessTokenStore: {} as any,
+      accessTokenStore: {} as AccessTokenStore,
       httpClientConfig: {
         urls: {
           rest: cellsConfigMock.pydio.url + cellsConfigMock.pydio.segment,
