@@ -75,7 +75,7 @@ export interface Conversation {
   creator: UUID;
   access: CONVERSATION_ACCESS[];
   group_conv_type?: GROUP_CONVERSATION_TYPE;
-  add_permission: ADD_PERMISSION;
+  add_permission?: ADD_PERMISSION;
   /** How users can join conversations */
   //CONVERSATION_ACCESS_ROLE for api <= v2, ACCESS_ROLE_V2[] since api v3
   access_role: CONVERSATION_LEGACY_ACCESS_ROLE | CONVERSATION_ACCESS_ROLE[];
