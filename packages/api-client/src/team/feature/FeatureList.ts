@@ -19,9 +19,11 @@
 
 import {
   FeatureAppLock,
+  FeatureChannels,
   FeatureClassifiedDomains,
   FeatureConferenceCalling,
   FeatureDigitalSignature,
+  FeatureDomainRegistration,
   FeatureDownloadPath,
   FeatureFileSharing,
   FeatureLegalhold,
@@ -42,6 +44,7 @@ export enum FEATURE_KEY {
   CONFERENCE_CALLING = 'conferenceCalling',
   CONVERSATION_GUEST_LINKS = 'conversationGuestLinks',
   DIGITAL_SIGNATURES = 'digitalSignatures',
+  DOMAIN_REGISTRATION = 'domainRegistration',
   ENFORCE_DOWNLOAD_PATH = 'enforceFileDownloadLocation',
   FILE_SHARING = 'fileSharing',
   LEGALHOLD = 'legalhold',
@@ -54,6 +57,7 @@ export enum FEATURE_KEY {
   SSO = 'sso',
   VALIDATE_SAML_EMAILS = 'validateSAMLemails',
   VIDEO_CALLING = 'videoCalling',
+  CHANNELS = 'channels',
 }
 
 export type FeatureList = {
@@ -61,6 +65,7 @@ export type FeatureList = {
   [FEATURE_KEY.CLASSIFIED_DOMAINS]?: FeatureClassifiedDomains;
   [FEATURE_KEY.CONFERENCE_CALLING]?: FeatureConferenceCalling;
   [FEATURE_KEY.DIGITAL_SIGNATURES]?: FeatureDigitalSignature;
+  [FEATURE_KEY.DOMAIN_REGISTRATION]?: FeatureDomainRegistration;
   [FEATURE_KEY.ENFORCE_DOWNLOAD_PATH]?: FeatureDownloadPath;
   [FEATURE_KEY.CONVERSATION_GUEST_LINKS]?: FeatureConversationGuestLink;
   [FEATURE_KEY.FILE_SHARING]?: FeatureFileSharing;
@@ -74,4 +79,5 @@ export type FeatureList = {
   [FEATURE_KEY.MLS_MIGRATION]?: FeatureMLSMigration;
   [FEATURE_KEY.VALIDATE_SAML_EMAILS]?: FeatureWithoutConfig;
   [FEATURE_KEY.VIDEO_CALLING]?: FeatureVideoCalling;
+  [FEATURE_KEY.CHANNELS]?: FeatureChannels;
 };

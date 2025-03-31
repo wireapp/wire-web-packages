@@ -422,7 +422,6 @@ export class MLSService extends TypedEventEmitter<Events> {
           proposals: [],
         };
       }
-      throw error;
     }
   }
 

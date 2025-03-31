@@ -17,6 +17,7 @@
  *
  */
 
+import {GenericMessage} from '@pydio/protocol-messaging';
 import {
   QualifiedUserClients,
   ConversationProtocol,
@@ -25,8 +26,6 @@ import {
 } from '@wireapp/api-client/lib/conversation';
 import {ConversationEvent, ConversationMemberJoinEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
-
-import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {MessageSendingState} from '..';
 
@@ -119,6 +118,7 @@ export enum AddUsersFailureReasons {
   NON_FEDERATING_BACKENDS = 'NON_FEDERATING_BACKENDS',
   UNREACHABLE_BACKENDS = 'UNREACHABLE_BACKENDS',
   OFFLINE_FOR_TOO_LONG = 'OFFLINE_FOR_TOO_LONG',
+  NOT_MLS_CAPABLE = 'NOT_MLS_CAPABLE',
 }
 
 /**
@@ -141,6 +141,10 @@ export type AddUsersFailure =
     }
   | {
       reason: AddUsersFailureReasons.OFFLINE_FOR_TOO_LONG;
+      users: QualifiedId[];
+    }
+  | {
+      reason: AddUsersFailureReasons.NOT_MLS_CAPABLE;
       users: QualifiedId[];
     };
 

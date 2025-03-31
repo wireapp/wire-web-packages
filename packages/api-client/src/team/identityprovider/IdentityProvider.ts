@@ -18,7 +18,13 @@
  */
 
 export interface IdentityProvider {
-  extraInfo: string;
+  extraInfo: {
+    apiVersion: string;
+    handle: string;
+    oldIssuers: [];
+    replacedBy: unknown;
+    team: string;
+  };
   id: string;
   metadata: IdentityProviderMetaData;
 }

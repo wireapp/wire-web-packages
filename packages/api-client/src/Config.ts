@@ -21,4 +21,5 @@ import {BackendData} from './env/';
 
 export interface Config {
   urls: BackendData;
+  headers?: Record<string, string>;
 }

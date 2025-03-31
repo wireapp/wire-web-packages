@@ -61,6 +61,8 @@ export * from './MuteIcon';
 export * from './NotificationIcon';
 export * from './NotificationOffIcon';
 export * from './OptionsIcon';
+export * from './OpenDetachedWindowIcon';
+export * from './CloseDetachedWindowIcon';
 export * from './OutlineCheck';
 export * from './GridIcon';
 export * from './PeopleIcon';
@@ -90,6 +92,11 @@ export * from './TriangleIcon';
 export * from './UploadIcon';
 export * from './VerificationShieldIcon';
 export * from './WireIcon';
+export * from './ShieldIcon';
+export * from './LockClosedIcon';
+export * from './ChannelIcon';
+export * from './UnlockedIcon';
+export * from './HistoryIcon';
 
 // Brand Icons
 export * from './Brand/AndroidIcon';
@@ -137,3 +144,6 @@ export * from './Files/MultipleFilesIcon';
 export * from './PlayIcon';
 export * from './PauseIcon';
 export * from './AlertIcon';
+export * from './SaveIcon';
+export * from './CollectionIcon';
+export * from './UnavailableFileIcon';

@@ -17,6 +17,7 @@
  *
  */
 
+import {GenericMessage} from '@pydio/protocol-messaging';
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {
   Conversation,
@@ -35,7 +36,6 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 
 import {APIClient} from '@wireapp/api-client';
-import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {AddUsersFailure, AddUsersFailureReasons, ConversationService, MessageSendingState} from '..';
 import {MLSService} from '../../messagingProtocols/mls';
@@ -111,6 +111,10 @@ describe('ConversationService', () => {
         },
       }),
     );
+
+    jest
+      .spyOn(client.api.user, 'getUserSupportedProtocols')
+      .mockReturnValue(Promise.resolve([ConversationProtocol.MLS, ConversationProtocol.PROTEUS]));
 
     client.context = {
       clientType: ClientType.NONE,
@@ -690,7 +694,7 @@ describe('ConversationService', () => {
       const mockGroupId = 'groupId';
       const mockConversationId = {id: PayloadHelper.getUUID(), domain: 'local.wire.com'};
 
-      const otherUsersToAdd = Array(3)
+      const otherUsersToAdd = Array(4)
         .fill(0)
         .map(() => ({id: PayloadHelper.getUUID(), domain: 'local.wire.com'}));
 
@@ -707,6 +711,17 @@ describe('ConversationService', () => {
         users: [otherUsersToAdd[1]],
         backends: [otherUsersToAdd[1].domain],
       };
+      const mlsFailure: AddUsersFailure = {
+        reason: AddUsersFailureReasons.NOT_MLS_CAPABLE,
+        users: [otherUsersToAdd[2]],
+      };
+
+      jest.spyOn(apiClient.api.user, 'getUserSupportedProtocols').mockImplementation(id => {
+        if (id === otherUsersToAdd[2]) {
+          return Promise.resolve([ConversationProtocol.PROTEUS]);
+        }
+        return Promise.resolve([ConversationProtocol.MLS, ConversationProtocol.PROTEUS]);
+      });
 
       jest.spyOn(mlsService, 'getKeyPackagesPayload').mockResolvedValueOnce({
         keyPackages: [new Uint8Array(0)],
@@ -729,7 +744,7 @@ describe('ConversationService', () => {
         conversationId: mockConversationId,
       });
 
-      expect(failedToAdd).toEqual([keysClaimingFailure, addUsersFailure]);
+      expect(failedToAdd).toEqual([keysClaimingFailure, addUsersFailure, mlsFailure]);
     });
   });
 

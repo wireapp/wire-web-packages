@@ -17,13 +17,13 @@
  *
  */
 
-import {IQuote} from '@wireapp/protocol-messaging';
+import {IQuote} from '@pydio/protocol-messaging';
 
-import {AssetContent, LocationContent, TextContent} from '.';
+import {AssetContent, LocationContent, MultiPartContent, TextContent} from '.';
 
 export {IQuote as QuoteContent};
 
 export interface QuoteMessageContent {
-  content: AssetContent | LocationContent | TextContent;
+  content: AssetContent | LocationContent | TextContent | MultiPartContent;
   quotedMessageId: string;
 }

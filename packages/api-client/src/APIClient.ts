@@ -39,6 +39,7 @@ import {
 import {CookieStore} from './auth/CookieStore';
 import {parseAccessToken} from './auth/parseAccessToken';
 import {BroadcastAPI} from './broadcast/';
+import {CellsAPI} from './cells/CellsAPI';
 import {ClientAPI, ClientType} from './client/';
 import {Config} from './Config';
 import {ConnectionAPI} from './connection/';
@@ -68,6 +69,7 @@ import {
 } from './team/';
 import {ScimAPI} from './team/scim/ScimAPI';
 import {TeamSearchAPI} from './team/search';
+import {SSOAPI} from './team/sso';
 import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../package.json');
@@ -79,9 +81,9 @@ enum TOPIC {
   ON_LOGOUT = 'APIClient.TOPIC.ON_LOGOUT',
 }
 
-const defaultConfig: Config = {
+const defaultConfig = {
   urls: Backend.PRODUCTION,
-};
+} as Config;
 
 export interface APIClient {
   on(event: TOPIC.ON_LOGOUT, listener: (error: InvalidTokenError) => void): this;
@@ -96,6 +98,7 @@ type Apis = {
   asset: AssetAPI;
   auth: AuthAPI;
   broadcast: BroadcastAPI;
+  cells: CellsAPI;
   client: ClientAPI;
   connection: ConnectionAPI;
   conversation: ConversationAPI;
@@ -117,6 +120,7 @@ type Apis = {
     scim: ScimAPI;
     search: TeamSearchAPI;
     service: ServiceAPI;
+    sso: SSOAPI;
     team: TeamAPI;
   };
   user: UserAPI;
@@ -144,11 +148,13 @@ export type BackendVersionResponse = {
   development?: number[];
   domain: string;
 };
+
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
   // APIs
   public api: Apis;
+  private cellsApi: CellsAPI | null = null;
 
   // Configuration
   private readonly accessTokenStore: AccessTokenStore;
@@ -200,13 +206,24 @@ export class APIClient extends EventEmitter {
 
   private configureApis(backendFeatures: BackendFeatures): Apis {
     this.logger.info('configuring APIs with config', backendFeatures);
+
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
+
+    // Prevents the CellsAPI from being initialized multiple times
+    if (!this.cellsApi) {
+      this.cellsApi = new CellsAPI({
+        httpClientConfig: this.config,
+        accessTokenStore: this.accessTokenStore,
+      });
+    }
+
     return {
       account: new AccountAPI(this.transport.http),
       asset: assetAPI,
       auth: new AuthAPI(this.transport.http),
       services: new ServicesAPI(this.transport.http, assetAPI),
       broadcast: new BroadcastAPI(this.transport.http),
+      cells: this.cellsApi,
       client: new ClientAPI(this.transport.http),
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
@@ -227,6 +244,7 @@ export class APIClient extends EventEmitter {
         scim: new ScimAPI(this.transport.http),
         search: new TeamSearchAPI(this.transport.http),
         service: new ServiceAPI(this.transport.http),
+        sso: new SSOAPI(this.transport.http),
         team: new TeamAPI(this.transport.http),
       },
       user: new UserAPI(this.transport.http, backendFeatures),

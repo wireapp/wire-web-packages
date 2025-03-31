@@ -68,7 +68,6 @@ const createMLSService = async () => {
     conversationExists: jest.fn(),
     clientPublicKey: jest.fn(),
     processWelcomeMessage: jest.fn(),
-    decryptMessage: jest.fn(),
     conversationEpoch: jest.fn(),
     commitPendingProposals: jest.fn(),
     e2eiIsEnabled: jest.fn(() => false),

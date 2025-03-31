@@ -3,6 +3,120 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [46.20.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.9...@wireapp/core@46.20.10) (2025-03-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.8...@wireapp/core@46.20.9) (2025-03-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.7...@wireapp/core@46.20.8) (2025-03-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.6...@wireapp/core@46.20.7) (2025-03-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.5...@wireapp/core@46.20.6) (2025-03-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.4...@wireapp/core@46.20.5) (2025-03-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.3...@wireapp/core@46.20.4) (2025-03-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.2...@wireapp/core@46.20.3) (2025-03-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.1...@wireapp/core@46.20.2) (2025-03-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.0...@wireapp/core@46.20.1) (2025-03-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.20.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.12...@wireapp/core@46.20.0) (2025-03-14)
+
+### Features
+
+* **core:** @wireapp/protocol-messaging to @pydio/protocol-messaging [WPB-16433] ([#6978](https://github.com/wireapp/wire-web-packages/issues/6978)) ([c06b24b](https://github.com/wireapp/wire-web-packages/commit/c06b24b19e69ba04d95884cabbb129dc447437ca))
+
+## [46.19.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.11...@wireapp/core@46.19.12) (2025-03-12)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.10...@wireapp/core@46.19.11) (2025-03-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.9...@wireapp/core@46.19.10) (2025-03-07)
+
+### Bug Fixes
+
+* **mls:** create specific error for trying to add proteus users [WPB-15301] ([#6976](https://github.com/wireapp/wire-web-packages/issues/6976)) ([0bc6bf6](https://github.com/wireapp/wire-web-packages/commit/0bc6bf6070dddba82e167957ae2ef72f51da17fc))
+
+## [46.19.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.8...@wireapp/core@46.19.9) (2025-03-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.7...@wireapp/core@46.19.8) (2025-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.6...@wireapp/core@46.19.7) (2025-03-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.5...@wireapp/core@46.19.6) (2025-03-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.4...@wireapp/core@46.19.5) (2025-03-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.3...@wireapp/core@46.19.4) (2025-02-28)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.2...@wireapp/core@46.19.3) (2025-02-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.19.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.1...@wireapp/core@46.19.2) (2025-02-24)
+
+### Bug Fixes
+
+* **core:** Catch and suppress buffer errors inside transaction (WPB-16234) ([#6959](https://github.com/wireapp/wire-web-packages/issues/6959)) ([df8bbb3](https://github.com/wireapp/wire-web-packages/commit/df8bbb3bcb4f99a9b438a9ce5e35a47097de1d3b))
+
+## [46.19.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.0...@wireapp/core@46.19.1) (2025-02-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.19.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.18.1...@wireapp/core@46.19.0) (2025-02-21)
+
+### Features
+
+* **mls:** add mlsOtherError to error ignore list [WPB-16234] ([#6930](https://github.com/wireapp/wire-web-packages/issues/6930)) ([6628664](https://github.com/wireapp/wire-web-packages/commit/6628664fd963ed13775cd8858d72ce1dccdd1f0b))
+
+## [46.18.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.18.0...@wireapp/core@46.18.1) (2025-02-18)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.18.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.17.0...@wireapp/core@46.18.0) (2025-02-14)
+
+### Features
+
+* bump CC to 3.1 ([#6896](https://github.com/wireapp/wire-web-packages/issues/6896)) ([3deb007](https://github.com/wireapp/wire-web-packages/commit/3deb007aab3acb59e3b40d82512fba41d3d86bb2))
+
 # [46.17.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.16.0...@wireapp/core@46.17.0) (2025-02-03)
 
 ### Features

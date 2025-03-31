@@ -36,7 +36,7 @@ import {
   MentionContent,
 } from '@wireapp/core/lib/conversation/content/';
 import {QuotableMessage} from '@wireapp/core/lib/conversation/message/OtrMessage';
-import {Asset, Confirmation} from '@wireapp/protocol-messaging';
+import {Asset, Confirmation} from '@pydio/protocol-messaging';
 import FileType = require('file-type');
 
 import fs from 'fs';
