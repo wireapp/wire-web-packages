@@ -77,13 +77,14 @@ export class S3Service implements CellsStorage {
       },
     });
 
-    upload.on('httpUploadProgress', progress => {
-      if (!progressCallback || !progress?.loaded || !progress?.total) {
-        return;
-      }
-
-      progressCallback(progress.loaded / progress.total);
-    });
+    if (progressCallback) {
+      upload.on('httpUploadProgress', progress => {
+        if (!progress?.loaded || !progress?.total) {
+          return;
+        }
+        progressCallback(progress.loaded / progress.total);
+      });
+    }
 
     try {
       await upload.done();

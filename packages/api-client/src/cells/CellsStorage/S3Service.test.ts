@@ -153,13 +153,9 @@ describe('S3Service', () => {
       expect(progressCallback).not.toHaveBeenCalled();
     });
 
-    it('does not call progress callback when no callback is provided', async () => {
+    it('does not set up progress listener when no callback is provided', async () => {
       const mockUpload = {
-        on: jest.fn().mockImplementation((event, callback) => {
-          if (event === 'httpUploadProgress') {
-            callback({loaded: 50, total: 100});
-          }
-        }),
+        on: jest.fn(),
         done: jest.fn().mockResolvedValue(undefined),
       };
 
@@ -167,7 +163,7 @@ describe('S3Service', () => {
 
       await service.putObject({path: testFilePath, file: testFile});
 
-      expect(mockUpload.on).toHaveBeenCalledWith('httpUploadProgress', expect.any(Function));
+      expect(mockUpload.on).not.toHaveBeenCalled();
     });
   });
 });
