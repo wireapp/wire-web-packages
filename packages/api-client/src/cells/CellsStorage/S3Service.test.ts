@@ -17,7 +17,7 @@
  *
  */
 
-import {PutObjectCommand, S3Client, S3ServiceException} from '@aws-sdk/client-s3';
+import {S3Client, S3ServiceException} from '@aws-sdk/client-s3';
 import {Upload} from '@aws-sdk/lib-storage';
 
 import {CellsStorageError} from './CellsStorage';
@@ -55,18 +55,32 @@ describe('S3Service', () => {
   });
 
   describe('putObject', () => {
-    it('creates a PutObjectCommand with the correct parameters', async () => {
+    it('creates an Upload with the correct parameters', async () => {
+      const mockUpload = {
+        on: jest.fn(),
+        done: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
+
       await service.putObject({path: testFilePath, file: testFile});
 
-      expect(PutObjectCommand).toHaveBeenCalledWith({
-        Bucket: testConfig.bucket,
-        Body: testFile,
-        Key: testFilePath,
-        ContentType: testFile.type,
-        ContentLength: testFile.size,
-        Metadata: undefined,
+      expect(Upload).toHaveBeenCalledWith({
+        client: expect.objectContaining({
+          send: expect.any(Function),
+        }),
+        partSize: 5 * 1024 * 1024,
+        queueSize: 3,
+        leavePartsOnError: true,
+        params: {
+          Bucket: testConfig.bucket,
+          Body: testFile,
+          Key: testFilePath,
+          ContentType: testFile.type,
+          ContentLength: testFile.size,
+          Metadata: undefined,
+        },
       });
-      expect(mockSend).toHaveBeenCalledWith(expect.any(PutObjectCommand));
     });
 
     it('includes metadata when provided', async () => {
@@ -75,23 +89,34 @@ describe('S3Service', () => {
         'another-key': 'another-value',
       };
 
+      const mockUpload = {
+        on: jest.fn(),
+        done: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
+
       await service.putObject({path: testFilePath, file: testFile, metadata});
 
-      expect(PutObjectCommand).toHaveBeenCalledWith(
+      expect(Upload).toHaveBeenCalledWith(
         expect.objectContaining({
-          Metadata: metadata,
+          params: expect.objectContaining({
+            Metadata: metadata,
+          }),
         }),
       );
     });
 
     it('handles EntityTooLarge errors with a specific error message', async () => {
       const error = createS3Error('EntityTooLarge', 'Entity too large');
+      const mockUpload = {
+        on: jest.fn(),
+        done: jest.fn().mockRejectedValue(error),
+      };
 
-      mockSend.mockRejectedValueOnce(error);
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
 
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toThrow(CellsStorageError);
-
-      mockSend.mockRejectedValueOnce(error);
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toThrow(/The object was too large/);
     });
 
@@ -99,12 +124,14 @@ describe('S3Service', () => {
       const errorName = 'OtherError';
       const errorMessage = 'Some other error';
       const error = createS3Error(errorName, errorMessage);
+      const mockUpload = {
+        on: jest.fn(),
+        done: jest.fn().mockRejectedValue(error),
+      };
 
-      mockSend.mockRejectedValueOnce(error);
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
 
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toThrow(CellsStorageError);
-
-      mockSend.mockRejectedValueOnce(error);
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toThrow(
         new RegExp(`Error from S3 while uploading object to.*${errorName}: ${errorMessage}`),
       );
@@ -112,7 +139,12 @@ describe('S3Service', () => {
 
     it('passes through other types of errors without wrapping them', async () => {
       const error = new Error('Unexpected error');
-      mockSend.mockRejectedValueOnce(error);
+      const mockUpload = {
+        on: jest.fn(),
+        done: jest.fn().mockRejectedValue(error),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
 
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toBe(error);
     });
