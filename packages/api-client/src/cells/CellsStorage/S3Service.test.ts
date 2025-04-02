@@ -18,11 +18,13 @@
  */
 
 import {PutObjectCommand, S3Client, S3ServiceException} from '@aws-sdk/client-s3';
+import {Upload} from '@aws-sdk/lib-storage';
 
 import {CellsStorageError} from './CellsStorage';
 import {S3Service} from './S3Service';
 
 jest.mock('@aws-sdk/client-s3');
+jest.mock('@aws-sdk/lib-storage');
 
 describe('S3Service', () => {
   let service: S3Service;
@@ -113,6 +115,59 @@ describe('S3Service', () => {
       mockSend.mockRejectedValueOnce(error);
 
       await expect(service.putObject({path: testFilePath, file: testFile})).rejects.toBe(error);
+    });
+
+    it('calls progress callback with correct progress values', async () => {
+      const progressCallback = jest.fn();
+      const mockUpload = {
+        on: jest.fn().mockImplementation((event, callback) => {
+          if (event === 'httpUploadProgress') {
+            callback({loaded: 50, total: 100});
+          }
+        }),
+        done: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
+
+      await service.putObject({path: testFilePath, file: testFile, progressCallback});
+
+      expect(progressCallback).toHaveBeenCalledWith(0.5);
+    });
+
+    it('does not call progress callback when progress information is missing', async () => {
+      const progressCallback = jest.fn();
+      const mockUpload = {
+        on: jest.fn().mockImplementation((event, callback) => {
+          if (event === 'httpUploadProgress') {
+            callback({loaded: undefined, total: undefined});
+          }
+        }),
+        done: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
+
+      await service.putObject({path: testFilePath, file: testFile, progressCallback});
+
+      expect(progressCallback).not.toHaveBeenCalled();
+    });
+
+    it('does not call progress callback when no callback is provided', async () => {
+      const mockUpload = {
+        on: jest.fn().mockImplementation((event, callback) => {
+          if (event === 'httpUploadProgress') {
+            callback({loaded: 50, total: 100});
+          }
+        }),
+        done: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (Upload as unknown as jest.Mock).mockImplementation(() => mockUpload);
+
+      await service.putObject({path: testFilePath, file: testFile});
+
+      expect(mockUpload.on).toHaveBeenCalledWith('httpUploadProgress', expect.any(Function));
     });
   });
 });

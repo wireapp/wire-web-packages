@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@pydio/protocol-messaging": "^1.51.0",
-    "@wireapp/api-client": "workspace:^",
+    "@wireapp/api-client": "file:.yalc/@wireapp/api-client",
     "@wireapp/commons": "workspace:^",
     "@wireapp/core-crypto": "3.1.0",
     "@wireapp/cryptobox": "12.8.0",
