@@ -22,12 +22,12 @@ export interface CellsStorage {
     path,
     file,
     metadata,
-    signal,
+    progressCallback,
   }: {
     path: string;
     file: File;
     metadata?: Record<string, string>;
-    signal?: AbortSignal;
+    progressCallback?: (progress: number) => void;
   }): Promise<void>;
 }
 

@@ -103,6 +103,7 @@ export class CellsAPI {
     path,
     file,
     autoRename = true,
+    progressCallback,
     signal,
   }: {
     uuid: string;
@@ -110,6 +111,7 @@ export class CellsAPI {
     path: string;
     file: File;
     autoRename?: boolean;
+    progressCallback?: (progress: number) => void;
     signal?: AbortSignal;
   }): Promise<RestCreateCheckResponse> {
     if (!this.client || !this.storageService) {
@@ -136,7 +138,7 @@ export class CellsAPI {
       'Create-Version-Id': versionId,
     };
 
-    await this.storageService.putObject({path: filePath, file, metadata, signal});
+    await this.storageService.putObject({path: filePath, file, metadata, progressCallback});
 
     return result.data;
   }
