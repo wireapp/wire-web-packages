@@ -30,7 +30,7 @@ interface S3ServiceConfig {
 }
 
 const MAX_QUEUE_SIZE = 3;
-const PART_SIZE = 5 * 1024 * 1024; // 5MB
+const PART_SIZE = 10 * 1024 * 1024; // 10MB
 
 export class S3Service implements CellsStorage {
   private client: S3Client;
