@@ -103,12 +103,14 @@ export class CellsAPI {
     path,
     file,
     autoRename = true,
+    signal,
   }: {
     uuid: string;
     versionId: string;
     path: string;
     file: File;
     autoRename?: boolean;
+    signal?: AbortSignal;
   }): Promise<RestCreateCheckResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -116,10 +118,13 @@ export class CellsAPI {
 
     let filePath = `${path}`.normalize('NFC');
 
-    const result = await this.client.createCheck({
-      Inputs: [{Type: 'LEAF', Locator: {Path: filePath, Uuid: uuid}, VersionId: versionId}],
-      FindAvailablePath: true,
-    });
+    const result = await this.client.createCheck(
+      {
+        Inputs: [{Type: 'LEAF', Locator: {Path: filePath, Uuid: uuid}, VersionId: versionId}],
+        FindAvailablePath: true,
+      },
+      {signal},
+    );
 
     if (autoRename && result.data.Results?.length && result.data.Results[0].Exists) {
       filePath = result.data.Results[0].NextPath || filePath;
@@ -131,7 +136,7 @@ export class CellsAPI {
       'Create-Version-Id': versionId,
     };
 
-    await this.storageService.putObject({path: filePath, file, metadata});
+    await this.storageService.putObject({path: filePath, file, metadata, signal});
 
     return result.data;
   }

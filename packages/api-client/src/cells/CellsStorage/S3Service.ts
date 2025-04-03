@@ -51,10 +51,12 @@ export class S3Service implements CellsStorage {
     path,
     file,
     metadata,
+    signal,
   }: {
     path: string;
     file: File;
     metadata?: Record<string, string>;
+    signal?: AbortSignal;
   }): Promise<void> {
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -66,7 +68,7 @@ export class S3Service implements CellsStorage {
     });
 
     try {
-      await this.client.send(command);
+      await this.client.send(command, {abortSignal: signal});
     } catch (caught) {
       if (caught instanceof S3ServiceException && caught.name === 'EntityTooLarge') {
         throw new CellsStorageError(
