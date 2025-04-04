@@ -363,7 +363,7 @@ export class Account extends TypedEventEmitter<Events> {
     // Call /access endpoint with client_id after client initialisation
     await this.apiClient.transport.http.associateClientWithSession(client.id);
 
-    await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
+    await this.service.proteus.initClient(this.apiClient.context);
 
     if ((await this.isMLSActiveForClient()) && this.service.mls && mlsConfig) {
       const {userId, domain = ''} = this.apiClient.context;
@@ -437,10 +437,15 @@ export class Account extends TypedEventEmitter<Events> {
     let mlsService: MLSService | undefined;
     let e2eServiceExternal: E2EIServiceExternal | undefined;
 
-    const proteusService = new ProteusService(this.apiClient, cryptoClient, {
-      onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
-      nbPrekeys: this.options.nbPrekeys,
-    });
+    const proteusService = new ProteusService(
+      this.apiClient,
+      cryptoClient,
+      {
+        onNewClient: payload => this.emit(EVENTS.NEW_SESSION, payload),
+        nbPrekeys: this.options.nbPrekeys,
+      },
+      this.storeEngine,
+    );
 
     const clientService = new ClientService(this.apiClient, proteusService, this.storeEngine);
 
@@ -520,7 +525,7 @@ export class Account extends TypedEventEmitter<Events> {
    * Will delete the identity of the current user
    */
   private async wipe(): Promise<void> {
-    await this.service?.proteus.wipe(this.storeEngine);
+    await this.service?.proteus.wipe();
     if (this.db) {
       await deleteDB(this.db);
     }
