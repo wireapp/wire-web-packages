@@ -56,11 +56,13 @@ export class S3Service implements CellsStorage {
     file,
     metadata,
     progressCallback,
+    abortController,
   }: {
     path: string;
     file: File;
     metadata?: Record<string, string>;
     progressCallback?: (progress: number) => void;
+    abortController?: AbortController;
   }): Promise<void> {
     const upload = new Upload({
       client: this.client,
@@ -75,6 +77,7 @@ export class S3Service implements CellsStorage {
         ContentLength: file.size,
         Metadata: metadata,
       },
+      abortController,
     });
 
     if (progressCallback) {
