@@ -66,7 +66,7 @@ export class S3Service implements CellsStorage {
       client: this.client,
       partSize: PART_SIZE,
       queueSize: MAX_QUEUE_SIZE,
-      leavePartsOnError: true,
+      leavePartsOnError: false,
       params: {
         Bucket: this.bucket,
         Body: file,
