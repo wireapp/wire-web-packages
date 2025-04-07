@@ -7851,10 +7851,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:3.1.0":
-  version: 3.1.0
-  resolution: "@wireapp/core-crypto@npm:3.1.0"
-  checksum: ec9bd04194945b86898be243010c696a2acc548d7658c8b9daae67b187948deee4decba0364c7f7bb43ff5ca3168b270217755a208a517f3614255b4d1b5fafe
+"@wireapp/core-crypto@npm:5.1.0":
+  version: 5.1.0
+  resolution: "@wireapp/core-crypto@npm:5.1.0"
+  checksum: 90ac8c7bc36b8fd3a5198ad2f8ceeccd914157e156ab9e3e98fa6f52be4e8cb8541196c4b9f2c2d343a4a2f6a4fa9cc45670350d8c1a2a9a6acb770fa042270f
   languageName: node
   linkType: hard
 
@@ -7872,7 +7872,7 @@ __metadata:
     "@types/uuid": 9.0.8
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 3.1.0
+    "@wireapp/core-crypto": 5.1.0
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"

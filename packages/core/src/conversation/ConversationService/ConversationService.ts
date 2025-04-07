@@ -53,6 +53,7 @@ import {
   AddUsersFailure,
   AddUsersFailureReasons,
   AddUsersParams,
+  BaseCreateConversationResponse,
   KeyPackageClaimUser,
   MLSCreateConversationResponse,
   SendMlsMessageParams,
@@ -364,7 +365,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     qualifiedUsers,
     groupId,
     conversationId,
-  }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
+  }: Required<AddUsersParams>): Promise<BaseCreateConversationResponse> {
     const notMLSCapableUserIds: string[] = [];
     // Failure object for users that are not MLS capable
     const notMLSCapableUserFailure: AddUsersFailure = {
@@ -386,10 +387,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const mlsCapableUsers: QualifiedId[] = qualifiedUsers.filter(user => !notMLSCapableUserIds.includes(user.id));
     const {keyPackages, failures: keysClaimingFailures} = await this.mlsService.getKeyPackagesPayload(mlsCapableUsers);
 
-    const {events, failures} =
-      keyPackages.length > 0
-        ? await this.mlsService.addUsersToExistingConversation(groupId, keyPackages)
-        : {events: [], failures: [] as AddUsersFailure[]};
+    await this.mlsService.addUsersToExistingConversation(groupId, keyPackages);
 
     const conversation = await this.getConversation(conversationId);
 
@@ -397,11 +395,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
     await this.mlsService.resetKeyMaterialRenewal(groupId);
 
     return {
-      events,
       conversation,
       failedToAdd: [
         ...keysClaimingFailures,
-        ...failures,
         // In case we have users that are not MLS capable, we add them to the failedToAdd list
         ...(notMLSCapableUserIds.length > 0 ? [notMLSCapableUserFailure] : []),
       ],
@@ -412,24 +408,19 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
     qualifiedUserIds,
-  }: RemoveUsersParams): Promise<MLSCreateConversationResponse> {
+  }: RemoveUsersParams): Promise<Conversation> {
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
     const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
       clientsToRemove.qualified_user_map,
     );
 
-    const messageResponse = await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
+    await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
 
     //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
     await this.mlsService.resetKeyMaterialRenewal(groupId);
 
-    const conversation = await this.getConversation(conversationId);
-
-    return {
-      events: messageResponse.events,
-      conversation,
-    };
+    return await this.getConversation(conversationId);
   }
 
   public async joinByExternalCommit(conversationId: QualifiedId) {
