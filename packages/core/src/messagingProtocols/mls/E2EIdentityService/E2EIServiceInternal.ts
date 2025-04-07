@@ -37,6 +37,7 @@ import {EnrollmentFlowData, InitialData, UnidentifiedEnrollmentFlowData} from '.
 import {CoreDatabase} from '../../../storage/CoreDB';
 
 export type getTokenCallback = (challengesData?: {challenge: any; keyAuth: string}) => Promise<string | undefined>;
+export type getAllConversationsCallback = () => Promise<Conversation[]>;
 export class E2EIServiceInternal {
   private readonly logger = LogFactory.getLogger('@wireapp/core/E2EIdentityServiceInternal');
   private acmeService: AcmeService;
@@ -64,7 +65,7 @@ export class E2EIServiceInternal {
   public async generateCertificate(
     getOAuthToken: getTokenCallback,
     refresh: boolean,
-    getAllConversations: () => Promise<Conversation[]>,
+    getAllConversations: getAllConversationsCallback,
     ciphersuite: Ciphersuite,
   ) {
     const stashedEnrollmentData = await this.enrollmentStorage.getPendingEnrollmentData();
@@ -104,7 +105,7 @@ export class E2EIServiceInternal {
   private async continueCertificateGeneration(
     oAuthToken: string,
     enrollmentData: EnrollmentFlowData,
-    getAllConversations: () => Promise<Conversation[]>,
+    getAllConversations: getAllConversationsCallback,
     cipherSuite: Ciphersuite,
   ) {
     const handle = enrollmentData.handle;
@@ -203,7 +204,7 @@ export class E2EIServiceInternal {
     identity: E2eiEnrollment,
     oAuthIdToken: string,
     enrollmentData: UnidentifiedEnrollmentFlowData,
-    getAllConversations: () => Promise<Conversation[]>,
+    getAllConversations: getAllConversationsCallback,
     cipherSuite: Ciphersuite,
   ) {
     // Step 7: Do OIDC client challenge
@@ -265,7 +266,7 @@ export class E2EIServiceInternal {
     // Step 10: Initialize MLS with the certificate
     return this.coreCryptoClient.transaction(async cx => {
       const conversations = await getAllConversations();
-      await cx.saveX509Credential(identity, certificate);
+      const newCrlDistributionPoints = await cx.saveX509Credential(identity, certificate);
       conversations.forEach(async conversation => {
         if (Boolean(conversation.group_id?.length)) {
           const idAsBytes = new TextEncoder().encode(conversation.group_id);
@@ -275,7 +276,12 @@ export class E2EIServiceInternal {
         }
       });
 
-      return await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
+      const keyPackages = await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
+
+      return {
+        newCrlDistributionPoints,
+        keyPackages,
+      };
     });
   }
 }

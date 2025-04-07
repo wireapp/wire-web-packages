@@ -14,7 +14,7 @@
     "@pydio/protocol-messaging": "^1.51.0",
     "@wireapp/api-client": "workspace:^",
     "@wireapp/commons": "workspace:^",
-    "@wireapp/core-crypto": "4.2.0",
+    "@wireapp/core-crypto": "5.1.0",
     "@wireapp/cryptobox": "12.8.0",
     "@wireapp/priority-queue": "workspace:^",
     "@wireapp/promise-queue": "workspace:^",

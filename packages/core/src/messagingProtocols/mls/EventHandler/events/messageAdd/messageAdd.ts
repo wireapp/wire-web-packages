@@ -39,13 +39,14 @@ export const handleMLSMessageAdd = async ({
 
   const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
-  const {
-    proposals,
-    commitDelay,
-    message,
-    senderClientId: encodedSenderClientId,
-    hasEpochChanged,
-  } = await mlsService.decryptMessage(groupIdBytes, encryptedData);
+  const decryptedMessage = await mlsService.decryptMessage(groupIdBytes, encryptedData);
+
+  if (!decryptedMessage) {
+    // If the message is not decrypted, we return null
+    return null;
+  }
+
+  const {message, commitDelay, proposals, hasEpochChanged, senderClientId: encodedSenderClientId} = decryptedMessage;
 
   if (encodedSenderClientId) {
     const decoder = new TextDecoder();

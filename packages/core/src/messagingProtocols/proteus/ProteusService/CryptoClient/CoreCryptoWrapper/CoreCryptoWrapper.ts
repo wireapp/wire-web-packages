@@ -34,10 +34,9 @@ type Config = {
   generateSecretKey: (keyId: string) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
-  wasmFilePath: string;
 };
 
-type ClientConfig = Omit<Config, 'generateSecretKey' | 'wasmFilePath'> & {
+type ClientConfig = Omit<Config, 'generateSecretKey'> & {
   onWipe: () => Promise<void>;
 };
 
@@ -60,7 +59,7 @@ const coreCryptoLogger = {
 
 export async function buildClient(
   storeEngine: CRUDEngine,
-  {wasmFilePath, generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
+  {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
   let key;
   const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
@@ -79,7 +78,6 @@ export async function buildClient(
   const coreCrypto = await CoreCrypto.deferredInit({
     databaseName: coreCryptoDbName,
     key: Encoder.toBase64(key.key).asString,
-    wasmFilePath,
   });
 
   setLogger(coreCryptoLogger);
