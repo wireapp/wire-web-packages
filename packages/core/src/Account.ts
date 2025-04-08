@@ -75,14 +75,6 @@ import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
 
 export type ProcessedEventPayload = HandledEventPayload;
 
-export enum EVENTS {
-  /**
-   * event triggered when a message from an unknown client is received.
-   * An unknown client is a client we don't yet have a session with
-   */
-  NEW_SESSION = 'new_session',
-}
-
 export enum ConnectionState {
   /** The websocket is closed and notifications stream is not being processed */
   CLOSED = 'closed',
@@ -128,6 +120,14 @@ const coreDefaultClient: ClientInfo = {
   cookieLabel: 'default',
   model: '@wireapp/core',
 };
+
+export enum EVENTS {
+  /**
+   * event triggered when a message from an unknown client is received.
+   * An unknown client is a client we don't yet have a session with
+   */
+  NEW_SESSION = 'new_session',
+}
 
 type Events = {
   [EVENTS.NEW_SESSION]: NewClient;
@@ -506,10 +506,14 @@ export class Account extends TypedEventEmitter<Events> {
    * Will logout the current user
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
-  public async logout(clearData: boolean = false): Promise<void> {
+  public async logout(data?: {clearAllData?: boolean; clearCryptoData?: boolean}): Promise<void> {
     this.db?.close();
     this.encryptedDb?.close();
-    if (clearData) {
+    if (data?.clearCryptoData) {
+      await this.encryptedDb?.wipe();
+      await this.service?.client.deleteLocalClient();
+    }
+    if (data?.clearAllData) {
       await this.wipe();
     }
     await this.apiClient.logout();

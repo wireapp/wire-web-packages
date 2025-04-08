@@ -32,7 +32,7 @@ import {APIClient} from '@wireapp/api-client';
 import {Ciphersuite, CommitBundle, CoreCrypto, DecryptedMessage} from '@wireapp/core-crypto';
 
 import {CORE_CRYPTO_ERROR_NAMES} from './CoreCryptoMLSError';
-import {InitClientOptions, MLSService} from './MLSService';
+import {InitClientOptions, MLSService, MLSServiceEvents} from './MLSService';
 
 import {AddUsersFailure, AddUsersFailureReasons} from '../../../conversation';
 import {openDB} from '../../../storage/CoreDB';
@@ -616,7 +616,10 @@ describe('MLSService', () => {
 
       await mlsService.handleMLSMessageAddEvent(mockedMLSWelcomeEvent, getGroupIdFromConversationId);
       expect(mockCoreCrypto.transaction).toHaveBeenCalled();
-      expect(mlsService.emit).toHaveBeenCalledWith('newEpoch', {epoch: mockedNewEpoch, groupId: mockGroupId});
+      expect(mlsService.emit).toHaveBeenCalledWith(MLSServiceEvents.NEW_EPOCH, {
+        epoch: mockedNewEpoch,
+        groupId: mockGroupId,
+      });
     });
 
     it('handles pending propoals with a delay after decrypting a message', async () => {

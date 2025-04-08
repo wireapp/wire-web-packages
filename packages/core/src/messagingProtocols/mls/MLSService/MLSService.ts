@@ -55,7 +55,12 @@ import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {User} from '../E2EIdentityService';
 import {E2EIServiceInternal, getTokenCallback} from '../E2EIdentityService/E2EIServiceInternal';
-import {getSignatureAlgorithmForCiphersuite, isMLSDevice} from '../E2EIdentityService/Helper';
+import {
+  getMLSDeviceStatus,
+  getSignatureAlgorithmForCiphersuite,
+  isMLSDevice,
+  MLSDeviceStatus,
+} from '../E2EIdentityService/Helper';
 import {handleMLSMessageAdd, handleMLSWelcomeMessage} from '../EventHandler/events';
 import {
   deleteMLSMessagesQueue,
@@ -96,9 +101,16 @@ const defaultConfig = {
   nbKeyPackages: 100,
 };
 
+export enum MLSServiceEvents {
+  NEW_EPOCH = 'newEpoch',
+  MLS_CLIENT_MISMATCH = 'mlsClientMismatch',
+  NEW_CRL_DISTRIBUTION_POINTS = 'newCrlDistributionPoints',
+}
+
 type Events = {
-  newEpoch: {epoch: number; groupId: string};
-  newCrlDistributionPoints: string[];
+  [MLSServiceEvents.NEW_EPOCH]: {epoch: number; groupId: string};
+  [MLSServiceEvents.NEW_CRL_DISTRIBUTION_POINTS]: string[];
+  [MLSServiceEvents.MLS_CLIENT_MISMATCH]: void;
 };
 export class MLSService extends TypedEventEmitter<Events> {
   logger = LogFactory.getLogger('@wireapp/core/MLSService');
@@ -149,7 +161,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     userId: QualifiedId,
     client: RegisteredClient,
     {skipInitIdentity, ...mlsConfig}: InitClientOptions,
-  ) {
+  ): Promise<void> {
     // filter out undefined values from mlsConfig
     const filteredMLSConfig = Object.fromEntries(
       Object.entries(mlsConfig).filter(([_, value]) => value !== undefined),
@@ -173,17 +185,28 @@ export class MLSService extends TypedEventEmitter<Events> {
       userAuthorize: async () => true,
     });
 
-    const isFreshMLSSelfClient = !this.isInitializedMLSClient(client);
-    const shouldinitIdentity = !(isFreshMLSSelfClient && skipInitIdentity);
+    const ccClientSignature = await this.getCCClientSignatureString();
+    const mlsDeviceStatus = getMLSDeviceStatus(client, this.config.defaultCiphersuite, ccClientSignature);
 
-    if (shouldinitIdentity) {
-      // We need to make sure keypackages and public key are uploaded to the backend
-      if (isFreshMLSSelfClient) {
-        await this.uploadMLSPublicKeys(client);
-      }
-      await this.verifyRemoteMLSKeyPackagesAmount(client.id);
-    } else {
-      this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
+    switch (mlsDeviceStatus) {
+      case MLSDeviceStatus.REGISTERED:
+        if (!skipInitIdentity) {
+          await this.verifyRemoteMLSKeyPackagesAmount(client.id);
+        } else {
+          this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
+        }
+        break;
+      case MLSDeviceStatus.MISMATCH:
+        this.logger.error(`Client ${client.id} is registered but with a different signature`);
+        this.emit(MLSServiceEvents.MLS_CLIENT_MISMATCH);
+        break;
+      case MLSDeviceStatus.FRESH:
+        if (!skipInitIdentity) {
+          await this.uploadMLSPublicKeys(client);
+        } else {
+          this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
+        }
+        break;
     }
   }
 
@@ -238,7 +261,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         }
         const newEpoch = await this.getEpoch(groupId);
 
-        this.emit('newEpoch', {epoch: newEpoch, groupId: groupIdStr});
+        this.emit(MLSServiceEvents.NEW_EPOCH, {epoch: newEpoch, groupId: groupIdStr});
         return response;
       } catch (error) {
         if (isExternalCommit) {
@@ -408,7 +431,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   private dispatchNewCrlDistributionPoints(payload: NewCrlDistributionPointsPayload) {
     const {crlNewDistributionPoints} = payload;
     if (crlNewDistributionPoints && crlNewDistributionPoints.length > 0) {
-      this.emit('newCrlDistributionPoints', crlNewDistributionPoints);
+      this.emit(MLSServiceEvents.NEW_CRL_DISTRIBUTION_POINTS, crlNewDistributionPoints);
     }
   }
 
@@ -799,6 +822,12 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.client.getMLSKeyPackageCount(clientId, numberToHex(this.config.defaultCiphersuite));
   }
 
+  private async getCCClientSignatureString() {
+    const credentialType = await this.getCredentialType();
+    const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite, credentialType);
+    return btoa(Converter.arrayBufferViewToBaselineString(publicKey));
+  }
+
   /**
    * Will update the given client on backend with its public key.
    *
@@ -807,13 +836,10 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   private async uploadMLSPublicKeys(client: RegisteredClient) {
     // If we've already updated a client with its public key, there's no need to do it again.
-    const credentialType = await this.getCredentialType();
-    const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite, credentialType);
+    const clientSignature = await this.getCCClientSignatureString();
     return this.apiClient.api.client.putClient(client.id, {
       mls_public_keys: {
-        [getSignatureAlgorithmForCiphersuite(this.config.defaultCiphersuite)]: btoa(
-          Converter.arrayBufferViewToBaselineString(publicKey),
-        ),
+        [getSignatureAlgorithmForCiphersuite(this.config.defaultCiphersuite)]: clientSignature,
       },
     });
   }
