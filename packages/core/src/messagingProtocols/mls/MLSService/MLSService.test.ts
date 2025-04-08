@@ -38,6 +38,12 @@ import {AddUsersFailure, AddUsersFailureReasons} from '../../../conversation';
 import {openDB} from '../../../storage/CoreDB';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
+import * as Helper from '../E2EIdentityService/Helper';
+
+jest.mock('../E2EIdentityService/Helper', () => ({
+  ...jest.requireActual('../E2EIdentityService/Helper'),
+  getMLSDeviceStatus: jest.fn(),
+}));
 
 jest.createMockFromModule('@wireapp/api-client');
 
@@ -457,6 +463,7 @@ describe('MLSService', () => {
       jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValueOnce(mockedClientPublicKey);
       jest.spyOn(apiClient.api.client, 'putClient').mockResolvedValueOnce(undefined);
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(mlsService.config.nbKeyPackages);
+      jest.spyOn(Helper, 'getMLSDeviceStatus').mockReturnValueOnce(Helper.MLSDeviceStatus.FRESH);
 
       await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 
@@ -469,16 +476,19 @@ describe('MLSService', () => {
 
       const mockUserId = {id: 'user-1', domain: 'local.zinfra.io'};
       const mockClientId = 'client-1';
+
       const mockClient = {mls_public_keys: {ed25519: 'key'}, id: mockClientId} as unknown as RegisteredClient;
 
       apiClient.context = {clientType: ClientType.PERMANENT, clientId: mockClientId, userId: ''};
 
       const mockedClientKeyPackages = [new Uint8Array()];
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
+      jest.spyOn(Helper, 'getMLSDeviceStatus').mockReturnValueOnce(Helper.MLSDeviceStatus.REGISTERED);
+      jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
+
       jest
         .spyOn(apiClient.api.client, 'getMLSKeyPackageCount')
         .mockResolvedValueOnce(mlsService['minRequiredKeyPackages'] - 1);
-      jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
 
       await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 

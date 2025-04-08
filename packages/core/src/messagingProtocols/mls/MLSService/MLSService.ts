@@ -822,10 +822,13 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.apiClient.api.client.getMLSKeyPackageCount(clientId, numberToHex(this.config.defaultCiphersuite));
   }
 
-  private async getCCClientSignatureString() {
+  private async getCCClientSignatureString(): Promise<string> {
     const credentialType = await this.getCredentialType();
     const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite, credentialType);
-    return btoa(Converter.arrayBufferViewToBaselineString(publicKey));
+    if (!publicKey) {
+      return '';
+    }
+    return Buffer.from(Converter.arrayBufferViewToBaselineString(publicKey)).toString('base64');
   }
 
   /**
