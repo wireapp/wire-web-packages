@@ -67,7 +67,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **core:** @wireapp/protocol-messaging to @wireapp/protocol-messaging [WPB-16433] ([#6978](https://github.com/wireapp/wire-web-packages/issues/6978)) ([c06b24b](https://github.com/wireapp/wire-web-packages/commit/c06b24b19e69ba04d95884cabbb129dc447437ca))
+* **core:** @wireapp/protocol-messaging to @pydio/protocol-messaging [WPB-16433] ([#6978](https://github.com/wireapp/wire-web-packages/issues/6978)) ([c06b24b](https://github.com/wireapp/wire-web-packages/commit/c06b24b19e69ba04d95884cabbb129dc447437ca))
 
 ## [46.19.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.19.11...@wireapp/core@46.19.12) (2025-03-12)
 
@@ -3026,7 +3026,7 @@ changed the types of conversation and user ids in @wireapp/bot-api MessageHandle
 
 ### BREAKING CHANGES
 
-* To send `lastRead` and `countly` as protobuf message, you now need to provide a `MessageSendingOptions` object as last parameter.
+* To send `lastRead` and `countly` as protobuf message, you now need to provide a `MessageSendingOptions` object as last parameter. 
 
 ```js
 core.service.conversation.sendLastRead(conversation, timestamp, true);
@@ -3078,13 +3078,13 @@ If you were doing
 const account = new Account(apiClient, createStoreEngine);
 ```
 
-Now you need to do
+Now you need to do 
 
 ```js
 const account = new Account(apiClient, {createStore: createStoreEngine});
 ```
 
-- The `login` and `init` function do not take a storage engine parameter anymore. You now need to give a `createStore` function to the constructor in order to give a custom storage engine to the core.
+- The `login` and `init` function do not take a storage engine parameter anymore. You now need to give a `createStore` function to the constructor in order to give a custom storage engine to the core. 
 
 BEFORE
 
@@ -3394,7 +3394,7 @@ Replace `MessageBuilder.createImage({..., imageAsset: asset})` with `MessageBuil
 
 ### BREAKING CHANGES
 
-* **core:** Uploading an asset now return a structure that allow cancelling the upload. Thus instances of `await account.service.asset.uploadAsset(...)` must be replaced by
+* **core:** Uploading an asset now return a structure that allow cancelling the upload. Thus instances of `await account.service.asset.uploadAsset(...)` must be replaced by 
 ```
 const {cancel, response} = await account.service.asset.uploadAsset(...);
 cancel() // This is how you cancel the upload
@@ -7222,7 +7222,7 @@ await account.service.conversation.send(textPayload);
 
 ### BREAKING CHANGES
 
-* **core:** createText() now returns a TextContentBuilder.
+* **core:** createText() now returns a TextContentBuilder. 
 
 <a name="5.9.25"></a>
 ## [5.9.25](https://github.com/wireapp/wire-web-packages/tree/main/packages/core/compare/@wireapp/core@5.9.24...@wireapp/core@5.9.25) (2018-09-12)

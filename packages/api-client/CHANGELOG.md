@@ -91,7 +91,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **core:** @wireapp/protocol-messaging to @wireapp/protocol-messaging [WPB-16433] ([#6978](https://github.com/wireapp/wire-web-packages/issues/6978)) ([c06b24b](https://github.com/wireapp/wire-web-packages/commit/c06b24b19e69ba04d95884cabbb129dc447437ca))
+* **core:** @wireapp/protocol-messaging to @pydio/protocol-messaging [WPB-16433] ([#6978](https://github.com/wireapp/wire-web-packages/issues/6978)) ([c06b24b](https://github.com/wireapp/wire-web-packages/commit/c06b24b19e69ba04d95884cabbb129dc447437ca))
 
 # [27.25.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.24.0...@wireapp/api-client@27.25.0) (2025-03-12)
 
@@ -2070,7 +2070,7 @@ changed the types of conversation and user ids in @wireapp/bot-api MessageHandle
 
 ### BREAKING CHANGES
 
-* **core:** Uploading an asset now return a structure that allow cancelling the upload. Thus instances of `await account.service.asset.uploadAsset(...)` must be replaced by
+* **core:** Uploading an asset now return a structure that allow cancelling the upload. Thus instances of `await account.service.asset.uploadAsset(...)` must be replaced by 
 ```
 const {cancel, response} = await account.service.asset.uploadAsset(...);
 cancel() // This is how you cancel the upload
@@ -2217,7 +2217,7 @@ await response// This will contain the uploaded asset once the upload is done
 
 ### BREAKING CHANGES
 
-* **api-client:** - `getListConversations` is now renamed `getConversationsByQualifiedIds`
+* **api-client:** - `getListConversations` is now renamed `getConversationsByQualifiedIds` 
 - `getRemoteConversations` is now renamed `getConversationList`
 
 ## [13.9.2](https://github.com/wireapp/wire-web-packages/tree/main/packages/api-client/compare/@wireapp/api-client@13.9.1...@wireapp/api-client@13.9.2) (2021-09-29)
