@@ -519,6 +519,12 @@ export class Account extends TypedEventEmitter<Events> {
     this.resetContext();
   }
 
+  private async wipeCommonData(): Promise<void> {
+    await this.service?.client.deleteLocalClient();
+    // needs to be wiped last
+    await this.encryptedDb?.wipe();
+  }
+
   /**
    * Will delete the identity and history of the current user
    */
@@ -527,9 +533,7 @@ export class Account extends TypedEventEmitter<Events> {
     if (this.db) {
       await deleteDB(this.db);
     }
-    await this.service?.client.deleteLocalClient();
-    // needs to be wiped last
-    await this.encryptedDb?.wipe();
+    await this.wipeCommonData();
   }
 
   /**
@@ -541,9 +545,7 @@ export class Account extends TypedEventEmitter<Events> {
     if (this.storeEngine) {
       await deleteIdentity(this.storeEngine, true);
     }
-    await this.service?.client.deleteLocalClient();
-    // needs to be wiped last
-    await this.encryptedDb?.wipe();
+    await this.wipeCommonData();
   }
 
   /**
