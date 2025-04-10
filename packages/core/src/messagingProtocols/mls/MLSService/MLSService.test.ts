@@ -458,12 +458,10 @@ describe('MLSService', () => {
 
       apiClient.context = {clientType: ClientType.PERMANENT, clientId: mockClientId, userId: ''};
 
-      const mockedClientPublicKey = new Uint8Array();
-
-      jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValueOnce(mockedClientPublicKey);
       jest.spyOn(apiClient.api.client, 'putClient').mockResolvedValueOnce(undefined);
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(mlsService.config.nbKeyPackages);
       jest.spyOn(Helper, 'getMLSDeviceStatus').mockReturnValueOnce(Helper.MLSDeviceStatus.FRESH);
+      jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValue(new Uint8Array());
 
       await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 
@@ -483,6 +481,7 @@ describe('MLSService', () => {
 
       const mockedClientKeyPackages = [new Uint8Array()];
       jest.spyOn(coreCrypto, 'clientKeypackages').mockResolvedValueOnce(mockedClientKeyPackages);
+      jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValueOnce(new Uint8Array());
       jest.spyOn(Helper, 'getMLSDeviceStatus').mockReturnValueOnce(Helper.MLSDeviceStatus.REGISTERED);
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages').mockResolvedValueOnce(undefined);
 
@@ -510,6 +509,8 @@ describe('MLSService', () => {
       jest.spyOn(apiClient.api.client, 'getMLSKeyPackageCount').mockResolvedValueOnce(mlsService.config.nbKeyPackages);
       jest.spyOn(apiClient.api.client, 'uploadMLSKeyPackages');
       jest.spyOn(apiClient.api.client, 'putClient');
+
+      jest.spyOn(coreCrypto, 'clientPublicKey').mockResolvedValueOnce(new Uint8Array());
 
       await mlsService.initClient(mockUserId, mockClient, defaultMLSInitConfig);
 

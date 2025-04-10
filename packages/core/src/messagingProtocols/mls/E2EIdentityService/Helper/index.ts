@@ -77,7 +77,7 @@ export const getMLSDeviceStatus = (
   const signatureAlogrithm = getSignatureAlgorithmForCiphersuite(ciphersuite);
   const signature = mls_public_keys[signatureAlogrithm];
 
-  if (!signature) {
+  if (!signature || !existingClientSignature) {
     return MLSDeviceStatus.FRESH;
   }
   if (signature !== existingClientSignature) {

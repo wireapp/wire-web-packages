@@ -26,9 +26,15 @@ const IDENTITY_STORES = ['amplify', 'clients', 'keys', 'prekeys', 'sessions', 'g
  * Will remove any information relative to the client identity.
  * @param storeEngine The engine that currently holds the identity information
  */
-export function deleteIdentity(storeEngine: CRUDEngine): Promise<boolean[]> {
+export function deleteIdentity(storeEngine: CRUDEngine, spareKeys: boolean = false): Promise<boolean[]> {
   return Promise.all(
     //make sure we use enum's lowercase values, not uppercase keys
-    IDENTITY_STORES.map(store => storeEngine.deleteAll(store)),
+
+    IDENTITY_STORES.map(store => {
+      if (store === 'keys' && spareKeys) {
+        return Promise.resolve(true);
+      }
+      return storeEngine.deleteAll(store);
+    }),
   );
 }

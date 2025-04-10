@@ -185,28 +185,33 @@ export class MLSService extends TypedEventEmitter<Events> {
       userAuthorize: async () => true,
     });
 
-    const ccClientSignature = await this.getCCClientSignatureString();
-    const mlsDeviceStatus = getMLSDeviceStatus(client, this.config.defaultCiphersuite, ccClientSignature);
+    try {
+      const ccClientSignature = await this.getCCClientSignatureString();
+      const mlsDeviceStatus = getMLSDeviceStatus(client, this.config.defaultCiphersuite, ccClientSignature);
 
-    switch (mlsDeviceStatus) {
-      case MLSDeviceStatus.REGISTERED:
-        if (!skipInitIdentity) {
-          await this.verifyRemoteMLSKeyPackagesAmount(client.id);
-        } else {
-          this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
-        }
-        break;
-      case MLSDeviceStatus.MISMATCH:
-        this.logger.error(`Client ${client.id} is registered but with a different signature`);
-        this.emit(MLSServiceEvents.MLS_CLIENT_MISMATCH);
-        break;
-      case MLSDeviceStatus.FRESH:
-        if (!skipInitIdentity) {
-          await this.uploadMLSPublicKeys(client);
-        } else {
-          this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
-        }
-        break;
+      switch (mlsDeviceStatus) {
+        case MLSDeviceStatus.REGISTERED:
+          if (!skipInitIdentity) {
+            await this.verifyRemoteMLSKeyPackagesAmount(client.id);
+          } else {
+            this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
+          }
+          break;
+        case MLSDeviceStatus.MISMATCH:
+          this.logger.error(`Client ${client.id} is registered but with a different signature`);
+          this.emit(MLSServiceEvents.MLS_CLIENT_MISMATCH);
+          break;
+        case MLSDeviceStatus.FRESH:
+          if (!skipInitIdentity) {
+            await this.uploadMLSPublicKeys(client);
+          } else {
+            this.logger.info(`Blocked initial key package upload for client ${client.id} as E2EI is enabled`);
+          }
+          break;
+      }
+    } catch (error) {
+      this.logger.error(`Error while initializing client ${client.id}`, error);
+      throw error;
     }
   }
 
@@ -826,9 +831,9 @@ export class MLSService extends TypedEventEmitter<Events> {
     const credentialType = await this.getCredentialType();
     const publicKey = await this.coreCryptoClient.clientPublicKey(this.config.defaultCiphersuite, credentialType);
     if (!publicKey) {
-      return '';
+      throw new Error('No public key found for client');
     }
-    return Buffer.from(Converter.arrayBufferViewToBaselineString(publicKey)).toString('base64');
+    return btoa(Converter.arrayBufferViewToBaselineString(publicKey));
   }
 
   /**
@@ -839,12 +844,17 @@ export class MLSService extends TypedEventEmitter<Events> {
    */
   private async uploadMLSPublicKeys(client: RegisteredClient) {
     // If we've already updated a client with its public key, there's no need to do it again.
-    const clientSignature = await this.getCCClientSignatureString();
-    return this.apiClient.api.client.putClient(client.id, {
-      mls_public_keys: {
-        [getSignatureAlgorithmForCiphersuite(this.config.defaultCiphersuite)]: clientSignature,
-      },
-    });
+    try {
+      const clientSignature = await this.getCCClientSignatureString();
+      return this.apiClient.api.client.putClient(client.id, {
+        mls_public_keys: {
+          [getSignatureAlgorithmForCiphersuite(this.config.defaultCiphersuite)]: clientSignature,
+        },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to upload public keys for client ${client.id}`, error);
+      throw error;
+    }
   }
 
   private async replaceKeyPackages(clientId: string, keyPackages: Uint8Array[]) {

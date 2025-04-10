@@ -64,6 +64,7 @@ import {getTokenCallback} from './messagingProtocols/mls/E2EIdentityService/E2EI
 import {CoreCallbacks, CoreCryptoConfig, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {deleteIdentity} from './messagingProtocols/proteus/ProteusService/identityClearer';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './secretStore/encryptedStore';
 import {generateSecretKey} from './secretStore/secretKeyGenerator';
@@ -509,25 +510,39 @@ export class Account extends TypedEventEmitter<Events> {
   public async logout(data?: {clearAllData?: boolean; clearCryptoData?: boolean}): Promise<void> {
     this.db?.close();
     this.encryptedDb?.close();
-    if (data?.clearCryptoData) {
-      await this.encryptedDb?.wipe();
-      await this.service?.client.deleteLocalClient();
-    }
     if (data?.clearAllData) {
-      await this.wipe();
+      await this.wipeAllData();
+    } else if (data?.clearCryptoData) {
+      await this.wipeCryptoData();
     }
     await this.apiClient.logout();
     this.resetContext();
   }
 
   /**
-   * Will delete the identity of the current user
+   * Will delete the identity and history of the current user
    */
-  private async wipe(): Promise<void> {
+  private async wipeAllData(): Promise<void> {
     await this.service?.proteus.wipe(this.storeEngine);
     if (this.db) {
       await deleteDB(this.db);
     }
+    await this.service?.client.deleteLocalClient();
+    // needs to be wiped last
+    await this.encryptedDb?.wipe();
+  }
+
+  /**
+   * Will delete the cryptography and client of the current user
+   * Will keep the history intact
+   */
+  private async wipeCryptoData(): Promise<void> {
+    await this.service?.proteus.wipe();
+    if (this.storeEngine) {
+      await deleteIdentity(this.storeEngine, true);
+    }
+    await this.service?.client.deleteLocalClient();
+    // needs to be wiped last
     await this.encryptedDb?.wipe();
   }
 
