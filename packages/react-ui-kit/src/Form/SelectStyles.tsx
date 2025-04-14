@@ -72,6 +72,7 @@ export const customStyles = ({
         '&:focus:visible, active': {
           boxShadow: !isSelectDisabled && `0 0 0 1px ${theme.general.primaryColor}`,
         },
+        ...controlCSS,
       },
       '& > div': isGroup(options)
         ? {
