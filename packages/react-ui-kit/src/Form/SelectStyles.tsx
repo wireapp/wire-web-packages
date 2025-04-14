@@ -28,8 +28,8 @@ interface CustomStylesParams {
   theme: Theme;
   markInvalid?: boolean;
   menuPosition?: 'absolute' | 'relative';
-  controlCSS?: CSSObject;
-  containerCSS?: CSSObject;
+  controlCSS: CSSObject;
+  containerCSS: CSSObject;
 }
 
 export const customStyles = ({
@@ -78,7 +78,7 @@ export const customStyles = ({
             display: 'inline',
             position: 'relative',
             top: '-10px',
-            ...(containerCSS && containerCSS),
+            ...containerCSS,
           }
         : {
             padding: 0,
@@ -89,7 +89,7 @@ export const customStyles = ({
               textShadow: '0 0 0 #000',
             },
             position: 'relative',
-            ...(containerCSS && containerCSS),
+            ...containerCSS,
           },
     };
   },
@@ -104,7 +104,7 @@ export const customStyles = ({
       position: 'absolute',
       zIndex: -9999,
     }),
-    ...(controlCSS && controlCSS),
+    ...controlCSS,
   }),
   dropdownIndicator: (provided, selectProps) => {
     const isSelectDisabled = selectProps.isDisabled;
