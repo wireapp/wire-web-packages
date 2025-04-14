@@ -17,6 +17,8 @@
  *
  */
 
+import {CSSObject} from '@emotion/react';
+
 import {inputStyle} from './Input';
 import {isGroup} from './SelectComponents';
 
@@ -26,8 +28,17 @@ interface CustomStylesParams {
   theme: Theme;
   markInvalid?: boolean;
   menuPosition?: 'absolute' | 'relative';
+  controlCSS?: CSSObject;
+  containerCSS?: CSSObject;
 }
-export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolute'}: CustomStylesParams) => ({
+
+export const customStyles = ({
+  theme,
+  markInvalid = false,
+  menuPosition = 'absolute',
+  controlCSS,
+  containerCSS,
+}: CustomStylesParams) => ({
   indicatorSeparator: () => ({
     display: 'none',
   }),
@@ -67,6 +78,7 @@ export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolu
             display: 'inline',
             position: 'relative',
             top: '-10px',
+            ...(containerCSS && containerCSS),
           }
         : {
             padding: 0,
@@ -77,6 +89,7 @@ export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolu
               textShadow: '0 0 0 #000',
             },
             position: 'relative',
+            ...(containerCSS && containerCSS),
           },
     };
   },
@@ -91,6 +104,7 @@ export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolu
       position: 'absolute',
       zIndex: -9999,
     }),
+    ...(controlCSS && controlCSS),
   }),
   dropdownIndicator: (provided, selectProps) => {
     const isSelectDisabled = selectProps.isDisabled;
