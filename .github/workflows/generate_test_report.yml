@@ -57,7 +57,7 @@ jobs:
 
       - name: Install AWS CLI
         run: |
-          awscli --version
+          aws --version
 
       # - name: Upload unit-tests.log to S3
       #   env:
