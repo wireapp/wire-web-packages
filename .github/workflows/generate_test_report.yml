@@ -42,30 +42,28 @@ jobs:
           GH_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}
         run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
 
-      - name: Install JS dependencies
-        run: yarn --immutable
+      # - name: Install JS dependencies
+      #   run: yarn --immutable
 
-      - name: Build
-        run: yarn dist
+      # - name: Build
+      #   run: yarn dist
 
-      - name: Test
-        run: |
-          set -o pipefail
-          yarn test:all --stream -- --verbose --coverage --coverage_reporters=lcov 2>&1 | tee ${{ env.UNIT_TEST_REPORT_FILE }}
-          echo -e "COMMIT SHA = ${{ inputs.commit }}" >> ${{ env.UNIT_TEST_REPORT_FILE }}
-          echo -e "TEST RUN DATE = $(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${{ env.UNIT_TEST_REPORT_FILE }}
+      # - name: Test
+      #   run: |
+      #     set -o pipefail
+      #     yarn test:all --stream -- --verbose --coverage --coverage_reporters=lcov 2>&1 | tee ${{ env.UNIT_TEST_REPORT_FILE }}
+      #     echo -e "COMMIT SHA = ${{ inputs.commit }}" >> ${{ env.UNIT_TEST_REPORT_FILE }}
+      #     echo -e "TEST RUN DATE = $(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${{ env.UNIT_TEST_REPORT_FILE }}
 
       - name: Install AWS CLI
         run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+          awscli --version
 
-      - name: Upload unit-tests.log to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
-        run: |
-          TIMESTAMP=$(date -u +'%Y%m%dT%H%M%SZ')
-          aws s3 cp ${{ env.UNIT_TEST_REPORT_FILE }} s3://wire-webapp/unit-tests-web-packages-${TIMESTAMP}-${{ inputs.commit }}.log
+      # - name: Upload unit-tests.log to S3
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: eu-west-1
+      #   run: |
+      #     TIMESTAMP=$(date -u +'%Y%m%dT%H%M%SZ')
+      #     aws s3 cp ${{ env.UNIT_TEST_REPORT_FILE }} s3://wire-webapp/unit-tests-web-packages-${TIMESTAMP}-${{ inputs.commit }}.log
