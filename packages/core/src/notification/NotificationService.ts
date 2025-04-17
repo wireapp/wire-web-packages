@@ -23,7 +23,7 @@ import {Notification} from '@wireapp/api-client/lib/notification/';
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory, TypedEventEmitter} from '@wireapp/commons';
 import {GenericMessage} from '@wireapp/protocol-messaging';
-import {CRUDEngine, error as StoreEngineError} from '@wireapp/store-engine';
+import {CRUDEngine} from '@wireapp/store-engine';
 
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
@@ -90,13 +90,6 @@ export class NotificationService extends TypedEventEmitter<Events> {
     return this.backend.getAllNotifications(clientId, since, abortController);
   }
 
-  /** Should only be called with a completely new client. */
-  public async initializeNotificationStream(clientId: string): Promise<string> {
-    await this.setLastEventDate(new Date(0));
-    const latestNotification = await this.backend.getLastNotification(clientId);
-    return this.setLastNotificationId(latestNotification);
-  }
-
   public async hasHistory(): Promise<boolean> {
     const notificationEvents = await this.getNotificationEventList();
     return !!notificationEvents.length;
@@ -106,42 +99,12 @@ export class NotificationService extends TypedEventEmitter<Events> {
     return this.database.getNotificationEventList();
   }
 
-  public async setLastEventDate(eventDate: Date): Promise<Date> {
-    let databaseLastEventDate: Date | undefined;
-
-    try {
-      databaseLastEventDate = await this.database.getLastEventDate();
-    } catch (error) {
-      if (
-        error instanceof StoreEngineError.RecordNotFoundError ||
-        (error as Error).constructor.name === StoreEngineError.RecordNotFoundError.name
-      ) {
-        return this.database.createLastEventDate(eventDate);
-      }
-      throw error;
-    }
-
-    if (databaseLastEventDate && eventDate > databaseLastEventDate) {
-      return this.database.updateLastEventDate(eventDate);
-    }
-
-    return databaseLastEventDate;
-  }
-
-  private async setLastNotificationId(lastNotification: Notification): Promise<string> {
-    return this.database.updateLastNotificationId(lastNotification);
-  }
-
   public async processNotificationStream(
     notificationHandler: NotificationHandler,
-    onMissedNotifications: (notificationId: string) => void,
     abortHandler: AbortController,
   ): Promise<{total: number; error: number; success: number}> {
     const lastNotificationId = await this.database.getLastNotificationId();
-    const {notifications, missedNotification} = await this.getAllNotifications(lastNotificationId, abortHandler);
-    if (missedNotification) {
-      onMissedNotifications(missedNotification);
-    }
+    const {notifications} = await this.getAllNotifications(lastNotificationId, abortHandler);
 
     const results = {total: notifications.length, error: 0, success: 0};
     const logMessage =
@@ -224,10 +187,6 @@ export class NotificationService extends TypedEventEmitter<Events> {
         };
         this.emit(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError);
       }
-    }
-    if (!dryRun && !notification.transient) {
-      // keep track of the last handled notification for next time we fetch the notification stream
-      await this.setLastNotificationId(notification);
     }
   }
 

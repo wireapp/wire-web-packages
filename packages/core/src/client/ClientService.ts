@@ -160,7 +160,7 @@ export class ClientService {
 
     const newClient: CreateClientPayload = {
       class: clientInfo.classification,
-      capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT],
+      capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS],
       cookie: clientInfo.cookieLabel,
       label: clientInfo.label,
       lastkey: lastPrekey,

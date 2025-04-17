@@ -85,7 +85,15 @@ export class WebSocketClient extends EventEmitter {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification: Notification = JSON.parse(data);
+      let notification: Notification = JSON.parse(data);
+
+      console.log('[WebSocketClient.ts] przemvs notification', notification);
+
+      if ('data' in notification) {
+        // @ts-ignore
+        notification = notification.data.event;
+      }
+
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
@@ -216,12 +224,22 @@ export class WebSocketClient extends EventEmitter {
     if (!token) {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
-    let url = `${this.baseUrl}/await?access_token=${token}`;
+
+    // Update for API Version >= 8
+    // We are using new endpoint /events instead of /await.
+    // This is a new endpoint. It differs from GET /await because it will work in completely different way.
+    // In theory, it is possible to implement this behaviour in GET /await,
+    // however if we introduce a new endpoint in a new API version,
+    // We can synchronise backend and clients in switching to new way of doing notifications.
+    // const incrementalSynchronizationUrl = this.apiClient.backendFeatures.version >= 8 ? '/v8/events' : '/await';
+    let url = `${this.baseUrl}/v8/events?access_token=${token}`;
+
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user
       url += `&client=${this.clientId}`;
     }
+
     return url;
   }
 }
