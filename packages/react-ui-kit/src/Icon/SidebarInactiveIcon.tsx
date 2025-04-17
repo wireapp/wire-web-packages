@@ -19,7 +19,7 @@
 
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export const SidebarUnactiveIcon = (props: SVGIconProps) => (
+export const SidebarInactiveIcon = (props: SVGIconProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props} fill="none">
     <path
       fillRule="evenodd"
