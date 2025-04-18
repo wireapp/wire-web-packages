@@ -83,7 +83,7 @@ const buttonSecondaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isAc
   };
 };
 
-const buttonTertiaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isActive, group}: ButtonProps<T>) => {
+const buttonTertiaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isActive}: ButtonProps<T>) => {
   const activeStyles = {
     backgroundColor: theme.Button.tertiaryActiveBg,
     color: theme.IconButton.primaryActiveFillColor,
