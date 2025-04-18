@@ -83,7 +83,7 @@ const buttonSecondaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isAc
   };
 };
 
-const buttonTertiaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isActive}: ButtonProps<T>) => {
+const buttonTertiaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isActive, group}: ButtonProps<T>) => {
   const activeStyles = {
     backgroundColor: theme.Button.tertiaryActiveBg,
     color: theme.IconButton.primaryActiveFillColor,
@@ -216,6 +216,7 @@ export const buttonStyle: <T>(theme: Theme, props: ButtonProps<T>) => CSSObject 
     noWrap = true,
     textTransform = 'none',
     truncate = true,
+    group = false,
     ...props
   },
 ) => {
@@ -263,5 +264,16 @@ export const buttonStyle: <T>(theme: Theme, props: ButtonProps<T>) => CSSObject 
     ...(variant === ButtonVariant.QUATERNARY && buttonQuaternaryStyles(props)),
     ...(variant === ButtonVariant.CANCEL && buttonCancelStyles(props)),
     ...(variant === ButtonVariant.SEND && buttonSendStyles(props)),
+
+    ...(group && {
+      borderRadius: '0',
+
+      '&:first-of-type': {
+        borderRadius: '12px 0 0 12px',
+      },
+      '&:last-of-type': {
+        borderRadius: '0 12px 12px 0',
+      },
+    }),
   };
 };
