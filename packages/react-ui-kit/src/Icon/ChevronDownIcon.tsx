@@ -17,10 +17,9 @@
  *
  */
 
-import {ArrowProps} from './ArrowIcon';
-import {SVGIcon} from './SVGIcon';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export const ChevronDownIcon = ({direction = 'right', ...props}: ArrowProps) => (
+export const ChevronDownIcon = (props: SVGIconProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props}>
     <path
       fillRule="evenodd"
