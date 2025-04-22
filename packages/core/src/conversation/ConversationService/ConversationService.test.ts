@@ -17,7 +17,6 @@
  *
  */
 
-import {GenericMessage} from '@pydio/protocol-messaging';
 import {ClientClassification, ClientType} from '@wireapp/api-client/lib/client';
 import {
   Conversation,
@@ -36,6 +35,7 @@ import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 
 import {APIClient} from '@wireapp/api-client';
+import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {AddUsersFailure, AddUsersFailureReasons, ConversationService, MessageSendingState} from '..';
 import {MLSService} from '../../messagingProtocols/mls';
@@ -711,10 +711,6 @@ describe('ConversationService', () => {
         users: [otherUsersToAdd[1]],
         backends: [otherUsersToAdd[1].domain],
       };
-      const mlsFailure: AddUsersFailure = {
-        reason: AddUsersFailureReasons.NOT_MLS_CAPABLE,
-        users: [otherUsersToAdd[2]],
-      };
 
       jest.spyOn(apiClient.api.user, 'getUserSupportedProtocols').mockImplementation(id => {
         if (id === otherUsersToAdd[2]) {
@@ -744,7 +740,7 @@ describe('ConversationService', () => {
         conversationId: mockConversationId,
       });
 
-      expect(failedToAdd).toEqual([keysClaimingFailure, addUsersFailure, mlsFailure]);
+      expect(failedToAdd).toEqual([keysClaimingFailure, addUsersFailure]);
     });
   });
 

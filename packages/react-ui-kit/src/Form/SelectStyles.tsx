@@ -17,6 +17,8 @@
  *
  */
 
+import {CSSObject} from '@emotion/react';
+
 import {inputStyle} from './Input';
 import {isGroup} from './SelectComponents';
 
@@ -26,47 +28,31 @@ interface CustomStylesParams {
   theme: Theme;
   markInvalid?: boolean;
   menuPosition?: 'absolute' | 'relative';
+  controlCSS: CSSObject;
+  containerCSS: CSSObject;
 }
-export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolute'}: CustomStylesParams) => ({
+
+export const customStyles = ({
+  theme,
+  markInvalid = false,
+  menuPosition = 'absolute',
+  controlCSS,
+  containerCSS,
+}: CustomStylesParams) => ({
   indicatorSeparator: () => ({
     display: 'none',
   }),
   indicatorsContainer: provided => ({
     ...provided,
   }),
-  container: (_, {isDisabled, selectProps, options}) => {
-    const {menuIsOpen} = selectProps;
-    const isSelectDisabled = selectProps.isDisabled;
-
+  container: (_, {options}) => {
     return {
-      '& > div > div[class$="-Control"]': {
-        ...inputStyle(theme, {disabled: isSelectDisabled, markInvalid}),
-        borderRadius: 12,
-        minHeight: 48,
-        ...(isDisabled && {
-          backgroundColor: theme.Input.backgroundColorDisabled,
-          color: theme.Select.disabledColor,
-          cursor: 'default',
-        }),
-        ...(markInvalid && {
-          boxShadow: `0 0 0 1px ${theme.general.dangerColor}`,
-        }),
-        ...(menuIsOpen && {
-          boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
-          '&:hover': {
-            boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
-          },
-        }),
-        cursor: !isSelectDisabled && 'pointer',
-        '&:focus:visible, active': {
-          boxShadow: !isSelectDisabled && `0 0 0 1px ${theme.general.primaryColor}`,
-        },
-      },
       '& > div': isGroup(options)
         ? {
             display: 'inline',
             position: 'relative',
             top: '-10px',
+            ...containerCSS,
           }
         : {
             padding: 0,
@@ -77,10 +63,11 @@ export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolu
               textShadow: '0 0 0 #000',
             },
             position: 'relative',
+            ...containerCSS,
           },
     };
   },
-  control: (_provided, {options}) => ({
+  control: (_provided, {isDisabled, selectProps, options}) => ({
     display: 'flex',
     alignItems: 'center',
     appearance: 'none',
@@ -91,6 +78,27 @@ export const customStyles = ({theme, markInvalid = false, menuPosition = 'absolu
       position: 'absolute',
       zIndex: -9999,
     }),
+    ...inputStyle(theme, {disabled: selectProps.isDisabled, markInvalid}),
+    borderRadius: 12,
+    ...(isDisabled && {
+      backgroundColor: theme.Input.backgroundColorDisabled,
+      color: theme.Select.disabledColor,
+      cursor: 'default',
+    }),
+    ...(markInvalid && {
+      boxShadow: `0 0 0 1px ${theme.general.dangerColor}`,
+    }),
+    ...(selectProps.menuIsOpen && {
+      boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+      '&:hover': {
+        boxShadow: `0 0 0 1px ${theme.general.primaryColor}`,
+      },
+    }),
+    cursor: !selectProps.isDisabled && 'pointer',
+    '&:focus:visible, active': {
+      boxShadow: !selectProps.isDisabled && `0 0 0 1px ${theme.general.primaryColor}`,
+    },
+    ...controlCSS,
   }),
   dropdownIndicator: (provided, selectProps) => {
     const isSelectDisabled = selectProps.isDisabled;

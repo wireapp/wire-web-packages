@@ -138,10 +138,13 @@ describe('CellsAPI', () => {
         file: testFile,
       });
 
-      expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
-        Inputs: [{Type: 'LEAF', Locator: {Path: TEST_FILE_PATH, Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
-        FindAvailablePath: true,
-      });
+      expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith(
+        {
+          Inputs: [{Type: 'LEAF', Locator: {Path: TEST_FILE_PATH, Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
+          FindAvailablePath: true,
+        },
+        {abortController: undefined},
+      );
 
       expect(mockStorage.putObject).toHaveBeenCalledWith({
         path: TEST_FILE_PATH,
@@ -151,6 +154,7 @@ describe('CellsAPI', () => {
           'Create-Resource-Uuid': MOCKED_UUID,
           'Create-Version-Id': MOCKED_UUID,
         },
+        abortController: undefined,
       });
     });
 
@@ -260,9 +264,23 @@ describe('CellsAPI', () => {
 
       await cellsAPI.uploadFileDraft({uuid: MOCKED_UUID, versionId: MOCKED_UUID, path: '', file: testFile});
 
-      expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith({
-        Inputs: [{Type: 'LEAF', Locator: {Path: '', Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
-        FindAvailablePath: true,
+      expect(mockNodeServiceApi.createCheck).toHaveBeenCalledWith(
+        {
+          Inputs: [{Type: 'LEAF', Locator: {Path: '', Uuid: MOCKED_UUID}, VersionId: MOCKED_UUID}],
+          FindAvailablePath: true,
+        },
+        {abortControllerntroller: undefined},
+      );
+
+      expect(mockStorage.putObject).toHaveBeenCalledWith({
+        path: '',
+        file: testFile,
+        metadata: {
+          'Draft-Mode': 'true',
+          'Create-Resource-Uuid': MOCKED_UUID,
+          'Create-Version-Id': MOCKED_UUID,
+        },
+        abortController: undefined,
       });
     });
   });
@@ -313,7 +331,7 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.getAllFiles({path: TEST_FILE_PATH});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Path: `${TEST_FILE_PATH}/*`}]},
+        Scope: {Root: {Path: TEST_FILE_PATH}},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -334,7 +352,7 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.getAllFiles({path: TEST_FILE_PATH});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Path: `${TEST_FILE_PATH}/*`}]},
+        Scope: {Root: {Path: TEST_FILE_PATH}},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -359,7 +377,7 @@ describe('CellsAPI', () => {
       });
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Path: `${TEST_FILE_PATH}/*`}]},
+        Scope: {Root: {Path: TEST_FILE_PATH}},
         Flags: ['WithPreSignedURLs'],
         Limit: '5',
         Offset: '10',
@@ -546,7 +564,7 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.lookupFileByPath({path: filePath});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Path: filePath}]},
+        Scope: {Nodes: [{Path: filePath}]},
         Flags: ['WithPreSignedURLs'],
       });
       expect(result).toEqual(mockNode);
@@ -589,7 +607,7 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.lookupFileByUuid({uuid: fileUuid});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Locators: {Many: [{Uuid: fileUuid}]},
+        Scope: {Nodes: [{Uuid: fileUuid}]},
         Flags: ['WithPreSignedURLs'],
       });
       expect(result).toEqual(mockNode);
@@ -796,10 +814,13 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.searchFiles({phrase: searchPhrase});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Query: {FileName: searchPhrase, Type: 'LEAF'},
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}, Type: 'LEAF'},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
     });
@@ -824,10 +845,13 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.searchFiles({phrase: searchPhrase});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Query: {FileName: searchPhrase, Type: 'LEAF'},
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}, Type: 'LEAF'},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
     });
@@ -856,10 +880,13 @@ describe('CellsAPI', () => {
       });
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Query: {FileName: searchPhrase, Type: 'LEAF'},
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}, Type: 'LEAF'},
         Flags: ['WithPreSignedURLs'],
         Limit: '5',
         Offset: '10',
+        SortDirDesc: true,
+        SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
     });
@@ -875,10 +902,13 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.searchFiles({phrase: searchPhrase});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Query: {FileName: searchPhrase, Type: 'LEAF'},
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}, Type: 'LEAF'},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
     });
@@ -903,10 +933,13 @@ describe('CellsAPI', () => {
       const result = await cellsAPI.searchFiles({phrase: searchPhrase});
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
-        Query: {FileName: searchPhrase, Type: 'LEAF'},
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}, Type: 'LEAF'},
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
     });

@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.49.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.48.0...@wireapp/react-ui-kit@9.49.0) (2025-04-18)
+
+### Features
+
+* **react-ui-kit/icon:** chevron and zoom icons ([#7030](https://github.com/wireapp/wire-web-packages/issues/7030)) ([a6e0baa](https://github.com/wireapp/wire-web-packages/commit/a6e0baab808c9cec9fba4a0024ecd677b79c2451))
+
+# [9.48.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.47.0...@wireapp/react-ui-kit@9.48.0) (2025-04-18)
+
+### Features
+
+* **react-ui-kit:** ButtonsGroup ([#7029](https://github.com/wireapp/wire-web-packages/issues/7029)) ([9e378bb](https://github.com/wireapp/wire-web-packages/commit/9e378bb6122d57f90e36fb475e0fb31c6fcac6ab))
+
+# [9.47.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.46.1...@wireapp/react-ui-kit@9.47.0) (2025-04-17)
+
+### Features
+
+* **react-ui-kit/icon:** sidebar icons [WPB-15678] ([#7028](https://github.com/wireapp/wire-web-packages/issues/7028)) ([1e66679](https://github.com/wireapp/wire-web-packages/commit/1e6667963e86e08f848f2da0151e45b45306d77f))
+
+## [9.46.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.46.0...@wireapp/react-ui-kit@9.46.1) (2025-04-15)
+
+### Bug Fixes
+
+* **react-ui-kit/select:** control styles [WPB-16997] ([#7022](https://github.com/wireapp/wire-web-packages/issues/7022)) ([b4940d6](https://github.com/wireapp/wire-web-packages/commit/b4940d6de781b6282f1988429e5fe59c1d49f74f))
+
+# [9.46.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.45.0...@wireapp/react-ui-kit@9.46.0) (2025-04-14)
+
+### Features
+
+* **react-ui-kit:** Update call icon (WPB-16259) ([#7023](https://github.com/wireapp/wire-web-packages/issues/7023)) ([575e776](https://github.com/wireapp/wire-web-packages/commit/575e7764d512eddfceacba307a2f74728eb0007c))
+
+# [9.45.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.44.1...@wireapp/react-ui-kit@9.45.0) (2025-04-14)
+
+### Features
+
+* **react-ui-kit/Select:** add additional css props [WPB-16997] ([#7021](https://github.com/wireapp/wire-web-packages/issues/7021)) ([6caf1e8](https://github.com/wireapp/wire-web-packages/commit/6caf1e8385398d4dbeb6a914ba12c673393fe4c5))
+
 ## [9.44.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.44.0...@wireapp/react-ui-kit@9.44.1) (2025-03-28)
 
 ### Bug Fixes

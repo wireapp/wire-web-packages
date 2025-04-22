@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.46.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.45.0...@wireapp/api-client@27.46.0) (2025-04-22)
+
+### Features
+
+* **react-ui-kit/api-client:** bump cells SDK to alpha10 and re-adapt payloads ([#7031](https://github.com/wireapp/wire-web-packages/issues/7031)) ([4d23313](https://github.com/wireapp/wire-web-packages/commit/4d233138edb903d1f064169b9986c6f76da086c9))
+
+# [27.45.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.44.0...@wireapp/api-client@27.45.0) (2025-04-11)
+
+### Features
+
+* Revert "revert: "feat: include api versioning to endpoints with credentials [WPB-16119] ([#7012](https://github.com/wireapp/wire-web-packages/issues/7012))" ([#7017](https://github.com/wireapp/wire-web-packages/issues/7017))" ([#7020](https://github.com/wireapp/wire-web-packages/issues/7020)) ([4ad2160](https://github.com/wireapp/wire-web-packages/commit/4ad2160886d9be8fc13dffa5a7fe803a439b5593))
+
+# [27.44.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.43.3...@wireapp/api-client@27.44.0) (2025-04-11)
+
+### Features
+
+* **cells:** api search sorting ([#7018](https://github.com/wireapp/wire-web-packages/issues/7018)) ([1250f9c](https://github.com/wireapp/wire-web-packages/commit/1250f9c96efd863f51f3fc65ca9f8a1125277d64))
+
+## [27.43.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.43.2...@wireapp/api-client@27.43.3) (2025-04-11)
+
+### Reverts
+
+* "feat: include api versioning to endpoints with credentials [WPB-16119] ([#7012](https://github.com/wireapp/wire-web-packages/issues/7012))" ([#7017](https://github.com/wireapp/wire-web-packages/issues/7017)) ([0978e39](https://github.com/wireapp/wire-web-packages/commit/0978e39549713646023feb3c1997f21de3cb05fc))
+
+## [27.43.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.43.1...@wireapp/api-client@27.43.2) (2025-04-11)
+
+### Reverts
+
+* "feat(CellsAPI): add sorting parameters to searchFiles() method ([#7013](https://github.com/wireapp/wire-web-packages/issues/7013))" ([#7015](https://github.com/wireapp/wire-web-packages/issues/7015)) ([2007c3e](https://github.com/wireapp/wire-web-packages/commit/2007c3e79ea01866f0c3e65c9c67eefc109c1d1d))
+
+## [27.43.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.43.0...@wireapp/api-client@27.43.1) (2025-04-11)
+
+### Reverts
+
+* "feat(CellsAPI): rename cells search sort param ([#7014](https://github.com/wireapp/wire-web-packages/issues/7014))" ([#7016](https://github.com/wireapp/wire-web-packages/issues/7016)) ([f7e4bec](https://github.com/wireapp/wire-web-packages/commit/f7e4becd9ee2d396dd3e8bd69737c3fe25e20ba9))
+
+# [27.43.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.42.0...@wireapp/api-client@27.43.0) (2025-04-11)
+
+### Features
+
+* **CellsAPI:** rename cells search sort param ([#7014](https://github.com/wireapp/wire-web-packages/issues/7014)) ([20c69b0](https://github.com/wireapp/wire-web-packages/commit/20c69b03c1f771daf6e3acbb4b1aa971171bb13b))
+
+# [27.42.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.41.0...@wireapp/api-client@27.42.0) (2025-04-11)
+
+### Features
+
+* **CellsAPI:** add sorting parameters to searchFiles() method ([#7013](https://github.com/wireapp/wire-web-packages/issues/7013)) ([8d36900](https://github.com/wireapp/wire-web-packages/commit/8d36900240f474638ee58c3e12de10063ddcbafd))
+
+# [27.41.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.40.1...@wireapp/api-client@27.41.0) (2025-04-11)
+
+### Features
+
+* include api versioning to endpoints with credentials [WPB-16119] ([#7012](https://github.com/wireapp/wire-web-packages/issues/7012)) ([39818b5](https://github.com/wireapp/wire-web-packages/commit/39818b5cea41dffea46fa74d8ee046fa5b7e1d12))
+
+## [27.40.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.40.0...@wireapp/api-client@27.40.1) (2025-04-10)
+
+### Bug Fixes
+
+* update DomainRedirectPayload, sync with BE [WPB-14366] ([#7011](https://github.com/wireapp/wire-web-packages/issues/7011)) ([8519f6d](https://github.com/wireapp/wire-web-packages/commit/8519f6df99a0dbdc665e23116a3877b923f9a45d))
+
+# [27.40.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.39.2...@wireapp/api-client@27.40.0) (2025-04-10)
+
+### Features
+
+* **api-client:** upgrade cells-sdk-ts to v0.1.1-alpha09 ([#7010](https://github.com/wireapp/wire-web-packages/issues/7010)) ([4b413f4](https://github.com/wireapp/wire-web-packages/commit/4b413f43f8376a1157abedbd3b949ade94337309))
+
+## [27.39.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.39.1...@wireapp/api-client@27.39.2) (2025-04-08)
+
+### Bug Fixes
+
+* **api-client:** correct typo put conversation ([#7009](https://github.com/wireapp/wire-web-packages/issues/7009)) ([981352f](https://github.com/wireapp/wire-web-packages/commit/981352f782de3733ce1cfd2a2c94fafc8ea5ec30))
+
+## [27.39.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.39.0...@wireapp/api-client@27.39.1) (2025-04-08)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.39.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.38.0...@wireapp/api-client@27.39.0) (2025-04-08)
+
+### Features
+
+* @pydio/protocol-messaging to @wireapp/protocol-messaging [WPB-16845] ([#7004](https://github.com/wireapp/wire-web-packages/issues/7004)) ([df3f0d3](https://github.com/wireapp/wire-web-packages/commit/df3f0d3d807f08ec2da5ffb48e705adec27dc9d5))
+
+# [27.38.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.37.1...@wireapp/api-client@27.38.0) (2025-04-07)
+
+### Features
+
+* **api-client/conversation:** add the cells option ([#7003](https://github.com/wireapp/wire-web-packages/issues/7003)) ([d99e027](https://github.com/wireapp/wire-web-packages/commit/d99e0274ab6ad3fe817c82262ce37accfd8cae7b))
+
+## [27.37.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.37.0...@wireapp/api-client@27.37.1) (2025-04-04)
+
+### Bug Fixes
+
+* **api-client/cells:** change leavePartsOnError to false in S3Service [WPB-16843] ([#7002](https://github.com/wireapp/wire-web-packages/issues/7002)) ([145ed44](https://github.com/wireapp/wire-web-packages/commit/145ed448faad404e87fecc268478a929f57d173b))
+
+# [27.37.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.36.0...@wireapp/api-client@27.37.0) (2025-04-03)
+
+### Features
+
+* add api wrapper for add_permissions update call [WPB-16728] ([#7001](https://github.com/wireapp/wire-web-packages/issues/7001)) ([3ff5ec2](https://github.com/wireapp/wire-web-packages/commit/3ff5ec21dd2443db99dac3f61b176dee7d3c0d85))
+
+# [27.36.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.35.0...@wireapp/api-client@27.36.0) (2025-04-03)
+
+### Features
+
+* **api-client/cells:** add support for abort signal [WPB-16843] ([#7000](https://github.com/wireapp/wire-web-packages/issues/7000)) ([7610a85](https://github.com/wireapp/wire-web-packages/commit/7610a85567e1f689d19869a200c64d704ac5b9ac))
+
+# [27.35.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.34.0...@wireapp/api-client@27.35.0) (2025-04-03)
+
+### Features
+
+* **api-client/cells:** file upload progress [WPB-16866] ([#6999](https://github.com/wireapp/wire-web-packages/issues/6999)) ([13efba5](https://github.com/wireapp/wire-web-packages/commit/13efba5e8a8270fe54dc7be02ddf8b89d6203a07))
+
 # [27.34.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.33.0...@wireapp/api-client@27.34.0) (2025-03-28)
 
 ### Features

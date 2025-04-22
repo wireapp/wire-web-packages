@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,15 @@
  *
  */
 
-import {Availability} from '@wireapp/protocol-messaging';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export type AvailabilityType = Availability.Type;
+export const SidebarActiveIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14 2H2V14H14V2ZM2 0C0.895431 0 0 0.895431 0 2V14C0 15.1046 0.895431 16 2 16H14C15.1046 16 16 15.1046 16 14V2C16 0.895431 15.1046 0 14 0H2Z"
+    />
+    <path d="M2 0H8V16H2V0Z" />
+  </SVGIcon>
+);

@@ -17,13 +17,14 @@
  *
  */
 
-import {GenericMessage, Text} from '@pydio/protocol-messaging';
 import {CONVERSATION_EVENT, ConversationMLSMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
+import {GenericMessage, Text} from '@wireapp/protocol-messaging';
+
 import {handleMLSMessageAdd} from './messageAdd';
 
-import {MLSService} from '../../../MLSService';
+import {MLSService, MLSServiceEvents} from '../../../MLSService';
 
 const mockedMLSService = {
   getGroupIdFromConversationId: jest.fn(),
@@ -114,7 +115,7 @@ describe('handleMLSMessageAdd', () => {
 
     await handleMLSMessageAdd({event, mlsService: mockedMLSService, groupId: mockGroupId});
 
-    expect(mockedMLSService.emit).toHaveBeenCalledWith('newEpoch', {
+    expect(mockedMLSService.emit).toHaveBeenCalledWith(MLSServiceEvents.NEW_EPOCH, {
       groupId: mockGroupId,
       epoch: mockedNewEpoch,
     });

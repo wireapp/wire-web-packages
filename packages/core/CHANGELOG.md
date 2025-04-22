@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [46.23.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.23.0...@wireapp/core@46.23.1) (2025-04-22)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.23.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.9...@wireapp/core@46.23.0) (2025-04-15)
+
+### Features
+
+* **core:** Bump @wireapp/core-crypto from 3.1.0 to 3.1.1 ([#7024](https://github.com/wireapp/wire-web-packages/issues/7024)) ([6b41823](https://github.com/wireapp/wire-web-packages/commit/6b41823ca0e41020aa46a09751434dfd3e3d4ca7))
+
+## [46.22.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.8...@wireapp/core@46.22.9) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.7...@wireapp/core@46.22.8) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.6...@wireapp/core@46.22.7) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.5...@wireapp/core@46.22.6) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.4...@wireapp/core@46.22.5) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.3...@wireapp/core@46.22.4) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.2...@wireapp/core@46.22.3) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.1...@wireapp/core@46.22.2) (2025-04-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.22.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.22.0...@wireapp/core@46.22.1) (2025-04-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.22.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.5...@wireapp/core@46.22.0) (2025-04-10)
+
+### Features
+
+* **mls:** detect a client mismatch and emit an specific event [WPB-16934] ([#7007](https://github.com/wireapp/wire-web-packages/issues/7007)) ([f55aaec](https://github.com/wireapp/wire-web-packages/commit/f55aaec584c08bf57612c13e9e5014ad36af0a15))
+
+## [46.21.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.4...@wireapp/core@46.21.5) (2025-04-10)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.21.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.3...@wireapp/core@46.21.4) (2025-04-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.21.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.2...@wireapp/core@46.21.3) (2025-04-08)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.21.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.1...@wireapp/core@46.21.2) (2025-04-08)
+
+### Bug Fixes
+
+* remove additional protocol check while inviting users [WPB-16998] ([#7006](https://github.com/wireapp/wire-web-packages/issues/7006)) ([1a987b7](https://github.com/wireapp/wire-web-packages/commit/1a987b785da2dfc899f3d46905835263bc9e6a8a))
+
+## [46.21.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.21.0...@wireapp/core@46.21.1) (2025-04-08)
+
+### Bug Fixes
+
+* **ConversationService:** correct typo ([#7005](https://github.com/wireapp/wire-web-packages/issues/7005)) ([b72400d](https://github.com/wireapp/wire-web-packages/commit/b72400dde96b8defce439a65712ad6a903b18073))
+
+# [46.21.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.15...@wireapp/core@46.21.0) (2025-04-08)
+
+### Features
+
+* @pydio/protocol-messaging to @wireapp/protocol-messaging [WPB-16845] ([#7004](https://github.com/wireapp/wire-web-packages/issues/7004)) ([df3f0d3](https://github.com/wireapp/wire-web-packages/commit/df3f0d3d807f08ec2da5ffb48e705adec27dc9d5))
+
+## [46.20.15](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.14...@wireapp/core@46.20.15) (2025-04-07)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.14](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.13...@wireapp/core@46.20.14) (2025-04-04)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.13](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.12...@wireapp/core@46.20.13) (2025-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.11...@wireapp/core@46.20.12) (2025-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.20.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.10...@wireapp/core@46.20.11) (2025-04-03)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [46.20.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.20.9...@wireapp/core@46.20.10) (2025-03-28)
 
 **Note:** Version bump only for package @wireapp/core

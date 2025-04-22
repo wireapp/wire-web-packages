@@ -67,6 +67,7 @@ import {
 import {CoreCallbacks, SecretCrypto} from './messagingProtocols/mls/types';
 import {NewClient, ProteusService} from './messagingProtocols/proteus';
 import {CryptoClientType} from './messagingProtocols/proteus/ProteusService/CryptoClient';
+import {deleteIdentity} from './messagingProtocols/proteus/ProteusService/identityClearer';
 import {HandledEventPayload, NotificationService, NotificationSource} from './notification/';
 import {createCustomEncryptedStore, createEncryptedStore, EncryptedStore} from './secretStore/encryptedStore';
 import {generateSecretKey} from './secretStore/secretKeyGenerator';
@@ -77,14 +78,6 @@ import {UserService} from './user/';
 import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
 
 export type ProcessedEventPayload = HandledEventPayload;
-
-export enum EVENTS {
-  /**
-   * event triggered when a message from an unknown client is received.
-   * An unknown client is a client we don't yet have a session with
-   */
-  NEW_SESSION = 'new_session',
-}
 
 export enum ConnectionState {
   /** The websocket is closed and notifications stream is not being processed */
@@ -127,6 +120,14 @@ const coreDefaultClient: ClientInfo = {
   cookieLabel: 'default',
   model: '@wireapp/core',
 };
+
+export enum EVENTS {
+  /**
+   * event triggered when a message from an unknown client is received.
+   * An unknown client is a client we don't yet have a session with
+   */
+  NEW_SESSION = 'new_session',
+}
 
 type Events = {
   [EVENTS.NEW_SESSION]: NewClient;
@@ -510,25 +511,46 @@ export class Account extends TypedEventEmitter<Events> {
    * Will logout the current user
    * @param clearData if set to `true` will completely wipe any database that was created by the Account
    */
-  public async logout(clearData: boolean = false): Promise<void> {
+  public async logout(data?: {clearAllData?: boolean; clearCryptoData?: boolean}): Promise<void> {
     this.db?.close();
     this.encryptedDb?.close();
-    if (clearData) {
-      await this.wipe();
+    if (data?.clearAllData) {
+      await this.wipeAllData();
+    } else if (data?.clearCryptoData) {
+      await this.wipeCryptoData();
     }
     await this.apiClient.logout();
     this.resetContext();
   }
 
+  private async wipeCommonData(): Promise<void> {
+    await this.service?.client.deleteLocalClient();
+    // needs to be wiped last
+    await this.encryptedDb?.wipe();
+  }
+
   /**
-   * Will delete the identity of the current user
+   * Will delete the identity and history of the current user
    */
-  private async wipe(): Promise<void> {
-    await this.service?.proteus.wipe();
+  private async wipeAllData(): Promise<void> {
+    if (this.storeEngine) {
+      await deleteIdentity(this.storeEngine, false);
+    }
     if (this.db) {
       await deleteDB(this.db);
     }
-    await this.encryptedDb?.wipe();
+    await this.wipeCommonData();
+  }
+
+  /**
+   * Will delete the cryptography and client of the current user
+   * Will keep the history intact
+   */
+  private async wipeCryptoData(): Promise<void> {
+    if (this.storeEngine) {
+      await deleteIdentity(this.storeEngine, true);
+    }
+    await this.wipeCommonData();
   }
 
   /**

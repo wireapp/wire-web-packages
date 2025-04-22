@@ -19,6 +19,7 @@
 
 import {
   NodeServiceApi,
+  RestLookupRequest,
   RestCreateCheckResponse,
   RestDeleteVersionResponse,
   RestNode,
@@ -36,9 +37,13 @@ import {S3Service} from './CellsStorage/S3Service';
 import {AccessTokenStore} from '../auth';
 import {HttpClient} from '../http';
 
+export type SortDirection = 'asc' | 'desc';
+
 const CONFIGURATION_ERROR = 'CellsAPI is not initialized. Call initialize() before using any methods.';
 const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
+const DEFAULT_SEARCH_SORT_FIELD = 'mtime';
+const DEFAULT_SEARCH_SORT_DIRECTION: SortDirection = 'desc';
 
 interface CellsConfig {
   pydio: {
@@ -103,12 +108,16 @@ export class CellsAPI {
     path,
     file,
     autoRename = true,
+    progressCallback,
+    abortController,
   }: {
     uuid: string;
     versionId: string;
     path: string;
     file: File;
     autoRename?: boolean;
+    progressCallback?: (progress: number) => void;
+    abortController?: AbortController;
   }): Promise<RestCreateCheckResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -116,10 +125,13 @@ export class CellsAPI {
 
     let filePath = `${path}`.normalize('NFC');
 
-    const result = await this.client.createCheck({
-      Inputs: [{Type: 'LEAF', Locator: {Path: filePath, Uuid: uuid}, VersionId: versionId}],
-      FindAvailablePath: true,
-    });
+    const result = await this.client.createCheck(
+      {
+        Inputs: [{Type: 'LEAF', Locator: {Path: filePath, Uuid: uuid}, VersionId: versionId}],
+        FindAvailablePath: true,
+      },
+      {signal: abortController?.signal},
+    );
 
     if (autoRename && result.data.Results?.length && result.data.Results[0].Exists) {
       filePath = result.data.Results[0].NextPath || filePath;
@@ -131,7 +143,7 @@ export class CellsAPI {
       'Create-Version-Id': versionId,
     };
 
-    await this.storageService.putObject({path: filePath, file, metadata});
+    await this.storageService.putObject({path: filePath, file, metadata, progressCallback, abortController});
 
     return result.data;
   }
@@ -172,7 +184,7 @@ export class CellsAPI {
     }
 
     const result = await this.client.lookup({
-      Locators: {Many: [{Path: path}]},
+      Scope: {Nodes: [{Path: path}]},
       Flags: ['WithPreSignedURLs'],
     });
 
@@ -191,7 +203,7 @@ export class CellsAPI {
     }
 
     const result = await this.client.lookup({
-      Locators: {Many: [{Uuid: uuid}]},
+      Scope: {Nodes: [{Uuid: uuid}]},
       Flags: ['WithPreSignedURLs'],
     });
 
@@ -238,7 +250,7 @@ export class CellsAPI {
     }
 
     const result = await this.client.lookup({
-      Locators: {Many: [{Path: `${path}/*`}]},
+      Scope: {Root: {Path: path}},
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
       Offset: `${offset}`,
@@ -251,21 +263,35 @@ export class CellsAPI {
     phrase,
     limit = DEFAULT_LIMIT,
     offset = DEFAULT_OFFSET,
+    sortBy = DEFAULT_SEARCH_SORT_FIELD,
+    sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
   }: {
     phrase: string;
     limit?: number;
     offset?: number;
+    sortBy?: string;
+    sortDirection?: SortDirection;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.lookup({
-      Query: {FileName: phrase, Type: 'LEAF'},
+    const request: RestLookupRequest = {
+      Scope: {Root: {Path: '/'}, Recursive: true},
+      Filters: {
+        Text: {SearchIn: 'BaseName', Term: phrase},
+        Type: 'LEAF',
+      },
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
       Offset: `${offset}`,
-    });
+    };
+    if (sortBy) {
+      request.SortField = sortBy;
+      request.SortDirDesc = sortDirection === 'desc';
+    }
+
+    const result = await this.client.lookup(request);
 
     return result.data;
   }

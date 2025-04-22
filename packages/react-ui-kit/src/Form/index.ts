@@ -36,3 +36,4 @@ export * from './Switch';
 export * from './TextArea';
 export * from './Tooltip';
 export * from './InputLabel';
+export * from './ButtonsGroup/ButtonsGroup';

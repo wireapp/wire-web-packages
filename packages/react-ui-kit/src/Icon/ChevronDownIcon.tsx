@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,14 @@
  *
  */
 
-import {Availability} from '@wireapp/protocol-messaging';
+import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-export type AvailabilityType = Availability.Type;
+export const ChevronDownIcon = (props: SVGIconProps) => (
+  <SVGIcon realWidth={16} realHeight={16} {...props}>
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M7.99999 12.5711L15.6568 4.91421L14.2426 3.5L7.99999 9.74264L1.75735 3.5L0.34314 4.91421L7.99999 12.5711Z"
+    />
+  </SVGIcon>
+);

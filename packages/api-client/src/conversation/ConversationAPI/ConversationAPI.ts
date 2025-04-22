@@ -17,11 +17,12 @@
  *
  */
 
-import {proteus as ProtobufOTR} from '@pydio/protocol-messaging/web/otr';
 import {chunk} from '@wireapp/commons/lib/util/ArrayUtil';
+import {proteus as ProtobufOTR} from '@wireapp/protocol-messaging/web/otr';
 import {AxiosRequestConfig, isAxiosError} from 'axios';
 
 import {
+  ADD_PERMISSION,
   Conversation,
   ConversationCode,
   ConversationProtocol,
@@ -40,6 +41,7 @@ import {
 import {BackendFeatures} from '../../APIClient';
 import {
   ConversationAccessUpdateEvent,
+  ConversationAddPermissionUpdateEvent,
   ConversationCodeDeleteEvent,
   ConversationCodeUpdateEvent,
   ConversationEvent,
@@ -81,8 +83,9 @@ type ConversationGuestLinkStatus = {status: 'enabled' | 'disabled'};
 
 const apiBreakpoint = {
   version2: 2,
-  // API V7 introduces new endpoints to conversations and users
+  // API V7 and up introduce new endpoints to conversations and users
   version7: 7,
+  version8: 8,
 };
 
 export class ConversationAPI {
@@ -115,6 +118,7 @@ export class ConversationAPI {
     TYPING: 'typing',
     V2: 'v2',
     ONE_2_ONE: 'one2one',
+    ADD_PERMISSION: 'add-permission',
   };
 
   constructor(
@@ -789,13 +793,16 @@ export class ConversationAPI {
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/conversations/updateConversation
    */
   public async putConversation(
-    conversationId: string,
+    conversationId: QualifiedId,
     conversationNameData: ConversationNameUpdateData,
   ): Promise<ConversationRenameEvent> {
     const config: AxiosRequestConfig = {
       data: conversationNameData,
       method: 'put',
-      url: `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId}/${ConversationAPI.URL.NAME}`,
+      url:
+        this.backendFeatures.version >= apiBreakpoint.version8
+          ? `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.NAME}`
+          : `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}/${ConversationAPI.URL.NAME}`,
     };
 
     const response = await this.client.sendJSON<ConversationRenameEvent>(config);
@@ -815,7 +822,10 @@ export class ConversationAPI {
     const config: AxiosRequestConfig = {
       data: messageTimerData,
       method: 'put',
-      url: `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}/${ConversationAPI.URL.MESSAGE_TIMER}`,
+      url:
+        this.backendFeatures.version >= apiBreakpoint.version8
+          ? `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId.domain}/${conversationId.id}/${ConversationAPI.URL.MESSAGE_TIMER}`
+          : `/${ConversationAPI.URL.CONVERSATIONS}/${conversationId.id}/${ConversationAPI.URL.MESSAGE_TIMER}`,
     };
 
     const response = await this.client.sendJSON<ConversationMessageTimerUpdateEvent>(config);
@@ -918,6 +928,28 @@ export class ConversationAPI {
     };
 
     await this.client.sendJSON(config);
+  }
+
+  /**
+   *
+   * Update add_permission for channel.
+   * @param conversationId The Conversation ID
+   * @param addPermission The new add_permission
+   */
+  public async putAddPermission(
+    conversationId: QualifiedId,
+    addPermission: ADD_PERMISSION,
+  ): Promise<ConversationAddPermissionUpdateEvent> {
+    const config: AxiosRequestConfig = {
+      data: {
+        add_permission: addPermission,
+      },
+      method: 'put',
+      url: `${this.generateBaseConversationUrl(conversationId)}/${ConversationAPI.URL.ADD_PERMISSION}`,
+    };
+
+    const response = await this.client.sendJSON<ConversationAddPermissionUpdateEvent>(config);
+    return response.data;
   }
 
   /**

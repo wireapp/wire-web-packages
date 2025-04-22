@@ -17,12 +17,13 @@
  *
  */
 
-import {GenericMessage} from '@pydio/protocol-messaging';
 import {ConversationMLSMessageAddEvent} from '@wireapp/api-client/lib/event';
 import {Decoder} from 'bazinga64';
 
+import {GenericMessage} from '@wireapp/protocol-messaging';
+
 import {HandledEventPayload} from '../../../../../notification';
-import {MLSService, optionalToUint8Array} from '../../../MLSService/MLSService';
+import {MLSService, MLSServiceEvents, optionalToUint8Array} from '../../../MLSService/MLSService';
 
 interface HandleMLSMessageAddParams {
   event: ConversationMLSMessageAddEvent;
@@ -67,7 +68,7 @@ export const handleMLSMessageAdd = async ({
 
   if (hasEpochChanged) {
     const newEpoch = await mlsService.getEpoch(groupId);
-    mlsService.emit('newEpoch', {groupId, epoch: newEpoch});
+    mlsService.emit(MLSServiceEvents.NEW_EPOCH, {groupId, epoch: newEpoch});
   }
 
   return message ? {event, decryptedData: GenericMessage.decode(message)} : null;
