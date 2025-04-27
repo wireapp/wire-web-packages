@@ -42,6 +42,7 @@ export * from './EmojiIcon';
 export * from './ErrorIcon';
 export * from './ExternalLinkIcon';
 export * from './FileIcon';
+export * from './FunnelFilterIcon';
 export * from './GifIcon';
 export * from './GroupIcon';
 export * from './HangupIcon';
