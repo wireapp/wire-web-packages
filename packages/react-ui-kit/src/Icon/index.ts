@@ -83,6 +83,7 @@ export * from './ServicesIcon';
 export * from './SettingsIcon';
 export * from './ShowIcon';
 export * from './SignIcon';
+export * from './SortIcon';
 export * from './SpeakerIcon';
 export * from './StarIcon';
 export * from './TeamIcon';
