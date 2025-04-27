@@ -34,6 +34,7 @@ export * from './CircleCloseIcon';
 export * from './CloseIcon';
 export * from './DeviceIcon';
 export * from './DownloadIcon';
+export * from './DropdownFilledIcon';
 export * from './EditDocumentIcon';
 export * from './EditIcon';
 export * from './EnterIcon';
