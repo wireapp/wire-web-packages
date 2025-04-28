@@ -756,10 +756,17 @@ export class Account extends TypedEventEmitter<Events> {
       return false;
     }
 
+    // Check if the MLS service is initialized and enabled
+    if (this.service?.mls === undefined || this.service?.mls.isEnabled === false) {
+      return false;
+    }
+
     // MLS is enabled for the public via feature flag
     const commonConfig = (await this.service?.team.getCommonFeatureConfig()) ?? {};
     const isMLSForTeamEnabled = commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
+    const selfTeamId = (await this.service?.self.getSelf()).team;
 
-    return isMLSSupported && isMLSForTeamEnabled && isMLSServiceInitialized;
+    // Check if the user is part of a team and if MLS is enabled for teams
+    return selfTeamId !== undefined && isMLSForTeamEnabled;
   }
 }
