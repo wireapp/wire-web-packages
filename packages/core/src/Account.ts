@@ -763,10 +763,9 @@ export class Account extends TypedEventEmitter<Events> {
 
     // MLS is enabled for the public via feature flag
     const commonConfig = (await this.service?.team.getCommonFeatureConfig()) ?? {};
-    const isMLSForTeamEnabled = commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
-    const selfTeamId = (await this.service?.self.getSelf()).team;
+    const isMLSOnServerEnabled = commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
 
     // Check if the user is part of a team and if MLS is enabled for teams
-    return selfTeamId !== undefined && isMLSForTeamEnabled;
+    return isMLSOnServerEnabled;
   }
 }
