@@ -47,6 +47,7 @@ export * from './FunnelFilterIcon';
 export * from './GifIcon';
 export * from './GroupIcon';
 export * from './HangupIcon';
+export * from './HashIcon';
 export * from './HideIcon';
 export * from './ImageIcon';
 export * from './SupportIcon';
