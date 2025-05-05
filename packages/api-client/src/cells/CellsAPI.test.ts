@@ -335,6 +335,8 @@ describe('CellsAPI', () => {
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortField: 'mtime',
+        SortDirDesc: true,
       });
       expect(result).toEqual(mockCollection);
     });
@@ -356,6 +358,8 @@ describe('CellsAPI', () => {
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
+        SortField: 'mtime',
+        SortDirDesc: true,
       });
       expect(result).toEqual(mockCollection);
     });
@@ -381,6 +385,62 @@ describe('CellsAPI', () => {
         Flags: ['WithPreSignedURLs'],
         Limit: '5',
         Offset: '10',
+        SortField: 'mtime',
+        SortDirDesc: true,
+      });
+      expect(result).toEqual(mockCollection);
+    });
+
+    it('respects custom sorting parameters', async () => {
+      const mockCollection: Partial<RestNodeCollection> = {
+        Nodes: [
+          {Path: '/file1.txt', Uuid: 'uuid1'},
+          {Path: '/file2.txt', Uuid: 'uuid2'},
+        ],
+      };
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockCollection as RestNodeCollection));
+
+      const result = await cellsAPI.getAllFiles({
+        path: TEST_FILE_PATH,
+        sortBy: 'name',
+        sortDirection: 'asc',
+      });
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: TEST_FILE_PATH}},
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortField: 'name',
+        SortDirDesc: false,
+      });
+      expect(result).toEqual(mockCollection);
+    });
+
+    it('handles descending sort direction', async () => {
+      const mockCollection: Partial<RestNodeCollection> = {
+        Nodes: [
+          {Path: '/file1.txt', Uuid: 'uuid1'},
+          {Path: '/file2.txt', Uuid: 'uuid2'},
+        ],
+      };
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockCollection as RestNodeCollection));
+
+      const result = await cellsAPI.getAllFiles({
+        path: TEST_FILE_PATH,
+        sortBy: 'size',
+        sortDirection: 'desc',
+      });
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: TEST_FILE_PATH}},
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortField: 'size',
+        SortDirDesc: true,
       });
       expect(result).toEqual(mockCollection);
     });
