@@ -242,7 +242,7 @@ export class E2EIServiceExternal extends TypedEventEmitter<Events> {
    * Both must be registered before the first enrollment.
    */
   private async registerServerCertificates(): Promise<void> {
-    const isRootRegistered = await this.coreCryptoClient.e2eiIsPKIEnvSetup();
+    const isRootRegistered = await this.coreCryptoClient.transaction(cx => cx.e2eiIsPKIEnvSetup());
 
     // Register root certificate if not already registered
     if (!isRootRegistered) {

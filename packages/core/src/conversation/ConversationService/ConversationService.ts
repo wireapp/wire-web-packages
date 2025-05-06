@@ -53,7 +53,6 @@ import {
   AddUsersParams,
   BaseCreateConversationResponse,
   KeyPackageClaimUser,
-  MLSCreateConversationResponse,
   SendMlsMessageParams,
   SendResult,
 } from './ConversationService.types';
@@ -274,7 +273,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     conversationData: NewConversation,
     selfUserId: QualifiedId,
     selfClientId: string,
-  ): Promise<MLSCreateConversationResponse> {
+  ): Promise<BaseCreateConversationResponse> {
     const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
@@ -292,7 +291,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       throw new Error('No group_id found in response which is required for creating MLS conversations.');
     }
 
-    const {events, failures} = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
+    const failures = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
       creator: {
         user: selfUserId,
         client: selfClientId,
@@ -303,7 +302,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
     return {
-      events,
       conversation,
       failedToAdd: failures,
     };
@@ -375,7 +373,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
     return {
       conversation,
-      failedToAdd: [...keysClaimingFailures, ...keysClaimingFailures],
+      failedToAdd: [...keysClaimingFailures],
     };
   }
 

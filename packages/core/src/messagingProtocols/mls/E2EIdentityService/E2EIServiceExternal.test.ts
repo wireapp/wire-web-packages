@@ -41,7 +41,9 @@ async function buildE2EIService(dbName = 'core-test-db') {
   const coreCrypto = {
     getUserIdentities: jest.fn(),
     getClientIds: jest.fn().mockResolvedValue([]),
-    transaction: jest.fn().mockImplementation(() => transactionContext),
+    transaction: jest.fn(fn => {
+      return fn(transactionContext);
+    }),
   } as unknown as jest.Mocked<CoreCrypto>;
   const clientService = {} as jest.Mocked<ClientService>;
 
@@ -245,13 +247,11 @@ describe('E2EIServiceExternal', () => {
     it('registers the server certificates and shedules a timer to refresh intermediate certs every', async () => {
       jest.useFakeTimers();
 
-      const [service, {coreCrypto, transactionContext}] = await buildE2EIService('mockedDB1');
-
-      jest.spyOn(coreCrypto, 'e2eiIsPKIEnvSetup').mockResolvedValueOnce(false);
-
+      const [service, {transactionContext}] = await buildE2EIService('mockedDB1');
+      jest.spyOn(transactionContext, 'e2eiIsPKIEnvSetup').mockResolvedValueOnce(false);
       await service.initialize('https://some.crl.discovery.url');
 
-      expect(transactionContext.e2eiRegisterIntermediateCA).toHaveBeenCalledWith(mockedRootCA);
+      expect(transactionContext.e2eiRegisterAcmeCA).toHaveBeenCalledWith(mockedRootCA);
       expect(transactionContext.e2eiRegisterIntermediateCA).toHaveBeenCalledWith(federatedCerts[0]);
       expect(transactionContext.e2eiRegisterIntermediateCA).toHaveBeenCalledWith(federatedCerts[1]);
       expect(transactionContext.e2eiRegisterIntermediateCA).toHaveBeenCalledTimes(2);
@@ -265,9 +265,9 @@ describe('E2EIServiceExternal', () => {
     it('does not register the root cert if it was already registered', async () => {
       jest.useFakeTimers();
 
-      const [service, {coreCrypto, transactionContext}] = await buildE2EIService('mockedDB2');
+      const [service, {transactionContext}] = await buildE2EIService('mockedDB2');
 
-      jest.spyOn(coreCrypto, 'e2eiIsPKIEnvSetup').mockResolvedValueOnce(true);
+      jest.spyOn(transactionContext, 'e2eiIsPKIEnvSetup').mockResolvedValueOnce(true);
 
       await service.initialize('https://some.crl.discovery.url');
 

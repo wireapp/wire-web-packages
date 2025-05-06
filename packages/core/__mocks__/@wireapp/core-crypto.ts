@@ -73,3 +73,7 @@ export class CoreCrypto {
     return '1.0.0';
   }
 }
+
+export function version() {
+  return '1.0.0';
+}

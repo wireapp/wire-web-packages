@@ -18,7 +18,7 @@
  */
 
 import type {ClaimedKeyPackages, MLSPublicKeyRecord, RegisteredClient} from '@wireapp/api-client/lib/client';
-import {Conversation, PostMlsMessageResponse, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+import {Conversation, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -128,7 +128,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const epochObserver: EpochObserver = {
       epochChanged: async (groupId, epoch) => {
         const groupIdStr = Encoder.toBase64(groupId).asString;
-        this.emit('newEpoch', {epoch, groupId: groupIdStr});
+        this.emit(MLSServiceEvents.NEW_EPOCH, {epoch, groupId: groupIdStr});
       },
     };
 
@@ -461,7 +461,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     groupId: string,
     users: QualifiedId[],
     options?: {creator?: {user: QualifiedId; client?: string}; parentGroupId?: string},
-  ): Promise<PostMlsMessageResponse & {failures: AddUsersFailure[]}> {
+  ): Promise<AddUsersFailure[]> {
     await this.registerEmptyConversation(groupId, options?.parentGroupId);
 
     const creator = options?.creator;
@@ -484,10 +484,8 @@ export class MLSService extends TypedEventEmitter<Events> {
       await this.updateKeyingMaterial(groupId);
       await this.scheduleKeyMaterialRenewal(groupId);
 
-      return {failures: keysClaimingFailures};
+      return keysClaimingFailures;
     }
-
-    const response = await this.addUsersToExistingConversation(groupId, keyPackages);
 
     // We schedule a periodic key material renewal
     await this.scheduleKeyMaterialRenewal(groupId);
@@ -496,8 +494,7 @@ export class MLSService extends TypedEventEmitter<Events> {
      * @note If we can't fetch a user's key packages then we can not add them to mls conversation
      * so we're adding them to the list of failed users.
      */
-    response.failures = [...keysClaimingFailures, ...response.failures];
-    return response;
+    return keysClaimingFailures;
   }
 
   /**
@@ -511,7 +508,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     userId: QualifiedId,
     selfUser: {user: QualifiedId; client: string},
     removalKeyFor1to1Signature?: MLSPublicKeyRecord,
-  ): Promise<PostMlsMessageResponse & {failures: AddUsersFailure[]}> {
+  ): Promise<AddUsersFailure[]> {
     try {
       await this.registerEmptyConversation(groupId, undefined, removalKeyFor1to1Signature);
 
@@ -533,16 +530,12 @@ export class MLSService extends TypedEventEmitter<Events> {
         {...selfUser.user, skipOwnClientId: selfUser.client},
       ]);
 
-      const response = await this.addUsersToExistingConversation(groupId, [
-        ...otherUserKeyPackages,
-        ...selfKeyPackages,
-      ]);
+      await this.addUsersToExistingConversation(groupId, [...otherUserKeyPackages, ...selfKeyPackages]);
 
       // We schedule a periodic key material renewal
       await this.scheduleKeyMaterialRenewal(groupId);
 
-      response.failures = [...otherUserKeysClaimingFailures, ...selfKeysClaimingFailures, ...response.failures];
-      return response;
+      return [...otherUserKeysClaimingFailures, ...selfKeysClaimingFailures];
     } catch (error) {
       await this.wipeConversation(groupId);
       throw error;
