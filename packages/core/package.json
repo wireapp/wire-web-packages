@@ -11,7 +11,7 @@
     "./lib/cryptography/AssetCryptography/crypto.node": "./lib/cryptography/AssetCryptography/crypto.browser.js"
   },
   "dependencies": {
-    "@wireapp/api-client": "workspace:^",
+    "@wireapp/api-client": "file:.yalc/@wireapp/api-client",
     "@wireapp/commons": "workspace:^",
     "@wireapp/core-crypto": "3.1.1",
     "@wireapp/cryptobox": "12.8.0",
