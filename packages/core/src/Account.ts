@@ -366,7 +366,9 @@ export class Account extends TypedEventEmitter<Events> {
 
     await this.service.proteus.initClient(this.storeEngine, this.apiClient.context);
 
-    if ((await this.isMLSActiveForClient()) && this.service.mls && mlsConfig) {
+    const mlsActiveForClient = await this.isMLSActiveForClient(true);
+
+    if (mlsActiveForClient && this.service.mls && mlsConfig) {
       const {userId, domain = ''} = this.apiClient.context;
       await this.service.mls.initClient({id: userId, domain}, client, mlsConfig);
       // initialize schedulers for pending mls proposals once client is initialized
@@ -743,7 +745,7 @@ export class Account extends TypedEventEmitter<Events> {
     return this.service?.subconversation.getSubconversationGroupId(conversationId, subconversationId);
   };
 
-  public async isMLSActiveForClient(): Promise<boolean> {
+  public async isMLSActiveForClient(skipMLSServiceCheck = false): Promise<boolean> {
     // MLS service is initialized
     const isMLSServiceInitialized = this.service?.mls !== undefined;
     if (!isMLSServiceInitialized) {
@@ -756,10 +758,18 @@ export class Account extends TypedEventEmitter<Events> {
       return false;
     }
 
+    if (!skipMLSServiceCheck) {
+      // Check if the MLS service is initialized and enabled
+      if (this.service?.mls === undefined || this.service?.mls.isEnabled === false) {
+        return false;
+      }
+    }
+
     // MLS is enabled for the public via feature flag
     const commonConfig = (await this.service?.team.getCommonFeatureConfig()) ?? {};
-    const isMLSForTeamEnabled = commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
+    const isMLSOnServerEnabled = commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
 
-    return isMLSSupported && isMLSForTeamEnabled && isMLSServiceInitialized;
+    // Check if the user is part of a team and if MLS is enabled for teams
+    return isMLSOnServerEnabled;
   }
 }
