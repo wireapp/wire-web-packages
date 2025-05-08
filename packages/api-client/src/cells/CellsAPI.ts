@@ -306,12 +306,20 @@ export class CellsAPI {
     return result.data;
   }
 
-  async createFile({path, uuid, versionId}: {path: string; uuid: string; versionId: string}) {
+  async createFile({
+    path,
+    uuid,
+    versionId,
+  }: {
+    path: string;
+    uuid: string;
+    versionId: string;
+  }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    await this.client.create({
+    const response = await this.client.create({
       Inputs: [
         {
           Type: 'LEAF',
@@ -321,14 +329,16 @@ export class CellsAPI {
         },
       ],
     });
+
+    return response.data;
   }
 
-  async createFolder({path, uuid}: {path: string; uuid: string}) {
+  async createFolder({path, uuid}: {path: string; uuid: string}): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    await this.client.create({
+    const response = await this.client.create({
       Inputs: [
         {
           Type: 'COLLECTION',
@@ -338,6 +348,8 @@ export class CellsAPI {
         },
       ],
     });
+
+    return response.data;
   }
 
   async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
