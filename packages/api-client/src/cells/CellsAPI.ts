@@ -306,6 +306,40 @@ export class CellsAPI {
     return result.data;
   }
 
+  async createFile({path, uuid, versionId}: {path: string; uuid: string; versionId: string}) {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    await this.client.create({
+      Inputs: [
+        {
+          Type: 'LEAF',
+          Locator: {Path: path.normalize('NFC')},
+          ResourceUuid: uuid,
+          VersionId: versionId,
+        },
+      ],
+    });
+  }
+
+  async createFolder({path, uuid}: {path: string; uuid: string}) {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    await this.client.create({
+      Inputs: [
+        {
+          Type: 'COLLECTION',
+          Locator: {Path: path.normalize('NFC')},
+          ResourceUuid: uuid,
+          VersionId: '',
+        },
+      ],
+    });
+  }
+
   async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
