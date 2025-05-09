@@ -380,7 +380,7 @@ describe('ConversationService', () => {
       } as unknown as MLSConversation);
 
       jest.spyOn(mlsService, 'isConversationEstablished').mockResolvedValueOnce(false);
-      jest.spyOn(mlsService, 'joinByExternalCommit').mockResolvedValueOnce({events: [], time: ''});
+      jest.spyOn(mlsService, 'joinByExternalCommit');
 
       const establishedConversation = await conversationService.establishMLS1to1Conversation(
         mockGroupId,
@@ -675,8 +675,7 @@ describe('ConversationService', () => {
         group_id: mockGroupId,
       } as unknown as Conversation);
 
-      const mlsMessage = {events: [], time: '', failures: []};
-      jest.spyOn(mlsService, 'addUsersToExistingConversation').mockResolvedValueOnce(mlsMessage);
+      jest.spyOn(mlsService, 'addUsersToExistingConversation');
 
       await conversationService.addUsersToMLSConversation({
         qualifiedUsers,
@@ -706,11 +705,6 @@ describe('ConversationService', () => {
         reason: AddUsersFailureReasons.OFFLINE_FOR_TOO_LONG,
         users: [otherUsersToAdd[0]],
       };
-      const addUsersFailure: AddUsersFailure = {
-        reason: AddUsersFailureReasons.UNREACHABLE_BACKENDS,
-        users: [otherUsersToAdd[1]],
-        backends: [otherUsersToAdd[1].domain],
-      };
 
       jest.spyOn(apiClient.api.user, 'getUserSupportedProtocols').mockImplementation(id => {
         if (id === otherUsersToAdd[2]) {
@@ -731,8 +725,7 @@ describe('ConversationService', () => {
         group_id: mockGroupId,
       } as unknown as Conversation);
 
-      const mlsMessage = {events: [], time: '', failures: [addUsersFailure]};
-      jest.spyOn(mlsService, 'addUsersToExistingConversation').mockResolvedValueOnce(mlsMessage);
+      jest.spyOn(mlsService, 'addUsersToExistingConversation');
 
       const {failedToAdd} = await conversationService.addUsersToMLSConversation({
         qualifiedUsers,
@@ -740,7 +733,7 @@ describe('ConversationService', () => {
         conversationId: mockConversationId,
       });
 
-      expect(failedToAdd).toEqual([keysClaimingFailure, addUsersFailure]);
+      expect(failedToAdd).toEqual([keysClaimingFailure]);
     });
   });
 

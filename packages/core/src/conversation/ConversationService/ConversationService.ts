@@ -50,10 +50,9 @@ import {LogFactory, TypedEventEmitter} from '@wireapp/commons';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {
-  AddUsersFailure,
   AddUsersParams,
+  BaseCreateConversationResponse,
   KeyPackageClaimUser,
-  MLSCreateConversationResponse,
   SendMlsMessageParams,
   SendResult,
 } from './ConversationService.types';
@@ -274,7 +273,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     conversationData: NewConversation,
     selfUserId: QualifiedId,
     selfClientId: string,
-  ): Promise<MLSCreateConversationResponse> {
+  ): Promise<BaseCreateConversationResponse> {
     const {qualified_users: qualifiedUsers = []} = conversationData;
 
     /**
@@ -292,7 +291,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       throw new Error('No group_id found in response which is required for creating MLS conversations.');
     }
 
-    const {events, failures} = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
+    const failures = await this.mlsService.registerConversation(groupId, qualifiedUsers.concat(selfUserId), {
       creator: {
         user: selfUserId,
         client: selfClientId,
@@ -303,7 +302,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const conversation = await this.apiClient.api.conversation.getConversation(qualifiedId);
 
     return {
-      events,
       conversation,
       failedToAdd: failures,
     };
@@ -363,13 +361,10 @@ export class ConversationService extends TypedEventEmitter<Events> {
     qualifiedUsers,
     groupId,
     conversationId,
-  }: Required<AddUsersParams>): Promise<MLSCreateConversationResponse> {
+  }: Required<AddUsersParams>): Promise<BaseCreateConversationResponse> {
     const {keyPackages, failures: keysClaimingFailures} = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
 
-    const {events, failures} =
-      keyPackages.length > 0
-        ? await this.mlsService.addUsersToExistingConversation(groupId, keyPackages)
-        : {events: [], failures: [] as AddUsersFailure[]};
+    await this.mlsService.addUsersToExistingConversation(groupId, keyPackages);
 
     const conversation = await this.getConversation(conversationId);
 
@@ -377,9 +372,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
     await this.mlsService.resetKeyMaterialRenewal(groupId);
 
     return {
-      events,
       conversation,
-      failedToAdd: [...keysClaimingFailures, ...failures],
+      failedToAdd: [...keysClaimingFailures],
     };
   }
 
@@ -387,24 +381,19 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
     qualifiedUserIds,
-  }: RemoveUsersParams): Promise<MLSCreateConversationResponse> {
+  }: RemoveUsersParams): Promise<Conversation> {
     const clientsToRemove = await this.apiClient.api.user.postListClients({qualified_users: qualifiedUserIds});
 
     const fullyQualifiedClientIds = mapQualifiedUserClientIdsToFullyQualifiedClientIds(
       clientsToRemove.qualified_user_map,
     );
 
-    const messageResponse = await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
+    await this.mlsService.removeClientsFromConversation(groupId, fullyQualifiedClientIds);
 
     //key material gets updated after removing a user from the group, so we can reset last key update time value in the store
     await this.mlsService.resetKeyMaterialRenewal(groupId);
 
-    const conversation = await this.getConversation(conversationId);
-
-    return {
-      events: messageResponse.events,
-      conversation,
-    };
+    return await this.getConversation(conversationId);
   }
 
   public async joinByExternalCommit(conversationId: QualifiedId) {
