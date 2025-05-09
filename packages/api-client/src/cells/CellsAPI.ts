@@ -316,8 +316,8 @@ export class CellsAPI {
   }: {
     path: NonNullable<RestNodeLocator['Path']>;
     uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
-    type: 'LEAF' | 'COLLECTION';
-    versionId?: string;
+    type: RestIncomingNode['Type'];
+    versionId?: RestIncomingNode['VersionId'];
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
