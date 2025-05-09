@@ -308,14 +308,16 @@ export class CellsAPI {
     return result.data;
   }
 
-  async createFile({
+  private async createNode({
     path,
     uuid,
-    versionId,
+    type,
+    versionId = '',
   }: {
     path: NonNullable<RestNodeLocator['Path']>;
     uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
-    versionId: NonNullable<RestIncomingNode['VersionId']>;
+    type: 'LEAF' | 'COLLECTION';
+    versionId?: string;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -324,7 +326,7 @@ export class CellsAPI {
     const response = await this.client.create({
       Inputs: [
         {
-          Type: 'LEAF',
+          Type: type,
           Locator: {Path: path.normalize('NFC')},
           ResourceUuid: uuid,
           VersionId: versionId,
@@ -335,6 +337,23 @@ export class CellsAPI {
     return response.data;
   }
 
+  async createFile({
+    path,
+    uuid,
+    versionId,
+  }: {
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+    versionId: NonNullable<RestIncomingNode['VersionId']>;
+  }): Promise<RestNodeCollection> {
+    return this.createNode({
+      path,
+      uuid,
+      type: 'LEAF',
+      versionId,
+    });
+  }
+
   async createFolder({
     path,
     uuid,
@@ -342,22 +361,11 @@ export class CellsAPI {
     path: NonNullable<RestNodeLocator['Path']>;
     uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
   }): Promise<RestNodeCollection> {
-    if (!this.client || !this.storageService) {
-      throw new Error(CONFIGURATION_ERROR);
-    }
-
-    const response = await this.client.create({
-      Inputs: [
-        {
-          Type: 'COLLECTION',
-          Locator: {Path: path.normalize('NFC')},
-          ResourceUuid: uuid,
-          VersionId: '',
-        },
-      ],
+    return this.createNode({
+      path,
+      uuid,
+      type: 'COLLECTION',
     });
-
-    return response.data;
   }
 
   async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
