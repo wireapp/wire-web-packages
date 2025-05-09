@@ -29,6 +29,8 @@ import {
   RestPublicLinkDeleteSuccess,
   RestShareLink,
   RestVersion,
+  RestIncomingNode,
+  RestNodeLocator,
 } from 'cells-sdk-ts';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
@@ -311,9 +313,9 @@ export class CellsAPI {
     uuid,
     versionId,
   }: {
-    path: string;
-    uuid: string;
-    versionId: string;
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+    versionId: NonNullable<RestIncomingNode['VersionId']>;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -333,7 +335,13 @@ export class CellsAPI {
     return response.data;
   }
 
-  async createFolder({path, uuid}: {path: string; uuid: string}): Promise<RestNodeCollection> {
+  async createFolder({
+    path,
+    uuid,
+  }: {
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+  }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
