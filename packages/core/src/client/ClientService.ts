@@ -82,7 +82,11 @@ export class ClientService {
     if (!localClientId) {
       throw new Error('Trying to delete local client, but local client has not been set');
     }
-    await this.backend.deleteClient(localClientId, password);
+    try {
+      await this.backend.deleteClient(localClientId, password);
+    } catch (error) {
+      this.logger.warn('Failed to delete client on backend', error);
+    }
     return this.database.deleteLocalClient();
   }
 
