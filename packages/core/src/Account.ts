@@ -520,8 +520,6 @@ export class Account extends TypedEventEmitter<Events> {
   }
 
   private async wipeCommonData(): Promise<void> {
-    await this.service?.client.deleteLocalClient();
-    // needs to be wiped last
     await this.encryptedDb?.wipe();
   }
 
