@@ -25,6 +25,10 @@ import {CombainedBreadcrumbs} from './CombainedBreadcrumbs/CombainedBreadcrumbs'
 const DEFAULT_MAX_VISIBLE_BREADCRUMBS = 4;
 
 interface BreadcrumbsProps {
+  /**
+   * Maximum number of items to display before combining middle items into a dropdown.
+   * @default 4
+   */
   maxNotCombinedItems?: number;
 
   items: Array<{name: string}>;
@@ -32,6 +36,16 @@ interface BreadcrumbsProps {
   onItemClick: (item: {name: string}) => void;
 }
 
+/**
+ * A navigation component that displays a hierarchical path of items, allowing users to navigate through different levels.
+ * When the number of items exceeds the maximum visible limit, it combines middle items into a dropdown menu
+ * while keeping the first and last two items visible.
+ *
+ * Example:
+ * ```tsx
+ * <Breadcrumbs items={[{name: 'Home'}, {name: 'Folder'}, {name: 'Subfolder'}]} onItemClick={() => {}} />
+ * ```
+ */
 export const Breadcrumbs = ({
   maxNotCombinedItems = DEFAULT_MAX_VISIBLE_BREADCRUMBS,
   items,
