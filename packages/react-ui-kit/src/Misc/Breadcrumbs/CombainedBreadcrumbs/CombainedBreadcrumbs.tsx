@@ -23,9 +23,10 @@ import {DropdownMenu} from '../../../DropdownMenu';
 
 interface CombainedBreadcrumbsProps {
   items: Array<{name: string}>;
+  onItemClick: (item: {name: string}) => void;
 }
 
-export const CombainedBreadcrumbs = ({items}: CombainedBreadcrumbsProps) => {
+export const CombainedBreadcrumbs = ({items, onItemClick}: CombainedBreadcrumbsProps) => {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -37,7 +38,9 @@ export const CombainedBreadcrumbs = ({items}: CombainedBreadcrumbsProps) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         {items.map(crumb => (
-          <DropdownMenu.Item key={crumb.name}>{crumb.name}</DropdownMenu.Item>
+          <DropdownMenu.Item key={crumb.name} onClick={() => onItemClick(crumb)}>
+            {crumb.name}
+          </DropdownMenu.Item>
         ))}
       </DropdownMenu.Content>
     </DropdownMenu>

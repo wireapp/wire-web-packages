@@ -42,9 +42,9 @@ export const Default: Story = {
         <PlusIcon />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item>Copy</DropdownMenu.Item>
-        <DropdownMenu.Item>Details</DropdownMenu.Item>
-        <DropdownMenu.Item>Delete for me</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Copy</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Details</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Delete for me</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   ),
@@ -57,9 +57,9 @@ export const WithLongItems: Story = {
         <PlusIcon />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item>Copy the detail of this message</DropdownMenu.Item>
-        <DropdownMenu.Item>Contact the sender</DropdownMenu.Item>
-        <DropdownMenu.Item>Delete this message (works only if you are the owner)</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Copy the detail of this message</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Contact the sender</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Delete this message (works only if you are the owner)</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   ),
@@ -79,9 +79,9 @@ export const WithCustomTrigger: Story = {
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item>Copy</DropdownMenu.Item>
-        <DropdownMenu.Item>Details</DropdownMenu.Item>
-        <DropdownMenu.Item>Delete for me</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Copy</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Details</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => {}}>Delete for me</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
   ),

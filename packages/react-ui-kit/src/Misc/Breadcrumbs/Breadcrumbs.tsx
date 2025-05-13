@@ -80,7 +80,7 @@ export const Breadcrumbs = ({
     <ol css={listStyles}>
       <BreadcrumbItem name={firstCrumb.name} isActive={false} onClick={() => onItemClick(firstCrumb)} />
       <BreadcrumbLeaf />
-      <CombainedBreadcrumbs items={middleCrumbs} />
+      <CombainedBreadcrumbs items={middleCrumbs} onItemClick={onItemClick} />
       <BreadcrumbLeaf />
       {lastTwoCrumbs.map((crumb, index) => (
         <>

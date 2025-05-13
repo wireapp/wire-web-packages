@@ -90,9 +90,9 @@ const DropdownMenuContent = ({children}: {children: ReactNode}) => {
 
 DropdownMenu.Content = DropdownMenuContent;
 
-const DropdownMenuItem = ({children}: {children: ReactNode}) => {
+const DropdownMenuItem = ({children, onClick}: {children: ReactNode; onClick: () => void}) => {
   return (
-    <DropdownMenuPrimitive.Item css={itemStyle}>
+    <DropdownMenuPrimitive.Item css={itemStyle} onClick={onClick}>
       <span css={textStyles}>{children}</span>
     </DropdownMenuPrimitive.Item>
   );
