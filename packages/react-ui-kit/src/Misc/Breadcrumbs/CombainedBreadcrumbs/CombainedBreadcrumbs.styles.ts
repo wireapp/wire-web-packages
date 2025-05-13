@@ -19,13 +19,15 @@
 
 import {CSSObject} from '@emotion/react';
 
+import {COLOR_V2} from '../../../Identity/colors-v2';
+
 export const buttonStyles: CSSObject = {
   background: 'none',
   border: 'none',
   padding: '0 8px',
   cursor: 'pointer',
   fontSize: 'var(--font-size-medium)',
-  color: 'var(--gray-70)',
+  color: COLOR_V2.GRAY_70,
 
   '&:hover': {
     color: 'var(--main-color)',
