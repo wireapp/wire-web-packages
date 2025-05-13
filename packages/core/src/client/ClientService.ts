@@ -86,8 +86,9 @@ export class ClientService {
       await this.backend.deleteClient(localClientId, password);
     } catch (error) {
       this.logger.warn('Failed to delete client on backend', error);
+    } finally {
+      return this.database.deleteLocalClient();
     }
-    return this.database.deleteLocalClient();
   }
 
   private async getLocalClient(): Promise<MetaClient | undefined> {
