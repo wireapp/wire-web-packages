@@ -96,7 +96,7 @@ export const contentStyle: CSSObject = {
 };
 
 export const itemStyle: CSSObject = {
-  fontSize: 12,
+  fontSize: '12px',
   fontWeight: 400,
   lineHeight: '2rem',
   padding: '0 8px',
