@@ -28,4 +28,3 @@ export * from './Misc';
 export * from './Modal';
 export * from './Text';
 export * from './mediaQueries';
-export * from './Modal/DropdownMenu';
