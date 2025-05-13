@@ -19,7 +19,7 @@
 
 import {CSSObject, keyframes} from '@emotion/react';
 
-import {ellipsis} from '../util';
+import {ellipsis} from '../../util';
 
 const slideUpAndFade = keyframes`
 	from {

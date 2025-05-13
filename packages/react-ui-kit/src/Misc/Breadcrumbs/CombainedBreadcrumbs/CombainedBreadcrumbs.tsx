@@ -19,7 +19,7 @@
 
 import {buttonStyles} from './CombainedBreadcrumbs.styles';
 
-import {DropdownMenu} from '../../../DropdownMenu';
+import {DropdownMenu} from '../../../Modal/DropdownMenu';
 
 interface CombainedBreadcrumbsProps {
   items: Array<{name: string}>;

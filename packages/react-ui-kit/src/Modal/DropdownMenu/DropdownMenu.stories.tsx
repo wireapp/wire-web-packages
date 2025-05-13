@@ -21,7 +21,7 @@ import {Meta, StoryObj} from '@storybook/react/*';
 
 import {DropdownMenu} from './DropdownMenu';
 
-import {PlusIcon} from '../Icon';
+import {PlusIcon} from '../../Icon';
 
 const meta: Meta<typeof DropdownMenu> = {
   component: DropdownMenu,
