@@ -26,7 +26,7 @@ export const buttonStyles: CSSObject = {
   border: 'none',
   padding: '0 8px',
   cursor: 'pointer',
-  fontSize: 'var(--font-size-medium)',
+  fontSize: '14px',
   color: COLOR_V2.GRAY_70,
 
   '&:hover': {
