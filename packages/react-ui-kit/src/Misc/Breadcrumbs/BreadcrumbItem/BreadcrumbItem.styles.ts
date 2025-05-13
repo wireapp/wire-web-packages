@@ -19,6 +19,8 @@
 
 import {CSSObject} from '@emotion/react';
 
+import {COLOR_V2} from '../../../Identity/colors-v2';
+
 export const listItemStyles: CSSObject = {
   display: 'flex',
   alignItems: 'center',
@@ -31,7 +33,7 @@ export const buttonStyles: CSSObject = {
   padding: '0 8px',
   cursor: 'pointer',
   fontSize: '14px',
-  color: 'var(--gray-70)',
+  color: COLOR_V2.GRAY_70,
 
   '&:hover': {
     color: 'var(--main-color)',
