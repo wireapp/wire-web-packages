@@ -31,9 +31,7 @@ export const BreadcrumbItem = ({name, isActive, onClick}: BreadcrumbItemProps) =
   return (
     <li css={listItemStyles}>
       {isActive ? (
-        <span aria-current="page" css={activeItemStyles}>
-          {name}
-        </span>
+        <span css={activeItemStyles}>{name}</span>
       ) : (
         <button type="button" css={buttonStyles} onClick={onClick}>
           {name}
