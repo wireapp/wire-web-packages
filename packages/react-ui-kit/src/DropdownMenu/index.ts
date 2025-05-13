@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2022 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,4 @@
  *
  */
 
-/// <reference types="@emotion/react/types/css-prop" />
-
-export * from './Form';
-export * from './Icon';
-export * from './Identity';
-export * from './Layout';
-export * from './Menu';
-export * from './Misc';
-export * from './Modal';
-export * from './Text';
-export * from './mediaQueries';
 export * from './DropdownMenu';
