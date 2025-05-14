@@ -22,7 +22,7 @@ import {Encoder} from 'bazinga64';
 import {deleteDB} from 'idb';
 
 import {LogFactory} from '@wireapp/commons';
-import {CoreCrypto, CoreCryptoLogLevel, setLogger, setMaxLogLevel} from '@wireapp/core-crypto';
+import {CoreCrypto, CoreCryptoLogLevel, setLogger, setMaxLogLevel, version as CCVersion} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
@@ -34,10 +34,9 @@ type Config = {
   generateSecretKey: (keyId: string) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
-  wasmFilePath: string;
 };
 
-type ClientConfig = Omit<Config, 'generateSecretKey' | 'wasmFilePath'> & {
+type ClientConfig = Omit<Config, 'generateSecretKey'> & {
   onWipe: () => Promise<void>;
 };
 
@@ -60,7 +59,7 @@ const coreCryptoLogger = {
 
 export async function buildClient(
   storeEngine: CRUDEngine,
-  {wasmFilePath, generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
+  {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
 ): Promise<CoreCryptoWrapper> {
   let key;
   const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
@@ -79,7 +78,6 @@ export async function buildClient(
   const coreCrypto = await CoreCrypto.deferredInit({
     databaseName: coreCryptoDbName,
     key: Encoder.toBase64(key.key).asString,
-    wasmFilePath,
   });
 
   setLogger(coreCryptoLogger);
@@ -94,9 +92,9 @@ export class CoreCryptoWrapper implements CryptoClient {
 
   constructor(
     private readonly coreCrypto: CoreCrypto,
-    private readonly config: ClientConfig,
+    config: ClientConfig,
   ) {
-    this.version = CoreCrypto.version();
+    this.version = CCVersion();
     this.prekeyTracker = new PrekeyTracker(this, config);
   }
 
@@ -105,18 +103,18 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   encrypt(sessions: string[], plainText: Uint8Array) {
-    return this.coreCrypto.proteusEncryptBatched(sessions, plainText);
+    return this.coreCrypto.transaction(cx => cx.proteusEncryptBatched(sessions, plainText));
   }
 
   decrypt(sessionId: string, message: Uint8Array) {
-    return this.coreCrypto.proteusDecrypt(sessionId, message);
+    return this.coreCrypto.transaction(cx => cx.proteusDecrypt(sessionId, message));
   }
 
   init(nbInitialPrekeys?: number) {
     if (nbInitialPrekeys) {
       this.prekeyTracker.setInitialState(nbInitialPrekeys);
     }
-    return this.coreCrypto.proteusInit();
+    return this.coreCrypto.transaction(cx => cx.proteusInit());
   }
 
   async create(nbPrekeys: number, entropy?: Uint8Array) {
@@ -129,7 +127,7 @@ export class CoreCryptoWrapper implements CryptoClient {
       prekeys.push(await this.newPrekey());
     }
 
-    const lastPrekeyBytes = await this.coreCrypto.proteusLastResortPrekey();
+    const lastPrekeyBytes = await this.coreCrypto.transaction(cx => cx.proteusLastResortPrekey());
     const lastPrekey = Encoder.toBase64(lastPrekeyBytes).asString;
 
     const lastPrekeyId = CoreCrypto.proteusLastResortPrekeyId();
@@ -150,11 +148,11 @@ export class CoreCryptoWrapper implements CryptoClient {
 
   async sessionFromMessage(sessionId: string, message: Uint8Array) {
     await this.consumePrekey(); // we need to mark a prekey as consumed since if we create a session from a message, it means the sender has consumed one of our prekeys
-    return this.coreCrypto.proteusSessionFromMessage(sessionId, message);
+    return this.coreCrypto.transaction(cx => cx.proteusSessionFromMessage(sessionId, message));
   }
 
   sessionFromPrekey(sessionId: string, prekey: Uint8Array) {
-    return this.coreCrypto.proteusSessionFromPrekey(sessionId, prekey);
+    return this.coreCrypto.transaction(cx => cx.proteusSessionFromPrekey(sessionId, prekey));
   }
 
   sessionExists(sessionId: string) {
@@ -162,11 +160,11 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   saveSession(sessionId: string) {
-    return this.coreCrypto.proteusSessionSave(sessionId);
+    return this.coreCrypto.transaction(cx => cx.proteusSessionSave(sessionId));
   }
 
   deleteSession(sessionId: string) {
-    return this.coreCrypto.proteusSessionDelete(sessionId);
+    return this.coreCrypto.transaction(cx => cx.proteusSessionDelete(sessionId));
   }
 
   consumePrekey() {
@@ -174,7 +172,7 @@ export class CoreCryptoWrapper implements CryptoClient {
   }
 
   async newPrekey() {
-    const {id, pkb} = await this.coreCrypto.proteusNewPrekeyAuto();
+    const {id, pkb} = await this.coreCrypto.transaction(cx => cx.proteusNewPrekeyAuto());
     return {id, key: Encoder.toBase64(pkb).asString};
   }
 
@@ -185,40 +183,10 @@ export class CoreCryptoWrapper implements CryptoClient {
       200, 16, 166, 184, 70, 21, 81, 43, 80, 21, 231, 182, 142, 51, 220, 131, 162, 11, 255, 162, 74, 78, 162, 95, 156,
       131, 48, 203, 5, 77, 122, 4, 246,
     ];
-    await this.coreCrypto.proteusSessionFromPrekey(sessionId, Uint8Array.from(fakePrekey));
-  }
-
-  async debugResetIdentity() {
-    await this.coreCrypto.wipe();
+    await this.coreCrypto.transaction(cx => cx.proteusSessionFromPrekey(sessionId, Uint8Array.from(fakePrekey)));
   }
 
   async migrateFromCryptobox(dbName: string) {
-    return this.coreCrypto.proteusCryptoboxMigrate(dbName);
-  }
-
-  /**
-   * Will call the callback once corecrypto is ready.
-   * @param callback - Function to be called once corecrypto is ready.
-   * @see https://github.com/wireapp/wire-web-packages/pull/4972
-   */
-  private onReady(callback: () => Promise<void>) {
-    if (!this.coreCrypto.isLocked()) {
-      return callback();
-    }
-
-    return new Promise<void>(resolve => {
-      const intervalId = setInterval(async () => {
-        if (!this.coreCrypto.isLocked()) {
-          clearInterval(intervalId);
-          await callback();
-          return resolve();
-        }
-      }, 100);
-    });
-  }
-
-  async wipe() {
-    await this.config.onWipe();
-    await this.onReady(() => this.coreCrypto.wipe());
+    return this.coreCrypto.transaction(cx => cx.proteusCryptoboxMigrate(dbName));
   }
 }
