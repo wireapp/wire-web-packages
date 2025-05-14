@@ -498,7 +498,7 @@ describe('CellsAPI', () => {
     });
   });
 
-  describe('move', () => {
+  describe('moveNode', () => {
     it('moves a file to the target path', async () => {
       const currentPath = '/current/file.txt';
       const targetPath = '/new-location/file.txt';
@@ -512,7 +512,7 @@ describe('CellsAPI', () => {
 
       mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
 
-      const result = await cellsAPI.move({currentPath, targetPath});
+      const result = await cellsAPI.moveNode({currentPath, targetPath});
 
       expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
         Nodes: [{Path: currentPath}],
@@ -530,7 +530,7 @@ describe('CellsAPI', () => {
 
       mockNodeServiceApi.performAction.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.move({currentPath, targetPath})).rejects.toThrow(errorMessage);
+      await expect(cellsAPI.moveNode({currentPath, targetPath})).rejects.toThrow(errorMessage);
     });
 
     it('handles empty current path', async () => {
@@ -540,7 +540,7 @@ describe('CellsAPI', () => {
 
       mockNodeServiceApi.performAction.mockRejectedValueOnce(new Error(errorMessage));
 
-      await expect(cellsAPI.move({currentPath: emptyCurrentPath, targetPath})).rejects.toThrow(errorMessage);
+      await expect(cellsAPI.moveNode({currentPath: emptyCurrentPath, targetPath})).rejects.toThrow(errorMessage);
     });
 
     it('handles empty target path', async () => {
@@ -556,7 +556,7 @@ describe('CellsAPI', () => {
 
       mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
 
-      const result = await cellsAPI.move({currentPath, targetPath: emptyTargetPath});
+      const result = await cellsAPI.moveNode({currentPath, targetPath: emptyTargetPath});
 
       expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
         Nodes: [{Path: currentPath}],
@@ -580,7 +580,7 @@ describe('CellsAPI', () => {
 
       mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
 
-      const result = await cellsAPI.move({currentPath, targetPath: rootPath});
+      const result = await cellsAPI.moveNode({currentPath, targetPath: rootPath});
 
       expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
         Nodes: [{Path: currentPath}],

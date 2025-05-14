@@ -181,7 +181,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async move({
+  async moveNode({
     currentPath,
     targetPath,
   }: {
