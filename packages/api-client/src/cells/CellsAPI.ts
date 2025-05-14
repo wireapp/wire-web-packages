@@ -238,18 +238,20 @@ export class CellsAPI {
     return result.data;
   }
 
-  async getAllFiles({
+  async getAllNodes({
     path,
     limit = DEFAULT_LIMIT,
     offset = DEFAULT_OFFSET,
     sortBy = DEFAULT_SEARCH_SORT_FIELD,
     sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
+    type,
   }: {
     path: string;
     limit?: number;
     offset?: number;
     sortBy?: string;
     sortDirection?: SortDirection;
+    type?: RestIncomingNode['Type'];
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -267,23 +269,31 @@ export class CellsAPI {
       request.SortDirDesc = sortDirection === 'desc';
     }
 
+    if (type) {
+      request.Filters = {
+        Type: type,
+      };
+    }
+
     const result = await this.client.lookup(request);
 
     return result.data;
   }
 
-  async searchFiles({
+  async searchNodes({
     phrase,
     limit = DEFAULT_LIMIT,
     offset = DEFAULT_OFFSET,
     sortBy = DEFAULT_SEARCH_SORT_FIELD,
     sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
+    type,
   }: {
     phrase: string;
     limit?: number;
     offset?: number;
     sortBy?: string;
     sortDirection?: SortDirection;
+    type?: RestIncomingNode['Type'];
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -298,9 +308,16 @@ export class CellsAPI {
       Limit: `${limit}`,
       Offset: `${offset}`,
     };
+
     if (sortBy) {
       request.SortField = sortBy;
       request.SortDirDesc = sortDirection === 'desc';
+    }
+
+    if (type) {
+      request.Filters = {
+        Type: type,
+      };
     }
 
     const result = await this.client.lookup(request);
