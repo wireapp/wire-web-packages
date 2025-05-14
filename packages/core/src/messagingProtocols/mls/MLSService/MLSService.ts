@@ -18,7 +18,7 @@
  */
 
 import type {ClaimedKeyPackages, MLSPublicKeyRecord, RegisteredClient} from '@wireapp/api-client/lib/client';
-import {Conversation, SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -49,7 +49,11 @@ import {numberToHex} from '../../../util/numberToHex';
 import {RecurringTaskScheduler} from '../../../util/RecurringTaskScheduler';
 import {TaskScheduler} from '../../../util/TaskScheduler';
 import {User} from '../E2EIdentityService';
-import {E2EIServiceInternal, getTokenCallback} from '../E2EIdentityService/E2EIServiceInternal';
+import {
+  E2EIServiceInternal,
+  getAllConversationsCallback,
+  getTokenCallback,
+} from '../E2EIdentityService/E2EIServiceInternal';
 import {
   getMLSDeviceStatus,
   getSignatureAlgorithmForCiphersuite,
@@ -96,12 +100,17 @@ export enum MLSServiceEvents {
   NEW_EPOCH = 'newEpoch',
   MLS_CLIENT_MISMATCH = 'mlsClientMismatch',
   NEW_CRL_DISTRIBUTION_POINTS = 'newCrlDistributionPoints',
+  MLS_EVENT_DISTRIBUTED = 'mlsEventDistributed',
 }
 
 type Events = {
   [MLSServiceEvents.NEW_EPOCH]: {epoch: number; groupId: string};
   [MLSServiceEvents.NEW_CRL_DISTRIBUTION_POINTS]: string[];
   [MLSServiceEvents.MLS_CLIENT_MISMATCH]: void;
+  [MLSServiceEvents.MLS_EVENT_DISTRIBUTED]: {
+    events: any;
+    time: string;
+  };
 };
 export class MLSService extends TypedEventEmitter<Events> {
   logger = LogFactory.getLogger('@wireapp/core/MLSService');
@@ -237,6 +246,10 @@ export class MLSService extends TypedEventEmitter<Events> {
         this.logger.warn(`Failed to send commit bundle to backend`);
         return 'retry';
       }
+
+      const {events, time} = response;
+
+      this.emit(MLSServiceEvents.MLS_EVENT_DISTRIBUTED, {events, time});
 
       return 'success';
     } catch (error) {
@@ -951,7 +964,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     nbPrekeys: number,
     certificateTtl: number,
     getOAuthToken: getTokenCallback,
-    getAllConversations: () => Promise<Conversation[]>,
+    getAllConversations: getAllConversationsCallback,
   ): Promise<void> {
     const isCertificateRenewal = await this.coreCryptoClient.e2eiIsEnabled(this.config.defaultCiphersuite);
     const e2eiServiceInternal = new E2EIServiceInternal(

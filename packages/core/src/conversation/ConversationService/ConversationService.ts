@@ -58,7 +58,7 @@ import {
 } from './ConversationService.types';
 
 import {MessageTimer, MessageSendingState, RemoveUsersParams} from '../../conversation/';
-import {MLSService} from '../../messagingProtocols/mls';
+import {MLSService, MLSServiceEvents} from '../../messagingProtocols/mls';
 import {queueConversationRejoin} from '../../messagingProtocols/mls/conversationRejoinQueue';
 import {
   isCoreCryptoMLSOrphanWelcomeMessageError,
@@ -78,6 +78,7 @@ import {SubconversationService} from '../SubconversationService/SubconversationS
 
 type Events = {
   MLSConversationRecovered: {conversationId: QualifiedId};
+  [MLSServiceEvents.MLS_EVENT_DISTRIBUTED]: {events: any; time: string};
 };
 
 export class ConversationService extends TypedEventEmitter<Events> {
@@ -97,6 +98,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
   ) {
     super();
     this.messageTimer = new MessageTimer();
+
+    if (this._mlsService) {
+      this.mlsService.on(MLSServiceEvents.MLS_EVENT_DISTRIBUTED, data => {
+        this.emit(MLSServiceEvents.MLS_EVENT_DISTRIBUTED, data);
+      });
+    }
   }
 
   get mlsService(): MLSService {

@@ -123,6 +123,7 @@ describe('ConversationService', () => {
     };
 
     const mockedMLSService = {
+      on: jest.fn(),
       encryptMessage: () => {},
       commitPendingProposals: () => Promise.resolve(),
       getEpoch: () => Promise.resolve(),

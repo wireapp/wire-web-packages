@@ -17,8 +17,6 @@
  *
  */
 
-import {Conversation} from '@wireapp/api-client/lib/conversation';
-
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory} from '@wireapp/commons';
 
@@ -37,7 +35,12 @@ import {EnrollmentFlowData, InitialData, UnidentifiedEnrollmentFlowData} from '.
 import {CoreDatabase} from '../../../storage/CoreDB';
 
 export type getTokenCallback = (challengesData?: {challenge: any; keyAuth: string}) => Promise<string | undefined>;
-export type getAllConversationsCallback = () => Promise<Conversation[]>;
+
+export type getAllConversationsCallback = () => Promise<
+  {
+    group_id: string;
+  }[]
+>;
 export class E2EIServiceInternal {
   private readonly logger = LogFactory.getLogger('@wireapp/core/E2EIdentityServiceInternal');
   private acmeService: AcmeService;
