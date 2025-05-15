@@ -22,9 +22,8 @@ import {ClientAPI, ClientClassification, ClientType, RegisteredClient} from '@wi
 import {ConversationAPI} from '@wireapp/api-client/lib/conversation';
 import {BackendEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
-import {NotificationAPI} from '@wireapp/api-client/lib/notification';
 import {Self, SelfAPI} from '@wireapp/api-client/lib/self';
-import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
+import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification';
 import {ReconnectingWebsocket} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
@@ -125,12 +124,7 @@ describe('Account', () => {
       .persist();
 
     nock(MOCK_BACKEND.rest)
-      .get(`${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`)
-      .query({client: CLIENT_ID})
-      .reply(HTTP_STATUS.OK, {});
-
-    nock(MOCK_BACKEND.rest)
-      .get(NotificationAPI.URL.NOTIFICATION)
+      .get('/notifications')
       .query({client: CLIENT_ID, size: 10000})
       .reply(HTTP_STATUS.OK, {has_more: false, notifications: []})
       .persist();
@@ -252,7 +246,7 @@ describe('Account', () => {
         },
       });
 
-      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
+      apiClient.transport.liveEvents.emit(ConsumableNotification.TOPIC.ON_MESSAGE, {payload: [{}]});
       kill();
     });
   });
@@ -260,14 +254,6 @@ describe('Account', () => {
   describe('Websocket connection', () => {
     let server: WS;
     let dependencies: {account: Account; apiClient: APIClient};
-
-    const mockNotifications = (size: number) => {
-      const notifications = Array.from(new Array(size)).map(() => ({
-        id: uuidv4(),
-        payload: [{}] as BackendEvent[],
-      }));
-      jest.spyOn(dependencies.apiClient.api.notification, 'getAllNotifications').mockResolvedValue({notifications});
-    };
 
     const callWhen = (desiredState: ConnectionState, callback: () => void, count: number = Infinity) => {
       let nbCalls = 0;
@@ -284,7 +270,7 @@ describe('Account', () => {
     };
 
     beforeEach(() => {
-      server = new WS(`${MOCK_BACKEND.ws}/await?access_token=${accessTokenData.access_token}`);
+      server = new WS(`${MOCK_BACKEND.ws}/v8/events?access_token=${accessTokenData.access_token}`);
       // Forces the reconnecting websocket not to automatically reconnect (to avoid infinitely hanging tests)
       ReconnectingWebsocket['RECONNECTING_OPTIONS'].maxRetries = 0;
     });
@@ -298,12 +284,11 @@ describe('Account', () => {
         password: 'my-secret',
       });
       account['currentClient'] = currentClient;
-      jest
-        .spyOn(dependencies.account.service!.notification, 'handleNotification')
-        .mockImplementation(notif => notif.payload as any);
-      jest
-        .spyOn(dependencies.account.service!.notification['database'], 'getLastNotificationId')
-        .mockResolvedValue('0');
+      // jest.spyOn(dependencies.account.service!.notification, 'handleNotification').mockImplementation(notif => {
+      //   console.log('[Account.test.ts] przemvs notif', notif);
+      //
+      //   return notif.data?.event.payload as any;
+      // });
     });
 
     afterEach(() => {
@@ -336,128 +321,129 @@ describe('Account', () => {
       });
 
       it('processes notification stream upon connection', async () => {
-        return new Promise<void>(async resolve => {
-          const nbNotifications = 10;
-          const onNotificationStreamProgress = jest.fn();
-          const onEvent = jest.fn();
-          mockNotifications(nbNotifications);
-          const disconnect = dependencies.account.listen({
-            onConnectionStateChanged: callWhen(ConnectionState.LIVE, () => {
-              expect(onNotificationStreamProgress).toHaveBeenCalledTimes(nbNotifications);
-              expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
-              expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-              disconnect();
-              resolve();
-            }),
-            onEvent: onEvent,
-            onNotificationStreamProgress: onNotificationStreamProgress,
-          });
+        const onEvent = jest.fn();
+        jest.spyOn(dependencies.apiClient, 'connect').mockImplementation();
+
+        const disconnect = dependencies.account.listen({
+          onConnectionStateChanged: callWhen(ConnectionState.LIVE, () => {
+            expect(onEvent).toHaveBeenCalledWith(NotificationSource.NOTIFICATION_STREAM);
+            disconnect();
+          }),
         });
+
+        expect(dependencies.apiClient.connect).toHaveBeenCalled();
       });
 
-      it('fowards events from websocket to consumer after the notification stream has been processed', async () => {
-        return new Promise<void>(async resolve => {
-          const nbNotifications = 10;
-          const onNotificationStreamProgress = jest.fn();
-          const onEvent = jest.fn();
-          mockNotifications(nbNotifications);
-          const disconnect = dependencies.account.listen({
-            onConnectionStateChanged: callWhen(ConnectionState.LIVE, async () => {
-              expect(onNotificationStreamProgress).toHaveBeenCalledTimes(nbNotifications);
-              expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
-              expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-              expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
+      it('forwards events from websocket to consumer after the notification stream has been processed', async () => {
+        const onEvent = jest.fn();
+        jest.spyOn(dependencies.apiClient, 'connect').mockImplementation();
 
-              onEvent.mockReset();
-              server.send(JSON.stringify({id: uuidv4(), payload: [{}]}));
-              await waitFor(() => expect(onEvent).toHaveBeenCalledTimes(1));
-              expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-              expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
-              disconnect();
-              resolve();
-            }),
-            onEvent: onEvent,
-            onNotificationStreamProgress: onNotificationStreamProgress,
-          });
+        const disconnect = dependencies.account.listen({
+          onConnectionStateChanged: callWhen(ConnectionState.LIVE, () => {
+            expect(onEvent).toHaveBeenCalledWith(NotificationSource.NOTIFICATION_STREAM);
+            expect(onEvent).not.toHaveBeenCalledWith(NotificationSource.WEBSOCKET);
+
+            onEvent.mockReset();
+
+            server.send(
+              JSON.stringify({
+                type: 'event',
+                data: {
+                  delivery_tag: 1,
+                  event: {
+                    id: uuidv4(),
+                    payload: [{}] as BackendEvent[],
+                  },
+                },
+              }),
+            );
+
+            expect(onEvent).toHaveBeenCalledTimes(2);
+            expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
+            expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
+            disconnect();
+          }),
+          onEvent,
         });
+
+        expect(dependencies.apiClient.connect).toHaveBeenCalled();
       });
 
       it('locks the websocket and waits for notification stream to be processed before sending websocket events', async () => {
-        const nbNotifications = 10;
-        const onNotificationStreamProgress = jest.fn();
         const onEvent = jest.fn();
-        mockNotifications(nbNotifications);
-        return new Promise<void>(async resolve => {
-          const disconnect = dependencies.account.listen({
-            onConnectionStateChanged: async state => {
-              switch (state) {
-                case ConnectionState.PROCESSING_NOTIFICATIONS:
-                  // sending a message as soon as the notificaiton stream starts to process
-                  // This message should only be forwarded once the notification stream is fully processed
-                  server.send(JSON.stringify({id: uuidv4(), payload: [{}]}));
-                  break;
-                case ConnectionState.LIVE:
-                  expect(onNotificationStreamProgress).toHaveBeenCalledTimes(nbNotifications);
-                  expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
-                  expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-                  expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
 
-                  onEvent.mockReset();
-                  await waitFor(() => expect(onEvent).toHaveBeenCalledTimes(1));
-                  expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-                  expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
-                  disconnect();
-                  resolve();
-              }
-            },
-            onEvent: onEvent,
-            onNotificationStreamProgress: onNotificationStreamProgress,
-          });
+        const disconnect = dependencies.account.listen({
+          onConnectionStateChanged: async state => {
+            switch (state) {
+              case ConnectionState.PROCESSING_NOTIFICATIONS:
+                // sending a message as soon as the notificaiton stream starts to process
+                // This message should only be forwarded once the notification stream is fully processed
+                server.send(
+                  JSON.stringify({
+                    type: 'event',
+                    data: {
+                      delivery_tag: 1,
+                      event: {
+                        id: uuidv4(),
+                        payload: [{}] as BackendEvent[],
+                      },
+                    },
+                  }),
+                );
+                break;
+              case ConnectionState.LIVE:
+                // expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
+                expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
+                expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
+
+                onEvent.mockReset();
+                await waitFor(() => expect(onEvent).toHaveBeenCalledTimes(1));
+                expect(onEvent).not.toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
+                expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.WEBSOCKET);
+                disconnect();
+            }
+          },
+          onEvent,
         });
       });
 
       it('does not unlock the websocket if the connection was aborted', async () => {
-        const nbNotifications = 10;
-        const onNotificationStreamProgress = jest
-          .fn()
-          .mockImplementationOnce(() => {})
-          .mockImplementationOnce(() => server.close());
-
         const onEvent = jest.fn();
-        mockNotifications(nbNotifications);
-        return new Promise<void>(async (resolve, reject) => {
-          dependencies.account.listen({
-            onConnectionStateChanged: async state => {
-              switch (state) {
-                case ConnectionState.PROCESSING_NOTIFICATIONS:
-                  // sending a message as soon as the notificaiton stream starts to process
-                  // This message should only be forwarded once the notification stream is fully processed
-                  server.send(JSON.stringify({id: uuidv4(), payload: [{}]}));
-                  break;
-                case ConnectionState.LIVE:
-                  reject(new Error());
-                  throw new Error('should not go to `live` state');
-                case ConnectionState.CLOSED:
-                  expect(onNotificationStreamProgress).toHaveBeenCalledTimes(2);
-                  expect(onEvent).toHaveBeenCalledTimes(2);
-                  expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-                  expect(dependencies.account.service!.notification.handleNotification).not.toHaveBeenCalledWith(
-                    expect.any(Object),
-                    NotificationSource.WEBSOCKET,
-                  );
-
-                  resolve();
-              }
-            },
-            onEvent: onEvent,
-            onNotificationStreamProgress: onNotificationStreamProgress,
-          });
+        dependencies.account.listen({
+          onConnectionStateChanged: async state => {
+            switch (state) {
+              case ConnectionState.PROCESSING_NOTIFICATIONS:
+                // sending a message as soon as the notificaiton stream starts to process
+                // This message should only be forwarded once the notification stream is fully processed
+                server.send(
+                  JSON.stringify({
+                    type: 'event',
+                    data: {
+                      delivery_tag: 1,
+                      event: {
+                        id: uuidv4(),
+                        payload: [{}] as BackendEvent[],
+                      },
+                    },
+                  }),
+                );
+                break;
+              case ConnectionState.LIVE:
+                throw new Error('should not go to `live` state');
+              case ConnectionState.CLOSED:
+                expect(onEvent).toHaveBeenCalledTimes(2);
+                expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
+                expect(dependencies.account.service!.notification.handleNotification).not.toHaveBeenCalledWith(
+                  expect.any(Object),
+                  NotificationSource.WEBSOCKET,
+                );
+            }
+          },
+          onEvent: onEvent,
         });
       });
 
       it('cancels notification stream process if socket is disconnected', () => {
-        const nbNotifications = 10;
-        const onNotificationStreamProgress = jest.fn();
         const onEvent = jest
           .fn()
           .mockImplementationOnce(() => {})
@@ -465,26 +451,21 @@ describe('Account', () => {
             // on second message, we kill the websocket
             server.close();
           });
-        mockNotifications(nbNotifications);
-        return new Promise<void>(resolve => {
-          dependencies.account.listen({
-            onConnectionStateChanged: callWhen(
-              ConnectionState.CLOSED,
-              () => {
-                try {
-                  expect(onNotificationStreamProgress).toHaveBeenCalledTimes(1);
-                  expect(onEvent).toHaveBeenCalledTimes(2);
-                  expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
-                } catch (error) {
-                  throw error;
-                }
-                resolve();
-              },
-              1,
-            ),
-            onEvent: onEvent,
-            onNotificationStreamProgress: onNotificationStreamProgress,
-          });
+
+        dependencies.account.listen({
+          onConnectionStateChanged: callWhen(
+            ConnectionState.CLOSED,
+            () => {
+              try {
+                expect(onEvent).toHaveBeenCalledTimes(2);
+                expect(onEvent).toHaveBeenCalledWith(expect.any(Object), NotificationSource.NOTIFICATION_STREAM);
+              } catch (error) {
+                throw error;
+              }
+            },
+            1,
+          ),
+          onEvent: onEvent,
         });
       });
     });

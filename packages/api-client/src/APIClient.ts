@@ -54,7 +54,8 @@ import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {ServiceProviderAPI} from './serviceProvider';
 import {ServicesAPI} from './services';
-import {OnConnect, WebSocketClient} from './tcp/';
+import {OnConnect} from './tcp/';
+import {ConsumableNotification} from './tcp/ConsumableNotification';
 import {
   FeatureAPI,
   IdentityProviderAPI,
@@ -159,7 +160,10 @@ export class APIClient extends EventEmitter {
   // Configuration
   private readonly accessTokenStore: AccessTokenStore;
   public context?: Context;
-  public transport: {http: HttpClient; ws: WebSocketClient};
+  public transport: {
+    http: HttpClient;
+    liveEvents: ConsumableNotification;
+  };
   public config: Config;
   public backendFeatures: BackendFeatures;
 
@@ -183,7 +187,7 @@ export class APIClient extends EventEmitter {
     this.logger = LogFactory.getLogger('@wireapp/api-client/Client');
 
     const httpClient = new HttpClient(this.config, this.accessTokenStore);
-    const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
+    const consumeLiveEvents = new ConsumableNotification(this.config.urls.ws, httpClient);
 
     const onInvalidCredentials = async (error: InvalidTokenError | MissingCookieError) => {
       try {
@@ -193,19 +197,20 @@ export class APIClient extends EventEmitter {
         this.emit(APIClient.TOPIC.ON_LOGOUT, error);
       }
     };
-    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
+
+    consumeLiveEvents.on(ConsumableNotification.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
     httpClient.on(HttpClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
 
     this.transport = {
       http: httpClient,
-      ws: webSocket,
+      liveEvents: consumeLiveEvents,
     };
     this.backendFeatures = this.computeBackendFeatures(0);
     this.api = this.configureApis(this.backendFeatures);
   }
 
   private configureApis(backendFeatures: BackendFeatures): Apis {
-    this.logger.info('configuring APIs with config', backendFeatures);
+    this.logger.info('Configuring APIs with config', backendFeatures);
 
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
 
@@ -374,8 +379,8 @@ export class APIClient extends EventEmitter {
     delete this.context;
   }
 
-  public connect(onConnect?: OnConnect): WebSocketClient {
-    return this.transport.ws.connect(this.context?.clientId, onConnect);
+  public connect(onConnect?: OnConnect): ConsumableNotification {
+    return this.transport.liveEvents.connect(this.context?.clientId, onConnect);
   }
 
   private async createContext(userId: string, clientType: ClientType): Promise<Context> {
@@ -394,7 +399,7 @@ export class APIClient extends EventEmitter {
   }
 
   public disconnect(reason?: string): void {
-    this.transport.ws.disconnect(reason);
+    this.transport.liveEvents.disconnect(reason);
   }
 
   public get clientId(): string | undefined {

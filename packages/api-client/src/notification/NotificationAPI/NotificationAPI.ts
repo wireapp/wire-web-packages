@@ -32,11 +32,6 @@ type NotificationsReponse = {
 export class NotificationAPI {
   constructor(private readonly client: HttpClient) {}
 
-  public static readonly URL = {
-    LAST: 'last',
-    NOTIFICATION: '/notifications',
-  };
-
   /**
    * Fetch the last notification.
    * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getLastNotification
@@ -47,7 +42,7 @@ export class NotificationAPI {
       params: {
         client: clientId,
       },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`,
+      url: `/notifications/last`,
     };
 
     const response = await this.client.sendJSON<Notification>(config);
@@ -74,7 +69,7 @@ export class NotificationAPI {
         since,
         size,
       },
-      url: NotificationAPI.URL.NOTIFICATION,
+      url: '/notifications',
     };
 
     const response = await this.client.sendJSON<NotificationList>(config, false, abortController);
@@ -175,7 +170,7 @@ export class NotificationAPI {
       params: {
         client: clientId,
       },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${notificationId}`,
+      url: `/notifications/${notificationId}`,
     };
 
     const response = await this.client.sendJSON<Notification>(config);

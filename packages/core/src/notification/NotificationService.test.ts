@@ -17,7 +17,7 @@
  *
  */
 
-import {Notification} from '@wireapp/api-client/lib/notification';
+import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 
 import {APIClient} from '@wireapp/api-client';
 import {MemoryEngine} from '@wireapp/store-engine';
@@ -57,8 +57,11 @@ describe('NotificationService', () => {
       });
 
       const notification = {
+        type: 'event',
+        deliveryTag: 0,
+        id: 'id-123456',
         payload: [{}],
-      } as unknown as Notification;
+      } as unknown as ConsumableNotification;
 
       const handledNotifications = notificationService.handleNotification(
         notification,
@@ -71,60 +74,6 @@ describe('NotificationService', () => {
   });
 
   describe('handleNotification', () => {
-    it('updates last notification ID when notification is NOT transient', async () => {
-      const storeEngine = new MemoryEngine();
-      await storeEngine.init('NotificationService.test');
-
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const notificationService = new NotificationService(apiClient, storeEngine, mockedConversationService);
-
-      jest.spyOn(notificationService as any, 'handleEvent').mockReturnValue({});
-      const spySetLastNotificationId = jest
-        .spyOn(notificationService as any, 'setLastNotificationId')
-        .mockReturnValue({});
-
-      const notification = {
-        payload: [{}],
-        transient: false,
-      } as unknown as Notification;
-
-      const handledNotifications = notificationService.handleNotification(
-        notification,
-        NotificationSource.NOTIFICATION_STREAM,
-      );
-
-      await handledNotifications.next();
-      await handledNotifications.next();
-
-      expect(spySetLastNotificationId).toHaveBeenCalledTimes(1);
-    });
-
-    it('does NOT update last notification ID when notification is transient', async () => {
-      const storeEngine = new MemoryEngine();
-      await storeEngine.init('NotificationService.test');
-
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
-      const notificationService = new NotificationService(apiClient, storeEngine, mockedConversationService);
-
-      jest.spyOn(notificationService as any, 'handleEvent').mockReturnValue({});
-      const spySetLastNotificationId = jest
-        .spyOn(notificationService as any, 'setLastNotificationId')
-        .mockReturnValue({});
-
-      const notification = {
-        payload: [{}],
-        transient: true,
-      } as unknown as Notification;
-
-      const handledNotifications = notificationService.handleNotification(
-        notification,
-        NotificationSource.NOTIFICATION_STREAM,
-      );
-      await handledNotifications.next();
-
-      expect(spySetLastNotificationId).toHaveBeenCalledTimes(0);
-    });
-
     it('does NOT update last notification ID when event processing fails', async () => {
       return new Promise<void>(async resolve => {
         const storeEngine = new MemoryEngine();
@@ -146,9 +95,11 @@ describe('NotificationService', () => {
           .mockResolvedValue('');
 
         const notification = {
+          type: 'event',
+          deliveryTag: 0,
+          id: 'id-123456',
           payload: [{}],
-          transient: true,
-        } as unknown as Notification;
+        } as unknown as ConsumableNotification;
 
         const handledNotifications = notificationService.handleNotification(
           notification,

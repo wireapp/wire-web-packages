@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,17 @@
  *
  */
 
-import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
-
-export enum CoreError {
-  NOTIFICATION_ERROR = 'CoreError.NOTIFICATION_ERROR',
+export interface AcknowledgeEvent {
+  type: AcknowledgeType;
+  data?: AcknowledgeData;
 }
 
-export interface NotificationError {
-  error: Error;
-  notification: ConsumableNotification;
-  type: CoreError.NOTIFICATION_ERROR;
+export interface AcknowledgeData {
+  delivery_tag: number;
+  multiple: boolean;
+}
+
+export enum AcknowledgeType {
+  ACK = 'ack',
+  ACK_FULL_SYNC = 'ack_full_sync',
 }
