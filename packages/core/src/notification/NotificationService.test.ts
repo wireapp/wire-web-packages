@@ -19,19 +19,11 @@
 
 import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 
-import {APIClient} from '@wireapp/api-client';
 import {MemoryEngine} from '@wireapp/store-engine';
 
 import {ConversationService} from '../conversation';
 
 import {NotificationService, NotificationSource} from '.';
-
-const BASE_URL = 'mock-backend.wire.com';
-const MOCK_BACKEND = {
-  name: 'mock',
-  rest: `https://${BASE_URL}`,
-  ws: `wss://${BASE_URL}`,
-};
 
 const mockedConversationService = {} as unknown as ConversationService;
 
@@ -41,9 +33,7 @@ describe('NotificationService', () => {
       const storeEngine = new MemoryEngine();
       await storeEngine.init('NotificationService.test');
 
-      const apiClient = new APIClient({urls: MOCK_BACKEND});
-
-      const notificationService = new NotificationService(apiClient, storeEngine, mockedConversationService);
+      const notificationService = new NotificationService(storeEngine, mockedConversationService);
 
       jest.spyOn(notificationService as any, 'handleEvent').mockImplementation(() => {
         throw new Error('Test error');
@@ -79,8 +69,7 @@ describe('NotificationService', () => {
         const storeEngine = new MemoryEngine();
         await storeEngine.init('NotificationService.test');
 
-        const apiClient = new APIClient({urls: MOCK_BACKEND});
-        const notificationService = new NotificationService(apiClient, storeEngine, mockedConversationService);
+        const notificationService = new NotificationService(storeEngine, mockedConversationService);
         notificationService.on(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError => {
           expect(notificationError.error.message).toBe('Test error');
           resolve();

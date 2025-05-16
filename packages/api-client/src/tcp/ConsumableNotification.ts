@@ -125,7 +125,7 @@ export class ConsumableNotification extends EventEmitter {
         type: AcknowledgeType.ACK,
         data: {
           delivery_tag: notification.deliveryTag,
-          // TODO: Handle multiple events
+          // Note: we can extend this when we want to implement multiple ack at once.
           multiple: false,
         },
       });
