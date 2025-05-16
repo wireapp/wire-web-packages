@@ -24,29 +24,33 @@ import {EventEmitter} from 'events';
 
 import {LogFactory} from '@wireapp/commons';
 
+import {AcknowledgeType} from './AcknowledgeEvent.types';
+import {
+  ConsumableEvent,
+  ConsumableNotification as ConsumableNotificationResponse,
+} from './ConsumableNotification.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
-import {Notification} from '../notification/';
 
-enum TOPIC {
-  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
-  ON_INVALID_TOKEN = 'WebSocketClient.TOPIC.ON_INVALID_TOKEN',
-  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
-  ON_STATE_CHANGE = 'WebSocketClient.TOPIC.ON_STATE_CHANGE',
+export enum TOPIC {
+  ON_ERROR = 'ConsumableNotification.TOPIC.ON_ERROR',
+  ON_INVALID_TOKEN = 'ConsumableNotification.TOPIC.ON_INVALID_TOKEN',
+  ON_MESSAGE = 'ConsumableNotification.TOPIC.ON_MESSAGE',
+  ON_STATE_CHANGE = 'ConsumableNotification.TOPIC.ON_STATE_CHANGE',
 }
 
-export interface WebSocketClient {
+export interface ConsumableNotification {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
-  on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotificationResponse) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
 export type OnConnect = (abortHandler: AbortController) => Promise<void>;
 
-export class WebSocketClient extends EventEmitter {
+export class ConsumableNotification extends EventEmitter {
   private clientId?: string;
   private isRefreshingAccessToken: boolean;
   private readonly baseUrl: string;
@@ -71,28 +75,68 @@ export class WebSocketClient extends EventEmitter {
     this.socket = new ReconnectingWebsocket(this.onReconnect);
     this.websocketState = this.socket.getState();
 
-    this.logger = LogFactory.getLogger('@wireapp/api-client/tcp/WebSocketClient');
+    this.logger = LogFactory.getLogger('@wireapp/api-client/tcp/ConsumableNotification');
   }
 
   private onStateChange(newState: WEBSOCKET_STATE): void {
     if (newState !== this.websocketState) {
       this.websocketState = newState;
-      this.emit(WebSocketClient.TOPIC.ON_STATE_CHANGE, this.websocketState);
+      this.emit(ConsumableNotification.TOPIC.ON_STATE_CHANGE, this.websocketState);
     }
+  }
+
+  public mapFromJSON(json: string): ConsumableNotificationResponse {
+    const data = JSON.parse(json);
+
+    return {
+      type: data.type,
+      ...(data?.data && {
+        deliveryTag: data.data.delivery_tag,
+        id: data.data.event.id,
+        payload: data.data.event.payload,
+      }),
+    };
   }
 
   private readonly onMessage = (data: string) => {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification: Notification = JSON.parse(data);
-      this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
+      const notification = this.mapFromJSON(data);
+      this.emit(ConsumableNotification.TOPIC.ON_MESSAGE, notification);
     }
   };
 
+  acknowledgeEvents(notification: ConsumableNotificationResponse) {
+    if (notification.type === ConsumableEvent.MISSED) {
+      const jsonEvent = JSON.stringify({
+        type: AcknowledgeType.ACK_FULL_SYNC,
+      });
+
+      this.socket.send(jsonEvent);
+    }
+
+    if (notification.type === ConsumableEvent.EVENT) {
+      if (!notification.deliveryTag) {
+        this.logger.warn(`Cannot acknowledge notification. DeliveryTag is missing`);
+      }
+
+      const jsonEvent = JSON.stringify({
+        type: AcknowledgeType.ACK,
+        data: {
+          delivery_tag: notification.deliveryTag,
+          // Note: we can extend this when we want to implement multiple ack at once.
+          multiple: false,
+        },
+      });
+
+      this.socket.send(jsonEvent);
+    }
+  }
+
   private readonly onError = async (error: ErrorEvent) => {
     this.onStateChange(this.socket.getState());
-    this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+    this.emit(ConsumableNotification.TOPIC.ON_ERROR, error);
     await this.refreshAccessToken();
   };
 
@@ -101,7 +145,7 @@ export class WebSocketClient extends EventEmitter {
       // before we try any connection, we first refresh the access token to make sure we will avoid concurrent accessToken refreshes
       await this.refreshAccessToken();
     }
-    return this.buildWebSocketUrl();
+    return this.consumeLiveEvents();
   };
 
   private readonly onOpen = () => {
@@ -126,7 +170,7 @@ export class WebSocketClient extends EventEmitter {
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.
    */
-  public connect(clientId?: string, onConnect?: OnConnect): WebSocketClient {
+  public connect(clientId?: string, onConnect?: OnConnect): ConsumableNotification {
     this.clientId = clientId;
 
     this.onStateChange(WEBSOCKET_STATE.CONNECTING);
@@ -166,9 +210,9 @@ export class WebSocketClient extends EventEmitter {
           `[WebSocket] Cannot renew access token because cookie/token is invalid: ${error.message}`,
           error,
         );
-        this.emit(WebSocketClient.TOPIC.ON_INVALID_TOKEN, error);
+        this.emit(ConsumableNotification.TOPIC.ON_INVALID_TOKEN, error);
       } else {
-        this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
+        this.emit(ConsumableNotification.TOPIC.ON_ERROR, error);
       }
     } finally {
       this.isRefreshingAccessToken = false;
@@ -210,18 +254,19 @@ export class WebSocketClient extends EventEmitter {
     return this.isSocketLocked;
   }
 
-  private buildWebSocketUrl(): string {
+  private consumeLiveEvents(): string {
     const store = this.client.accessTokenStore.accessToken;
-    const token = store && store.access_token ? store.access_token : '';
+    const token = store?.access_token ?? '';
     if (!token) {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
-    let url = `${this.baseUrl}/await?access_token=${token}`;
+
+    let url = `${this.baseUrl}/v8/events?access_token=${token}`;
+
     if (this.clientId) {
-      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
-      // of the connected user
       url += `&client=${this.clientId}`;
     }
+
     return url;
   }
 }

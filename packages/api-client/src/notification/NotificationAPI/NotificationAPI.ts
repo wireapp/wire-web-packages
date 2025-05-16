@@ -32,28 +32,6 @@ type NotificationsReponse = {
 export class NotificationAPI {
   constructor(private readonly client: HttpClient) {}
 
-  public static readonly URL = {
-    LAST: 'last',
-    NOTIFICATION: '/notifications',
-  };
-
-  /**
-   * Fetch the last notification.
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getLastNotification
-   */
-  public async getLastNotification(clientId?: string): Promise<Notification> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        client: clientId,
-      },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`,
-    };
-
-    const response = await this.client.sendJSON<Notification>(config);
-    return response.data;
-  }
-
   /**
    * Fetch paged notifications.
    * @param clientId Only return notifications targeted at the given client.
@@ -74,7 +52,7 @@ export class NotificationAPI {
         since,
         size,
       },
-      url: NotificationAPI.URL.NOTIFICATION,
+      url: '/notifications',
     };
 
     const response = await this.client.sendJSON<NotificationList>(config, false, abortController);
@@ -163,22 +141,5 @@ export class NotificationAPI {
     };
 
     return getNotificationChunks([], clientId, lastNotificationId);
-  }
-
-  /**
-   * Fetch a notification by ID.
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getNotification
-   */
-  public async getNotification(notificationId: string, clientId?: string): Promise<Notification> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        client: clientId,
-      },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${notificationId}`,
-    };
-
-    const response = await this.client.sendJSON<Notification>(config);
-    return response.data;
   }
 }
