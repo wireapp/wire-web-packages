@@ -19,11 +19,12 @@
 
 /* eslint-disable dot-notation */
 
-import {WebSocketClient} from './WebSocketClient';
+import {ConsumableEvent} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
+
+import {ConsumableNotification} from './ConsumableNotification';
 
 import {InvalidTokenError} from '../auth/AuthenticationError';
 import {TEAM_EVENT} from '../event/';
-import {Notification} from '../notification';
 
 const accessTokenPayload = {
   access_token:
@@ -53,15 +54,16 @@ const fakeSocket = {
   onclose: ({code}: {code: number}) => ({
     code,
   }),
+  // @ts-ignore
   onerror: (error: Error) => {},
   onmessage: ({}) => {},
   onopen: () => {},
 };
 
-describe('WebSocketClient', () => {
+describe('ConsumableNotification', () => {
   describe('handler', () => {
     it('calls "onOpen" when WebSocket opens', async () => {
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onOpenSpy = jest.spyOn(websocketClient as any, 'onOpen');
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
@@ -73,7 +75,7 @@ describe('WebSocketClient', () => {
     });
 
     it('calls "onClose" when WebSocket closes', async () => {
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onCloseSpy = jest.spyOn(websocketClient as any, 'onClose');
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
@@ -85,7 +87,7 @@ describe('WebSocketClient', () => {
     });
 
     it('calls "onError" when WebSocket received error', async () => {
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onErrorSpy = jest.spyOn(websocketClient as any, 'onError');
       const refreshTokenSpy = jest.spyOn(websocketClient as any, 'refreshAccessToken');
       const socket = websocketClient['socket'];
@@ -100,7 +102,7 @@ describe('WebSocketClient', () => {
 
     it('calls "onMessage" when WebSocket received message', async () => {
       const message = 'hello';
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
@@ -116,7 +118,7 @@ describe('WebSocketClient', () => {
       const onConnect = () => {
         return onConnectResult();
       };
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
@@ -130,14 +132,14 @@ describe('WebSocketClient', () => {
   describe('refreshAccessToken', () => {
     // eslint-disable-next-line jest/expect-expect
     it('emits the correct message for invalid tokens', async () => {
-      const websocketClient = new WebSocketClient('ws://url', invalidTokenHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', invalidTokenHttpClient);
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
 
       return new Promise<void>(resolve => {
-        websocketClient.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, () => resolve());
+        websocketClient.on(ConsumableNotification.TOPIC.ON_INVALID_TOKEN, () => resolve());
 
         fakeSocket.onerror(new Error('error'));
       });
@@ -145,22 +147,28 @@ describe('WebSocketClient', () => {
   });
 
   describe('connect', () => {
-    const fakeNotification: Notification = {
-      id: '123',
-      payload: [
-        {
-          data: {
-            user: 'Bob',
-          },
-          team: '456',
-          time: new Date().toISOString(),
-          type: TEAM_EVENT.MEMBER_JOIN,
+    const fakeNotification = {
+      type: ConsumableEvent.EVENT,
+      data: {
+        delivery_tag: 1,
+        event: {
+          id: '123',
+          payload: [
+            {
+              data: {
+                user: 'Bob',
+              },
+              team: '456',
+              time: new Date().toISOString(),
+              type: TEAM_EVENT.MEMBER_JOIN,
+            },
+          ],
         },
-      ],
+      },
     };
 
     it('does not lock websocket by default', async () => {
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
@@ -169,10 +177,11 @@ describe('WebSocketClient', () => {
       expect(websocketClient.isLocked()).toBe(false);
 
       return new Promise<void>(resolve => {
-        websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+        websocketClient.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
           expect(onMessageSpy).toHaveBeenCalledTimes(1);
           expect(websocketClient['bufferedMessages'].length).toBe(0);
-          expect(notification).toEqual(fakeNotification);
+          const mappedNotification = websocketClient.mapFromJSON(JSON.stringify(fakeNotification));
+          expect(notification).toEqual(mappedNotification);
           resolve();
         });
         fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});
@@ -180,7 +189,7 @@ describe('WebSocketClient', () => {
     });
 
     it('emits buffered messages when unlocked', async () => {
-      const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
+      const websocketClient = new ConsumableNotification('ws://url', fakeHttpClient);
       const onMessageSpy = jest.spyOn(websocketClient as any, 'onMessage');
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
@@ -194,7 +203,7 @@ describe('WebSocketClient', () => {
       expect(websocketClient['bufferedMessages'].length).toBe(1);
 
       return new Promise<void>(resolve => {
-        websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+        websocketClient.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
           expect(notification).toEqual(notification);
           expect(onMessageSpy).toHaveBeenCalledTimes(2);
           resolve();

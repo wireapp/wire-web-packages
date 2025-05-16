@@ -85,7 +85,7 @@ export class ConsumableNotification extends EventEmitter {
     }
   }
 
-  private mapFromJSON(json: string): ConsumableNotificationResponse {
+  public mapFromJSON(json: string): ConsumableNotificationResponse {
     const data = JSON.parse(json);
 
     return {

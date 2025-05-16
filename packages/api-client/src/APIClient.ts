@@ -54,8 +54,7 @@ import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {ServiceProviderAPI} from './serviceProvider';
 import {ServicesAPI} from './services';
-import {OnConnect} from './tcp/';
-import {ConsumableNotification} from './tcp/ConsumableNotification';
+import {ConsumableNotification, OnConnect} from './tcp/';
 import {
   FeatureAPI,
   IdentityProviderAPI,
