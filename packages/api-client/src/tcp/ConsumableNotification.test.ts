@@ -50,7 +50,9 @@ const invalidTokenHttpClient: any = {
 };
 
 const fakeSocket = {
-  onclose: () => {},
+  onclose: ({code}: {code: number}) => ({
+    code,
+  }),
   onerror: (error: Error) => {},
   onmessage: ({}) => {},
   onopen: () => {},
@@ -77,7 +79,7 @@ describe('WebSocketClient', () => {
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
-      fakeSocket.onclose();
+      fakeSocket.onclose({code: 1000});
 
       expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });

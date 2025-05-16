@@ -344,7 +344,7 @@ export class Account extends TypedEventEmitter<Events> {
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
     const clientId = client.id;
 
-    await this.service.notification.initializeNotificationStream(clientId);
+    await this.service.notification.initializeNotificationStream();
     await this.service.client.synchronizeClients(clientId);
     return client;
   }
@@ -472,7 +472,7 @@ export class Account extends TypedEventEmitter<Events> {
       subconversationService,
       mlsService,
     );
-    const notificationService = new NotificationService(this.apiClient, this.storeEngine, conversationService);
+    const notificationService = new NotificationService(this.storeEngine, conversationService);
 
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);

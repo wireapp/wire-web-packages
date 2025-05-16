@@ -83,16 +83,12 @@ describe('NotificationService', () => {
         const notificationService = new NotificationService(apiClient, storeEngine, mockedConversationService);
         notificationService.on(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError => {
           expect(notificationError.error.message).toBe('Test error');
-          expect(spySetLastNotificationId).toHaveBeenCalledTimes(0);
           resolve();
         });
 
         jest.spyOn(notificationService as any, 'handleEvent').mockImplementation(() => {
           throw new Error('Test error');
         });
-        const spySetLastNotificationId = jest
-          .spyOn(notificationService as any, 'setLastNotificationId')
-          .mockResolvedValue('');
 
         const notification = {
           type: 'event',
