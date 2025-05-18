@@ -613,8 +613,6 @@ export class Account extends TypedEventEmitter<Events> {
       try {
         const messages = this.service!.notification.handleNotification(notification, source, dryRun);
 
-        console.log('[Account.ts] przemvs mockNotifications', mockNotifications);
-
         for await (const message of messages) {
           await handleEvent(message, source);
           this.apiClient.transport.liveEvents.acknowledgeEvents(notification);
