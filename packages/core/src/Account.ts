@@ -34,9 +34,9 @@ import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
 import {
   ConsumableEvent,
-  ConsumableNotification as ConsumableNotificationResponse,
+  ConsumableNotification,
   ConsumableNotificationEvent,
-  ConsumableNotificationMissing,
+  ConsumableNotificationMissed,
 } from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {FEATURE_KEY, FeatureStatus} from '@wireapp/api-client/lib/team';
@@ -639,7 +639,7 @@ export class Account extends TypedEventEmitter<Events> {
       }
     };
 
-    const handleMissedNotification = (notification: ConsumableNotificationMissing) => {
+    const handleMissedNotification = (notification: ConsumableNotificationMissed) => {
       if (this.hasMLSDevice) {
         queueConversationRejoin('all-conversations', () =>
           this.service!.conversation.handleConversationsEpochMismatch(),
@@ -650,7 +650,7 @@ export class Account extends TypedEventEmitter<Events> {
       this.apiClient.transport.ws.acknowledgeEvents(notification);
     };
 
-    const onNotification = (notification: ConsumableNotificationResponse) => {
+    const onNotification = (notification: ConsumableNotification) => {
       if (notification.type === ConsumableEvent.MISSED) {
         this.logger.log(`Start processing missing notification`);
         handleMissedNotification(notification);
@@ -720,13 +720,9 @@ export class Account extends TypedEventEmitter<Events> {
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
 
-      const queueLength = getQueueLength();
-
-      if (queueLength > 0) {
-        this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
-        resumeMessageSending();
-        resumeRejoiningMLSConversations();
-      }
+      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+      resumeMessageSending();
+      resumeRejoiningMLSConversations();
     };
 
     this.apiClient.connect(processNotificationStream);

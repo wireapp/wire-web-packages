@@ -17,9 +17,9 @@
  *
  */
 
-import {ConsumableNotification as ConsumableNotificationResponse} from './ConsumableNotification.types';
+import {ConsumableNotification} from './ConsumableNotification.types';
 
-export const mapConsumableNotification = (json: string): ConsumableNotificationResponse => {
+export const mapConsumableNotification = (json: string): ConsumableNotification => {
   const data = JSON.parse(json);
 
   return {

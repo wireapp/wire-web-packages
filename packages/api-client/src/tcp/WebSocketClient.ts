@@ -25,10 +25,7 @@ import {EventEmitter} from 'events';
 import {LogFactory} from '@wireapp/commons';
 
 import {AcknowledgeType} from './AcknowledgeEvent.types';
-import {
-  ConsumableEvent,
-  ConsumableNotification as ConsumableNotificationResponse,
-} from './ConsumableNotification.types';
+import {ConsumableEvent, ConsumableNotification} from './ConsumableNotification.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 import {mapConsumableNotification} from './utils';
 
@@ -45,7 +42,7 @@ enum TOPIC {
 export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
-  on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotificationResponse) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotification) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
@@ -95,7 +92,7 @@ export class WebSocketClient extends EventEmitter {
     }
   };
 
-  acknowledgeEvents(notification: ConsumableNotificationResponse) {
+  acknowledgeEvents(notification: ConsumableNotification) {
     if (notification.type === ConsumableEvent.MISSED) {
       const jsonEvent = JSON.stringify({
         type: AcknowledgeType.ACK_FULL_SYNC,
@@ -106,7 +103,7 @@ export class WebSocketClient extends EventEmitter {
 
     if (notification.type === ConsumableEvent.EVENT) {
       if (!notification.deliveryTag) {
-        this.logger.warn(`Cannot acknowledge notification. DeliveryTag is missing`);
+        this.logger.warn(`Cannot acknowledge event. DeliveryTag is missing.`);
       }
 
       const jsonEvent = JSON.stringify({
@@ -249,7 +246,6 @@ export class WebSocketClient extends EventEmitter {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
     let url = `${this.baseUrl}/v8/events?access_token=${token}`;
-
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user

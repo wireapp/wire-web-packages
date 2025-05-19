@@ -19,18 +19,18 @@
 
 import {BackendEvent} from '../event';
 
-export interface ConsumableNotificationMissing {
+export interface ConsumableNotificationMissed {
   type: ConsumableEvent.MISSED;
 }
 
 export interface ConsumableNotificationEvent {
   type: ConsumableEvent.EVENT;
-  deliveryTag?: number;
-  payload?: BackendEvent[];
-  id?: string;
+  deliveryTag: number;
+  payload: BackendEvent[];
+  id: string;
 }
 
-export type ConsumableNotification = ConsumableNotificationMissing | ConsumableNotificationEvent;
+export type ConsumableNotification = ConsumableNotificationMissed | ConsumableNotificationEvent;
 
 export enum ConsumableEvent {
   EVENT = 'event',
