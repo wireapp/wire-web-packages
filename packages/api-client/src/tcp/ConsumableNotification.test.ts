@@ -22,6 +22,7 @@
 import {ConsumableEvent} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 
 import {ConsumableNotification} from './ConsumableNotification';
+import {mapConsumableNotification} from './utils';
 
 import {InvalidTokenError} from '../auth/AuthenticationError';
 import {TEAM_EVENT} from '../event/';
@@ -180,7 +181,7 @@ describe('ConsumableNotification', () => {
         websocketClient.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
           expect(onMessageSpy).toHaveBeenCalledTimes(1);
           expect(websocketClient['bufferedMessages'].length).toBe(0);
-          const mappedNotification = websocketClient.mapFromJSON(JSON.stringify(fakeNotification));
+          const mappedNotification = mapConsumableNotification(JSON.stringify(fakeNotification));
           expect(notification).toEqual(mappedNotification);
           resolve();
         });

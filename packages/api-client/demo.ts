@@ -36,7 +36,7 @@ import {
 } from './src/auth';
 import {ClientType} from './src/client';
 import {Config} from './src/Config';
-import {WebSocketClient} from './src/tcp';
+import {ConsumableNotification} from './src/tcp';
 
 require('dotenv').config();
 
@@ -117,7 +117,7 @@ if (WIRE_EMAIL && WIRE_PASSWORD) {
     try {
       const webSocketClient = await apiClient.connect();
 
-      webSocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+      webSocketClient.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
         logger.log('Received notification via WebSocket', notification);
       });
     } catch (error) {
