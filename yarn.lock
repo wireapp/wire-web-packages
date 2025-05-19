@@ -7725,7 +7725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
+"@wireapp/api-client@workspace:*, @wireapp/api-client@workspace:packages/api-client":
   version: 0.0.0-use.local
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
@@ -7857,7 +7857,7 @@ __metadata:
     "@types/long": ^5.0.0
     "@types/tough-cookie": 4.0.5
     "@types/uuid": 9.0.8
-    "@wireapp/api-client": "workspace:^"
+    "@wireapp/api-client": "workspace:*"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 3.1.1
     "@wireapp/cryptobox": 12.8.0
