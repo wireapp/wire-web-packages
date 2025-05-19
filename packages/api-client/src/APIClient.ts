@@ -54,7 +54,7 @@ import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {ServiceProviderAPI} from './serviceProvider';
 import {ServicesAPI} from './services';
-import {WebSocketClient, OnConnect} from './tcp/';
+import {OnConnect, WebSocketClient} from './tcp/';
 import {
   FeatureAPI,
   IdentityProviderAPI,
@@ -159,10 +159,7 @@ export class APIClient extends EventEmitter {
   // Configuration
   private readonly accessTokenStore: AccessTokenStore;
   public context?: Context;
-  public transport: {
-    http: HttpClient;
-    ws: WebSocketClient;
-  };
+  public transport: {http: HttpClient; ws: WebSocketClient};
   public config: Config;
   public backendFeatures: BackendFeatures;
 
@@ -196,7 +193,6 @@ export class APIClient extends EventEmitter {
         this.emit(APIClient.TOPIC.ON_LOGOUT, error);
       }
     };
-
     webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
     httpClient.on(HttpClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
 
@@ -209,7 +205,7 @@ export class APIClient extends EventEmitter {
   }
 
   private configureApis(backendFeatures: BackendFeatures): Apis {
-    this.logger.info('Configuring APIs with config', backendFeatures);
+    this.logger.info('configuring APIs with config', backendFeatures);
 
     const assetAPI = new AssetAPI(this.transport.http, backendFeatures);
 
@@ -232,7 +228,6 @@ export class APIClient extends EventEmitter {
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
       giphy: new GiphyAPI(this.transport.http),
-      // TODO: After add get server-time from different API, this one can be removed.
       notification: new NotificationAPI(this.transport.http),
       oauth: new OAuthAPI(this.transport.http),
       self: new SelfAPI(this.transport.http),

@@ -35,7 +35,7 @@ import {mapConsumableNotification} from './utils';
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
 
-export enum TOPIC {
+enum TOPIC {
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
   ON_INVALID_TOKEN = 'WebSocketClient.TOPIC.ON_INVALID_TOKEN',
   ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
@@ -133,7 +133,7 @@ export class WebSocketClient extends EventEmitter {
       // before we try any connection, we first refresh the access token to make sure we will avoid concurrent accessToken refreshes
       await this.refreshAccessToken();
     }
-    return this.consumeLiveEvents();
+    return this.buildWebSocketUrl();
   };
 
   private readonly onOpen = () => {
@@ -242,7 +242,7 @@ export class WebSocketClient extends EventEmitter {
     return this.isSocketLocked;
   }
 
-  private consumeLiveEvents(): string {
+  private buildWebSocketUrl(): string {
     const store = this.client.accessTokenStore.accessToken;
     const token = store && store.access_token ? store.access_token : '';
     if (!token) {
@@ -251,6 +251,8 @@ export class WebSocketClient extends EventEmitter {
     let url = `${this.baseUrl}/v8/events?access_token=${token}`;
 
     if (this.clientId) {
+      // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
+      // of the connected user
       url += `&client=${this.clientId}`;
     }
     return url;
