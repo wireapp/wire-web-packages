@@ -232,6 +232,7 @@ export class APIClient extends EventEmitter {
       connection: new ConnectionAPI(this.transport.http),
       conversation: new ConversationAPI(this.transport.http, backendFeatures),
       giphy: new GiphyAPI(this.transport.http),
+      // TODO: After add get server-time from different API, this one can be removed.
       notification: new NotificationAPI(this.transport.http),
       oauth: new OAuthAPI(this.transport.http),
       self: new SelfAPI(this.transport.http),

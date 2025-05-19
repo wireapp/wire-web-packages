@@ -30,6 +30,7 @@ import {
   ConsumableNotification as ConsumableNotificationResponse,
 } from './ConsumableNotification.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
+import {mapConsumableNotification} from './utils';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
@@ -85,24 +86,11 @@ export class ConsumableNotification extends EventEmitter {
     }
   }
 
-  public mapFromJSON(json: string): ConsumableNotificationResponse {
-    const data = JSON.parse(json);
-
-    return {
-      type: data.type,
-      ...(data?.data && {
-        deliveryTag: data.data.delivery_tag,
-        id: data.data.event.id,
-        payload: data.data.event.payload,
-      }),
-    };
-  }
-
   private readonly onMessage = (data: string) => {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification = this.mapFromJSON(data);
+      const notification = mapConsumableNotification(data);
       this.emit(ConsumableNotification.TOPIC.ON_MESSAGE, notification);
     }
   };
@@ -256,17 +244,15 @@ export class ConsumableNotification extends EventEmitter {
 
   private consumeLiveEvents(): string {
     const store = this.client.accessTokenStore.accessToken;
-    const token = store?.access_token ?? '';
+    const token = store && store.access_token ? store.access_token : '';
     if (!token) {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
-
     let url = `${this.baseUrl}/v8/events?access_token=${token}`;
 
     if (this.clientId) {
       url += `&client=${this.clientId}`;
     }
-
     return url;
   }
 }

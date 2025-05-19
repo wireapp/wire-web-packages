@@ -17,7 +17,7 @@
  *
  */
 
-import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
+import {ConsumableNotificationEvent} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 
 import {MemoryEngine} from '@wireapp/store-engine';
 
@@ -51,7 +51,7 @@ describe('NotificationService', () => {
         deliveryTag: 0,
         id: 'id-123456',
         payload: [{}],
-      } as unknown as ConsumableNotification;
+      } as unknown as ConsumableNotificationEvent;
 
       const handledNotifications = notificationService.handleNotification(
         notification,
@@ -84,7 +84,7 @@ describe('NotificationService', () => {
           deliveryTag: 0,
           id: 'id-123456',
           payload: [{}],
-        } as unknown as ConsumableNotification;
+        } as unknown as ConsumableNotificationEvent;
 
         const handledNotifications = notificationService.handleNotification(
           notification,

@@ -35,6 +35,8 @@ import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNoti
 import {
   ConsumableEvent,
   ConsumableNotification as ConsumableNotificationResponse,
+  ConsumableNotificationEvent,
+  ConsumableNotificationMissing,
 } from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {FEATURE_KEY, FeatureStatus} from '@wireapp/api-client/lib/team';
@@ -568,6 +570,8 @@ export class Account extends TypedEventEmitter<Events> {
   public listen({
     onEvent = () => {},
     onConnectionStateChanged = () => {},
+    onNotificationStreamProgress = () => {},
+    onMissedNotifications = () => {},
     dryRun = false,
   }: {
     /**
@@ -576,6 +580,19 @@ export class Account extends TypedEventEmitter<Events> {
      * @param source where the message comes from (either websocket or notification stream)
      */
     onEvent?: (payload: HandledEventPayload, source: NotificationSource) => void;
+
+    /**
+     * During the notification stream processing, this function will be called whenever a new notification has been processed
+     */
+    onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
+
+    /**
+     * called when we detect lost notification from backend.
+     * When a client doesn't log in for a while (28 days, as of now) notifications that are older than 28 days will be deleted from backend.
+     * We can then detect that something was wrong and warn the consumer that there might be some missing old messages
+     */
+    onMissedNotifications?: () => void;
+
     /**
      * called when the connection state with the backend has changed
      */
@@ -607,37 +624,45 @@ export class Account extends TypedEventEmitter<Events> {
     };
 
     const handleNotification = async (
-      notification: ConsumableNotificationResponse,
+      notification: ConsumableNotificationEvent,
       source: NotificationSource,
     ): Promise<void> => {
       try {
         const messages = this.service!.notification.handleNotification(notification, source, dryRun);
-
         for await (const message of messages) {
-          await handleEvent(message, source);
-          this.apiClient.transport.liveEvents.acknowledgeEvents(notification);
+          await handleEvent(message, source).then(() => {
+            this.apiClient.transport.liveEvents.acknowledgeEvents(notification);
+          });
         }
       } catch (error) {
         this.logger.error(`Failed to handle notification ID "${notification.id}": ${(error as any).message}`, error);
       }
     };
 
-    this.apiClient.transport.liveEvents.removeAllListeners(ConsumableNotification.TOPIC.ON_MESSAGE);
-    this.apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
-      if (notification.type === ConsumableEvent.MISSED) {
-        if (this.hasMLSDevice) {
-          queueConversationRejoin('all-conversations', () =>
-            this.service!.conversation.handleConversationsEpochMismatch(),
-          );
-        }
-
-        this.apiClient.transport.liveEvents.acknowledgeEvents(notification);
+    const handleMissedNotification = (notification: ConsumableNotificationMissing) => {
+      if (this.hasMLSDevice) {
+        queueConversationRejoin('all-conversations', () =>
+          this.service!.conversation.handleConversationsEpochMismatch(),
+        );
       }
 
-      return handleNotification(notification, NotificationSource.WEBSOCKET);
-    });
+      onMissedNotifications();
+      this.apiClient.transport.liveEvents.acknowledgeEvents(notification);
+    };
 
-    this.apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_STATE_CHANGE, wsState => {
+    const onNotification = (notification: ConsumableNotificationResponse) => {
+      if (notification.type === ConsumableEvent.MISSED) {
+        this.logger.log(`Start processing missing notification`);
+        handleMissedNotification(notification);
+      }
+
+      if (notification.type === ConsumableEvent.EVENT) {
+        this.logger.log(`Start processing notification id ${notification.id}`);
+        void handleNotification(notification, NotificationSource.WEBSOCKET);
+      }
+    };
+
+    const onStateChange = (wsState: WEBSOCKET_STATE) => {
       const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
         [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
         [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
@@ -646,7 +671,11 @@ export class Account extends TypedEventEmitter<Events> {
       if (connectionState) {
         onConnectionStateChanged(connectionState);
       }
-    });
+    };
+
+    this.apiClient.transport.liveEvents.removeAllListeners(ConsumableNotification.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_MESSAGE, onNotification);
+    this.apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_STATE_CHANGE, onStateChange);
 
     const processNotificationStream = async (abortHandler: AbortController) => {
       // Lock websocket in order to buffer any message that arrives while we handle the notification stream
@@ -655,6 +684,31 @@ export class Account extends TypedEventEmitter<Events> {
       // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
       pauseRejoiningMLSConversations();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+
+      const results = {done: 0};
+
+      this.apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_MESSAGE, notification => {
+        if (abortHandler.signal.aborted) {
+          /* Stop handling notifications if the websocket has been disconnected.
+           * Upon reconnecting we are going to restart handling the notification stream for where we left of
+           */
+          this.logger.warn(`Stop processing notifications as connection to websocket was closed`);
+        }
+
+        onNotification(notification);
+        onNotificationStreamProgress({done: results.done + 1, total: 0});
+        results.done++;
+      });
+
+      // const results = await this.service!.notification.processNotificationStream(
+      //   async (notification, source, progress) => {
+      //     await handleNotification(notification, source);
+      //     onNotificationStreamProgress(progress);
+      //   },
+      //   abortHandler,
+      // );
+      //
+      // this.logger.info('Finished processing notifications', results);
 
       if (abortHandler.signal.aborted) {
         this.logger.warn('Ending connection process as websocket was closed');
@@ -665,9 +719,14 @@ export class Account extends TypedEventEmitter<Events> {
       this.apiClient.transport.liveEvents.unlock();
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
-      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
-      resumeMessageSending();
-      resumeRejoiningMLSConversations();
+
+      const queueLength = getQueueLength();
+
+      if (queueLength > 0) {
+        this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+        resumeMessageSending();
+        resumeRejoiningMLSConversations();
+      }
     };
 
     this.apiClient.connect(processNotificationStream);

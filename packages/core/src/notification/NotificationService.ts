@@ -18,7 +18,10 @@
  */
 
 import {BackendEvent} from '@wireapp/api-client/lib/event';
-import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
+import {
+  ConsumableNotification,
+  ConsumableNotificationEvent,
+} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
 
 import {LogFactory, TypedEventEmitter} from '@wireapp/commons';
 import {GenericMessage} from '@wireapp/protocol-messaging';
@@ -54,6 +57,12 @@ export type HandledEventResult =
 enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
 }
+
+export type NotificationHandler = (
+  notification: ConsumableNotification,
+  source: NotificationSource,
+  progress: {done: number; total: number},
+) => Promise<void>;
 
 type Events = {
   [TOPIC.NOTIFICATION_ERROR]: NotificationError;
@@ -99,6 +108,42 @@ export class NotificationService extends TypedEventEmitter<Events> {
     return databaseLastEventDate;
   }
 
+  // public async processNotificationStream(
+  //   notificationHandler: NotificationHandler,
+  //   abortHandler: AbortController,
+  // ): Promise<{total: number; error: number; success: number}> {
+  //   const lastNotificationId = await this.database.getLastNotificationId();
+  //   const {notifications} = await this.getAllNotifications(lastNotificationId, abortHandler);
+  //
+  //   const results = {total: notifications.length, error: 0, success: 0};
+  //   const logMessage =
+  //     notifications.length > 0
+  //       ? `Start processing ${notifications.length} notifications since notification id ${lastNotificationId}`
+  //       : `No notification to process from the stream`;
+  //   this.logger.log(logMessage);
+  //   for (const [index, notification] of notifications.entries()) {
+  //     if (abortHandler.signal.aborted) {
+  //       /* Stop handling notifications if the websocket has been disconnected.
+  //        * Upon reconnecting we are going to restart handling the notification stream for where we left of
+  //        */
+  //       this.logger.warn(`Stop processing notifications as connection to websocket was closed`);
+  //       return results;
+  //     }
+  //     try {
+  //       await notificationHandler(notification, NotificationSource.NOTIFICATION_STREAM, {
+  //         done: index + 1,
+  //         total: notifications.length,
+  //       });
+  //       results.success++;
+  //     } catch (error) {
+  //       const message = error instanceof Error ? error.message : error;
+  //       this.logger.error(`Error while processing notification ${notification.id}: ${message}`, error);
+  //       results.error++;
+  //     }
+  //   }
+  //   return results;
+  // }
+
   /**
    * Checks if an event should be ignored.
    * An event that has a date prior to that last event that we have parsed should be ignored
@@ -120,7 +165,7 @@ export class NotificationService extends TypedEventEmitter<Events> {
   }
 
   public async *handleNotification(
-    notification: ConsumableNotification,
+    notification: ConsumableNotificationEvent,
     source: NotificationSource,
     dryRun: boolean = false,
   ): AsyncGenerator<HandledEventPayload> {

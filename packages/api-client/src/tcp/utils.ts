@@ -17,22 +17,17 @@
  *
  */
 
-import {BackendEvent} from '../event';
+import {ConsumableNotification as ConsumableNotificationResponse} from './ConsumableNotification.types';
 
-export interface ConsumableNotificationMissing {
-  type: ConsumableEvent.MISSED;
-}
+export const mapConsumableNotification = (json: string): ConsumableNotificationResponse => {
+  const data = JSON.parse(json);
 
-export interface ConsumableNotificationEvent {
-  type: ConsumableEvent.EVENT;
-  deliveryTag?: number;
-  payload?: BackendEvent[];
-  id?: string;
-}
-
-export type ConsumableNotification = ConsumableNotificationMissing | ConsumableNotificationEvent;
-
-export enum ConsumableEvent {
-  EVENT = 'event',
-  MISSED = 'notifications.missed',
-}
+  return {
+    type: data.type,
+    ...(data?.data && {
+      deliveryTag: data.data.delivery_tag,
+      id: data.data.event.id,
+      payload: data.data.event.payload,
+    }),
+  };
+};
