@@ -19,16 +19,18 @@
 
 import * as path from 'path';
 import * as logdown from 'logdown';
-import {Account, MessageBuilder} from '@wireapp/core';
+import {Account} from '@wireapp/core';
 import {PayloadBundleType} from '@wireapp/core/lib/conversation/';
 import {APIClient} from '@wireapp/api-client';
+import {WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {ClientType} from '@wireapp/api-client/lib/client/ClientType';
 import {ConnectionStatus} from '@wireapp/api-client/lib/connection/';
 import {CONVERSATION_TYPING} from '@wireapp/api-client/lib/conversation/data/';
 import {LegalHoldStatus, Confirmation} from '@wireapp/protocol-messaging';
+import {AssetContent} from '../main/conversation/content/AssetContent';
+import {LinkPreviewUploadedContent} from '../main/conversation/content';
+import {MessageBuilder} from '../main/conversation/message/MessageBuilder';
 import {ConversationProtocol} from '@wireapp/api-client/lib/conversation';
-import { ConsumableNotification } from "@wireapp/api-client/lib/tcp/ConsumableNotification";
-import { AssetContent, LinkPreviewUploadedContent } from "../conversation/content";
 
 const logger = logdown('@wireapp/core/demo/echo.js', {
   logger: console,
@@ -183,7 +185,7 @@ const {WIRE_EMAIL, WIRE_PASSWORD, WIRE_BACKEND = 'staging'} = process.env;
     return newLinkPreviews;
   };
 
-  apiClient.transport.liveEvents.on(ConsumableNotification.TOPIC.ON_STATE_CHANGE, () => logger.info('API Client state changed'));
+  apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, () => logger.info('API Client state changed'));
 
   account.on(PayloadBundleType.TEXT, async data => {
     const {

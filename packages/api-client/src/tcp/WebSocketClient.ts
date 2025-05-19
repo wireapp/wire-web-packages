@@ -36,13 +36,13 @@ import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from 
 import {HttpClient, NetworkError} from '../http/';
 
 export enum TOPIC {
-  ON_ERROR = 'ConsumableNotification.TOPIC.ON_ERROR',
-  ON_INVALID_TOKEN = 'ConsumableNotification.TOPIC.ON_INVALID_TOKEN',
-  ON_MESSAGE = 'ConsumableNotification.TOPIC.ON_MESSAGE',
-  ON_STATE_CHANGE = 'ConsumableNotification.TOPIC.ON_STATE_CHANGE',
+  ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
+  ON_INVALID_TOKEN = 'WebSocketClient.TOPIC.ON_INVALID_TOKEN',
+  ON_MESSAGE = 'WebSocketClient.TOPIC.ON_MESSAGE',
+  ON_STATE_CHANGE = 'WebSocketClient.TOPIC.ON_STATE_CHANGE',
 }
 
-export interface ConsumableNotification {
+export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
   on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotificationResponse) => void): this;
@@ -51,7 +51,7 @@ export interface ConsumableNotification {
 
 export type OnConnect = (abortHandler: AbortController) => Promise<void>;
 
-export class ConsumableNotification extends EventEmitter {
+export class WebSocketClient extends EventEmitter {
   private clientId?: string;
   private isRefreshingAccessToken: boolean;
   private readonly baseUrl: string;
@@ -76,13 +76,13 @@ export class ConsumableNotification extends EventEmitter {
     this.socket = new ReconnectingWebsocket(this.onReconnect);
     this.websocketState = this.socket.getState();
 
-    this.logger = LogFactory.getLogger('@wireapp/api-client/tcp/ConsumableNotification');
+    this.logger = LogFactory.getLogger('@wireapp/api-client/tcp/WebSocketClient');
   }
 
   private onStateChange(newState: WEBSOCKET_STATE): void {
     if (newState !== this.websocketState) {
       this.websocketState = newState;
-      this.emit(ConsumableNotification.TOPIC.ON_STATE_CHANGE, this.websocketState);
+      this.emit(WebSocketClient.TOPIC.ON_STATE_CHANGE, this.websocketState);
     }
   }
 
@@ -91,7 +91,7 @@ export class ConsumableNotification extends EventEmitter {
       this.bufferedMessages.push(data);
     } else {
       const notification = mapConsumableNotification(data);
-      this.emit(ConsumableNotification.TOPIC.ON_MESSAGE, notification);
+      this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
 
@@ -124,7 +124,7 @@ export class ConsumableNotification extends EventEmitter {
 
   private readonly onError = async (error: ErrorEvent) => {
     this.onStateChange(this.socket.getState());
-    this.emit(ConsumableNotification.TOPIC.ON_ERROR, error);
+    this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
     await this.refreshAccessToken();
   };
 
@@ -158,7 +158,7 @@ export class ConsumableNotification extends EventEmitter {
    * Essentially the websocket will lock before execution of this function and
    * unlocks after the execution of the handler and pushes all buffered messages.
    */
-  public connect(clientId?: string, onConnect?: OnConnect): ConsumableNotification {
+  public connect(clientId?: string, onConnect?: OnConnect): WebSocketClient {
     this.clientId = clientId;
 
     this.onStateChange(WEBSOCKET_STATE.CONNECTING);
@@ -198,9 +198,9 @@ export class ConsumableNotification extends EventEmitter {
           `[WebSocket] Cannot renew access token because cookie/token is invalid: ${error.message}`,
           error,
         );
-        this.emit(ConsumableNotification.TOPIC.ON_INVALID_TOKEN, error);
+        this.emit(WebSocketClient.TOPIC.ON_INVALID_TOKEN, error);
       } else {
-        this.emit(ConsumableNotification.TOPIC.ON_ERROR, error);
+        this.emit(WebSocketClient.TOPIC.ON_ERROR, error);
       }
     } finally {
       this.isRefreshingAccessToken = false;

@@ -23,7 +23,7 @@ import {ConversationAPI} from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {Self, SelfAPI} from '@wireapp/api-client/lib/self';
-import {ConsumableNotification} from '@wireapp/api-client/lib/tcp';
+import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
 import {ReconnectingWebsocket} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
@@ -240,7 +240,7 @@ describe('Account', () => {
         },
       });
 
-      apiClient.transport.liveEvents.emit(ConsumableNotification.TOPIC.ON_MESSAGE, {payload: [{}]});
+      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
       kill();
     });
   });

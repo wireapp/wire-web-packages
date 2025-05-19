@@ -17,4 +17,4 @@
  *
  */
 
-export * from './ConsumableNotification';
+export * from './WebSocketClient';

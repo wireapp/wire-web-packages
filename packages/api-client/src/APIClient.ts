@@ -54,7 +54,7 @@ import {ObfuscationUtil} from './obfuscation/';
 import {SelfAPI} from './self/';
 import {ServiceProviderAPI} from './serviceProvider';
 import {ServicesAPI} from './services';
-import {ConsumableNotification, OnConnect} from './tcp/';
+import {WebSocketClient, OnConnect} from './tcp/';
 import {
   FeatureAPI,
   IdentityProviderAPI,
@@ -161,7 +161,7 @@ export class APIClient extends EventEmitter {
   public context?: Context;
   public transport: {
     http: HttpClient;
-    liveEvents: ConsumableNotification;
+    ws: WebSocketClient;
   };
   public config: Config;
   public backendFeatures: BackendFeatures;
@@ -186,7 +186,7 @@ export class APIClient extends EventEmitter {
     this.logger = LogFactory.getLogger('@wireapp/api-client/Client');
 
     const httpClient = new HttpClient(this.config, this.accessTokenStore);
-    const consumeLiveEvents = new ConsumableNotification(this.config.urls.ws, httpClient);
+    const webSocket = new WebSocketClient(this.config.urls.ws, httpClient);
 
     const onInvalidCredentials = async (error: InvalidTokenError | MissingCookieError) => {
       try {
@@ -197,12 +197,12 @@ export class APIClient extends EventEmitter {
       }
     };
 
-    consumeLiveEvents.on(ConsumableNotification.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
+    webSocket.on(WebSocketClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
     httpClient.on(HttpClient.TOPIC.ON_INVALID_TOKEN, onInvalidCredentials);
 
     this.transport = {
       http: httpClient,
-      liveEvents: consumeLiveEvents,
+      ws: webSocket,
     };
     this.backendFeatures = this.computeBackendFeatures(0);
     this.api = this.configureApis(this.backendFeatures);
@@ -379,8 +379,8 @@ export class APIClient extends EventEmitter {
     delete this.context;
   }
 
-  public connect(onConnect?: OnConnect): ConsumableNotification {
-    return this.transport.liveEvents.connect(this.context?.clientId, onConnect);
+  public connect(onConnect?: OnConnect): WebSocketClient {
+    return this.transport.ws.connect(this.context?.clientId, onConnect);
   }
 
   private async createContext(userId: string, clientType: ClientType): Promise<Context> {
@@ -399,7 +399,7 @@ export class APIClient extends EventEmitter {
   }
 
   public disconnect(reason?: string): void {
-    this.transport.liveEvents.disconnect(reason);
+    this.transport.ws.disconnect(reason);
   }
 
   public get clientId(): string | undefined {
