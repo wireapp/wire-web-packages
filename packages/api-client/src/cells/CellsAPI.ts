@@ -105,7 +105,7 @@ export class CellsAPI {
     this.client = new NodeServiceApi(undefined, undefined, http.client);
   }
 
-  async uploadFileDraft({
+  async uploadNodeDraft({
     uuid,
     versionId,
     path,
@@ -151,7 +151,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async promoteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
+  async promoteNodeDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -161,7 +161,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestDeleteVersionResponse> {
+  async deleteNodeDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestDeleteVersionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -171,12 +171,21 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFile({uuid}: {uuid: string}): Promise<RestPerformActionResponse> {
+  async deleteNode({
+    uuid,
+    permanently = false,
+  }: {
+    uuid: string;
+    permanently?: boolean;
+  }): Promise<RestPerformActionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.performAction('delete', {Nodes: [{Uuid: uuid}]});
+    const result = await this.client.performAction('delete', {
+      Nodes: [{Uuid: uuid}],
+      DeleteOptions: {PermanentDelete: permanently},
+    });
 
     return result.data;
   }
@@ -202,7 +211,17 @@ export class CellsAPI {
     return result.data;
   }
 
-  async lookupFileByPath({path}: {path: string}): Promise<RestNode | undefined> {
+  async restoreNode({uuid}: {uuid: string}): Promise<RestPerformActionResponse> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const result = await this.client.performAction('restore', {Nodes: [{Uuid: uuid}]});
+
+    return result.data;
+  }
+
+  async lookupNodeByPath({path}: {path: string}): Promise<RestNode | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -221,7 +240,7 @@ export class CellsAPI {
     return node;
   }
 
-  async lookupFileByUuid({uuid}: {uuid: string}): Promise<RestNode | undefined> {
+  async lookupNodeByUuid({uuid}: {uuid: string}): Promise<RestNode | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -240,7 +259,7 @@ export class CellsAPI {
     return node;
   }
 
-  async getFileVersions({uuid}: {uuid: string}): Promise<RestVersion[] | undefined> {
+  async getNodeVersions({uuid}: {uuid: string}): Promise<RestVersion[] | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -250,7 +269,7 @@ export class CellsAPI {
     return result.data.Versions;
   }
 
-  async getFile({id}: {id: string}): Promise<RestNode> {
+  async getNode({id}: {id: string}): Promise<RestNode> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -407,7 +426,7 @@ export class CellsAPI {
     });
   }
 
-  async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
+  async deleteNodePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -417,7 +436,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async createFilePublicLink({uuid, label}: {uuid: string; label?: string}): Promise<RestShareLink> {
+  async createNodePublicLink({uuid, label}: {uuid: string; label?: string}): Promise<RestShareLink> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -432,7 +451,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async getFilePublicLink({uuid}: {uuid: string}): Promise<RestShareLink> {
+  async getNodePublicLink({uuid}: {uuid: string}): Promise<RestShareLink> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
