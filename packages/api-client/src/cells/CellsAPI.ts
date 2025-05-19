@@ -286,6 +286,7 @@ export class CellsAPI {
     sortBy = DEFAULT_SEARCH_SORT_FIELD,
     sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
     type,
+    deleted = false,
   }: {
     path: string;
     limit?: number;
@@ -293,6 +294,7 @@ export class CellsAPI {
     sortBy?: string;
     sortDirection?: SortDirection;
     type?: RestIncomingNode['Type'];
+    deleted?: boolean;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -303,17 +305,17 @@ export class CellsAPI {
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
       Offset: `${offset}`,
+      Filters: {
+        Type: type,
+        Status: {
+          Deleted: deleted ? 'Only' : 'Not',
+        },
+      },
     };
 
     if (sortBy) {
       request.SortField = sortBy;
       request.SortDirDesc = sortDirection === 'desc';
-    }
-
-    if (type) {
-      request.Filters = {
-        Type: type,
-      };
     }
 
     const result = await this.client.lookup(request);
@@ -328,6 +330,7 @@ export class CellsAPI {
     sortBy = DEFAULT_SEARCH_SORT_FIELD,
     sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
     type,
+    deleted = false,
   }: {
     phrase: string;
     limit?: number;
@@ -335,6 +338,7 @@ export class CellsAPI {
     sortBy?: string;
     sortDirection?: SortDirection;
     type?: RestIncomingNode['Type'];
+    deleted?: boolean;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -344,6 +348,10 @@ export class CellsAPI {
       Scope: {Root: {Path: '/'}, Recursive: true},
       Filters: {
         Text: {SearchIn: 'BaseName', Term: phrase},
+        Type: type,
+        Status: {
+          Deleted: deleted ? 'Only' : 'Not',
+        },
       },
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
@@ -353,12 +361,6 @@ export class CellsAPI {
     if (sortBy) {
       request.SortField = sortBy;
       request.SortDirDesc = sortDirection === 'desc';
-    }
-
-    if (type) {
-      request.Filters = {
-        Type: type,
-      };
     }
 
     const result = await this.client.lookup(request);

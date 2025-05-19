@@ -338,6 +338,39 @@ describe('CellsAPI', () => {
         Offset: '0',
         SortField: 'mtime',
         SortDirDesc: true,
+        Filters: {
+          Status: {
+            Deleted: 'Not',
+          },
+        },
+      });
+      expect(result).toEqual(mockCollection);
+    });
+
+    it('retrieves deleted files when deleted is true', async () => {
+      const mockCollection: Partial<RestNodeCollection> = {
+        Nodes: [
+          {Path: '/deleted1.txt', Uuid: 'uuid1'},
+          {Path: '/deleted2.txt', Uuid: 'uuid2'},
+        ],
+      };
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockCollection as RestNodeCollection));
+
+      const result = await cellsAPI.getAllNodes({path: TEST_FILE_PATH, deleted: true});
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: TEST_FILE_PATH}},
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortField: 'mtime',
+        SortDirDesc: true,
+        Filters: {
+          Status: {
+            Deleted: 'Only',
+          },
+        },
       });
       expect(result).toEqual(mockCollection);
     });
@@ -1058,7 +1091,48 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('searches for deleted files when deleted is true', async () => {
+      const searchPhrase = 'test';
+      const mockResponse: RestNodeCollection = {
+        Nodes: [
+          {
+            Path: '/deleted-test.txt',
+            Uuid: 'file-uuid-1',
+          },
+          {
+            Path: '/folder/deleted-test-file.txt',
+            Uuid: 'file-uuid-2',
+          },
+        ],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.searchNodes({phrase: searchPhrase, deleted: true});
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Only',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -1089,7 +1163,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -1124,7 +1203,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '5',
         Offset: '10',
@@ -1159,7 +1243,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -1194,7 +1283,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -1227,6 +1321,9 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Type: 'LEAF',
+          Status: {
+            Deleted: 'Not',
+          },
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1249,7 +1346,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
@@ -1280,7 +1382,12 @@ describe('CellsAPI', () => {
 
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
-        Filters: {Text: {SearchIn: 'BaseName', Term: searchPhrase}},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Status: {
+            Deleted: 'Not',
+          },
+        },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
         Offset: '0',
