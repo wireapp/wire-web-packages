@@ -306,7 +306,7 @@ export class CellsAPI {
       Limit: `${limit}`,
       Offset: `${offset}`,
       Filters: {
-        Type: type,
+        Type: type || 'UNKNOWN',
         Status: {
           Deleted: deleted ? 'Only' : 'Not',
         },
@@ -348,7 +348,7 @@ export class CellsAPI {
       Scope: {Root: {Path: '/'}, Recursive: true},
       Filters: {
         Text: {SearchIn: 'BaseName', Term: phrase},
-        Type: type,
+        Type: type || 'UNKNOWN',
         Status: {
           Deleted: deleted ? 'Only' : 'Not',
         },

@@ -339,6 +339,7 @@ describe('CellsAPI', () => {
         SortField: 'mtime',
         SortDirDesc: true,
         Filters: {
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -367,6 +368,7 @@ describe('CellsAPI', () => {
         SortField: 'mtime',
         SortDirDesc: true,
         Filters: {
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Only',
           },
@@ -394,6 +396,12 @@ describe('CellsAPI', () => {
         Offset: '0',
         SortField: 'mtime',
         SortDirDesc: true,
+        Filters: {
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+        },
       });
       expect(result).toEqual(mockCollection);
     });
@@ -421,6 +429,12 @@ describe('CellsAPI', () => {
         Offset: '10',
         SortField: 'mtime',
         SortDirDesc: true,
+        Filters: {
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+        },
       });
       expect(result).toEqual(mockCollection);
     });
@@ -448,6 +462,12 @@ describe('CellsAPI', () => {
         Offset: '0',
         SortField: 'name',
         SortDirDesc: false,
+        Filters: {
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+        },
       });
       expect(result).toEqual(mockCollection);
     });
@@ -475,6 +495,12 @@ describe('CellsAPI', () => {
         Offset: '0',
         SortField: 'size',
         SortDirDesc: true,
+        Filters: {
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+        },
       });
       expect(result).toEqual(mockCollection);
     });
@@ -500,6 +526,9 @@ describe('CellsAPI', () => {
         SortDirDesc: true,
         Filters: {
           Type: 'LEAF',
+          Status: {
+            Deleted: 'Not',
+          },
         },
       });
       expect(result).toEqual(mockCollection);
@@ -1093,6 +1122,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1129,6 +1159,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Only',
           },
@@ -1165,6 +1196,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1205,6 +1237,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1245,6 +1278,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1285,6 +1319,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1320,6 +1355,7 @@ describe('CellsAPI', () => {
       expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
           Type: 'LEAF',
           Status: {
             Deleted: 'Not',
@@ -1348,6 +1384,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
@@ -1384,6 +1421,7 @@ describe('CellsAPI', () => {
         Scope: {Root: {Path: '/'}, Recursive: true},
         Filters: {
           Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
           Status: {
             Deleted: 'Not',
           },
