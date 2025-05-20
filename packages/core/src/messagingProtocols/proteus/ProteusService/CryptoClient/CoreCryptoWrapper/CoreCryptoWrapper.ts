@@ -29,6 +29,8 @@ import {
   setMaxLogLevel,
   version as CCVersion,
   initCoreCrypto,
+  migrateDatabaseKeyTypeToBytes,
+  DatabaseKey,
 } from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
@@ -39,7 +41,7 @@ import {CoreCryptoConfig} from '../../../../common.types';
 import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
-  generateSecretKey: (keyId: string) => Promise<GeneratedKey>;
+  generateSecretKey: (keyId: string, keySize: 16 | 32) => Promise<GeneratedKey>;
   nbPrekeys: number;
   onNewPrekeys: (prekeys: PreKey[]) => void;
 };
@@ -65,6 +67,52 @@ const coreCryptoLogger = {
   },
 };
 
+const getKey = async (generateSecretKey: Config['generateSecretKey'], keyName: string, keyLength: 16 | 32) => {
+  return await generateSecretKey(keyName, keyLength);
+};
+
+type MigrateOnceAndGetKeyReturnType = {
+  key: DatabaseKey;
+  deleteKey: () => Promise<void>;
+};
+const migrateOnceAndGetKey = async (
+  generateSecretKey: Config['generateSecretKey'],
+  coreCryptoDbName: string,
+): Promise<MigrateOnceAndGetKeyReturnType> => {
+  const coreCryptoNewKeyId = 'corecrypto-key-v2';
+  const coreCryptoKeyId = 'corecrypto-key';
+
+  // We retrieve the old key if it exists or generate a new one
+  const keyOld = await getKey(generateSecretKey, coreCryptoKeyId, 16);
+  // We retrieve the new key if it exists or generate a new one
+  const keyNew = await getKey(generateSecretKey, coreCryptoNewKeyId, 32);
+
+  // If we dont retreive any key, we throw an error
+  // This should not happen since we generate a new key if it does not exist
+  if (!keyNew || !keyOld) {
+    throw new Error('Key not found and could not be generated');
+  }
+
+  /**
+   * If the old key is freshly generated we dont need to migrate and return the new key
+   * If the old key exists and the new key is freshly generated, we need to migrate and then return the new key (This should only happen once !!!!)
+   * If the old key exists and the new key exists we return the new key
+   */
+  if (!keyOld.freshlyGenerated && keyNew.freshlyGenerated) {
+    // Create the new key in the format used by coreCrypto
+    const databaseKey = new DatabaseKey(keyNew.key);
+    // Run the migration
+    await migrateDatabaseKeyTypeToBytes(coreCryptoDbName, Encoder.toBase64(keyOld.key).asString, databaseKey);
+    // delete the old key, it will be freshly generated in the next call and ensure we dont run the migration again
+    await keyOld.deleteKey();
+  }
+
+  return {
+    key: new DatabaseKey(keyNew.key),
+    deleteKey: keyNew.deleteKey,
+  };
+};
+
 export async function buildClient(
   storeEngine: CRUDEngine,
   {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
@@ -77,16 +125,17 @@ export async function buildClient(
     initCoreCrypto(wasmFilePath)
       .then(async output => {
         logger.log('info', 'CoreCrypto initialized', {output});
-        let key;
         const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
-        const coreCryptoKeyId = 'corecrypto-key';
+        // New key format used by coreCrypto
+        let key: MigrateOnceAndGetKeyReturnType;
+
         try {
-          key = await generateSecretKey(coreCryptoKeyId);
+          key = await migrateOnceAndGetKey(generateSecretKey, coreCryptoDbName);
         } catch (error) {
           if (error instanceof CorruptedKeyError) {
             // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
             await deleteDB(coreCryptoDbName);
-            key = await generateSecretKey(coreCryptoKeyId);
+            key = await migrateOnceAndGetKey(generateSecretKey, coreCryptoDbName);
           } else {
             throw error;
           }
@@ -94,7 +143,7 @@ export async function buildClient(
 
         const coreCrypto = await CoreCrypto.deferredInit({
           databaseName: coreCryptoDbName,
-          key: Encoder.toBase64(key.key).asString,
+          key: key.key,
         });
 
         setLogger(coreCryptoLogger);
