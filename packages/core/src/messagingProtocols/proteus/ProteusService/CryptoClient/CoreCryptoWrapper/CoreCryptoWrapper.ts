@@ -22,12 +22,20 @@ import {Encoder} from 'bazinga64';
 import {deleteDB} from 'idb';
 
 import {LogFactory} from '@wireapp/commons';
-import {CoreCrypto, CoreCryptoLogLevel, setLogger, setMaxLogLevel, version as CCVersion} from '@wireapp/core-crypto';
+import {
+  CoreCrypto,
+  CoreCryptoLogLevel,
+  setLogger,
+  setMaxLogLevel,
+  version as CCVersion,
+  initCoreCrypto,
+} from '@wireapp/core-crypto';
 import type {CRUDEngine} from '@wireapp/store-engine';
 
 import {PrekeyTracker} from './PrekeysTracker';
 
 import {CorruptedKeyError, GeneratedKey} from '../../../../../secretStore/secretKeyGenerator';
+import {CoreCryptoConfig} from '../../../../common.types';
 import {CryptoClient} from '../CryptoClient.types';
 
 type Config = {
@@ -60,30 +68,46 @@ const coreCryptoLogger = {
 export async function buildClient(
   storeEngine: CRUDEngine,
   {generateSecretKey, nbPrekeys, onNewPrekeys}: Config,
+  {wasmFilePath}: CoreCryptoConfig,
 ): Promise<CoreCryptoWrapper> {
-  let key;
-  const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
-  const coreCryptoKeyId = 'corecrypto-key';
-  try {
-    key = await generateSecretKey(coreCryptoKeyId);
-  } catch (error) {
-    if (error instanceof CorruptedKeyError) {
-      // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
-      await deleteDB(coreCryptoDbName);
-      key = await generateSecretKey(coreCryptoKeyId);
-    } else {
-      throw error;
-    }
-  }
-  const coreCrypto = await CoreCrypto.deferredInit({
-    databaseName: coreCryptoDbName,
-    key: Encoder.toBase64(key.key).asString,
-  });
+  return (
+    // We need to initialize the coreCrypto package with the path to the wasm file
+    // before we can use it. This is a one time operation and should be done
+    // before we create the CoreCrypto instance.
+    initCoreCrypto(wasmFilePath)
+      .then(async output => {
+        logger.log('info', 'CoreCrypto initialized', {output});
+        let key;
+        const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
+        const coreCryptoKeyId = 'corecrypto-key';
+        try {
+          key = await generateSecretKey(coreCryptoKeyId);
+        } catch (error) {
+          if (error instanceof CorruptedKeyError) {
+            // If we are dealing with a corrupted key, we wipe the key and the coreCrypto DB to start fresh
+            await deleteDB(coreCryptoDbName);
+            key = await generateSecretKey(coreCryptoKeyId);
+          } else {
+            throw error;
+          }
+        }
 
-  setLogger(coreCryptoLogger);
-  setMaxLogLevel(CoreCryptoLogLevel.Info);
+        const coreCrypto = await CoreCrypto.deferredInit({
+          databaseName: coreCryptoDbName,
+          key: Encoder.toBase64(key.key).asString,
+        });
 
-  return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
+        setLogger(coreCryptoLogger);
+        setMaxLogLevel(CoreCryptoLogLevel.Info);
+
+        return new CoreCryptoWrapper(coreCrypto, {nbPrekeys, onNewPrekeys, onWipe: key.deleteKey});
+      })
+      // if the coreCrypto initialization fails, can not use the crypto client and throw an error
+      .catch(error => {
+        logger.error('error', 'CoreCrypto initialization failed', {error});
+        throw error;
+      })
+  );
 }
 
 export class CoreCryptoWrapper implements CryptoClient {

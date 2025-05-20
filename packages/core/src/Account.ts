@@ -53,6 +53,7 @@ import {getQueueLength, pauseMessageSending, resumeMessageSending} from './conve
 import {SubconversationService} from './conversation/SubconversationService/SubconversationService';
 import {GiphyService} from './giphy/';
 import {LinkPreviewService} from './linkPreview';
+import {CoreCryptoConfig} from './messagingProtocols/common.types';
 import {InitClientOptions, MLSService} from './messagingProtocols/mls';
 import {
   pauseRejoiningMLSConversations,
@@ -96,7 +97,7 @@ interface AccountOptions {
   /** Used to store info in the database (will create a inMemory engine if returns undefined) */
   createStore?: CreateStoreFn;
   systemCrypto?: SecretCrypto;
-  enableCoreCrypto: boolean;
+  coreCryptoConfig?: CoreCryptoConfig;
 
   /** Number of prekeys to generate when creating a new device (defaults to 2)
    * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
@@ -170,7 +171,7 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    private options: AccountOptions = {nbPrekeys: 100, enableCoreCrypto: false},
+    private options: AccountOptions = {nbPrekeys: 100, coreCryptoConfig: {wasmFilePath: '', enabled: false}},
   ) {
     super();
     this.apiClient = apiClient;
@@ -395,12 +396,16 @@ export class Account extends TypedEventEmitter<Events> {
       },
     };
 
-    if (this.options.enableCoreCrypto) {
+    if (this.options.coreCryptoConfig?.enabled) {
       const {buildClient} = await import('./messagingProtocols/proteus/ProteusService/CryptoClient/CoreCryptoWrapper');
-      const client = await buildClient(storeEngine, {
-        ...baseConfig,
-        generateSecretKey: keyId => generateSecretKey({keyId, keySize: 16, secretsDb: encryptedStore}),
-      });
+      const client = await buildClient(
+        storeEngine,
+        {
+          ...baseConfig,
+          generateSecretKey: keyId => generateSecretKey({keyId, keySize: 16, secretsDb: encryptedStore}),
+        },
+        this.options.coreCryptoConfig,
+      );
       return [CryptoClientType.CORE_CRYPTO, client] as const;
     }
 
@@ -750,7 +755,7 @@ export class Account extends TypedEventEmitter<Events> {
 
   public async isMLSActiveForClient(): Promise<boolean> {
     // Check for CoreCrypto library, it is required for MLS
-    if (!this.options.enableCoreCrypto) {
+    if (!this.options.coreCryptoConfig?.enabled) {
       return false;
     }
 
