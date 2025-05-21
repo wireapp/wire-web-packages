@@ -338,7 +338,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     return currentClientIdsInGroup;
   }
 
-  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[], skipClientIds?: string[]) {
+  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[], skipClientIds: string[] = []) {
     /**
      * @note We need to fetch key packages for all the users
      * we want to add to the new MLS conversations,
@@ -391,7 +391,7 @@ export class MLSService extends TypedEventEmitter<Events> {
         return [
           ...previousValue,
           ...key_packages
-            .filter(keyPackage => !skipClientIds?.includes(keyPackage.client))
+            .filter(keyPackage => !skipClientIds.includes(keyPackage.client))
             .map(keyPackage => Decoder.fromBase64(keyPackage.key_package).asBytes),
         ];
       }
