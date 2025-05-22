@@ -8335,10 +8335,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:3.1.1":
-  version: 3.1.1
-  resolution: "@wireapp/core-crypto@npm:3.1.1"
-  checksum: 9a3a49991222c7c73f660046a4429d950727e30a88473045c1d86f6d68637c03ca4ab5fe0e7f9babbdab60d61edb8f13ecf02bdf2cec394281eafd9a2b613934
+"@wireapp/core-crypto@npm:6.0.1":
+  version: 6.0.1
+  resolution: "@wireapp/core-crypto@npm:6.0.1"
+  checksum: c4ba5b1a06838972e94fd7bf925e6f25d1bb9ea9a393086ab6a18978b8546969332f8ec2afb09f4e7f0fae49142e09770e933a2920d406de7862489943df481a
   languageName: node
   linkType: hard
 
@@ -8355,12 +8355,12 @@ __metadata:
     "@types/uuid": 9.0.8
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 3.1.1
+    "@wireapp/core-crypto": 6.0.1
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.52.0
-    "@wireapp/store-engine": "workspace:*"
+    "@wireapp/store-engine": "workspace:^"
     axios: 1.7.9
     bazinga64: "workspace:^"
     commander: 13.0.0
@@ -8631,7 +8631,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@5.1.11, @wireapp/store-engine@workspace:*, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@5.1.11, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
