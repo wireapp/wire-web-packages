@@ -366,7 +366,7 @@ export class MLSService extends TypedEventEmitter<Events> {
     const welcomeBundle = await this.coreCryptoClient.transaction(cx =>
       cx.joinByExternalCommit(groupInfo, credentialType),
     );
-    await this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
+    await this.dispatchNewCrlDistributionPoints(welcomeBundle.crl_new_distribution_points);
 
     if (welcomeBundle.id) {
       //after we've successfully joined via external commit, we schedule periodic key material renewal
@@ -389,7 +389,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
   public async processWelcomeMessage(welcomeMessage: Uint8Array): Promise<ConversationId> {
     const welcomeBundle = await this.coreCryptoClient.transaction(cx => cx.processWelcomeMessage(welcomeMessage));
-    this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
+    this.dispatchNewCrlDistributionPoints(welcomeBundle.crl_new_distribution_points);
     return welcomeBundle.id;
   }
 

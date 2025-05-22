@@ -270,14 +270,14 @@ export class E2EIServiceInternal {
     return this.coreCryptoClient.transaction(async cx => {
       const conversations = await getAllConversations();
       const newCrlDistributionPoints = await cx.saveX509Credential(identity, certificate);
-      conversations.forEach(async conversation => {
+      for (const conversation of conversations) {
         if (Boolean(conversation.group_id?.length)) {
           const idAsBytes = new TextEncoder().encode(conversation.group_id);
           await cx.e2eiRotate(idAsBytes);
         } else {
           this.logger.error('No group id found in conversation');
         }
-      });
+      }
 
       const keyPackages = await cx.clientKeypackages(cipherSuite, CredentialType.X509, this.keyPackagesAmount);
 

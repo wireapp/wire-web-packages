@@ -402,7 +402,7 @@ export class Account extends TypedEventEmitter<Events> {
         storeEngine,
         {
           ...baseConfig,
-          generateSecretKey: keyId => generateSecretKey({keyId, keySize: 16, secretsDb: encryptedStore}),
+          generateSecretKey: (keyId, keySize) => generateSecretKey({keyId, keySize, secretsDb: encryptedStore}),
         },
         this.options.coreCryptoConfig,
       );
