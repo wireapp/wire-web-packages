@@ -93,29 +93,35 @@ export class WebSocketClient extends EventEmitter {
   };
 
   acknowledgeEvents(notification: ConsumableNotification) {
-    if (notification.type === ConsumableEvent.MISSED) {
-      const jsonEvent = JSON.stringify({
-        type: AcknowledgeType.ACK_FULL_SYNC,
-      });
+    if (this.socket && this.socket.getState() === WebSocket.OPEN) {
+      if (notification.type === ConsumableEvent.MISSED) {
+        // TODO: Add Full / Slow sync before send ACK_FULL_SYNC
 
-      this.socket.send(jsonEvent);
-    }
+        const jsonEvent = JSON.stringify({
+          type: AcknowledgeType.ACK_FULL_SYNC,
+        });
 
-    if (notification.type === ConsumableEvent.EVENT) {
-      if (!notification.deliveryTag) {
-        this.logger.warn(`Cannot acknowledge event. DeliveryTag is missing.`);
+        this.socket.send(jsonEvent);
       }
 
-      const jsonEvent = JSON.stringify({
-        type: AcknowledgeType.ACK,
-        data: {
-          delivery_tag: notification.deliveryTag,
-          // Note: we can extend this when we want to implement multiple ack at once.
-          multiple: false,
-        },
-      });
+      if (notification.type === ConsumableEvent.EVENT) {
+        if (!notification.deliveryTag) {
+          this.logger.warn(`Cannot acknowledge event. DeliveryTag is missing.`);
+        }
 
-      this.socket.send(jsonEvent);
+        const jsonEvent = JSON.stringify({
+          type: AcknowledgeType.ACK,
+          data: {
+            delivery_tag: notification.deliveryTag,
+            // Note: we can extend this when we want to implement multiple ack at once.
+            multiple: false,
+          },
+        });
+
+        this.socket.send(jsonEvent);
+      }
+    } else {
+      console.warn('WebSocket is not open. Cannot acknowledge vent.');
     }
   }
 

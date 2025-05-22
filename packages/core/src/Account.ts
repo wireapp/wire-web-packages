@@ -570,7 +570,6 @@ export class Account extends TypedEventEmitter<Events> {
   public listen({
     onEvent = () => {},
     onConnectionStateChanged = () => {},
-    onNotificationStreamProgress = () => {},
     onMissedNotifications = () => {},
     dryRun = false,
   }: {
@@ -580,11 +579,6 @@ export class Account extends TypedEventEmitter<Events> {
      * @param source where the message comes from (either websocket or notification stream)
      */
     onEvent?: (payload: HandledEventPayload, source: NotificationSource) => void;
-
-    /**
-     * During the notification stream processing, this function will be called whenever a new notification has been processed
-     */
-    onNotificationStreamProgress?: ({done, total}: {done: number; total: number}) => void;
 
     /**
      * called when we detect lost notification from backend.
@@ -630,9 +624,8 @@ export class Account extends TypedEventEmitter<Events> {
       try {
         const messages = this.service!.notification.handleNotification(notification, source, dryRun);
         for await (const message of messages) {
-          await handleEvent(message, source).then(() => {
-            this.apiClient.transport.ws.acknowledgeEvents(notification);
-          });
+          await handleEvent(message, source);
+          this.apiClient.transport.ws.acknowledgeEvents(notification);
         }
       } catch (error) {
         this.logger.error(`Failed to handle notification ID "${notification.id}": ${(error as any).message}`, error);
@@ -652,8 +645,30 @@ export class Account extends TypedEventEmitter<Events> {
 
     const onNotification = (notification: ConsumableNotification) => {
       if (notification.type === ConsumableEvent.MISSED) {
+        // lock ws
+        this.apiClient.transport.ws.lock();
+        pauseMessageSending();
+        // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
+        pauseRejoiningMLSConversations();
+        onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+
         this.logger.log(`Start processing missing notification`);
         handleMissedNotification(notification);
+
+        // if (abortHandler.signal.aborted) {
+        //   this.logger.warn('Ending connection process as websocket was closed');
+        //   return;
+        // }
+
+        onConnectionStateChanged(ConnectionState.LIVE);
+        // We can now unlock the websocket and let the new messages being handled and decrypted
+        this.apiClient.transport.ws.unlock();
+        // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
+        // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
+
+        this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+        resumeMessageSending();
+        resumeRejoiningMLSConversations();
       }
 
       if (notification.type === ConsumableEvent.EVENT) {
@@ -684,31 +699,6 @@ export class Account extends TypedEventEmitter<Events> {
       // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
       pauseRejoiningMLSConversations();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
-
-      const results = {done: 0};
-
-      this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
-        if (abortHandler.signal.aborted) {
-          /* Stop handling notifications if the websocket has been disconnected.
-           * Upon reconnecting we are going to restart handling the notification stream for where we left of
-           */
-          this.logger.warn(`Stop processing notifications as connection to websocket was closed`);
-        }
-
-        onNotification(notification);
-        onNotificationStreamProgress({done: results.done + 1, total: 0});
-        results.done++;
-      });
-
-      // const results = await this.service!.notification.processNotificationStream(
-      //   async (notification, source, progress) => {
-      //     await handleNotification(notification, source);
-      //     onNotificationStreamProgress(progress);
-      //   },
-      //   abortHandler,
-      // );
-      //
-      // this.logger.info('Finished processing notifications', results);
 
       if (abortHandler.signal.aborted) {
         this.logger.warn('Ending connection process as websocket was closed');
