@@ -17,18 +17,10 @@
  *
  */
 
-import {BackendEvent} from '@wireapp/api-client/lib/event';
-import {Notification} from '@wireapp/api-client/lib/notification/';
-
 import {CRUDEngine} from '@wireapp/store-engine';
-
-enum DatabaseStores {
-  EVENTS = 'events',
-}
 
 export enum DatabaseKeys {
   PRIMARY_KEY_LAST_EVENT = 'z.storage.StorageKey.EVENT.LAST_DATE',
-  PRIMARY_KEY_LAST_NOTIFICATION = 'z.storage.StorageKey.NOTIFICATION.LAST_ID',
 }
 
 const STORES = {
@@ -37,10 +29,6 @@ const STORES = {
 
 export class NotificationDatabaseRepository {
   constructor(private readonly storeEngine: CRUDEngine) {}
-
-  public getNotificationEventList() {
-    return this.storeEngine.readAll<BackendEvent>(DatabaseStores.EVENTS);
-  }
 
   public async getLastEventDate() {
     const {value} = await this.storeEngine.read<{
@@ -61,19 +49,5 @@ export class NotificationDatabaseRepository {
       value: eventDate.toISOString(),
     });
     return eventDate;
-  }
-
-  public async getLastNotificationId() {
-    const {value} = await this.storeEngine.read<{
-      value: string;
-    }>(STORES.AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION);
-    return value;
-  }
-
-  public async updateLastNotificationId(lastNotification: Notification) {
-    await this.storeEngine.updateOrCreate(STORES.AMPLIFY, DatabaseKeys.PRIMARY_KEY_LAST_NOTIFICATION, {
-      value: lastNotification.id,
-    });
-    return lastNotification.id;
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,22 @@
  *
  */
 
-import {ConsumableNotification} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
+import {BackendEvent} from '../event';
 
-export enum CoreError {
-  NOTIFICATION_ERROR = 'CoreError.NOTIFICATION_ERROR',
+export interface ConsumableNotificationMissed {
+  type: ConsumableEvent.MISSED;
 }
 
-export interface NotificationError {
-  error: Error;
-  notification: ConsumableNotification;
-  type: CoreError.NOTIFICATION_ERROR;
+export interface ConsumableNotificationEvent {
+  type: ConsumableEvent.EVENT;
+  deliveryTag: number;
+  payload: BackendEvent[];
+  id: string;
+}
+
+export type ConsumableNotification = ConsumableNotificationMissed | ConsumableNotificationEvent;
+
+export enum ConsumableEvent {
+  EVENT = 'event',
+  MISSED = 'notifications.missed',
 }
