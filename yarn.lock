@@ -8241,7 +8241,7 @@ __metadata:
     "@wireapp/protocol-messaging": 1.52.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
-    axios: 1.7.9
+    axios: 1.9.0
     axios-retry: 4.5.0
     browser-sync: 3.0.3
     cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha11"
@@ -9458,7 +9458,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.9.0":
+"axios@npm:1.9.0, axios@npm:^1.9.0":
   version: 1.9.0
   resolution: "axios@npm:1.9.0"
   dependencies:
