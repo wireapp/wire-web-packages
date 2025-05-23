@@ -56,7 +56,6 @@ import {LinkPreviewService} from './linkPreview';
 import {InitClientOptions, MLSService} from './messagingProtocols/mls';
 import {
   pauseRejoiningMLSConversations,
-  queueConversationRejoin,
   resumeRejoiningMLSConversations,
 } from './messagingProtocols/mls/conversationRejoinQueue';
 import {E2EIServiceExternal, User} from './messagingProtocols/mls/E2EIdentityService';
@@ -341,7 +340,6 @@ export class Account extends TypedEventEmitter<Events> {
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
     const clientId = client.id;
 
-    await this.service.notification.initializeNotificationStream(clientId);
     await this.service.client.synchronizeClients(clientId);
     return client;
   }
@@ -566,8 +564,9 @@ export class Account extends TypedEventEmitter<Events> {
     onEvent = () => {},
     onConnectionStateChanged = () => {},
     onNotificationStreamProgress = () => {},
-    onMissedNotifications = () => {},
+    // onMissedNotifications = () => {},
     dryRun = false,
+    isDeprecated = true,
   }: {
     /**
      * Called when a new event arrives from backend
@@ -593,12 +592,14 @@ export class Account extends TypedEventEmitter<Events> {
      * We can then detect that something was wrong and warn the consumer that there might be some missing old messages
      * @param  {string} notificationId
      */
-    onMissedNotifications?: (notificationId: string) => void;
+    // onMissedNotifications?: (notificationId: string) => void;
 
     /**
      * When set will not decrypt and not store the last notification ID. This is useful if you only want to subscribe to unencrypted backend events
      */
     dryRun?: boolean;
+
+    isDeprecated?: boolean;
   } = {}): () => void {
     if (!this.currentClient) {
       throw new Error('Client has not been initialized - please login first');
@@ -646,45 +647,37 @@ export class Account extends TypedEventEmitter<Events> {
       }
     });
 
-    const handleMissedNotifications = async (notificationId: string) => {
-      if (this.hasMLSDevice) {
-        queueConversationRejoin('all-conversations', () =>
-          this.service!.conversation.handleConversationsEpochMismatch(),
-        );
-      }
-      return onMissedNotifications(notificationId);
-    };
-
     const processNotificationStream = async (abortHandler: AbortController) => {
-      // Lock websocket in order to buffer any message that arrives while we handle the notification stream
-      this.apiClient.transport.ws.lock();
-      pauseMessageSending();
-      // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
-      pauseRejoiningMLSConversations();
-      onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+      if (isDeprecated) {
+        // Lock websocket in order to buffer any message that arrives while we handle the notification stream
+        this.apiClient.transport.ws.lock();
+        pauseMessageSending();
+        // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
+        pauseRejoiningMLSConversations();
+        onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
 
-      const results = await this.service!.notification.processNotificationStream(
-        async (notification, source, progress) => {
-          await handleNotification(notification, source);
-          onNotificationStreamProgress(progress);
-        },
-        handleMissedNotifications,
-        abortHandler,
-      );
-      this.logger.info('Finished processing notifications', results);
+        const results = await this.service!.notification.processNotificationStream(
+          async (notification, source, progress) => {
+            await handleNotification(notification, source);
+            onNotificationStreamProgress(progress);
+          },
+          abortHandler,
+        );
+        this.logger.info('Finished processing notifications', results);
 
-      if (abortHandler.signal.aborted) {
-        this.logger.warn('Ending connection process as websocket was closed');
-        return;
+        if (abortHandler.signal.aborted) {
+          this.logger.warn('Ending connection process as websocket was closed');
+          return;
+        }
+        onConnectionStateChanged(ConnectionState.LIVE);
+        // We can now unlock the websocket and let the new messages being handled and decrypted
+        this.apiClient.transport.ws.unlock();
+        // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
+        // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
+        this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+        resumeMessageSending();
+        resumeRejoiningMLSConversations();
       }
-      onConnectionStateChanged(ConnectionState.LIVE);
-      // We can now unlock the websocket and let the new messages being handled and decrypted
-      this.apiClient.transport.ws.unlock();
-      // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
-      // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
-      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
-      resumeMessageSending();
-      resumeRejoiningMLSConversations();
     };
 
     this.apiClient.connect(processNotificationStream);
