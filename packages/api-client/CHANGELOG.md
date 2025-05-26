@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.55.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.54.0...@wireapp/api-client@27.55.0) (2025-05-23)
+
+### Features
+
+* **api-client:** bump cells-sdk to v0.1.1-alpha11 ([#7054](https://github.com/wireapp/wire-web-packages/issues/7054)) ([83bb710](https://github.com/wireapp/wire-web-packages/commit/83bb7100eb719588c1c45b4cc48c9cfb5614cf36))
+
+# [27.54.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.53.1...@wireapp/api-client@27.54.0) (2025-05-19)
+
+### Features
+
+* **api-client/cell:** permanent delete + restore + rename methods [WPB-17716] ([#7049](https://github.com/wireapp/wire-web-packages/issues/7049)) ([0f6cf98](https://github.com/wireapp/wire-web-packages/commit/0f6cf98c17185d4f6883ac571627405cdb5adc30))
+
+## [27.53.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.53.0...@wireapp/api-client@27.53.1) (2025-05-19)
+
+### Bug Fixes
+
+* **api-client:** remove version prefix for all access endpoints ([#7048](https://github.com/wireapp/wire-web-packages/issues/7048)) ([416613b](https://github.com/wireapp/wire-web-packages/commit/416613b94afbfbbba390c6546ccb719b9597dc9b))
+
+# [27.53.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.52.0...@wireapp/api-client@27.53.0) (2025-05-14)
+
+### Features
+
+* **api-client/cells:** add type param for getting nodes ([#7046](https://github.com/wireapp/wire-web-packages/issues/7046)) ([4ae93e5](https://github.com/wireapp/wire-web-packages/commit/4ae93e517ce22a75a31bbb43f2e7aa9a466692d1))
+
+# [27.52.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.51.0...@wireapp/api-client@27.52.0) (2025-05-14)
+
+### Features
+
+* **api-client/cells:** move method [WPB-17386] ([#7045](https://github.com/wireapp/wire-web-packages/issues/7045)) ([a3f3597](https://github.com/wireapp/wire-web-packages/commit/a3f359725453a8342ab7355058b38256b01f0da8))
+
+# [27.51.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.50.0...@wireapp/api-client@27.51.0) (2025-05-09)
+
+### Features
+
+* **api-client/cells:** createFile & createFolder [WPB-17571] ([#7042](https://github.com/wireapp/wire-web-packages/issues/7042)) ([33f2323](https://github.com/wireapp/wire-web-packages/commit/33f232346a0fa24892744a19c3c597e5c4f3ab55))
+
+# [27.50.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.49.0...@wireapp/api-client@27.50.0) (2025-05-07)
+
+### Features
+
+* **api-client/cells:** remove type filter from search [WPB-17388] ([#7041](https://github.com/wireapp/wire-web-packages/issues/7041)) ([bade74a](https://github.com/wireapp/wire-web-packages/commit/bade74a3e7aa68e72a537f881f7bf2863f7793de))
+
+# [27.49.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.48.0...@wireapp/api-client@27.49.0) (2025-05-05)
+
+### Features
+
+* **api-client/cells:** getAllFiles sorting [WPB-17384] ([#7039](https://github.com/wireapp/wire-web-packages/issues/7039)) ([ce58502](https://github.com/wireapp/wire-web-packages/commit/ce585021e558de7ee06f8ded91c71c58d526c65f))
+
+# [27.48.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.47.0...@wireapp/api-client@27.48.0) (2025-05-05)
+
+### Features
+
+* Add getCurrentSubscription endpoint ([#7037](https://github.com/wireapp/wire-web-packages/issues/7037)) ([2a7d200](https://github.com/wireapp/wire-web-packages/commit/2a7d200048e3f848d545871efeda0b0fe3c7bc8a))
+
 # [27.47.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.46.0...@wireapp/api-client@27.47.0) (2025-04-28)
 
 ### Features
