@@ -19,10 +19,10 @@
 
 import {CSSObject} from '@emotion/react';
 
+import {inputStyle} from './Input';
 import {isGroup} from './SelectComponents';
 
-import {Theme} from '../../Layout';
-import {inputStyle} from '../Input';
+import {Theme} from '../Layout';
 
 interface CustomStylesParams {
   theme: Theme;
