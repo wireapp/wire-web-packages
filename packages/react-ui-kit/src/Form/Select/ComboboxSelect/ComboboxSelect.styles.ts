@@ -32,7 +32,7 @@ import {
   baseSingleValueStyles,
 } from '../BaseSelect/BaseSelect.styles';
 
-interface SelectStylesParams {
+interface CustomStylesParams {
   theme: Theme;
   markInvalid?: boolean;
   menuPosition?: 'absolute' | 'relative';
@@ -49,12 +49,12 @@ export const wrapperStyles: CSSObject = {
   },
 };
 
-export const selectStyles = ({
+export const customStyles = ({
   theme,
   markInvalid = false,
   controlCSS = {},
   containerCSS = {},
-}: SelectStylesParams): StylesConfig => ({
+}: CustomStylesParams): StylesConfig => ({
   indicatorSeparator: () => baseIndicatorSeparatorStyles(),
   indicatorsContainer: provided => provided,
   container: provided => ({
