@@ -242,6 +242,7 @@ exports[`"Select" renders 1`] = `
           aria-live="polite"
           aria-relevant="additions text"
           className="emotion-3"
+          role="log"
         />
         <div
           className="emotion-5"
@@ -259,6 +260,7 @@ exports[`"Select" renders 1`] = `
             </div>
              
             <input
+              aria-activedescendant=""
               aria-autocomplete="list"
               aria-describedby="react-select-2-placeholder"
               aria-expanded={false}
@@ -542,6 +544,7 @@ exports[`"Select" renders as disabled 1`] = `
           aria-live="polite"
           aria-relevant="additions text"
           className="emotion-3"
+          role="log"
         />
         <div
           aria-disabled={true}
@@ -560,6 +563,7 @@ exports[`"Select" renders as disabled 1`] = `
             </div>
              
             <input
+              aria-activedescendant=""
               aria-autocomplete="list"
               aria-describedby="react-select-3-placeholder"
               aria-expanded={false}
@@ -844,6 +848,7 @@ exports[`"Select" renders as invalid 1`] = `
           aria-live="polite"
           aria-relevant="additions text"
           className="emotion-3"
+          role="log"
         />
         <div
           className="emotion-5"
@@ -861,6 +866,7 @@ exports[`"Select" renders as invalid 1`] = `
             </div>
              
             <input
+              aria-activedescendant=""
               aria-autocomplete="list"
               aria-describedby="react-select-4-placeholder"
               aria-expanded={false}
