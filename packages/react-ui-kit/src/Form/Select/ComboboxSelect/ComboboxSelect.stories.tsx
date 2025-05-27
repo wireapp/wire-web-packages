@@ -17,11 +17,15 @@
  *
  */
 
+import {useState} from 'react';
+
 import type {Meta, StoryObj} from '@storybook/react';
 
-import {ComboboxSelect} from './ComboboxSelect';
+import {ComboboxSelect, type ComboboxSelectProps} from './ComboboxSelect';
 
-const options = [
+import type {Option} from '../Select';
+
+const initialOptions: Option[] = [
   {value: '1', label: 'Option 1'},
   {value: '2', label: 'Option 2'},
   {value: '3', label: 'Option 3'},
@@ -49,7 +53,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     id: 'default-select',
-    options,
+    options: initialOptions,
     placeholder: 'Select options...',
     dataUieName: 'default-select',
     createOptionLabel: inputValue => `Create item "${inputValue}"`,
@@ -61,8 +65,8 @@ export const Default: Story = {
 export const WithValue: Story = {
   args: {
     id: 'with-value-select',
-    options,
-    value: [options[0], options[1]],
+    options: initialOptions,
+    value: [initialOptions[0], initialOptions[1]],
     placeholder: 'Select options...',
     dataUieName: 'with-value-select',
     createOptionLabel: inputValue => `Create item "${inputValue}"`,
@@ -74,7 +78,7 @@ export const WithValue: Story = {
 export const Disabled: Story = {
   args: {
     id: 'disabled-select',
-    options,
+    options: initialOptions,
     isDisabled: true,
     placeholder: 'Select options...',
     dataUieName: 'disabled-select',
@@ -84,10 +88,38 @@ export const Disabled: Story = {
   },
 };
 
+const CreatableSelectWrapper = (args: ComboboxSelectProps) => {
+  const [options, setOptions] = useState<Option[]>(initialOptions);
+  const [selectedValue, setSelectedValue] = useState<Option[]>([]);
+
+  const handleCreateOption = (inputValue: string) => {
+    const newOption = {
+      value: inputValue.toLowerCase().replace(/\W/g, ''),
+      label: inputValue,
+    };
+    setOptions(prev => [...prev, newOption]);
+    setSelectedValue(prev => [...prev, newOption]);
+  };
+
+  const handleChange = (value: Option | Option[]) => {
+    setSelectedValue(Array.isArray(value) ? value : [value]);
+  };
+
+  return (
+    <ComboboxSelect
+      {...args}
+      options={options}
+      value={selectedValue}
+      onChange={handleChange}
+      onCreateOption={handleCreateOption}
+    />
+  );
+};
+
 export const Creatable: Story = {
   args: {
     id: 'creatable-select',
-    options,
+    options: initialOptions,
     placeholder: 'Select or create options...',
     dataUieName: 'creatable-select',
     createOptionLabel: inputValue => `Create item "${inputValue}"`,
@@ -95,13 +127,14 @@ export const Creatable: Story = {
     noOptionsMessage: 'No options available',
     required: true,
   },
+  render: args => <CreatableSelectWrapper {...args} />,
 };
 
 export const WithLabel: Story = {
   args: {
     id: 'with-label-select',
     label: 'Select options',
-    options,
+    options: initialOptions,
     createOptionLabel: inputValue => `Create item "${inputValue}"`,
     onCreateOption: () => {},
     noOptionsMessage: 'No options available',
