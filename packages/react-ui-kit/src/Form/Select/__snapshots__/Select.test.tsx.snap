@@ -17,7 +17,6 @@ exports[`"Select" renders 1`] = `
 }
 
 .emotion-2>div {
-  padding: 0;
   height: auto;
   min-height: 48px;
   position: relative;
@@ -327,7 +326,6 @@ exports[`"Select" renders as disabled 1`] = `
 }
 
 .emotion-2>div {
-  padding: 0;
   height: auto;
   min-height: 48px;
   position: relative;
@@ -629,7 +627,6 @@ exports[`"Select" renders as invalid 1`] = `
 }
 
 .emotion-2>div {
-  padding: 0;
   height: auto;
   min-height: 48px;
   position: relative;
