@@ -40,15 +40,6 @@ interface CustomStylesParams {
   containerCSS?: CSSObject;
 }
 
-export const wrapperStyles: CSSObject = {
-  marginBottom: '20px',
-  width: '100%',
-  position: 'relative',
-  '& .select__menu': {
-    position: 'absolute',
-  },
-};
-
 export const customStyles = ({
   theme,
   markInvalid = false,
@@ -95,7 +86,6 @@ export const customStyles = ({
     ...baseMenuStyles({theme, menuPosition: 'absolute'}),
     width: '100%',
     zIndex: 1,
-    position: 'absolute',
   }),
   multiValue: provided => ({
     ...provided,
@@ -114,15 +104,9 @@ export const customStyles = ({
   multiValueRemove: provided => ({
     ...provided,
     color: theme.general.primaryColor,
-    paddingLeft: 2,
-    paddingRight: 6,
     ':hover': {
       backgroundColor: 'transparent',
       color: theme.general.primaryColor,
-    },
-
-    '& svg': {
-      fill: 'currentColor',
     },
   }),
   valueContainer: provided => ({
@@ -135,7 +119,3 @@ export const customStyles = ({
     overflowY: 'auto',
   }),
 });
-
-export const noOptionsMessageStyles = {
-  padding: '8px 12px',
-};
