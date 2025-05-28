@@ -72,8 +72,8 @@ export const ComboboxSelect = ({
         options={options}
         value={value}
         onChange={onChange}
-        isMulti={true}
-        isSearchable={true}
+        isMulti
+        isSearchable
         isDisabled={isDisabled}
         placeholder={placeholder}
         styles={selectStyles({theme})}
