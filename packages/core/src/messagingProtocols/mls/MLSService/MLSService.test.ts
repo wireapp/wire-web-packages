@@ -103,6 +103,10 @@ const createMLSService = async () => {
   return [mlsService, {apiClient, coreCrypto: mockCoreCrypto, recurringTaskScheduler, transactionContext}] as const;
 };
 
+afterAll(() => {
+  jest.clearAllTimers();
+});
+
 describe('MLSService', () => {
   describe('registerConversation', () => {
     let mlsService: MLSService;
@@ -540,7 +544,6 @@ describe('MLSService', () => {
       const mockedDecryptoedMessage: DecryptedMessage = {
         hasEpochChanged: true,
         isActive: false,
-        proposals: [],
       };
 
       jest.spyOn(transactionContext, 'decryptMessage').mockResolvedValueOnce(mockedDecryptoedMessage);
@@ -577,7 +580,6 @@ describe('MLSService', () => {
       const mockedDecryptoedMessage: DecryptedMessage = {
         hasEpochChanged: true,
         isActive: false,
-        proposals: [],
         commitDelay,
       };
 

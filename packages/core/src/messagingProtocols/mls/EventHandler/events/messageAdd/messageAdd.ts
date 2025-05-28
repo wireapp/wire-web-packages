@@ -47,7 +47,7 @@ export const handleMLSMessageAdd = async ({
     return null;
   }
 
-  const {message, commitDelay, proposals, hasEpochChanged, senderClientId: encodedSenderClientId} = decryptedMessage;
+  const {message, commitDelay, hasEpochChanged, senderClientId: encodedSenderClientId} = decryptedMessage;
 
   if (encodedSenderClientId) {
     const decoder = new TextDecoder();
@@ -56,7 +56,7 @@ export const handleMLSMessageAdd = async ({
   }
 
   // Check if the message includes proposals
-  if (typeof commitDelay === 'number' || proposals.length > 0) {
+  if (typeof commitDelay === 'number') {
     // we are dealing with a proposal, add a task to process this proposal later on
     // Those proposals are stored inside of coreCrypto and will be handled after a timeout
     await mlsService.handlePendingProposals({

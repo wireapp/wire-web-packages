@@ -28,7 +28,7 @@ import {
   setLogger,
   setMaxLogLevel,
   version as CCVersion,
-  initCoreCrypto,
+  initWasmModule,
   migrateDatabaseKeyTypeToBytes,
   DatabaseKey,
 } from '@wireapp/core-crypto';
@@ -122,7 +122,7 @@ export async function buildClient(
     // We need to initialize the coreCrypto package with the path to the wasm file
     // before we can use it. This is a one time operation and should be done
     // before we create the CoreCrypto instance.
-    initCoreCrypto(wasmFilePath)
+    initWasmModule(wasmFilePath)
       .then(async output => {
         logger.log('info', 'CoreCrypto initialized', {output});
         const coreCryptoDbName = `corecrypto-${storeEngine.storeName}`;
