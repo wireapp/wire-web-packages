@@ -57,6 +57,7 @@ export class WebSocketClient extends EventEmitter {
   private isSocketLocked: boolean;
   private bufferedMessages: string[];
   private abortHandler?: AbortController;
+  private versionPrefix = '';
 
   public static readonly TOPIC = TOPIC;
 
@@ -72,6 +73,13 @@ export class WebSocketClient extends EventEmitter {
     this.websocketState = this.socket.getState();
 
     this.logger = LogFactory.getLogger('@wireapp/api-client/tcp/WebSocketClient');
+  }
+
+  public useVersion(version: number): void {
+    if (version < 8) {
+      throw new Error('Minium supported api version is 8 in order to connect to web socket');
+    }
+    this.versionPrefix = version > 0 ? `/v${version}` : '';
   }
 
   private onStateChange(newState: WEBSOCKET_STATE): void {
@@ -216,7 +224,12 @@ export class WebSocketClient extends EventEmitter {
     if (!token) {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
-    let url = `${this.baseUrl}/await?access_token=${token}`;
+
+    if (!this.versionPrefix) {
+      throw new Error('Backend api version is not set to connect to web socket');
+    }
+
+    let url = `${this.baseUrl}${this.versionPrefix}/events?access_token=${token}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user
