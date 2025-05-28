@@ -84,7 +84,7 @@ export const ComboboxSelect = ({
         components={{
           ClearIndicator: () => null,
           DropdownIndicator: BaseSelectDropdownIndicator,
-          MultiValueRemove: props => <MultiValueRemove {...props} theme={theme} />,
+          MultiValueRemove: props => <MultiValueRemove {...props} />,
           NoOptionsMessage: props => <NoOptionsMessage {...props} message={noOptionsMessage} />,
         }}
       />
@@ -92,7 +92,7 @@ export const ComboboxSelect = ({
   );
 };
 
-const MultiValueRemove = ({theme, ...props}: MultiValueRemoveProps & {theme: Theme}) => (
+const MultiValueRemove = (props: MultiValueRemoveProps) => (
   <components.MultiValueRemove {...props}>
     <CloseIcon width={10} height={10} />
   </components.MultiValueRemove>
