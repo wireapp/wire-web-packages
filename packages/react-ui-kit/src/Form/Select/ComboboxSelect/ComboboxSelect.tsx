@@ -47,9 +47,7 @@ export interface ComboboxSelectProps {
   noOptionsMessage: string;
   label?: string;
   required?: boolean;
-
   menuPotralTarget?: HTMLElement;
-
   menuPosition?: MenuPosition;
   menuListCSS?: CSSObject;
 }
