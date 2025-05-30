@@ -32,6 +32,7 @@ import {
   RestIncomingNode,
   RestNodeLocator,
   RestActionOptionsCopyMove,
+  RestNamespaceValuesResponse,
 } from 'cells-sdk-ts';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
@@ -459,6 +460,33 @@ export class CellsAPI {
     }
 
     const result = await this.client.getPublicLink(uuid);
+
+    return result.data;
+  }
+
+  async getAllTags(): Promise<RestNamespaceValuesResponse> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const result = await this.client.listNamespaceValues('usermeta-tags', 'PUT', ['']);
+
+    return result.data;
+  }
+
+  async setNodeTags({uuid, tags}: {uuid: string; tags: string[]}): Promise<RestNode> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const result = await this.client.patchNode(uuid, {
+      MetaUpdates: [
+        {
+          Operation: 'PUT',
+          UserMeta: {Namespace: 'usermeta-tags', JsonValue: `"${tags.join(',')}"`},
+        },
+      ],
+    });
 
     return result.data;
   }
