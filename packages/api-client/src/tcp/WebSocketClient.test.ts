@@ -19,11 +19,13 @@
 
 /* eslint-disable dot-notation */
 
+import {ConsumableEvent} from '@wireapp/api-client/lib/tcp/ConsumableNotification.types';
+
+import {mapConsumableNotification} from './utils';
 import {WebSocketClient} from './WebSocketClient';
 
 import {InvalidTokenError} from '../auth/AuthenticationError';
 import {TEAM_EVENT} from '../event/';
-import {Notification} from '../notification';
 
 const accessTokenPayload = {
   access_token:
@@ -50,13 +52,16 @@ const invalidTokenHttpClient: any = {
 };
 
 const fakeSocket = {
-  onclose: () => {},
+  onclose: ({code}: {code: number}) => ({
+    code,
+  }),
+  // @ts-ignore
   onerror: (error: Error) => {},
   onmessage: ({}) => {},
   onopen: () => {},
 };
 
-describe('WebSocketClient', () => {
+describe('ConsumableNotification', () => {
   describe('handler', () => {
     it('calls "onOpen" when WebSocket opens', async () => {
       const websocketClient = new WebSocketClient('ws://url', fakeHttpClient);
@@ -77,7 +82,7 @@ describe('WebSocketClient', () => {
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
       await websocketClient.connect();
-      fakeSocket.onclose();
+      fakeSocket.onclose({code: 1000});
 
       expect(onCloseSpy).toHaveBeenCalledTimes(1);
     });
@@ -143,18 +148,24 @@ describe('WebSocketClient', () => {
   });
 
   describe('connect', () => {
-    const fakeNotification: Notification = {
-      id: '123',
-      payload: [
-        {
-          data: {
-            user: 'Bob',
-          },
-          team: '456',
-          time: new Date().toISOString(),
-          type: TEAM_EVENT.MEMBER_JOIN,
+    const fakeNotification = {
+      type: ConsumableEvent.EVENT,
+      data: {
+        delivery_tag: 1,
+        event: {
+          id: '123',
+          payload: [
+            {
+              data: {
+                user: 'Bob',
+              },
+              team: '456',
+              time: new Date().toISOString(),
+              type: TEAM_EVENT.MEMBER_JOIN,
+            },
+          ],
         },
-      ],
+      },
     };
 
     it('does not lock websocket by default', async () => {
@@ -170,7 +181,8 @@ describe('WebSocketClient', () => {
         websocketClient.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
           expect(onMessageSpy).toHaveBeenCalledTimes(1);
           expect(websocketClient['bufferedMessages'].length).toBe(0);
-          expect(notification).toEqual(fakeNotification);
+          const mappedNotification = mapConsumableNotification(JSON.stringify(fakeNotification));
+          expect(notification).toEqual(mappedNotification);
           resolve();
         });
         fakeSocket.onmessage({data: Buffer.from(JSON.stringify(fakeNotification), 'utf-8')});

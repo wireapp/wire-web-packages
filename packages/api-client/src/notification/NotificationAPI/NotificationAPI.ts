@@ -17,42 +17,15 @@
  *
  */
 
-import axios, {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
-import {Notification, NotificationList} from '..';
-import {BackendError, BackendErrorLabel, HttpClient, StatusCode} from '../../http';
+import {NotificationList} from '..';
+import {HttpClient} from '../../http';
 
 export const NOTIFICATION_SIZE_MAXIMUM = 10000;
 
-type NotificationsReponse = {
-  notifications: Notification[];
-  missedNotification?: string;
-};
-
 export class NotificationAPI {
   constructor(private readonly client: HttpClient) {}
-
-  public static readonly URL = {
-    LAST: 'last',
-    NOTIFICATION: '/notifications',
-  };
-
-  /**
-   * Fetch the last notification.
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getLastNotification
-   */
-  public async getLastNotification(clientId?: string): Promise<Notification> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        client: clientId,
-      },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`,
-    };
-
-    const response = await this.client.sendJSON<Notification>(config);
-    return response.data;
-  }
 
   /**
    * Fetch paged notifications.
@@ -74,111 +47,10 @@ export class NotificationAPI {
         since,
         size,
       },
-      url: NotificationAPI.URL.NOTIFICATION,
+      url: '/notifications',
     };
 
     const response = await this.client.sendJSON<NotificationList>(config, false, abortController);
-    return response.data;
-  }
-
-  /**
-   * Fetch all notifications.
-   * @param clientId Only return notifications targeted at the given client
-   * @param lastNotificationId Only return notifications more recent than this
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/fetchNotifications
-   */
-  public async getAllNotifications(
-    clientId?: string,
-    lastNotificationId?: string,
-    abortController?: AbortController,
-  ): Promise<NotificationsReponse> {
-    const getNotificationChunks = async (
-      notificationList: Notification[],
-      currentClientId?: string,
-      currentNotificationId?: string,
-    ): Promise<NotificationsReponse> => {
-      const defaultPayload: NotificationList = {
-        notifications: [],
-        time: '0',
-        has_more: false,
-      };
-      let payload: NotificationList = {...defaultPayload};
-      let hasMissedNotifications = false;
-
-      try {
-        payload = await this.getNotifications(
-          currentClientId,
-          NOTIFICATION_SIZE_MAXIMUM,
-          currentNotificationId,
-          abortController,
-        );
-      } catch (error) {
-        const isAxiosError = axios.isAxiosError(error);
-
-        //error with response body (before v3 API)
-        const isErrorWithNotifications = isAxiosError && error.response?.data?.notifications;
-
-        //uuid parsing error
-        const isBadRequestError = isAxiosError && error.response?.status === StatusCode.BAD_REQUEST;
-
-        //notification was not found in the database,
-        const isNotFoundError = error instanceof BackendError && error.label === BackendErrorLabel.NOT_FOUND;
-
-        if (isBadRequestError || isNotFoundError) {
-          //we need to load all the notifications from the beginning (without 'since' param)
-          const payload = await getNotificationChunks(notificationList, currentClientId);
-
-          //we have to manually add missedNotification value since it won't be included when called without 'since' param
-          return {...payload, missedNotification: currentNotificationId};
-        }
-
-        if (isErrorWithNotifications) {
-          hasMissedNotifications = true;
-          payload = {...defaultPayload, ...error.response?.data};
-        }
-
-        //throw error for other BackendError type errors
-        if (!isAxiosError) {
-          throw Error;
-        }
-      }
-
-      const {notifications, has_more} = payload;
-
-      if (notifications?.length) {
-        notificationList = notificationList.concat(notifications);
-      }
-
-      if (has_more) {
-        const lastNotification = notifications[notifications.length - 1];
-        if (lastNotification) {
-          return getNotificationChunks(notificationList, currentClientId, lastNotification.id);
-        }
-      }
-
-      return {
-        notifications: notificationList,
-        missedNotification: hasMissedNotifications ? currentNotificationId : undefined,
-      };
-    };
-
-    return getNotificationChunks([], clientId, lastNotificationId);
-  }
-
-  /**
-   * Fetch a notification by ID.
-   * @see https://staging-nginz-https.zinfra.io/swagger-ui/#!/push/getNotification
-   */
-  public async getNotification(notificationId: string, clientId?: string): Promise<Notification> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      params: {
-        client: clientId,
-      },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${notificationId}`,
-    };
-
-    const response = await this.client.sendJSON<Notification>(config);
     return response.data;
   }
 }
