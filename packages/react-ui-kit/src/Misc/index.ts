@@ -27,3 +27,4 @@ export * from './Pill';
 export * from './useLongTouch';
 export * from './useTimeout';
 export * from './Breadcrumbs';
+export * from './Badge';
