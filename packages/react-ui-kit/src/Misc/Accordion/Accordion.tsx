@@ -45,6 +45,36 @@ interface AccordionComponent extends ForwardRefExoticComponent<AccordionProps & 
   Item: typeof AccordionItem;
 }
 
+/**
+ * A vertically stacked set of interactive headings that each reveal an associated section of content.
+ * The Accordion component can be used to create expandable/collapsible sections of content.
+ *
+ * @example
+ * Single open accordion (default)
+ * ```tsx
+ * <Accordion>
+ *   <Accordion.Item title="What is Wire?" value="item-1">
+ *     <Text>Wire is a secure messaging platform...</Text>
+ *   </Accordion.Item>
+ *   <Accordion.Item title="Is Wire secure?" value="item-2">
+ *     <Text>Yes, Wire uses end-to-end encryption...</Text>
+ *   </Accordion.Item>
+ * </Accordion>
+ * ```
+ *
+ * @example
+ * Multiple open accordion:
+ * ```tsx
+ * <Accordion type="multiple">
+ *   <Accordion.Item title="What is Wire?" value="item-1">
+ *     <Text>Wire is a secure messaging platform...</Text>
+ *   </Accordion.Item>
+ *   <Accordion.Item title="Is Wire secure?" value="item-2">
+ *     <Text>Yes, Wire uses end-to-end encryption...</Text>
+ *   </Accordion.Item>
+ * </Accordion>
+ * ```
+ */
 export const Accordion = forwardRef<ElementRef<typeof AccordionPrimitive.Root>, AccordionProps>((props, ref) => {
   if (props.type === 'multiple') {
     return (
