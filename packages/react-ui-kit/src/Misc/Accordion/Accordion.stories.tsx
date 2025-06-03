@@ -95,3 +95,17 @@ export const WithDefaultOpen: Story = {
     </Accordion>
   ),
 };
+
+export const TooLongTitle: Story = {
+  render: () => (
+    <Accordion>
+      <Accordion.Item
+        title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        value="item-1"
+      >
+        Wire is a secure messaging and collaboration platform that helps teams communicate effectively while maintaining
+        the highest standards of security and privacy.
+      </Accordion.Item>
+    </Accordion>
+  ),
+};

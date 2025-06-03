@@ -21,7 +21,14 @@ import {ElementRef, forwardRef, ReactNode} from 'react';
 
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 
-import {chevronStyles, contentStyles, contentTextStyles, itemStyles, triggerStyles} from './AccordionItem.styles';
+import {
+  chevronStyles,
+  contentStyles,
+  contentTextStyles,
+  itemStyles,
+  triggerStyles,
+  triggerTextStyles,
+} from './AccordionItem.styles';
 
 import {ChevronDownIcon} from '../../../Icon';
 
@@ -35,7 +42,7 @@ export const AccordionItem = forwardRef<ElementRef<typeof AccordionPrimitive.Ite
   ({title, children, value}, ref) => (
     <AccordionPrimitive.Item value={value} ref={ref} css={itemStyles}>
       <AccordionPrimitive.Trigger css={triggerStyles}>
-        {title}
+        <span css={triggerTextStyles}>{title}</span>
         <ChevronDownIcon css={chevronStyles} />
       </AccordionPrimitive.Trigger>
       <AccordionPrimitive.Content css={contentStyles}>

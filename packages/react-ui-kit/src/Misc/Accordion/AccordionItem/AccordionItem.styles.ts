@@ -20,6 +20,10 @@
 import {CSSObject, keyframes} from '@emotion/react';
 
 import {COLOR_V2} from '../../../Identity/colors-v2';
+import {ellipsis} from '../../../util';
+
+const ANIMATION_TIMING = '300ms';
+const ANIMATION_EASING = 'cubic-bezier(0.87, 0, 0.13, 1)';
 
 const slideDown = keyframes`
   from {
@@ -61,11 +65,14 @@ export const triggerStyles: CSSObject = {
   padding: '16px',
   border: 'none',
   cursor: 'pointer',
-  fontSize: '16px',
-  fontWeight: 500,
-  color: COLOR_V2.GRAY_90,
   transition: 'background-color 0.2s ease',
   height: '48px',
+};
+
+export const triggerTextStyles: CSSObject = {
+  ...ellipsis(),
+  fontSize: '16px',
+  marginRight: '16px',
 };
 
 export const contentStyles: CSSObject = {
@@ -74,10 +81,10 @@ export const contentStyles: CSSObject = {
   fontSize: '14px',
   lineHeight: 1.5,
   '&[data-state="open"]': {
-    animation: `${slideDown} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
+    animation: `${slideDown} ${ANIMATION_TIMING} ${ANIMATION_EASING}`,
   },
   '&[data-state="closed"]': {
-    animation: `${slideUp} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
+    animation: `${slideUp} ${ANIMATION_TIMING} ${ANIMATION_EASING}`,
   },
 };
 
@@ -89,7 +96,7 @@ export const chevronStyles: CSSObject = {
   width: '16px',
   height: '16px',
   color: COLOR_V2.GRAY_70,
-  transition: 'transform 300ms cubic-bezier(0.87, 0, 0.13, 1)',
+  transition: `transform ${ANIMATION_TIMING} ${ANIMATION_EASING}`,
   '[data-state="open"] &': {
     transform: 'rotate(180deg)',
   },
