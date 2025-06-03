@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,31 @@
  *
  */
 
-export * from './ButtonGroup';
-export * from './childrenWithDefaultProps';
-export * from './IconButton';
-export * from './IsInViewport';
-export * from './Loading';
-export * from './Pagination';
-export * from './Pill';
-export * from './useLongTouch';
-export * from './useTimeout';
-export * from './Breadcrumbs';
-export * from './Badge';
-export * from './BadgeWithCounter';
+import {CSSObject} from '@emotion/react';
+
+export const wrapperStyles: CSSObject = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+};
+
+export const countStyles: CSSObject = {
+  color: 'gray',
+  flexShrink: 0,
+};
+
+export const listStyles: CSSObject = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+  maxWidth: '200px',
+  maxHeight: '200px',
+  overflowY: 'auto',
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
+};
+
+export const listItemStyles: CSSObject = {
+  flexShrink: 0,
+};
