@@ -48,6 +48,7 @@ const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
 const DEFAULT_SEARCH_SORT_FIELD = 'mtime';
 const DEFAULT_SEARCH_SORT_DIRECTION: SortDirection = 'desc';
+const USER_META_TAGS_NAMESPACE = 'usermeta-tags';
 
 interface CellsConfig {
   pydio: {
@@ -469,7 +470,7 @@ export class CellsAPI {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.listNamespaceValues('usermeta-tags');
+    const result = await this.client.listNamespaceValues(USER_META_TAGS_NAMESPACE);
 
     return result.data;
   }
