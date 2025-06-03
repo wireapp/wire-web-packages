@@ -27,11 +27,15 @@ import {
   LoginData,
   PreKey,
 } from '@wireapp/api-client/lib/auth';
-import {ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
+import {ClientCapability, ClientClassification, ClientType, RegisteredClient} from '@wireapp/api-client/lib/client/';
 import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
+import {
+  ConsumableEvent,
+  ConsumableNotification,
+} from '@wireapp/api-client/lib/notification/ConsumableNotification.types';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {FEATURE_KEY, FeatureStatus} from '@wireapp/api-client/lib/team';
@@ -562,7 +566,7 @@ export class Account extends TypedEventEmitter<Events> {
    * @param callbacks callbacks that will be called to handle different events
    * @returns close a function that will disconnect from the websocket
    */
-  public listen({
+  public async listen({
     onEvent = () => {},
     onConnectionStateChanged = () => {},
     onNotificationStreamProgress = () => {},
@@ -599,7 +603,7 @@ export class Account extends TypedEventEmitter<Events> {
      * When set will not decrypt and not store the last notification ID. This is useful if you only want to subscribe to unencrypted backend events
      */
     dryRun?: boolean;
-  } = {}): () => void {
+  } = {}): Promise<() => void> {
     if (!this.currentClient) {
       throw new Error('Client has not been initialized - please login first');
     }
@@ -620,25 +624,66 @@ export class Account extends TypedEventEmitter<Events> {
       await onEvent(payload, source);
     };
 
-    const handleNotification = async (notification: Notification, source: NotificationSource): Promise<void> => {
+    const checkIsConsumable = (
+      notification: Notification | ConsumableNotification,
+    ): notification is ConsumableNotification => {
+      return 'type' in notification;
+    };
+
+    /**
+     * Handles a unified notification received from either a WebSocket or a legacy notification from notifications endpoint.
+     *
+     * This function processes both legacy and consumable notifications. it forwards the
+     * notification to core crypto for decryption then forwards the resulting event to the appropriate handler (webapp).
+     * For consumable notifications, it also acknowledges on the backend them to avoid duplicate processing.
+     *
+     * @param notification - The notification object, which may be a legacy Notification or a ConsumableNotification.
+     * @param source - The origin of the notification (e.g., WebSocket or legacy /notifications endpoint).
+     * @returns A Promise that resolves when the notification has been fully processed.
+     */
+    const handleUnifiedNotification = async (
+      notification: Notification | ConsumableNotification,
+      source: NotificationSource,
+    ): Promise<void> => {
+      const isConsumable = checkIsConsumable(notification);
       try {
-        const messages = this.service!.notification.handleNotification(notification, source, dryRun);
+        if (isConsumable && notification.type === ConsumableEvent.MISSED) {
+          // TODO: FULL SYNC
+          this.apiClient.transport.ws.acknowledgeMissedNotification();
+          return;
+        }
+
+        const event = isConsumable ? notification.data.event : notification;
+        const messages = this.service!.notification.handleNotification(event, source, dryRun);
+
         for await (const message of messages) {
+          /**
+           * At this point, the message has already been decrypted.
+           * It's best to acknowledge it on the backend now to avoid receiving it again.
+           * Otherwise, we'll attempt to decrypt it a second time, which can lead to
+           * a duplicate error from the core crypto.
+           */
+          if (isConsumable) {
+            this.apiClient.transport.ws.acknowledgeNotification(notification);
+          }
+
           await handleEvent(message, source);
         }
       } catch (error) {
-        this.logger.error(`Failed to handle notification ID "${notification.id}": ${(error as any).message}`, error);
+        const id = isConsumable ? notification.type : notification.id;
+        this.logger.error(`Failed to handle notification ID "${id}": ${(error as any).message}`, error);
       }
     };
 
     this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
-      handleNotification(notification, NotificationSource.WEBSOCKET),
+      handleUnifiedNotification(notification, NotificationSource.WEBSOCKET),
     );
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
       const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
         [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
         [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
+        [WEBSOCKET_STATE.OPEN]: ConnectionState.LIVE,
       };
       const connectionState = mapping[wsState];
       if (connectionState) {
@@ -655,9 +700,7 @@ export class Account extends TypedEventEmitter<Events> {
       return onMissedNotifications(notificationId);
     };
 
-    const processNotificationStream = async (abortHandler: AbortController) => {
-      // Lock websocket in order to buffer any message that arrives while we handle the notification stream
-      this.apiClient.transport.ws.lock();
+    const processNotificationStream = async () => {
       pauseMessageSending();
       // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
       pauseRejoiningMLSConversations();
@@ -665,21 +708,14 @@ export class Account extends TypedEventEmitter<Events> {
 
       const results = await this.service!.notification.processNotificationStream(
         async (notification, source, progress) => {
-          await handleNotification(notification, source);
+          await handleUnifiedNotification(notification, source);
           onNotificationStreamProgress(progress);
         },
         handleMissedNotifications,
-        abortHandler,
       );
+
       this.logger.info('Finished processing notifications', results);
 
-      if (abortHandler.signal.aborted) {
-        this.logger.warn('Ending connection process as websocket was closed');
-        return;
-      }
-      onConnectionStateChanged(ConnectionState.LIVE);
-      // We can now unlock the websocket and let the new messages being handled and decrypted
-      this.apiClient.transport.ws.unlock();
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
@@ -687,7 +723,36 @@ export class Account extends TypedEventEmitter<Events> {
       resumeRejoiningMLSConversations();
     };
 
-    this.apiClient.connect(processNotificationStream);
+    const isClientCapabaleOfConsumableNotifications = this.currentClient.capabilities.includes(
+      ClientCapability.CONSUMABLE_NOTIFICATIONS,
+    );
+
+    /*
+     * When enabling async notifications, be aware that the backend maintains a separate queue
+     * for new async notifications (/events weboscket endpoint), which only starts populating *after* the client declares support
+     * for async notifications.
+     *
+     * Therefore, after declaring support, it's necessary to perform one final fetch from the legacy
+     * system to ensure no notifications are missed—since older notifications won't
+     * appear in the new queue.
+     *
+     * These two systems are separate, and the transition timing
+     * is important to avoid missing any messages during the switch.
+     */
+    if (!isClientCapabaleOfConsumableNotifications) {
+      // let the backend now client is capable of consumable notifications
+      await this.service?.client.putClientCapabilities(this.currentClient.id, {
+        capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS],
+      });
+
+      // do a quick legacy sync without connecting to any websockets
+      await processNotificationStream();
+    } else {
+      onNotificationStreamProgress({done: 1, total: 1});
+    }
+
+    this.apiClient.connect();
+    onConnectionStateChanged(ConnectionState.LIVE);
 
     return () => {
       this.apiClient.disconnect();
@@ -763,3 +828,5 @@ export class Account extends TypedEventEmitter<Events> {
     return isMLSSupported && isMLSForTeamEnabled && isMLSServiceInitialized;
   }
 }
+
+console.info('bardia latest CORE');

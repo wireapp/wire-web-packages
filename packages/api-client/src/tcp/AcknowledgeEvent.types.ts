@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,17 @@
  *
  */
 
-import {Notification} from '@wireapp/api-client/lib/notification/';
+export interface AcknowledgeEvent {
+  type: AcknowledgeType;
+  data?: AcknowledgeData;
+}
 
-import {APIClient} from '@wireapp/api-client';
+export interface AcknowledgeData {
+  delivery_tag: number;
+  multiple: boolean;
+}
 
-export class NotificationBackendRepository {
-  constructor(private readonly apiClient: APIClient) {}
-
-  public async getAllNotifications(clientId?: string, lastNotificationId?: string) {
-    return this.apiClient.api.notification.getAllNotifications(clientId, lastNotificationId);
-  }
-
-  public getLastNotification(clientId?: string): Promise<Notification> {
-    return this.apiClient.api.notification.getLastNotification(clientId);
-  }
+export enum AcknowledgeType {
+  ACK = 'ack',
+  ACK_FULL_SYNC = 'ack_full_sync',
 }

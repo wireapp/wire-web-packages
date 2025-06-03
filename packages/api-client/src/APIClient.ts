@@ -444,3 +444,5 @@ export class APIClient extends EventEmitter {
     return false;
   }
 }
+
+console.info('bardia latest API-CLIENT');

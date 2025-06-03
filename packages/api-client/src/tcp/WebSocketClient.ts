@@ -24,11 +24,16 @@ import {EventEmitter} from 'events';
 
 import {LogFactory} from '@wireapp/commons';
 
+import {AcknowledgeType} from './AcknowledgeEvent.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
-import {Notification} from '../notification/';
+import {
+  ConsumableEvent,
+  ConsumableNotification,
+  ConsumableNotificationEvent,
+} from '../notification/ConsumableNotification.types';
 
 enum TOPIC {
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
@@ -40,7 +45,7 @@ enum TOPIC {
 export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
-  on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotification) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
@@ -77,7 +82,7 @@ export class WebSocketClient extends EventEmitter {
 
   public useVersion(version: number): void {
     if (version < 8) {
-      throw new Error('Minium supported api version is 8 in order to connect to web socket');
+      throw new Error('Minium supported api version is 8 in order to connect to /events web socket endpoint');
     }
     this.versionPrefix = version > 0 ? `/v${version}` : '';
   }
@@ -93,7 +98,14 @@ export class WebSocketClient extends EventEmitter {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification: Notification = JSON.parse(data);
+      const notification: ConsumableNotification = JSON.parse(data);
+      if (notification.type === ConsumableEvent.MISSED) {
+        this.acknowledgeMissedNotification();
+        setTimeout(() => {
+          this.handleMissedConsumableNotification();
+        }, 2000);
+        return;
+      }
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
@@ -236,5 +248,34 @@ export class WebSocketClient extends EventEmitter {
       url += `&client=${this.clientId}`;
     }
     return url;
+  }
+
+  private handleMissedConsumableNotification() {
+    window.location.reload();
+  }
+
+  private acknowledgeMissedNotification() {
+    const jsonEvent = JSON.stringify({
+      type: AcknowledgeType.ACK_FULL_SYNC,
+    });
+
+    this.socket.send(jsonEvent);
+  }
+
+  public acknowledgeNotification(notification: ConsumableNotificationEvent) {
+    if (this.socket?.getState() !== WebSocket.OPEN) {
+      return;
+    }
+
+    const jsonEvent = JSON.stringify({
+      type: AcknowledgeType.ACK,
+      data: {
+        delivery_tag: notification.data.delivery_tag,
+        // Note: this can be used when implementing batch proccessing
+        multiple: false,
+      },
+    });
+
+    this.socket.send(jsonEvent);
   }
 }

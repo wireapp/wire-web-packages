@@ -162,6 +162,7 @@ describe('Account', () => {
   });
 
   const currentClient: RegisteredClient = {
+    capabilities: [],
     id: CLIENT_ID,
     cookie: '',
     time: '',
@@ -245,7 +246,7 @@ describe('Account', () => {
         },
       });
 
-      const kill = account.listen({
+      const kill = await account.listen({
         onEvent: ({event}) => {
           expect(event.type).toBe(CONVERSATION_EVENT.OTR_MESSAGE_ADD);
           resolve();
@@ -319,7 +320,7 @@ describe('Account', () => {
             ConnectionState.LIVE,
             ConnectionState.CLOSED,
           ];
-          const disconnect = dependencies.account.listen({
+          const disconnect = await dependencies.account.listen({
             onConnectionStateChanged: state => {
               expect(state).toBe(expectedConnectionStates.splice(0, 1)[0]);
               switch (state) {
@@ -341,7 +342,7 @@ describe('Account', () => {
           const onNotificationStreamProgress = jest.fn();
           const onEvent = jest.fn();
           mockNotifications(nbNotifications);
-          const disconnect = dependencies.account.listen({
+          const disconnect = await dependencies.account.listen({
             onConnectionStateChanged: callWhen(ConnectionState.LIVE, () => {
               expect(onNotificationStreamProgress).toHaveBeenCalledTimes(nbNotifications);
               expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
@@ -361,7 +362,7 @@ describe('Account', () => {
           const onNotificationStreamProgress = jest.fn();
           const onEvent = jest.fn();
           mockNotifications(nbNotifications);
-          const disconnect = dependencies.account.listen({
+          const disconnect = await dependencies.account.listen({
             onConnectionStateChanged: callWhen(ConnectionState.LIVE, async () => {
               expect(onNotificationStreamProgress).toHaveBeenCalledTimes(nbNotifications);
               expect(onEvent).toHaveBeenCalledTimes(nbNotifications);
@@ -388,7 +389,7 @@ describe('Account', () => {
         const onEvent = jest.fn();
         mockNotifications(nbNotifications);
         return new Promise<void>(async resolve => {
-          const disconnect = dependencies.account.listen({
+          const disconnect = await dependencies.account.listen({
             onConnectionStateChanged: async state => {
               switch (state) {
                 case ConnectionState.PROCESSING_NOTIFICATIONS:
