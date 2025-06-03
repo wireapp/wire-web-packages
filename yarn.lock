@@ -8221,7 +8221,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/api-client@workspace:^, @wireapp/api-client@workspace:packages/api-client":
+"@wireapp/api-client@file:.yalc/@wireapp/api-client::locator=%40wireapp%2Fcore%40workspace%3Apackages%2Fcore":
+  version: 27.55.0
+  resolution: "@wireapp/api-client@file:.yalc/@wireapp/api-client#.yalc/@wireapp/api-client::hash=f1a35a&locator=%40wireapp%2Fcore%40workspace%3Apackages%2Fcore"
+  dependencies:
+    "@aws-sdk/client-s3": 3.750.0
+    "@aws-sdk/lib-storage": 3.779.0
+    "@wireapp/commons": ^5.4.2
+    "@wireapp/priority-queue": ^2.1.11
+    "@wireapp/protocol-messaging": 1.52.0
+    axios: 1.9.0
+    axios-retry: 4.5.0
+    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha11"
+    http-status-codes: 2.3.0
+    logdown: 3.3.1
+    pako: 2.1.0
+    reconnecting-websocket: 4.4.0
+    spark-md5: 3.0.2
+    tough-cookie: 4.1.4
+    uuid: 11.1.0
+    ws: 8.18.1
+    zod: 3.24.2
+  checksum: 25c62e18a8ecdd872ac8cc2f8e7d28c8a7d9d8a98c2cafe2593cf18c519b06ab54e73bf93eac7db68602401ec0f024e268f183f6275e6a770246f4f35bce70f0
+  languageName: node
+  linkType: hard
+
+"@wireapp/api-client@workspace:packages/api-client":
   version: 0.0.0-use.local
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
@@ -8244,7 +8269,7 @@ __metadata:
     axios: 1.9.0
     axios-retry: 4.5.0
     browser-sync: 3.0.3
-    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha11"
+    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha12"
     concurrently: 9.1.2
     cross-env: 7.0.3
     dotenv: 16.4.7
@@ -8292,7 +8317,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/commons@workspace:^, @wireapp/commons@workspace:packages/commons":
+"@wireapp/commons@^5.4.2, @wireapp/commons@workspace:^, @wireapp/commons@workspace:packages/commons":
   version: 0.0.0-use.local
   resolution: "@wireapp/commons@workspace:packages/commons"
   dependencies:
@@ -8353,7 +8378,7 @@ __metadata:
     "@types/long": ^5.0.0
     "@types/tough-cookie": 4.0.5
     "@types/uuid": 9.0.8
-    "@wireapp/api-client": "workspace:^"
+    "@wireapp/api-client": "file:.yalc/@wireapp/api-client"
     "@wireapp/commons": "workspace:^"
     "@wireapp/core-crypto": 3.1.1
     "@wireapp/cryptobox": 12.8.0
@@ -8465,16 +8490,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/priority-queue@npm:1.6.38":
-  version: 1.6.38
-  resolution: "@wireapp/priority-queue@npm:1.6.38"
-  dependencies:
-    "@types/node": ~14
-  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
-  languageName: node
-  linkType: hard
-
-"@wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
+"@wireapp/priority-queue@^2.1.11, @wireapp/priority-queue@workspace:^, @wireapp/priority-queue@workspace:packages/priority-queue":
   version: 0.0.0-use.local
   resolution: "@wireapp/priority-queue@workspace:packages/priority-queue"
   dependencies:
@@ -8488,6 +8504,15 @@ __metadata:
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
+
+"@wireapp/priority-queue@npm:1.6.38":
+  version: 1.6.38
+  resolution: "@wireapp/priority-queue@npm:1.6.38"
+  dependencies:
+    "@types/node": ~14
+  checksum: cefa5c99a3b5640fb2b0a77392e13e8cbc816f05e1c9c859f96a4d1c93bbcc29ae56afeed94a09f5dce664b7c0243eb8a1d6075ef1fb6329ee4775515e843628
+  languageName: node
+  linkType: hard
 
 "@wireapp/promise-queue@workspace:^, @wireapp/promise-queue@workspace:packages/promise-queue":
   version: 0.0.0-use.local
@@ -10139,6 +10164,15 @@ __metadata:
   dependencies:
     axios: ^1.9.0
   checksum: 4990b905a413060de8c6ce8e9e28093eaf3c32ba91457b7e15e629bc66540c0a7efa5c25133962882c933e522af7a067932ea54a45db30b7126547dfb35a260d
+  languageName: node
+  linkType: hard
+
+"cells-sdk-ts@https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha12":
+  version: 0.1.0
+  resolution: "cells-sdk-ts@https://github.com/pydio/cells-sdk-ts.git#commit=7df0cf67605e2d53ab22a3c7b3deb1e04196db67"
+  dependencies:
+    axios: ^1.9.0
+  checksum: 0f1147c1e1d3518ce332e4784170fbaa10d25e68f8f668f9588cf7eadca15f02a1e7637b71f81ce89ad120e12c7d2f87eb1c78bd94a3fc8acc718d4ab0271e8f
   languageName: node
   linkType: hard
 

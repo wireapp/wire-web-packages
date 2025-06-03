@@ -1616,7 +1616,7 @@ describe('CellsAPI', () => {
 
       const result = await cellsAPI.getAllTags();
 
-      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags', 'PUT', ['']);
+      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags');
       expect(result).toEqual(mockResponse);
     });
 
@@ -1629,7 +1629,7 @@ describe('CellsAPI', () => {
 
       const result = await cellsAPI.getAllTags();
 
-      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags', 'PUT', ['']);
+      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags');
       expect(result).toEqual(mockResponse);
     });
 

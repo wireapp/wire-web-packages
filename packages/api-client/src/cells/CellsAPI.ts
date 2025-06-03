@@ -469,7 +469,7 @@ export class CellsAPI {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.listNamespaceValues('usermeta-tags', 'PUT', ['']);
+    const result = await this.client.listNamespaceValues('usermeta-tags');
 
     return result.data;
   }
