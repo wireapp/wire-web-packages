@@ -42,8 +42,6 @@ const meta: Meta<typeof Accordion> = {
 export default meta;
 type Story = StoryObj<typeof Accordion>;
 
-// const Text = ({children}: {children: ReactNode}) => <div css={{fontSize: '14px', lineHeight: 1.5}}>{children}</div>;
-
 export const SingleOpen: Story = {
   render: () => (
     <Accordion>
