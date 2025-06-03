@@ -30,6 +30,7 @@ import {BackendErrorLabel, StatusCode} from './http';
 import {cellsConfigMock} from './mocks/cells';
 import {Self, SelfAPI} from './self';
 import {UserAPI} from './user/UserAPI';
+import {AxiosResponse} from 'axios';
 
 const testConfig = {
   cells: cellsConfigMock,
@@ -91,15 +92,15 @@ describe('APIClient', () => {
     it('fails if backend versions and accepted version have no common version', async () => {
       nock(baseUrl)
         .get('/api-version')
-        .reply(200, {supported: [0, 1]});
+        .reply(200, {supported: [8, 9]});
       const client = new APIClient(testConfig);
       let errorMessage;
       try {
-        await client.useVersion(2, 3);
+        await client.useVersion(10, 11);
       } catch (error) {
         errorMessage = error.message;
       } finally {
-        expect(errorMessage).toContain('does not support');
+        expect(errorMessage).toContain('No compatible API version in range');
       }
     });
 
@@ -112,15 +113,13 @@ describe('APIClient', () => {
       } catch (error) {
         errorMessage = error.message;
       } finally {
-        expect(errorMessage).toContain('Minium supported api version is 8');
+        expect(errorMessage).toContain('Minimum supported API version is 8.');
       }
     });
 
     it('uses highest common version', async () => {
-      nock(baseUrl)
-        .get('/api-version')
-        .reply(200, {supported: [8, 9]});
       const client = new APIClient(testConfig);
+      jest.spyOn(client.transport.http, 'sendRequest').mockReturnValue({data: {supported: [8, 9]}} as any);
       const {version, isFederated, federationEndpoints} = await client.useVersion(8, 10);
       expect(version).toBe(9);
       expect(isFederated).toBe(false);
@@ -128,42 +127,43 @@ describe('APIClient', () => {
     });
 
     it('uses dev version if available and requested', async () => {
-      nock(baseUrl)
-        .get('/api-version')
-        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 10, true);
+      jest
+        .spyOn(client.transport.http, 'sendRequest')
+        .mockReturnValue({data: {supported: [8, 9], development: [10]}} as any);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(8, 10, true);
       expect(version).toBe(10);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
 
     it('ignores dev version if not requested', async () => {
-      nock(baseUrl)
-        .get('/api-version')
-        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 10, false);
+      jest
+        .spyOn(client.transport.http, 'sendRequest')
+        .mockReturnValue({data: {supported: [8, 9], development: [10]}} as any);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(8, 10, false);
       expect(version).toBe(9);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
 
     it('ignores dev version if not listed in the supported versions', async () => {
-      nock(baseUrl)
-        .get('/api-version')
-        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 9, true);
+      jest
+        .spyOn(client.transport.http, 'sendRequest')
+        .mockReturnValue({data: {supported: [8, 9], development: [10]}} as any);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(8, 9, true);
       expect(version).toBe(9);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
 
     it('returns the backend federation state', async () => {
-      const response: BackendVersionResponse = {supported: [8, 9], federation: true};
-      nock(baseUrl).get('/api-version').reply(200, response);
       const client = new APIClient(testConfig);
+      jest
+        .spyOn(client.transport.http, 'sendRequest')
+        .mockReturnValue({data: {supported: [8, 9], federation: true}} as any);
       const {isFederated} = await client.useVersion(8, 10);
       expect(isFederated).toBe(true);
     });
