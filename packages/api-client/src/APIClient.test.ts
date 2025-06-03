@@ -103,31 +103,37 @@ describe('APIClient', () => {
       }
     });
 
-    it("uses version 0 if backend doesn't support /api-version endpoint", async () => {
+    it("throws error if backend doesn't support /api-version endpoint", async () => {
       nock(baseUrl).get('/api-version').reply(404);
       const client = new APIClient(testConfig);
-      const {version} = await client.useVersion(0, 3);
-      expect(version).toBe(0);
+      let errorMessage;
+      try {
+        await client.useVersion(0, 3);
+      } catch (error) {
+        errorMessage = error.message;
+      } finally {
+        expect(errorMessage).toContain('Minium supported api version is 8');
+      }
     });
 
     it('uses highest common version', async () => {
       nock(baseUrl)
         .get('/api-version')
-        .reply(200, {supported: [0, 1]});
+        .reply(200, {supported: [8, 9]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2);
-      expect(version).toBe(1);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(8, 10);
+      expect(version).toBe(9);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
 
-    it('uses version dev version if available and requested', async () => {
+    it('uses dev version if available and requested', async () => {
       nock(baseUrl)
         .get('/api-version')
-        .reply(200, {supported: [0, 1], development: [2]});
+        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2, true);
-      expect(version).toBe(2);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 10, true);
+      expect(version).toBe(10);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
@@ -135,10 +141,10 @@ describe('APIClient', () => {
     it('ignores dev version if not requested', async () => {
       nock(baseUrl)
         .get('/api-version')
-        .reply(200, {supported: [0, 1], development: [2]});
+        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 2, false);
-      expect(version).toBe(1);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 10, false);
+      expect(version).toBe(9);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
@@ -146,19 +152,19 @@ describe('APIClient', () => {
     it('ignores dev version if not listed in the supported versions', async () => {
       nock(baseUrl)
         .get('/api-version')
-        .reply(200, {supported: [0, 1], development: [2]});
+        .reply(200, {supported: [8, 9], development: [10]});
       const client = new APIClient(testConfig);
-      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 1, true);
-      expect(version).toBe(1);
+      const {version, isFederated, federationEndpoints} = await client.useVersion(0, 9, true);
+      expect(version).toBe(9);
       expect(isFederated).toBe(false);
       expect(federationEndpoints).toBe(true);
     });
 
     it('returns the backend federation state', async () => {
-      const response: BackendVersionResponse = {supported: [0, 1], federation: true};
+      const response: BackendVersionResponse = {supported: [8, 9], federation: true};
       nock(baseUrl).get('/api-version').reply(200, response);
       const client = new APIClient(testConfig);
-      const {isFederated} = await client.useVersion(0, 2);
+      const {isFederated} = await client.useVersion(8, 10);
       expect(isFederated).toBe(true);
     });
   });
