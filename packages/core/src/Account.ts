@@ -828,5 +828,3 @@ export class Account extends TypedEventEmitter<Events> {
     return isMLSSupported && isMLSForTeamEnabled && isMLSServiceInitialized;
   }
 }
-
-console.info('bardia latest CORE');
