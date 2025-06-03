@@ -288,8 +288,7 @@ export class APIClient extends EventEmitter {
     const devVersions = allowDev ? backendVersions.development ?? [] : [];
     const highestCommonVersion = backendVersions.supported
       .concat(devVersions)
-      .sort(Number)
-      .reverse()
+      .sort((a, b) => b - a)
       .find(version => version >= min && version <= max);
 
     if (highestCommonVersion === undefined) {
