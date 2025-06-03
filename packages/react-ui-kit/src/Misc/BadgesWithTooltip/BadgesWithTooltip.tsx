@@ -17,12 +17,12 @@
  *
  */
 
-import {wrapperStyles, countStyles, listStyles, listItemStyles} from './BadgeWithCounter.styles';
+import {wrapperStyles, countStyles, listStyles, listItemStyles} from './BadgesWithTooltip.styles';
 
 import {Tooltip} from '../../Form/Tooltip';
 import {Badge} from '../Badge';
 
-export const BadgeWithCounter = ({items}: {items: string[]}) => {
+export const BadgesWithTooltip = ({items}: {items: string[]}) => {
   if (items.length === 1) {
     return <BadgeWithCount item={items[0]} count={items.length} />;
   }

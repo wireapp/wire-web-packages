@@ -19,11 +19,11 @@
 
 import type {Meta, StoryObj} from '@storybook/react';
 
-import {BadgeWithCounter} from './BadgeWithCounter';
+import {BadgesWithTooltip} from './BadgesWithTooltip';
 
 const meta = {
-  title: 'Misc/BadgeWithCounter',
-  component: BadgeWithCounter,
+  title: 'Misc/BadgesWithTooltip',
+  component: BadgesWithTooltip,
   parameters: {
     layout: 'centered',
   },
@@ -45,10 +45,10 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof BadgeWithCounter>;
+} satisfies Meta<typeof BadgesWithTooltip>;
 
 export default meta;
-type Story = StoryObj<typeof BadgeWithCounter>;
+type Story = StoryObj<typeof BadgesWithTooltip>;
 
 export const SingleItem: Story = {
   args: {
