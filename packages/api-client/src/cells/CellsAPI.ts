@@ -29,6 +29,9 @@ import {
   RestPublicLinkDeleteSuccess,
   RestShareLink,
   RestVersion,
+  RestIncomingNode,
+  RestNodeLocator,
+  RestActionOptionsCopyMove,
 } from 'cells-sdk-ts';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
@@ -102,7 +105,7 @@ export class CellsAPI {
     this.client = new NodeServiceApi(undefined, undefined, http.client);
   }
 
-  async uploadFileDraft({
+  async uploadNodeDraft({
     uuid,
     versionId,
     path,
@@ -148,7 +151,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async promoteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
+  async promoteNodeDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestPromoteVersionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -158,7 +161,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFileDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestDeleteVersionResponse> {
+  async deleteNodeDraft({uuid, versionId}: {uuid: string; versionId: string}): Promise<RestDeleteVersionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -168,17 +171,57 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFile({uuid}: {uuid: string}): Promise<RestPerformActionResponse> {
+  async deleteNode({
+    uuid,
+    permanently = false,
+  }: {
+    uuid: string;
+    permanently?: boolean;
+  }): Promise<RestPerformActionResponse> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.performAction('delete', {Nodes: [{Uuid: uuid}]});
+    const result = await this.client.performAction('delete', {
+      Nodes: [{Uuid: uuid}],
+      DeleteOptions: {PermanentDelete: permanently},
+    });
 
     return result.data;
   }
 
-  async lookupFileByPath({path}: {path: string}): Promise<RestNode | undefined> {
+  async moveNode({
+    currentPath,
+    targetPath,
+  }: {
+    currentPath: RestNodeLocator['Path'];
+    targetPath: RestActionOptionsCopyMove['TargetPath'];
+  }): Promise<RestPerformActionResponse> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const result = await this.client.performAction('move', {
+      Nodes: [{Path: currentPath}],
+      CopyMoveOptions: {TargetIsParent: true, TargetPath: targetPath},
+      AwaitStatus: 'Finished',
+      AwaitTimeout: '5000ms',
+    });
+
+    return result.data;
+  }
+
+  async restoreNode({uuid}: {uuid: string}): Promise<RestPerformActionResponse> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const result = await this.client.performAction('restore', {Nodes: [{Uuid: uuid}]});
+
+    return result.data;
+  }
+
+  async lookupNodeByPath({path}: {path: string}): Promise<RestNode | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -197,7 +240,7 @@ export class CellsAPI {
     return node;
   }
 
-  async lookupFileByUuid({uuid}: {uuid: string}): Promise<RestNode | undefined> {
+  async lookupNodeByUuid({uuid}: {uuid: string}): Promise<RestNode | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -216,7 +259,7 @@ export class CellsAPI {
     return node;
   }
 
-  async getFileVersions({uuid}: {uuid: string}): Promise<RestVersion[] | undefined> {
+  async getNodeVersions({uuid}: {uuid: string}): Promise<RestVersion[] | undefined> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -226,7 +269,7 @@ export class CellsAPI {
     return result.data.Versions;
   }
 
-  async getFile({id}: {id: string}): Promise<RestNode> {
+  async getNode({id}: {id: string}): Promise<RestNode> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -236,56 +279,40 @@ export class CellsAPI {
     return result.data;
   }
 
-  async getAllFiles({
+  async getAllNodes({
     path,
-    limit = DEFAULT_LIMIT,
-    offset = DEFAULT_OFFSET,
-  }: {
-    path: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<RestNodeCollection> {
-    if (!this.client || !this.storageService) {
-      throw new Error(CONFIGURATION_ERROR);
-    }
-
-    const result = await this.client.lookup({
-      Scope: {Root: {Path: path}},
-      Flags: ['WithPreSignedURLs'],
-      Limit: `${limit}`,
-      Offset: `${offset}`,
-    });
-
-    return result.data;
-  }
-
-  async searchFiles({
-    phrase,
     limit = DEFAULT_LIMIT,
     offset = DEFAULT_OFFSET,
     sortBy = DEFAULT_SEARCH_SORT_FIELD,
     sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
+    type,
+    deleted = false,
   }: {
-    phrase: string;
+    path: string;
     limit?: number;
     offset?: number;
     sortBy?: string;
     sortDirection?: SortDirection;
+    type?: RestIncomingNode['Type'];
+    deleted?: boolean;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
     const request: RestLookupRequest = {
-      Scope: {Root: {Path: '/'}, Recursive: true},
-      Filters: {
-        Text: {SearchIn: 'BaseName', Term: phrase},
-        Type: 'LEAF',
-      },
+      Scope: {Root: {Path: path}},
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
       Offset: `${offset}`,
+      Filters: {
+        Type: type || 'UNKNOWN',
+        Status: {
+          Deleted: deleted ? 'Only' : 'Not',
+        },
+      },
     };
+
     if (sortBy) {
       request.SortField = sortBy;
       request.SortDirDesc = sortDirection === 'desc';
@@ -296,7 +323,112 @@ export class CellsAPI {
     return result.data;
   }
 
-  async deleteFilePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
+  async searchNodes({
+    phrase,
+    limit = DEFAULT_LIMIT,
+    offset = DEFAULT_OFFSET,
+    sortBy = DEFAULT_SEARCH_SORT_FIELD,
+    sortDirection = DEFAULT_SEARCH_SORT_DIRECTION,
+    type,
+    deleted = false,
+  }: {
+    phrase: string;
+    limit?: number;
+    offset?: number;
+    sortBy?: string;
+    sortDirection?: SortDirection;
+    type?: RestIncomingNode['Type'];
+    deleted?: boolean;
+  }): Promise<RestNodeCollection> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const request: RestLookupRequest = {
+      Scope: {Root: {Path: '/'}, Recursive: true},
+      Filters: {
+        Text: {SearchIn: 'BaseName', Term: phrase},
+        Type: type || 'UNKNOWN',
+        Status: {
+          Deleted: deleted ? 'Only' : 'Not',
+        },
+      },
+      Flags: ['WithPreSignedURLs'],
+      Limit: `${limit}`,
+      Offset: `${offset}`,
+    };
+
+    if (sortBy) {
+      request.SortField = sortBy;
+      request.SortDirDesc = sortDirection === 'desc';
+    }
+
+    const result = await this.client.lookup(request);
+
+    return result.data;
+  }
+
+  private async createNode({
+    path,
+    uuid,
+    type,
+    versionId = '',
+  }: {
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+    type: RestIncomingNode['Type'];
+    versionId?: RestIncomingNode['VersionId'];
+  }): Promise<RestNodeCollection> {
+    if (!this.client || !this.storageService) {
+      throw new Error(CONFIGURATION_ERROR);
+    }
+
+    const response = await this.client.create({
+      Inputs: [
+        {
+          Type: type,
+          Locator: {Path: path.normalize('NFC')},
+          ResourceUuid: uuid,
+          VersionId: versionId,
+        },
+      ],
+    });
+
+    return response.data;
+  }
+
+  async createFile({
+    path,
+    uuid,
+    versionId,
+  }: {
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+    versionId: NonNullable<RestIncomingNode['VersionId']>;
+  }): Promise<RestNodeCollection> {
+    return this.createNode({
+      path,
+      uuid,
+      type: 'LEAF',
+      versionId,
+    });
+  }
+
+  async createFolder({
+    path,
+    uuid,
+  }: {
+    path: NonNullable<RestNodeLocator['Path']>;
+    uuid: NonNullable<RestIncomingNode['ResourceUuid']>;
+  }): Promise<RestNodeCollection> {
+    return this.createNode({
+      path,
+      uuid,
+      type: 'COLLECTION',
+    });
+  }
+
+  async deleteNodePublicLink({uuid}: {uuid: string}): Promise<RestPublicLinkDeleteSuccess> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -306,7 +438,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async createFilePublicLink({uuid, label}: {uuid: string; label?: string}): Promise<RestShareLink> {
+  async createNodePublicLink({uuid, label}: {uuid: string; label?: string}): Promise<RestShareLink> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
@@ -321,7 +453,7 @@ export class CellsAPI {
     return result.data;
   }
 
-  async getFilePublicLink({uuid}: {uuid: string}): Promise<RestShareLink> {
+  async getNodePublicLink({uuid}: {uuid: string}): Promise<RestShareLink> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }

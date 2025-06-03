@@ -369,7 +369,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
   }: Required<AddUsersParams>): Promise<BaseCreateConversationResponse> {
-    const {keyPackages, failures: keysClaimingFailures} = await this.mlsService.getKeyPackagesPayload(qualifiedUsers);
+    const exisitingClientIdsInGroup = await this.mlsService.getClientIdsInGroup(groupId);
+
+    const {keyPackages, failures: keysClaimingFailures} = await this.mlsService.getKeyPackagesPayload(
+      qualifiedUsers,
+      exisitingClientIdsInGroup,
+    );
 
     await this.mlsService.addUsersToExistingConversation(groupId, keyPackages);
 

@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2024 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,4 @@
  *
  */
 
-import {CSSObject} from '@emotion/react';
-
-import {Theme} from '../Theme/Theme';
-
-export const menuListHeadingContainerStyles = (theme: Theme): CSSObject => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  fontSize: theme.fontSizes.medium,
-  fontWeight: 600,
-  padding: '8px 16px',
-});
-
-export const menuListCloseButtonStyles: CSSObject = {
-  background: 'transparent',
-  border: 'none',
-  cursor: 'pointer',
-  padding: 0,
-  display: 'flex',
-  alignItems: 'center',
-};
+export * from './Breadcrumbs';

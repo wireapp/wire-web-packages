@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.56.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.56.0...@wireapp/react-ui-kit@9.56.1) (2025-06-02)
+
+### Bug Fixes
+
+* **react-ui-kit:** Badge export [WPB-17811] ([#7062](https://github.com/wireapp/wire-web-packages/issues/7062)) ([4adb136](https://github.com/wireapp/wire-web-packages/commit/4adb1369134d03c0fb56028194d7fd98d1cdfa4c))
+
+# [9.56.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.55.0...@wireapp/react-ui-kit@9.56.0) (2025-06-02)
+
+### Features
+
+* **react-ui-kit:** Badge ([#7061](https://github.com/wireapp/wire-web-packages/issues/7061)) ([0492e7b](https://github.com/wireapp/wire-web-packages/commit/0492e7b4f59385b399f32f7d1c315d45b90f710a))
+
+# [9.55.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.54.1...@wireapp/react-ui-kit@9.55.0) (2025-05-30)
+
+### Features
+
+* **react-ui-kit/combobox-select:** loading ([#7060](https://github.com/wireapp/wire-web-packages/issues/7060)) ([f53f8a8](https://github.com/wireapp/wire-web-packages/commit/f53f8a8bc01a2865067557c85d8783fbc053959b))
+
+## [9.54.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.54.0...@wireapp/react-ui-kit@9.54.1) (2025-05-29)
+
+### Bug Fixes
+
+* **ComboboxSelect:** position and z-index [WPB-17810] ([#7058](https://github.com/wireapp/wire-web-packages/issues/7058)) ([9a3f2a6](https://github.com/wireapp/wire-web-packages/commit/9a3f2a64964f34dde82b5b4d0f51d5dd66d7b4fe))
+
+# [9.54.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.53.0...@wireapp/react-ui-kit@9.54.0) (2025-05-28)
+
+### Features
+
+* **react-ui-kit:** combobox select component ([#7056](https://github.com/wireapp/wire-web-packages/issues/7056)) ([057a260](https://github.com/wireapp/wire-web-packages/commit/057a26042d85575051fc52e529418351c532d6f9))
+* **react-ui-kit:** revert combobox changes ([#7055](https://github.com/wireapp/wire-web-packages/issues/7055)) ([03eab8e](https://github.com/wireapp/wire-web-packages/commit/03eab8edd08df1d87bae48f20e5acd6ab18a1ca3))
+
+# [9.53.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.52.1...@wireapp/react-ui-kit@9.53.0) (2025-05-21)
+
+### Features
+
+* **react-ui-kit:** breadcrubms with icons ([#7052](https://github.com/wireapp/wire-web-packages/issues/7052)) ([cbb77d0](https://github.com/wireapp/wire-web-packages/commit/cbb77d05ea9d71b22b4744df7b4c0b08d28fc8de))
+
+## [9.52.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.52.0...@wireapp/react-ui-kit@9.52.1) (2025-05-19)
+
+### Bug Fixes
+
+* **react-ui-kit:** dropdown menu composition trigger ([#7050](https://github.com/wireapp/wire-web-packages/issues/7050)) ([d4da91e](https://github.com/wireapp/wire-web-packages/commit/d4da91e3116f694f39fb0672e0e13ebfa9240b75))
+
+# [9.52.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.51.0...@wireapp/react-ui-kit@9.52.0) (2025-05-14)
+
+### Features
+
+* **react-ui-kit:** dropdown menu & breadcrumbs components ([#7044](https://github.com/wireapp/wire-web-packages/issues/7044)) ([6a6de4a](https://github.com/wireapp/wire-web-packages/commit/6a6de4a106d9060aca2be558d1598f8a1464b86d))
+
+# [9.51.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.50.1...@wireapp/react-ui-kit@9.51.0) (2025-04-28)
+
+### Features
+
+* **react-ui-kit:** team members sort, filter and dropdown icons [WPB-16799] ([#7034](https://github.com/wireapp/wire-web-packages/issues/7034)) ([e2c8dc1](https://github.com/wireapp/wire-web-packages/commit/e2c8dc1786a6c474d9c2dd7af6fa6fc7188d8379))
+
+## [9.50.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.50.0...@wireapp/react-ui-kit@9.50.1) (2025-04-24)
+
+### Bug Fixes
+
+* **react-ui-kit/icon:** adjust file icon sizes ([#7033](https://github.com/wireapp/wire-web-packages/issues/7033)) ([a38589d](https://github.com/wireapp/wire-web-packages/commit/a38589d5a9f20583d673f1991af124bb0ec17d90))
+
+# [9.50.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.49.0...@wireapp/react-ui-kit@9.50.0) (2025-04-24)
+
+### Features
+
+* add hamburger icon [WPB-17114] ([#7032](https://github.com/wireapp/wire-web-packages/issues/7032)) ([1e058aa](https://github.com/wireapp/wire-web-packages/commit/1e058aaae8aaef279d64d5c21653c5a1088e499b))
+
 # [9.49.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.48.0...@wireapp/react-ui-kit@9.49.0) (2025-04-18)
 
 ### Features

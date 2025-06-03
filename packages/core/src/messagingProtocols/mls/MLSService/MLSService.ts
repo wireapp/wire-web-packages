@@ -279,7 +279,26 @@ export class MLSService extends TypedEventEmitter<Events> {
     this.dispatchNewCrlDistributionPoints(crlNewDistributionPoints);
   }
 
-  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[]) {
+  /**
+   * Will return a list of client ids which are already in the group at core crypto level
+   *
+   * @param groupId - the group id of the MLS group
+   * @returns list of client ids
+   */
+  public async getClientIdsInGroup(groupId: string) {
+    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+    const currentClientIdsInGroup = [];
+
+    for (const clientId of await this.coreCryptoClient.getClientIds(groupIdBytes)) {
+      // [user-id]:[client-id]@[domain] -> [client-id]
+      // example: fb880fac-b549-4d8b-9398-4246324c7b85:67f41928e2844b6c@staging.zinfra.io -> 67f41928e2844b6c
+      currentClientIdsInGroup.push(Converter.arrayBufferViewToStringUTF8(clientId).split('@')[0].split(':')[1]);
+    }
+
+    return currentClientIdsInGroup;
+  }
+
+  public async getKeyPackagesPayload(qualifiedUsers: KeyPackageClaimUser[], skipClientIds: string[] = []) {
     /**
      * @note We need to fetch key packages for all the users
      * we want to add to the new MLS conversations,
@@ -331,7 +350,9 @@ export class MLSService extends TypedEventEmitter<Events> {
       if (key_packages.length > 0) {
         return [
           ...previousValue,
-          ...key_packages.map(keyPackage => Decoder.fromBase64(keyPackage.key_package).asBytes),
+          ...key_packages
+            .filter(keyPackage => !skipClientIds.includes(keyPackage.client))
+            .map(keyPackage => Decoder.fromBase64(keyPackage.key_package).asBytes),
         ];
       }
       return previousValue;

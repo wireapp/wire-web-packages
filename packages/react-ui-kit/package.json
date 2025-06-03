@@ -8,10 +8,11 @@
   "main": "lib/index",
   "homepage": "https://wire-react-ui-kit.netlify.app/",
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "2.1.14",
     "@types/color": "3.0.6",
     "color": "4.2.3",
     "emotion-normalize": "11.0.1",
-    "react-select": "5.7.7",
+    "react-select": "5.10.1",
     "react-transition-group": "4.4.5"
   },
   "devDependencies": {
@@ -77,5 +78,5 @@
     "test:watch": "jest --watch",
     "test:update": "jest --updateSnapshot"
   },
-  "version": "9.49.0"
+  "version": "9.56.1"
 }

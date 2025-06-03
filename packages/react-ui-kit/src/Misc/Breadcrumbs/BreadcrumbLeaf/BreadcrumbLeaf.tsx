@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2019 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,14 @@
  *
  */
 
-/* eslint-disable jest/expect-expect */
+import {iconStyles} from './BreadcrumbLeaf.styles';
 
-import * as React from 'react';
+import {ChevronUpIcon} from '../../../Icon';
 
-import {Select} from './Select';
-
-import {matchComponent} from '../test/testUtil';
-
-const props: React.ComponentProps<typeof Select> = {
-  options: [],
-  id: 'test',
-  dataUieName: 'test',
+export const BreadcrumbLeaf = () => {
+  return (
+    <li aria-hidden="true">
+      <ChevronUpIcon css={iconStyles} width={12} height={12} />
+    </li>
+  );
 };
-
-describe('"Select"', () => {
-  it('renders', () =>
-    matchComponent(
-      <Select {...props}>
-        <option>a</option>
-        <option>b</option>
-      </Select>,
-    ));
-  it('renders as disabled', () => matchComponent(<Select {...props} disabled></Select>));
-  it('renders as invalid', () => matchComponent(<Select {...props} markInvalid></Select>));
-});
