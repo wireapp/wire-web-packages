@@ -647,9 +647,9 @@ export class Account extends TypedEventEmitter<Events> {
     ): Promise<void> => {
       const isConsumable = checkIsConsumable(notification);
       try {
+        // TODO: FULL SYNC
         if (isConsumable && notification.type === ConsumableEvent.MISSED) {
-          // TODO: FULL SYNC
-          this.apiClient.transport.ws.acknowledgeMissedNotification();
+          // this.apiClient.transport.ws.acknowledgeMissedNotification();
           return;
         }
 
