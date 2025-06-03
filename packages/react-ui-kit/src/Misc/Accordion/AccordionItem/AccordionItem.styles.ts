@@ -77,9 +77,6 @@ export const triggerTextStyles: CSSObject = {
 
 export const contentStyles: CSSObject = {
   overflow: 'hidden',
-  color: COLOR_V2.GRAY_80,
-  fontSize: '14px',
-  lineHeight: 1.5,
   '&[data-state="open"]': {
     animation: `${slideDown} ${ANIMATION_TIMING} ${ANIMATION_EASING}`,
   },
@@ -89,7 +86,8 @@ export const contentStyles: CSSObject = {
 };
 
 export const contentTextStyles: CSSObject = {
-  padding: '16px',
+  width: '100%',
+  padding: '0 16px 16px',
 };
 
 export const chevronStyles: CSSObject = {

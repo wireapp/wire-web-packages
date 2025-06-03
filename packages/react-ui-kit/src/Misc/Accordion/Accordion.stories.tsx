@@ -21,6 +21,9 @@ import {Meta, StoryObj} from '@storybook/react';
 
 import {Accordion} from './Accordion';
 
+import {COLOR_V2} from '../../Identity/colors-v2';
+import {Text} from '../../Text';
+
 const meta: Meta<typeof Accordion> = {
   component: Accordion,
   title: 'Misc/Accordion',
@@ -39,20 +42,28 @@ const meta: Meta<typeof Accordion> = {
 export default meta;
 type Story = StoryObj<typeof Accordion>;
 
+// const Text = ({children}: {children: ReactNode}) => <div css={{fontSize: '14px', lineHeight: 1.5}}>{children}</div>;
+
 export const SingleOpen: Story = {
   render: () => (
     <Accordion>
       <Accordion.Item title="What is Wire?" value="item-1">
-        Wire is a secure messaging and collaboration platform that helps teams communicate effectively while maintaining
-        the highest standards of security and privacy.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Wire is a secure messaging and collaboration platform that helps teams communicate effectively while
+          maintaining the highest standards of security and privacy.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Is Wire secure?" value="item-2">
-        Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
-        in a conversation can read the messages.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
+          in a conversation can read the messages.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Can I use Wire on multiple devices?" value="item-3">
-        Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
-        and web browsers.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
+          and web browsers.
+        </Text>
       </Accordion.Item>
     </Accordion>
   ),
@@ -62,16 +73,22 @@ export const MultipleOpen: Story = {
   render: () => (
     <Accordion type="multiple">
       <Accordion.Item title="What is Wire?" value="item-1">
-        Wire is a secure messaging and collaboration platform that helps teams communicate effectively while maintaining
-        the highest standards of security and privacy.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Wire is a secure messaging and collaboration platform that helps teams communicate effectively while
+          maintaining the highest standards of security and privacy.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Is Wire secure?" value="item-2">
-        Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
-        in a conversation can read the messages.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
+          in a conversation can read the messages.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Can I use Wire on multiple devices?" value="item-3">
-        Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
-        and web browsers.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
+          and web browsers.
+        </Text>
       </Accordion.Item>
     </Accordion>
   ),
@@ -81,16 +98,22 @@ export const WithDefaultOpen: Story = {
   render: () => (
     <Accordion defaultValue="item-2">
       <Accordion.Item title="What is Wire?" value="item-1">
-        Wire is a secure messaging and collaboration platform that helps teams communicate effectively while maintaining
-        the highest standards of security and privacy.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Wire is a secure messaging and collaboration platform that helps teams communicate effectively while
+          maintaining the highest standards of security and privacy.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Is Wire secure?" value="item-2">
-        Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
-        in a conversation can read the messages.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire uses end-to-end encryption for all messages, calls, and files. This means that only the participants
+          in a conversation can read the messages.
+        </Text>
       </Accordion.Item>
       <Accordion.Item title="Can I use Wire on multiple devices?" value="item-3">
-        Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
-        and web browsers.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Yes, Wire is available on multiple platforms including desktop (Windows, macOS, Linux), mobile (iOS, Android),
+          and web browsers.
+        </Text>
       </Accordion.Item>
     </Accordion>
   ),
@@ -103,8 +126,10 @@ export const TooLongTitle: Story = {
         title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         value="item-1"
       >
-        Wire is a secure messaging and collaboration platform that helps teams communicate effectively while maintaining
-        the highest standards of security and privacy.
+        <Text size={12} color={COLOR_V2.GRAY_80}>
+          Wire is a secure messaging and collaboration platform that helps teams communicate effectively while
+          maintaining the highest standards of security and privacy.
+        </Text>
       </Accordion.Item>
     </Accordion>
   ),
