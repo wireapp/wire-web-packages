@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,17 @@
  *
  */
 
-import {Notification} from '@wireapp/api-client/lib/notification/';
+import {ConsumableNotification} from './ConsumableNotification.types';
 
-import {APIClient} from '@wireapp/api-client';
+export const mapConsumableNotification = (json: string): ConsumableNotification => {
+  const data = JSON.parse(json);
 
-export class NotificationBackendRepository {
-  constructor(private readonly apiClient: APIClient) {}
-
-  public async getAllNotifications(clientId?: string, lastNotificationId?: string, abortController?: AbortController) {
-    return this.apiClient.api.notification.getAllNotifications(clientId, lastNotificationId, abortController);
-  }
-
-  public getLastNotification(clientId?: string): Promise<Notification> {
-    return this.apiClient.api.notification.getLastNotification(clientId);
-  }
-}
+  return {
+    type: data.type,
+    ...(data?.data && {
+      deliveryTag: data.data.delivery_tag,
+      id: data.data.event.id,
+      payload: data.data.event.payload,
+    }),
+  };
+};

@@ -24,11 +24,13 @@ import {EventEmitter} from 'events';
 
 import {LogFactory} from '@wireapp/commons';
 
+import {AcknowledgeType} from './AcknowledgeEvent.types';
+import {ConsumableEvent, ConsumableNotification} from './ConsumableNotification.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
+import {mapConsumableNotification} from './utils';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
-import {Notification} from '../notification/';
 
 enum TOPIC {
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
@@ -40,7 +42,7 @@ enum TOPIC {
 export interface WebSocketClient {
   on(event: TOPIC.ON_ERROR, listener: (error: Error | ErrorEvent) => void): this;
   on(event: TOPIC.ON_INVALID_TOKEN, listener: (error: InvalidTokenError | MissingCookieError) => void): this;
-  on(event: TOPIC.ON_MESSAGE, listener: (notification: Notification) => void): this;
+  on(event: TOPIC.ON_MESSAGE, listener: (notification: ConsumableNotification) => void): this;
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
@@ -85,10 +87,43 @@ export class WebSocketClient extends EventEmitter {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification: Notification = JSON.parse(data);
+      const notification = mapConsumableNotification(data);
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
+
+  acknowledgeEvents(notification: ConsumableNotification) {
+    if (this.socket && this.socket.getState() === WebSocket.OPEN) {
+      if (notification.type === ConsumableEvent.MISSED) {
+        // TODO: Add Full / Slow sync before send ACK_FULL_SYNC
+
+        const jsonEvent = JSON.stringify({
+          type: AcknowledgeType.ACK_FULL_SYNC,
+        });
+
+        this.socket.send(jsonEvent);
+      }
+
+      if (notification.type === ConsumableEvent.EVENT) {
+        if (!notification.deliveryTag) {
+          this.logger.warn(`Cannot acknowledge event. DeliveryTag is missing.`);
+        }
+
+        const jsonEvent = JSON.stringify({
+          type: AcknowledgeType.ACK,
+          data: {
+            delivery_tag: notification.deliveryTag,
+            // Note: we can extend this when we want to implement multiple ack at once.
+            multiple: false,
+          },
+        });
+
+        this.socket.send(jsonEvent);
+      }
+    } else {
+      console.warn('WebSocket is not open. Cannot acknowledge vent.');
+    }
+  }
 
   private readonly onError = async (error: ErrorEvent) => {
     this.onStateChange(this.socket.getState());
@@ -216,7 +251,7 @@ export class WebSocketClient extends EventEmitter {
     if (!token) {
       this.logger.warn('Reconnecting WebSocket with unset token');
     }
-    let url = `${this.baseUrl}/await?access_token=${token}`;
+    let url = `${this.baseUrl}/v8/events?access_token=${token}`;
     if (this.clientId) {
       // Note: If no client ID is given, then the WebSocket connection will receive all notifications for all clients
       // of the connected user
