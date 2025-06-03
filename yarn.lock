@@ -4717,7 +4717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-accordion@npm:^1.2.11":
+"@radix-ui/react-accordion@npm:1.2.11":
   version: 1.2.11
   resolution: "@radix-ui/react-accordion@npm:1.2.11"
   dependencies:
@@ -8649,7 +8649,7 @@ __metadata:
     "@emotion/babel-preset-css-prop": ^11.12.0
     "@emotion/jest": 11.13.0
     "@emotion/react": ^11.10.4
-    "@radix-ui/react-accordion": ^1.2.11
+    "@radix-ui/react-accordion": 1.2.11
     "@radix-ui/react-dropdown-menu": 2.1.14
     "@storybook/addon-essentials": ^8.5.2
     "@storybook/addon-interactions": ^8.5.2
