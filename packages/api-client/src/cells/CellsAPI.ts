@@ -484,7 +484,7 @@ export class CellsAPI {
       MetaUpdates: [
         {
           Operation: 'PUT',
-          UserMeta: {Namespace: 'usermeta-tags', JsonValue: `"${tags.join(',')}"`},
+          UserMeta: {Namespace: USER_META_TAGS_NAMESPACE, JsonValue: JSON.stringify(tags.join(','))},
         },
       ],
     });
