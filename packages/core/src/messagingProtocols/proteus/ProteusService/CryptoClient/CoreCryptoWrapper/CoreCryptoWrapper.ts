@@ -67,8 +67,8 @@ const coreCryptoLogger = {
   },
 };
 
-const getKey = async (generateSecretKey: Config['generateSecretKey'], keyName: string, keyLength: 16 | 32) => {
-  return await generateSecretKey(keyName, keyLength);
+const getKey = async (generateSecretKey: Config['generateSecretKey'], keyName: string, keySize: 16 | 32) => {
+  return await generateSecretKey(keyName, keySize);
 };
 
 type MigrateOnceAndGetKeyReturnType = {
