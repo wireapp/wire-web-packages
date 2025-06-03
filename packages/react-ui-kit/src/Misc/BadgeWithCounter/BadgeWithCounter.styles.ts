@@ -19,6 +19,8 @@
 
 import {CSSObject} from '@emotion/react';
 
+import {COLOR_V2} from '../../Identity/colors-v2';
+
 export const wrapperStyles: CSSObject = {
   display: 'flex',
   alignItems: 'center',
@@ -26,7 +28,7 @@ export const wrapperStyles: CSSObject = {
 };
 
 export const countStyles: CSSObject = {
-  color: 'gray',
+  color: COLOR_V2.GRAY_70,
   flexShrink: 0,
 };
 
