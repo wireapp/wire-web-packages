@@ -385,7 +385,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
     return {
       conversation,
-      failedToAdd: [...keysClaimingFailures],
+      failedToAdd: keysClaimingFailures,
     };
   }
 
