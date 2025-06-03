@@ -28,4 +28,4 @@ export * from './useLongTouch';
 export * from './useTimeout';
 export * from './Breadcrumbs';
 export * from './Badge';
-export * from './BadgeWithCounter';
+export * from './BadgesWithTooltip';
