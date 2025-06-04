@@ -487,7 +487,6 @@ export class CellsAPI {
       MetaUpdates: [
         {
           Operation: tags.length > 0 ? 'PUT' : 'DELETE',
-
           UserMeta: {Namespace: USER_META_TAGS_NAMESPACE, JsonValue: JSON.stringify(tags.join(','))},
         },
       ],
