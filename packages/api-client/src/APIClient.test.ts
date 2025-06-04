@@ -22,7 +22,7 @@
 import {AccentColor} from '@wireapp/commons/lib';
 import nock from 'nock';
 
-import {APIClient, BackendVersionResponse} from './APIClient';
+import {APIClient} from './APIClient';
 import {AuthAPI} from './auth/AuthAPI';
 import {ClientType} from './client';
 import {Config} from './Config';
@@ -30,7 +30,6 @@ import {BackendErrorLabel, StatusCode} from './http';
 import {cellsConfigMock} from './mocks/cells';
 import {Self, SelfAPI} from './self';
 import {UserAPI} from './user/UserAPI';
-import {AxiosResponse} from 'axios';
 
 const testConfig = {
   cells: cellsConfigMock,
