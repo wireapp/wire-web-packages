@@ -49,7 +49,7 @@ export interface WebSocketClient {
   on(event: TOPIC.ON_STATE_CHANGE, listener: (state: WEBSOCKET_STATE) => void): this;
 }
 
-export type OnConnect = (abortHandler: AbortController) => Promise<void>;
+export type OnConnect = (abortHandler: AbortController) => void;
 
 export class WebSocketClient extends EventEmitter {
   private clientId?: string;

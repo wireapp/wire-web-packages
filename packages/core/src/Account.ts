@@ -621,13 +621,7 @@ export class Account extends TypedEventEmitter<Events> {
           break;
         }
       }
-      await onEvent(payload, source);
-    };
-
-    const checkIsConsumable = (
-      notification: Notification | ConsumableNotification,
-    ): notification is ConsumableNotification => {
-      return 'type' in notification;
+      onEvent(payload, source);
     };
 
     /**
@@ -645,7 +639,7 @@ export class Account extends TypedEventEmitter<Events> {
       notification: Notification | ConsumableNotification,
       source: NotificationSource,
     ): Promise<void> => {
-      const isConsumable = checkIsConsumable(notification);
+      const isConsumable = this.checkIsConsumable(notification);
       try {
         // TODO: FULL SYNC
         if (isConsumable && notification.type === ConsumableEvent.MISSED) {
@@ -683,7 +677,6 @@ export class Account extends TypedEventEmitter<Events> {
       const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
         [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
         [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
-        [WEBSOCKET_STATE.OPEN]: ConnectionState.LIVE,
       };
       const connectionState = mapping[wsState];
       if (connectionState) {
@@ -721,9 +714,10 @@ export class Account extends TypedEventEmitter<Events> {
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
       resumeMessageSending();
       resumeRejoiningMLSConversations();
+      onConnectionStateChanged(ConnectionState.LIVE);
     };
 
-    const isClientCapabaleOfConsumableNotifications = this.currentClient.capabilities.includes(
+    const isClientCapabaleOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
     );
 
@@ -747,18 +741,29 @@ export class Account extends TypedEventEmitter<Events> {
 
       // do a quick legacy sync without connecting to any websockets
       await processNotificationStream();
-    } else {
-      onNotificationStreamProgress({done: 1, total: 1});
     }
 
-    this.apiClient.connect();
-    onConnectionStateChanged(ConnectionState.LIVE);
+    this.apiClient.connect(() => {
+      if (isClientCapabaleOfConsumableNotifications) {
+        onConnectionStateChanged(ConnectionState.LIVE);
+      }
+    });
 
     return () => {
       this.apiClient.disconnect();
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
     };
+  }
+
+  public getClientCapabilities() {
+    return this.currentClient?.capabilities || [];
+  }
+
+  public checkIsConsumable(
+    notification: Notification | ConsumableNotification,
+  ): notification is ConsumableNotification {
+    return 'type' in notification;
   }
 
   private generateDbName(context: Context) {
