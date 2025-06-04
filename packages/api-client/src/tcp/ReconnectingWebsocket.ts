@@ -111,7 +111,7 @@ export class ReconnectingWebsocket {
   };
 
   private readonly internalOnClose = (event: CloseEvent) => {
-    this.logger.debug(`WebSocket closed with code: ${event.code}${event.reason ? `Reason: ${event.reason}` : ''}`);
+    this.logger.debug(`WebSocket closed with code: ${event?.code}${event?.reason ? `Reason: ${event?.reason}` : ''}`);
     if (this.onClose) {
       this.onClose(event);
     }

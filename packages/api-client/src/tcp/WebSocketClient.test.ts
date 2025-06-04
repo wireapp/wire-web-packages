@@ -118,7 +118,8 @@ describe('WebSocketClient', () => {
       const socket = websocketClient['socket'];
       jest.spyOn(socket as any, 'getReconnectingWebsocket').mockReturnValue(fakeSocket);
 
-      await websocketClient.connect(undefined, onConnect);
+      websocketClient.useVersion(8);
+      websocketClient.connect(undefined, onConnect);
       fakeSocket.onopen();
       await websocketClient['onReconnect']();
       expect(onConnectResult).toHaveBeenCalledTimes(1);
