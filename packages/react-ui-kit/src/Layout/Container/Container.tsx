@@ -21,9 +21,8 @@ import {FC, forwardRef, HTMLProps} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
+import {QueryKeys, media} from '../../utils';
 import {GUTTER, WIDTH} from '../sizes/sizes';
-
-import {QueryKeys, media} from '../mediaQueries';
 
 export interface ContainerProps extends HTMLProps<HTMLDivElement> {
   centerText?: boolean;

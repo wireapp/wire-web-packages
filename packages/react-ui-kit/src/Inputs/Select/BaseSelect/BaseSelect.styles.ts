@@ -19,7 +19,7 @@
 
 import {CSSObject} from '@emotion/react';
 
-import {Theme} from '../../../Layout';
+import {Theme} from '../../../Identity';
 import {inputStyle} from '../../Input';
 
 export interface BaseSelectStylesParams {

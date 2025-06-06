@@ -30,7 +30,7 @@ import {
   triggerTextStyles,
 } from './AccordionItem.styles';
 
-import {ChevronDownIcon} from '../../../Icon';
+import {ChevronDownIcon} from '../../../DataDisplay/Icon';
 
 interface AccordionItemProps {
   title: string;

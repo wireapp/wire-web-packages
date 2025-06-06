@@ -19,7 +19,7 @@
 
 import {CSSObject} from '@emotion/react';
 
-import {Theme} from '../../../Layout';
+import {Theme} from '../../../Identity';
 
 export const headingContainerStyles = (theme: Theme): CSSObject => ({
   display: 'flex',

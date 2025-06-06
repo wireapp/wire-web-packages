@@ -21,11 +21,10 @@ import {forwardRef} from 'react';
 
 import {buttonStyle} from './Button.styles';
 
-import {COLOR} from '../../Identity';
-import {Theme} from '../../Layout';
-import {Loading} from '../../Misc';
+import {Loading} from '../../DataDisplay';
+import {COLOR, Theme} from '../../Identity';
 import {TextProps, filterTextProps} from '../../Typography';
-import {filterProps} from '../../utils/util';
+import {filterProps} from '../../utils';
 
 export enum ButtonVariant {
   PRIMARY = 'primary',

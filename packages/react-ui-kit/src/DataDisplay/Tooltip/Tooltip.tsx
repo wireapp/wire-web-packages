@@ -22,8 +22,8 @@ import {HTMLProps, MouseEvent, FocusEvent, ReactNode, useRef, useState} from 're
 import {CSSObject} from '@emotion/react';
 import {createPortal} from 'react-dom';
 
-import {Theme} from '../../Layout';
-import {filterProps} from '../../utils/util';
+import {Theme} from '../../Identity';
+import {filterProps} from '../../utils';
 
 const paddingDistance = 8;
 

@@ -19,9 +19,8 @@
 
 import {Line} from './Line';
 
-import {COLOR} from '../Identity';
-import {THEME_ID} from '../Layout';
-import {matchComponent} from '../test/testUtil';
+import {COLOR, THEME_ID} from '../../Identity';
+import {matchComponent} from '../../utils';
 
 /* eslint-disable jest/expect-expect */
 

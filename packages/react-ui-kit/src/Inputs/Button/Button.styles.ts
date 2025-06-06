@@ -21,10 +21,9 @@ import {CSSObject} from '@emotion/react';
 
 import {ButtonProps, ButtonVariant} from './Button';
 
-import {COLOR, COLOR_V2} from '../Identity';
-import {defaultTransition} from '../Identity/motions';
-import {textStyle} from '../Text';
-import {Theme} from '../Theme/Theme';
+import {COLOR, COLOR_V2, Theme} from '../../Identity';
+import {defaultTransition} from '../../Identity/motions';
+import {textStyle} from '../../Typography';
 
 const buttonPrimaryStyles = <T>(theme: Theme, {backgroundColor, disabled, isActive}: ButtonProps<T>) => {
   const activeStyles = {

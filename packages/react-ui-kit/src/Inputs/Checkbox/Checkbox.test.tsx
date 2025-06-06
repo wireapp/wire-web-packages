@@ -22,9 +22,9 @@ import {fireEvent, render} from '@testing-library/react';
 
 import {Checkbox, CheckboxLabel} from './Checkbox';
 
-import {StyledApp} from '../../src/Layout/StyledApp';
-import {THEME_ID} from '../Layout';
-import {matchComponent} from '../test/testUtil';
+import {THEME_ID} from '../../Identity';
+import {StyledApp} from '../../Layout';
+import {matchComponent} from '../../utils';
 
 /* eslint-disable jest/expect-expect */
 

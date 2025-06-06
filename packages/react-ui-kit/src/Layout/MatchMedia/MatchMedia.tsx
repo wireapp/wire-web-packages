@@ -20,7 +20,7 @@
 import {ReactFragment, useEffect, useMemo, useState} from 'react';
 import * as React from 'react';
 
-import {QUERY, QueryKeys} from '../mediaQueries';
+import {QUERY, QueryKeys} from '../../utils';
 
 type Query = string | QueryKeys;
 

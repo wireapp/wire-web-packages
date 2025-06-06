@@ -19,7 +19,7 @@
 
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-import {Theme} from '../Layout';
+import {Theme} from '../../Identity';
 
 export const ExpiresSoon = (props: SVGIconProps) => (
   <SVGIcon realWidth={17} realHeight={18} {...props}>

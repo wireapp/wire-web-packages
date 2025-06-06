@@ -20,7 +20,8 @@
 import {jsx as JSX} from '@emotion/react';
 import {create} from 'react-test-renderer';
 
-import {StyledApp, THEME_ID} from '../Layout';
+import {THEME_ID} from '../Identity';
+import {StyledApp} from '../Layout';
 
 /* eslint-disable no-unsanitized/method */
 export const matchComponent = (component: JSX.Element, themeId = THEME_ID.LIGHT) =>

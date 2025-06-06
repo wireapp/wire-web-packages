@@ -19,7 +19,7 @@
 
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
-import {Theme} from '../Layout';
+import {Theme} from '../../Identity';
 
 export const MLSVerified = (props: SVGIconProps) => (
   <SVGIcon realWidth={16} realHeight={16} {...props}>

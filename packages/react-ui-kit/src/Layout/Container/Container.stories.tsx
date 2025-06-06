@@ -23,7 +23,7 @@ import {Meta, StoryObj} from '@storybook/react';
 
 import {Container, ContainerLG, ContainerMD, ContainerSM, ContainerXS, ContainerXXS} from './Container';
 
-import {COLOR} from '../Identity/colors/colors';
+import {COLOR} from '../../Identity';
 
 const meta: Meta<typeof Container> = {
   component: Container,

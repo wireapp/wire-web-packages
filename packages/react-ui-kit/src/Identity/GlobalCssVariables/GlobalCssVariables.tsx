@@ -19,7 +19,8 @@
 
 import {CSSObject} from '@emotion/react';
 
-import {COLOR, COLOR_V2} from '..';
+import {COLOR} from '../colors';
+import {COLOR_V2} from '../colors-v2';
 
 const light: () => CSSObject = () => ({
   // Checkbox

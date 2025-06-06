@@ -21,10 +21,10 @@ import * as React from 'react';
 
 import {CSSObject} from '@emotion/react';
 
-import {COLOR} from '../Identity';
-import {ANIMATION, DURATION, EASE} from '../Identity/motions/motions';
-import {QueryKeys, media} from '../mediaQueries';
-import {noop} from '../util';
+import {COLOR} from '../../Identity';
+import {ANIMATION, DURATION, EASE} from '../../Identity/motions';
+import {QueryKeys, media} from '../../utils';
+import {noop} from '../../utils/util';
 
 export type OverlayWrapperProps<T = HTMLDivElement> = React.HTMLProps<T>;
 

@@ -21,10 +21,9 @@ import * as React from 'react';
 
 import {ThemeProvider as EmotionThemeProvider, Theme as ETheme} from '@emotion/react';
 
-import {fontSizes} from './Sizes';
-
-import {COLOR} from '../Identity/colors/colors';
-import {COLOR_V2, BASE_DARK_COLOR, BASE_LIGHT_COLOR} from '../Identity/colors-v2/colors-v2';
+import {COLOR} from '../colors';
+import {COLOR_V2, BASE_DARK_COLOR, BASE_LIGHT_COLOR} from '../colors-v2';
+import {fontSizes} from '../Sizes';
 
 export enum THEME_ID {
   DARK = 'THEME_DARK',

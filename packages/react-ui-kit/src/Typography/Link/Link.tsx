@@ -21,9 +21,9 @@ import {ReactNode} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
-import {defaultTransition} from '../../Identity/motions/motions';
+import {defaultTransition} from '../../Identity/motions';
 import {Theme} from '../../Identity/Theme';
-import {filterProps} from '../../utils/util';
+import {filterProps} from '../../utils';
 import {TextProps, filterTextProps, textStyle} from '../Text';
 
 export enum LinkVariant {

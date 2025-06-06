@@ -17,8 +17,9 @@
  *
  */
 
-import {THEME_ID} from '../Layout';
-import {matchComponent} from '../test/testUtil';
+import {THEME_ID} from '../../Identity';
+import {matchComponent} from '../../utils';
+
 import {Link} from '.';
 
 /* eslint-disable jest/expect-expect */
