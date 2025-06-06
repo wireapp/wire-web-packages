@@ -661,7 +661,11 @@ export class Account extends TypedEventEmitter<Events> {
       this.apiClient.transport.ws.removeAllListeners();
     };
   }
-
+  /**
+   * Creates the event handler that is invoked for each decrypted event from the backend.
+   * Responsible for handling specific event types like `MESSAGE_TIMER_UPDATE`, and then
+   * forwarding the event to the consumer via the `onEvent` callback.
+   */
   private createEventHandler(onEvent: (payload: HandledEventPayload, source: NotificationSource) => void) {
     return async (payload: HandledEventPayload, source: NotificationSource) => {
       const {event} = payload;
@@ -676,10 +680,17 @@ export class Account extends TypedEventEmitter<Events> {
           break;
         }
       }
+
+      // Always forward the event to the consumer
       onEvent(payload, source);
     };
   }
 
+  /**
+   * Wraps the logic for handling any incoming notification from backend (WebSocket or polling).
+   * Takes care of decryption, calling downstream processing logic, and backend acknowledgment.
+   * It can process both legacy and consumable notifications.
+   */
   private createUnifiedNotificationHandler(
     handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
     dryRun: boolean,
@@ -687,7 +698,7 @@ export class Account extends TypedEventEmitter<Events> {
     return async (notification: Notification | ConsumableNotification, source: NotificationSource): Promise<void> => {
       const isConsumable = this.checkIsConsumable(notification);
       try {
-        // TODO: FULL SYNC
+        // Special-case for "missed" events, which don't require processing
         if (isConsumable && notification.type === ConsumableEvent.MISSED) {
           this.reactToMissedNotification();
           return;
@@ -698,10 +709,8 @@ export class Account extends TypedEventEmitter<Events> {
 
         for await (const message of messages) {
           /**
-           * At this point, the message has already been decrypted.
-           * It's best to acknowledge it on the backend now to avoid receiving it again.
-           * Otherwise, we'll attempt to decrypt it a second time, which can lead to
-           * a duplicate error from the core crypto.
+           * Acknowledge consumable notifications after decryption to prevent replay.
+           * This avoids unnecessary reprocessing and crypto errors.
            */
           if (isConsumable) {
             this.apiClient.transport.ws.acknowledgeNotification(notification);
@@ -716,6 +725,11 @@ export class Account extends TypedEventEmitter<Events> {
     };
   }
 
+  /**
+   * Returns a function to handle missed notifications — i.e., when the backend indicates
+   * that some notifications were lost due to age (typically >28 days).
+   * Also handles MLS-specific epoch mismatch recovery by triggering a conversation rejoin.
+   */
   private createMissedNotificationsHandler(onMissedNotifications: (notificationId: string) => void) {
     return async (notificationId: string) => {
       if (this.hasMLSDevice) {
@@ -723,10 +737,18 @@ export class Account extends TypedEventEmitter<Events> {
           this.service!.conversation.handleConversationsEpochMismatch(),
         );
       }
+
       return onMissedNotifications(notificationId);
     };
   }
 
+  /**
+   * Returns a processor function for the notification stream (legacy sync).
+   * It pauses message sending and MLS rejoining during stream handling to prevent race conditions,
+   * then resumes normal operations after sync is complete.
+   *
+   * @param handlers Various logic handlers wired to notification callbacks
+   */
   private createNotificationStreamProcessor({
     handleUnifiedNotification,
     handleMissedNotifications,
@@ -766,6 +788,13 @@ export class Account extends TypedEventEmitter<Events> {
     };
   }
 
+  /**
+   * Sets up WebSocket event listeners for:
+   * - Incoming backend messages
+   * - WebSocket state changes
+   * On each new backend message, we pass it to the unified notification handler.
+   * On state changes, we map raw socket states to public connection states and emit them.
+   */
   private setupWebSocketListeners(
     handleUnifiedNotification: (
       notification: Notification | ConsumableNotification,
@@ -774,14 +803,17 @@ export class Account extends TypedEventEmitter<Events> {
     onConnectionStateChanged: (state: ConnectionState) => void,
   ) {
     this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
       handleUnifiedNotification(notification, NotificationSource.WEBSOCKET),
     );
+
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
       const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
         [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
         [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
       };
+
       const connectionState = mapping[wsState];
       if (connectionState) {
         onConnectionStateChanged(connectionState);
