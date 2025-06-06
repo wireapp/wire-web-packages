@@ -76,6 +76,7 @@ import {SelfService} from './self/';
 import {CoreDatabase, deleteDB, openDB} from './storage/CoreDB';
 import {TeamService} from './team/';
 import {UserService} from './user/';
+import {LocalStorageStore} from './util/LocalStorageStore';
 import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
 
 export type ProcessedEventPayload = HandledEventPayload;
@@ -137,6 +138,8 @@ export enum EVENTS {
 type Events = {
   [EVENTS.NEW_SESSION]: NewClient;
 };
+
+export const AccountLocalStorageStore = LocalStorageStore('core_account');
 
 export class Account extends TypedEventEmitter<Events> {
   private readonly apiClient: APIClient;
@@ -608,114 +611,17 @@ export class Account extends TypedEventEmitter<Events> {
       throw new Error('Client has not been initialized - please login first');
     }
 
-    const handleEvent = async (payload: HandledEventPayload, source: NotificationSource) => {
-      const {event} = payload;
-      switch (event?.type) {
-        case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
-          const {
-            data: {message_timer},
-            conversation,
-          } = event as Events.ConversationMessageTimerUpdateEvent;
-          const expireAfterMillis = Number(message_timer);
-          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
-          break;
-        }
-      }
-      onEvent(payload, source);
-    };
-
-    /**
-     * Handles a unified notification received from either a WebSocket or a legacy notification from notifications endpoint.
-     *
-     * This function processes both legacy and consumable notifications. it forwards the
-     * notification to core crypto for decryption then forwards the resulting event to the appropriate handler (webapp).
-     * For consumable notifications, it also acknowledges on the backend them to avoid duplicate processing.
-     *
-     * @param notification - The notification object, which may be a legacy Notification or a ConsumableNotification.
-     * @param source - The origin of the notification (e.g., WebSocket or legacy /notifications endpoint).
-     * @returns A Promise that resolves when the notification has been fully processed.
-     */
-    const handleUnifiedNotification = async (
-      notification: Notification | ConsumableNotification,
-      source: NotificationSource,
-    ): Promise<void> => {
-      const isConsumable = this.checkIsConsumable(notification);
-      try {
-        // TODO: FULL SYNC
-        if (isConsumable && notification.type === ConsumableEvent.MISSED) {
-          // this.apiClient.transport.ws.acknowledgeMissedNotification();
-          return;
-        }
-
-        const event = isConsumable ? notification.data.event : notification;
-        const messages = this.service!.notification.handleNotification(event, source, dryRun);
-
-        for await (const message of messages) {
-          /**
-           * At this point, the message has already been decrypted.
-           * It's best to acknowledge it on the backend now to avoid receiving it again.
-           * Otherwise, we'll attempt to decrypt it a second time, which can lead to
-           * a duplicate error from the core crypto.
-           */
-          if (isConsumable) {
-            this.apiClient.transport.ws.acknowledgeNotification(notification);
-          }
-
-          await handleEvent(message, source);
-        }
-      } catch (error) {
-        const id = isConsumable ? notification.type : notification.id;
-        this.logger.error(`Failed to handle notification ID "${id}": ${(error as any).message}`, error);
-      }
-    };
-
-    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
-      handleUnifiedNotification(notification, NotificationSource.WEBSOCKET),
-    );
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
-      const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
-        [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
-        [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
-      };
-      const connectionState = mapping[wsState];
-      if (connectionState) {
-        onConnectionStateChanged(connectionState);
-      }
+    const handleEvent = this.createEventHandler(onEvent);
+    const handleUnifiedNotification = this.createUnifiedNotificationHandler(handleEvent, dryRun);
+    const handleMissedNotifications = this.createMissedNotificationsHandler(onMissedNotifications);
+    const processNotificationStream = this.createNotificationStreamProcessor({
+      handleUnifiedNotification,
+      handleMissedNotifications,
+      onNotificationStreamProgress,
+      onConnectionStateChanged,
     });
 
-    const handleMissedNotifications = async (notificationId: string) => {
-      if (this.hasMLSDevice) {
-        queueConversationRejoin('all-conversations', () =>
-          this.service!.conversation.handleConversationsEpochMismatch(),
-        );
-      }
-      return onMissedNotifications(notificationId);
-    };
-
-    const processNotificationStream = async () => {
-      pauseMessageSending();
-      // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
-      pauseRejoiningMLSConversations();
-      onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
-
-      const results = await this.service!.notification.processNotificationStream(
-        async (notification, source, progress) => {
-          await handleUnifiedNotification(notification, source);
-          onNotificationStreamProgress(progress);
-        },
-        handleMissedNotifications,
-      );
-
-      this.logger.info('Finished processing notifications', results);
-
-      // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
-      // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
-      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
-      resumeMessageSending();
-      resumeRejoiningMLSConversations();
-      onConnectionStateChanged(ConnectionState.LIVE);
-    };
+    this.setupWebSocketListeners(handleUnifiedNotification, onConnectionStateChanged);
 
     const isClientCapabaleOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
@@ -754,6 +660,167 @@ export class Account extends TypedEventEmitter<Events> {
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
     };
+  }
+
+  private createEventHandler(onEvent: (payload: HandledEventPayload, source: NotificationSource) => void) {
+    return async (payload: HandledEventPayload, source: NotificationSource) => {
+      const {event} = payload;
+      switch (event?.type) {
+        case CONVERSATION_EVENT.MESSAGE_TIMER_UPDATE: {
+          const {
+            data: {message_timer},
+            conversation,
+          } = event as Events.ConversationMessageTimerUpdateEvent;
+          const expireAfterMillis = Number(message_timer);
+          this.service!.conversation.messageTimer.setConversationLevelTimer(conversation, expireAfterMillis);
+          break;
+        }
+      }
+      onEvent(payload, source);
+    };
+  }
+
+  private createUnifiedNotificationHandler(
+    handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
+    dryRun: boolean,
+  ) {
+    return async (notification: Notification | ConsumableNotification, source: NotificationSource): Promise<void> => {
+      const isConsumable = this.checkIsConsumable(notification);
+      try {
+        // TODO: FULL SYNC
+        if (isConsumable && notification.type === ConsumableEvent.MISSED) {
+          this.reactToMissedNotification();
+          return;
+        }
+
+        const event = isConsumable ? notification.data.event : notification;
+        const messages = this.service!.notification.handleNotification(event, source, dryRun);
+
+        for await (const message of messages) {
+          /**
+           * At this point, the message has already been decrypted.
+           * It's best to acknowledge it on the backend now to avoid receiving it again.
+           * Otherwise, we'll attempt to decrypt it a second time, which can lead to
+           * a duplicate error from the core crypto.
+           */
+          if (isConsumable) {
+            this.apiClient.transport.ws.acknowledgeNotification(notification);
+          }
+
+          await handleEvent(message, source);
+        }
+      } catch (error) {
+        const id = isConsumable ? notification.type : notification.id;
+        this.logger.error(`Failed to handle notification ID "${id}": ${(error as any).message}`, error);
+      }
+    };
+  }
+
+  private createMissedNotificationsHandler(onMissedNotifications: (notificationId: string) => void) {
+    return async (notificationId: string) => {
+      if (this.hasMLSDevice) {
+        queueConversationRejoin('all-conversations', () =>
+          this.service!.conversation.handleConversationsEpochMismatch(),
+        );
+      }
+      return onMissedNotifications(notificationId);
+    };
+  }
+
+  private createNotificationStreamProcessor({
+    handleUnifiedNotification,
+    handleMissedNotifications,
+    onNotificationStreamProgress,
+    onConnectionStateChanged,
+  }: {
+    handleUnifiedNotification: (
+      notification: Notification | ConsumableNotification,
+      source: NotificationSource,
+    ) => Promise<void>;
+    handleMissedNotifications: (notificationId: string) => Promise<void>;
+    onNotificationStreamProgress: ({done, total}: {done: number; total: number}) => void;
+    onConnectionStateChanged: (state: ConnectionState) => void;
+  }) {
+    return async () => {
+      pauseMessageSending();
+      // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
+      pauseRejoiningMLSConversations();
+      onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+
+      const results = await this.service!.notification.processNotificationStream(
+        async (notification, source, progress) => {
+          await handleUnifiedNotification(notification, source);
+          onNotificationStreamProgress(progress);
+        },
+        handleMissedNotifications,
+      );
+
+      this.logger.info('Finished processing notifications', results);
+
+      // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
+      // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
+      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+      resumeMessageSending();
+      resumeRejoiningMLSConversations();
+      onConnectionStateChanged(ConnectionState.LIVE);
+    };
+  }
+
+  private setupWebSocketListeners(
+    handleUnifiedNotification: (
+      notification: Notification | ConsumableNotification,
+      source: NotificationSource,
+    ) => Promise<void>,
+    onConnectionStateChanged: (state: ConnectionState) => void,
+  ) {
+    this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
+      handleUnifiedNotification(notification, NotificationSource.WEBSOCKET),
+    );
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
+      const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
+        [WEBSOCKET_STATE.CLOSED]: ConnectionState.CLOSED,
+        [WEBSOCKET_STATE.CONNECTING]: ConnectionState.CONNECTING,
+      };
+      const connectionState = mapping[wsState];
+      if (connectionState) {
+        onConnectionStateChanged(connectionState);
+      }
+    });
+  }
+
+  /**
+   * Handles logic for reacting to a missed notification event.
+   *
+   * The backend sends a special "missed notification" signal if it detects
+   * that the client has missed one or more notifications. Once this signal is sent,
+   * the backend will **stop sending all further notifications** until the client
+   * acknowledges the missed state.
+   *
+   * Because our app currently lacks functionality to perform a full real-time sync
+   * while running, we must reload the application to re-fetch the entire state.
+   *
+   * On first detection of the missed notification:
+   * - We set a local storage flag (`has_missing_notification`) to mark that we've
+   *   entered this state.
+   * - We reload the application so the state can be re-fetched from scratch.
+   *
+   * On the next load:
+   * - If the flag is already present, we acknowledge the missed notification via
+   *   the WebSocket transport, unblocking the backend so it resumes sending updates.
+   */
+  private reactToMissedNotification() {
+    const localStorageKey = 'has_missing_notification';
+
+    // First-time handling: set flag and reload to trigger full re-fetch of state.
+    if (!AccountLocalStorageStore.has(localStorageKey)) {
+      AccountLocalStorageStore.add(localStorageKey, 'true');
+      window.location.reload();
+      return;
+    }
+
+    // After reload: acknowledge the missed notification so backend resumes notifications.
+    this.apiClient.transport.ws.acknowledgeMissedNotification();
   }
 
   public getClientCapabilities() {

@@ -250,11 +250,7 @@ export class WebSocketClient extends EventEmitter {
     return url;
   }
 
-  private handleMissedConsumableNotification() {
-    window.location.reload();
-  }
-
-  private acknowledgeMissedNotification() {
+  public acknowledgeMissedNotification() {
     const jsonEvent = JSON.stringify({
       type: AcknowledgeType.ACK_FULL_SYNC,
     });
