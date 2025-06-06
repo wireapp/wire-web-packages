@@ -18,7 +18,7 @@ The react-ui-kit package's component structure needed better organization to imp
 We have reorganized all components into the following categories:
 
 - **DataDisplay**: Components for displaying data (tables, lists, etc.)
-- **Identity**: Components related to user identity and avatars
+- **Identity**: Design system, theme, colors, etc.
 - **Inputs**: Form controls and input elements
 - **Layout**: Structural components for page and content organization
 - **Navigation**: Components for navigation and routing

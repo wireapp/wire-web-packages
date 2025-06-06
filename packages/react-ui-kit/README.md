@@ -28,7 +28,7 @@ When creating a new component, follow these guidelines:
 
    - Place your component in the appropriate category folder under `src/`:
      - `DataDisplay/`: For data visualization components (tables, lists)
-     - `Identity/`: For user identity components (avatars, user info)
+     - `Identity/`: Design system, theme, colors, etc.
      - `Inputs/`: For form controls and input elements
      - `Layout/`: For structural components
      - `Navigation/`: For navigation-related components
