@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,26 @@
  *
  */
 
-import {Notification} from '@wireapp/api-client/lib/notification/';
+import {BackendEvent} from '../event';
 
-import {APIClient} from '@wireapp/api-client';
+export interface ConsumableNotificationMissed {
+  type: ConsumableEvent.MISSED;
+}
 
-export class NotificationBackendRepository {
-  constructor(private readonly apiClient: APIClient) {}
+export interface ConsumableNotificationEvent {
+  type: ConsumableEvent.EVENT;
+  data: {
+    delivery_tag: number;
+    event: {
+      id: 'uuid';
+      payload: BackendEvent[];
+    };
+  };
+}
 
-  public async getAllNotifications(clientId?: string, lastNotificationId?: string) {
-    return this.apiClient.api.notification.getAllNotifications(clientId, lastNotificationId);
-  }
+export type ConsumableNotification = ConsumableNotificationMissed | ConsumableNotificationEvent;
 
-  public getLastNotification(clientId?: string): Promise<Notification> {
-    return this.apiClient.api.notification.getLastNotification(clientId);
-  }
+export enum ConsumableEvent {
+  EVENT = 'event',
+  MISSED = 'notifications.missed',
 }
