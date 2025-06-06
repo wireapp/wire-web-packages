@@ -23,9 +23,9 @@ import {Meta, StoryObj} from '@storybook/react';
 
 import {HeaderMenu} from './HeaderMenu';
 
-import {COLOR} from '../../Identity/colors';
-import {Logo} from '../../Identity/Logo';
-import {Text} from '../../Text';
+import {COLOR} from '../../Identity/colors/colors';
+import {Logo} from '../../Identity/Logo/Logo';
+import {Text} from '../../Typography';
 
 const meta: Meta<typeof HeaderMenu> = {
   component: HeaderMenu,

@@ -19,9 +19,9 @@
 
 import {CSSObject} from '@emotion/react';
 
-import {TextProps} from '../../Text';
-import {filterProps} from '../../util';
-import {contentStyle} from '../Content';
+import {TextProps} from '../../Typography';
+import {filterProps} from '../../utils/util';
+import {contentStyle} from '../Content/Content';
 
 export interface MenuContentProps<T = HTMLDivElement> extends TextProps<T> {
   open?: boolean;

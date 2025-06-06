@@ -24,10 +24,9 @@ import {CSSObject} from '@emotion/react';
 import {MENU_LINK_CLASSNAME} from './MenuLink';
 import {MenuSubLink} from './MenuSubLink';
 
-import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
-import {DURATION} from '../../Identity/motions';
-import {QUERY} from '../../mediaQueries';
-import {Theme} from '../../Theme/Theme';
+import {COLOR, Opacity, Slide, YAxisMovement, Theme} from '../../Identity';
+import {DURATION} from '../../Identity/motions/motions';
+import {QUERY} from '../../utils';
 
 export type DesktopStyledHeaderSubMenuProps<T = HTMLDivElement> = React.HTMLProps<T>;
 

@@ -21,10 +21,9 @@ import {CSSObject} from '@emotion/react';
 
 import {DESKTOP_HEADER_SUB_MENU_CLASSNAME} from './HeaderSubMenu';
 
-import {QueryKeys, media} from '../../mediaQueries';
-import {LinkProps, filterLinkProps, linkStyle} from '../../Text';
-import {Theme} from '../../Theme/Theme';
-import {filterProps} from '../../util';
+import {Theme} from '../../Identity';
+import {LinkProps, filterLinkProps, linkStyle} from '../../Typography';
+import {QueryKeys, media, filterProps} from '../../utils';
 
 export interface MenuLinkProps<T = HTMLAnchorElement> extends LinkProps<T> {
   button?: boolean;
