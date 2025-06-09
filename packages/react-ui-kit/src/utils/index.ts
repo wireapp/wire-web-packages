@@ -21,7 +21,6 @@ export * from './childrenWithDefaultProps';
 export * from './enums';
 export * from './IsInViewport';
 export * from './mediaQueries';
-export * from './testUtil';
 export * from './useLongTouch';
 export * from './useTimeout';
 export * from './util';
