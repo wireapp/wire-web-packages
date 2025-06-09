@@ -20,7 +20,7 @@
 import {Line} from './Line';
 
 import {COLOR, THEME_ID} from '../../Identity';
-import {matchComponent} from '../../utils';
+import {matchComponent} from '../../utils/testUtil';
 
 /* eslint-disable jest/expect-expect */
 

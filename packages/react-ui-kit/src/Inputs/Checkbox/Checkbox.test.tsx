@@ -24,7 +24,7 @@ import {Checkbox, CheckboxLabel} from './Checkbox';
 
 import {THEME_ID} from '../../Identity';
 import {StyledApp} from '../../Layout';
-import {matchComponent} from '../../utils';
+import {matchComponent} from '../../utils/testUtil';
 
 /* eslint-disable jest/expect-expect */
 

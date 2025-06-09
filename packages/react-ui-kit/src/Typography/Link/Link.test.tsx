@@ -18,7 +18,7 @@
  */
 
 import {THEME_ID} from '../../Identity';
-import {matchComponent} from '../../utils';
+import {matchComponent} from '../../utils/testUtil';
 
 import {Link} from '.';
 
