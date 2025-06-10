@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.59.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.59.1...@wireapp/react-ui-kit@9.59.2) (2025-06-10)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.59.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.59.0...@wireapp/react-ui-kit@9.59.1) (2025-06-05)
+
+### Bug Fixes
+
+* **react-ui-kit:** Accordion spacing ([#7070](https://github.com/wireapp/wire-web-packages/issues/7070)) ([f7fc37a](https://github.com/wireapp/wire-web-packages/commit/f7fc37a95e69fb158054a1e6f16f89e7a88b266e))
+
+# [9.59.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.58.0...@wireapp/react-ui-kit@9.59.0) (2025-06-04)
+
+### Features
+
+* **react-ui-kit:** ComboboxSelect without the creatable option ([#7069](https://github.com/wireapp/wire-web-packages/issues/7069)) ([69357c5](https://github.com/wireapp/wire-web-packages/commit/69357c5e2857eceb5ea04df26df141a4b75ff1ac))
+
+# [9.58.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.57.1...@wireapp/react-ui-kit@9.58.0) (2025-06-04)
+
+### Features
+
+* **react-ui-kit:** Accordion component ([#7065](https://github.com/wireapp/wire-web-packages/issues/7065)) ([3df072b](https://github.com/wireapp/wire-web-packages/commit/3df072b6ac3639048016942287ed487cd5cc8e67))
+
+## [9.57.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.57.0...@wireapp/react-ui-kit@9.57.1) (2025-06-04)
+
+### Bug Fixes
+
+* **react-ui-kit:** new OptionsIcon ([#7067](https://github.com/wireapp/wire-web-packages/issues/7067)) ([0dbbe17](https://github.com/wireapp/wire-web-packages/commit/0dbbe17986e04f08ec3213a630ae53bfcf51e0c2))
+
+# [9.57.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.56.1...@wireapp/react-ui-kit@9.57.0) (2025-06-03)
+
+### Features
+
+* **react-ui-kit:** BadgesWithTooltip [WPB-17811] ([#7063](https://github.com/wireapp/wire-web-packages/issues/7063)) ([caf2797](https://github.com/wireapp/wire-web-packages/commit/caf279748c0013beeff6c7909318aa0f4e7cb5c2))
+
+## [9.56.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.56.0...@wireapp/react-ui-kit@9.56.1) (2025-06-02)
+
+### Bug Fixes
+
+* **react-ui-kit:** Badge export [WPB-17811] ([#7062](https://github.com/wireapp/wire-web-packages/issues/7062)) ([4adb136](https://github.com/wireapp/wire-web-packages/commit/4adb1369134d03c0fb56028194d7fd98d1cdfa4c))
+
+# [9.56.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.55.0...@wireapp/react-ui-kit@9.56.0) (2025-06-02)
+
+### Features
+
+* **react-ui-kit:** Badge ([#7061](https://github.com/wireapp/wire-web-packages/issues/7061)) ([0492e7b](https://github.com/wireapp/wire-web-packages/commit/0492e7b4f59385b399f32f7d1c315d45b90f710a))
+
+# [9.55.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.54.1...@wireapp/react-ui-kit@9.55.0) (2025-05-30)
+
+### Features
+
+* **react-ui-kit/combobox-select:** loading ([#7060](https://github.com/wireapp/wire-web-packages/issues/7060)) ([f53f8a8](https://github.com/wireapp/wire-web-packages/commit/f53f8a8bc01a2865067557c85d8783fbc053959b))
+
+## [9.54.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.54.0...@wireapp/react-ui-kit@9.54.1) (2025-05-29)
+
+### Bug Fixes
+
+* **ComboboxSelect:** position and z-index [WPB-17810] ([#7058](https://github.com/wireapp/wire-web-packages/issues/7058)) ([9a3f2a6](https://github.com/wireapp/wire-web-packages/commit/9a3f2a64964f34dde82b5b4d0f51d5dd66d7b4fe))
+
+# [9.54.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.53.0...@wireapp/react-ui-kit@9.54.0) (2025-05-28)
+
+### Features
+
+* **react-ui-kit:** combobox select component ([#7056](https://github.com/wireapp/wire-web-packages/issues/7056)) ([057a260](https://github.com/wireapp/wire-web-packages/commit/057a26042d85575051fc52e529418351c532d6f9))
+* **react-ui-kit:** revert combobox changes ([#7055](https://github.com/wireapp/wire-web-packages/issues/7055)) ([03eab8e](https://github.com/wireapp/wire-web-packages/commit/03eab8edd08df1d87bae48f20e5acd6ab18a1ca3))
+
 # [9.53.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.52.1...@wireapp/react-ui-kit@9.53.0) (2025-05-21)
 
 ### Features
