@@ -153,6 +153,7 @@ export class Account extends TypedEventEmitter<Events> {
   private coreCallbacks?: CoreCallbacks;
   private totalPendingNotifications: number = 0;
   private remainingNotifications: number = 0;
+  private connectionState: ConnectionState = ConnectionState.CLOSED;
 
   public service?: {
     mls?: MLSService;
@@ -573,7 +574,7 @@ export class Account extends TypedEventEmitter<Events> {
    */
   public async listen({
     onEvent = () => {},
-    onConnectionStateChanged = () => {},
+    onConnectionStateChanged: onConnectionStateChangedCallBack = () => {},
     onNotificationStreamProgress = () => {},
     onMissedNotifications = () => {},
     dryRun = false,
@@ -612,6 +613,8 @@ export class Account extends TypedEventEmitter<Events> {
     if (!this.currentClient) {
       throw new Error('Client has not been initialized - please login first');
     }
+
+    const onConnectionStateChanged = this.createConnectionStateChangedHandler(onConnectionStateChangedCallBack);
 
     const handleEvent = this.createEventHandler(onEvent);
     const handleUnifiedNotification = this.createUnifiedNotificationHandler(
@@ -664,6 +667,17 @@ export class Account extends TypedEventEmitter<Events> {
       this.apiClient.transport.ws.removeAllListeners();
     };
   }
+
+  private createConnectionStateChangedHandler(
+    onConnectionStateChanged: (state: ConnectionState) => void,
+  ): (state: ConnectionState) => void {
+    return (state: ConnectionState) => {
+      this.connectionState = state;
+      onConnectionStateChanged(state);
+      this.logger.info(`Connection state changed to: ${state}`);
+    };
+  }
+
   /**
    * Creates the event handler that is invoked for each decrypted event from the backend.
    * Responsible for handling specific event types like `MESSAGE_TIMER_UPDATE`, and then
@@ -717,6 +731,15 @@ export class Account extends TypedEventEmitter<Events> {
           this.totalPendingNotifications = count;
           this.remainingNotifications = 0;
           this.apiClient.transport.ws.acknowledgeMessageCountNotification();
+          pauseMessageSending();
+
+          onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
+
+          // If there are no messages to process, we can resume message sending immediately and go LIVE
+          if (count === 0) {
+            resumeMessageSending();
+            onConnectionStateChanged(ConnectionState.LIVE);
+          }
 
           return;
         }
@@ -724,22 +747,28 @@ export class Account extends TypedEventEmitter<Events> {
         const event = isConsumable ? notification.data.event : notification;
         const messages = this.service!.notification.handleNotification(event, source, dryRun);
 
-        this.remainingNotifications++;
-        onNotificationStreamProgress({done: this.remainingNotifications, total: this.totalPendingNotifications});
+        if (this.connectionState !== ConnectionState.LIVE) {
+          this.remainingNotifications++;
+          onNotificationStreamProgress({done: this.remainingNotifications, total: this.totalPendingNotifications});
+        }
+
+        /**
+         * Acknowledge consumable notifications after decryption to prevent replay.
+         * This avoids unnecessary reprocessing and crypto errors.
+         */
+        if (isConsumable) {
+          this.apiClient.transport.ws.acknowledgeNotification(notification);
+        }
 
         for await (const message of messages) {
-          /**
-           * Acknowledge consumable notifications after decryption to prevent replay.
-           * This avoids unnecessary reprocessing and crypto errors.
-           */
-          if (isConsumable) {
-            this.apiClient.transport.ws.acknowledgeNotification(notification);
-          }
-
           await handleEvent(message, source);
         }
 
-        if (this.totalPendingNotifications === this.remainingNotifications) {
+        if (
+          this.totalPendingNotifications === this.remainingNotifications &&
+          this.connectionState !== ConnectionState.LIVE
+        ) {
+          resumeMessageSending();
           onConnectionStateChanged(ConnectionState.LIVE);
         }
       } catch (error) {
