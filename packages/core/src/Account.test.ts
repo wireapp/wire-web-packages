@@ -82,6 +82,34 @@ const waitFor = (assertion: () => void) => {
   });
 };
 
+const mockWebSocketMessage = {
+  data: {
+    delivery_tag: 4,
+    event: {
+      id: '7e497e6f-460c-11f0-8001-e256b69264bc',
+      payload: [
+        {
+          conversation: '5bb62669-480d-5805-99b5-db8ef57cbf01',
+          data: 'MOCK_MESSAGE',
+          from: '01d9d7f2-c8b7-4095-b4d0-a7bea86c4084',
+          qualified_conversation: {
+            domain: 'staging.zinfra.io',
+            id: '5bb62669-480d-5805-99b5-db8ef57cbf01',
+          },
+          qualified_from: {
+            domain: 'staging.zinfra.io',
+            id: '01d9d7f2-c8b7-4095-b4d0-a7bea86c4084',
+          },
+          time: '2025-06-10T15:06:32.064Z',
+          type: 'conversation.mls-message-add',
+          senderClientId: '01d9d7f2-c8b7-4095-b4d0:c5e6fbb371fdb545@staging.zinfra.io',
+        },
+      ],
+    },
+  },
+  type: 'event',
+};
+
 /* eslint-disable jest/no-conditional-expect */
 
 describe('Account', () => {
@@ -284,7 +312,7 @@ describe('Account', () => {
         },
       });
 
-      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, {payload: [{}]});
+      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, mockWebSocketMessage);
       kill();
     });
   });
@@ -369,7 +397,7 @@ describe('Account', () => {
               await server.connected;
               jest
                 .spyOn(dependencies.account.service!.notification as any, 'handleNotification')
-                .mockReturnValue([{event: {myamirtestdata: 1}}]);
+                .mockReturnValue([{event: {testData: 1}}]);
               server.send(
                 JSON.stringify({
                   type: ConsumableEvent.EVENT,
@@ -389,24 +417,17 @@ describe('Account', () => {
       });
 
       it('warns consumer of the connection state', async () => {
-        jest
-          .spyOn(dependencies.account, 'getClientCapabilities')
-          .mockReturnValue([ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS]);
-
         await new Promise<void>(async resolve => {
           mockNotifications(10);
 
           const onConnectionStateChanged = jest.fn().mockImplementation((state: ConnectionState) => {
             switch (state) {
               case ConnectionState.LIVE:
-                // When socket is live we disconnect before ending the test
-                disconnect();
                 break;
               case ConnectionState.CLOSED:
                 // Expect all states to have been called in order
-                expect(onConnectionStateChanged).toHaveBeenNthCalledWith(1, ConnectionState.CONNECTING);
+                expect(onConnectionStateChanged).toHaveBeenNthCalledWith(1, ConnectionState.PROCESSING_NOTIFICATIONS);
                 expect(onConnectionStateChanged).toHaveBeenNthCalledWith(2, ConnectionState.LIVE);
-                expect(onConnectionStateChanged).toHaveBeenNthCalledWith(3, ConnectionState.CLOSED);
                 resolve();
                 break;
             }
@@ -415,6 +436,12 @@ describe('Account', () => {
           const disconnect = await dependencies.account.listen({
             onConnectionStateChanged,
           });
+
+          await waitFor(() =>
+            expect(onConnectionStateChanged).toHaveBeenCalledWith(ConnectionState.PROCESSING_NOTIFICATIONS),
+          );
+
+          disconnect();
         });
       });
 

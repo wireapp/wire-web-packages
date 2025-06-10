@@ -617,21 +617,24 @@ export class Account extends TypedEventEmitter<Events> {
     const onConnectionStateChanged = this.createConnectionStateChangedHandler(onConnectionStateChangedCallBack);
 
     const handleEvent = this.createEventHandler(onEvent);
-    const handleUnifiedNotification = this.createUnifiedNotificationHandler(
+
+    const handleLegacyNotification = this.createLegacyNotificationHandler(handleEvent, dryRun);
+    const handleNotification = this.createNotificationHandler(
       handleEvent,
       onNotificationStreamProgress,
       onConnectionStateChanged,
       dryRun,
     );
-    const handleMissedNotifications = this.createMissedNotificationsHandler(onMissedNotifications);
-    const processNotificationStream = this.createNotificationStreamProcessor({
-      handleUnifiedNotification,
+
+    const handleMissedNotifications = this.createLegacyMissedNotificationsHandler(onMissedNotifications);
+    const processNotificationStream = this.createLegacyNotificationStreamProcessor({
+      handleLegacyNotification,
       handleMissedNotifications,
       onNotificationStreamProgress,
       onConnectionStateChanged,
     });
 
-    this.setupWebSocketListeners(handleUnifiedNotification, onConnectionStateChanged);
+    this.setupWebSocketListeners(handleNotification, onConnectionStateChanged);
 
     const isClientCapabaleOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
@@ -703,30 +706,44 @@ export class Account extends TypedEventEmitter<Events> {
     };
   }
 
-  /**
-   * Wraps the logic for handling any incoming notification from backend (WebSocket or polling).
-   * Takes care of decryption, calling downstream processing logic, and backend acknowledgment.
-   * It can process both legacy and consumable notifications.
-   */
-  private createUnifiedNotificationHandler(
+  private createLegacyNotificationHandler(
+    handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
+    dryRun: boolean,
+  ) {
+    return async (notification: Notification, source: NotificationSource): Promise<void> => {
+      try {
+        const messages = this.service!.notification.handleNotification(notification, source, dryRun);
+
+        for await (const message of messages) {
+          await handleEvent(message, source);
+        }
+      } catch (error) {
+        this.logger.error(
+          `Failed to handle legacy notification "${notification.id}": ${(error as any).message}`,
+          error,
+        );
+      }
+    };
+  }
+
+  private createNotificationHandler(
     handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
     onNotificationStreamProgress: ({done, total}: {done: number; total: number}) => void,
     onConnectionStateChanged: (state: ConnectionState) => void,
     dryRun: boolean,
   ) {
-    return async (notification: Notification | ConsumableNotification, source: NotificationSource): Promise<void> => {
-      const isConsumable = this.checkIsConsumable(notification);
+    return async (notification: ConsumableNotification, source: NotificationSource): Promise<void> => {
       try {
-        // Special-case for "missed" events, which don't require processing
-        if (isConsumable && notification.type === ConsumableEvent.MISSED) {
+        if (notification.type === ConsumableEvent.MISSED) {
           this.reactToMissedNotification();
           return;
         }
 
-        if (isConsumable && notification.type === ConsumableEvent.MESSAGE_COUNT) {
+        if (notification.type === ConsumableEvent.MESSAGE_COUNT) {
           const {
             data: {count},
           } = notification;
+
           onNotificationStreamProgress({total: count, done: 0});
           this.totalPendingNotifications = count;
           this.remainingNotifications = 0;
@@ -735,7 +752,6 @@ export class Account extends TypedEventEmitter<Events> {
 
           onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
 
-          // If there are no messages to process, we can resume message sending immediately and go LIVE
           if (count === 0) {
             resumeMessageSending();
             onConnectionStateChanged(ConnectionState.LIVE);
@@ -744,21 +760,18 @@ export class Account extends TypedEventEmitter<Events> {
           return;
         }
 
-        const event = isConsumable ? notification.data.event : notification;
+        const event = notification.data.event;
         const messages = this.service!.notification.handleNotification(event, source, dryRun);
 
         if (this.connectionState !== ConnectionState.LIVE) {
           this.remainingNotifications++;
-          onNotificationStreamProgress({done: this.remainingNotifications, total: this.totalPendingNotifications});
+          onNotificationStreamProgress({
+            done: this.remainingNotifications,
+            total: this.totalPendingNotifications,
+          });
         }
 
-        /**
-         * Acknowledge consumable notifications after decryption to prevent replay.
-         * This avoids unnecessary reprocessing and crypto errors.
-         */
-        if (isConsumable) {
-          this.apiClient.transport.ws.acknowledgeNotification(notification);
-        }
+        this.apiClient.transport.ws.acknowledgeNotification(notification);
 
         for await (const message of messages) {
           await handleEvent(message, source);
@@ -772,8 +785,10 @@ export class Account extends TypedEventEmitter<Events> {
           onConnectionStateChanged(ConnectionState.LIVE);
         }
       } catch (error) {
-        const id = isConsumable ? notification.type : notification.id;
-        this.logger.error(`Failed to handle notification ID "${id}": ${(error as any).message}`, error);
+        this.logger.error(
+          `Failed to handle consumable notification "${notification.type}": ${(error as any).message}`,
+          error,
+        );
       }
     };
   }
@@ -783,7 +798,7 @@ export class Account extends TypedEventEmitter<Events> {
    * that some notifications were lost due to age (typically >28 days).
    * Also handles MLS-specific epoch mismatch recovery by triggering a conversation rejoin.
    */
-  private createMissedNotificationsHandler(onMissedNotifications: (notificationId: string) => void) {
+  private createLegacyMissedNotificationsHandler(onMissedNotifications: (notificationId: string) => void) {
     return async (notificationId: string) => {
       if (this.hasMLSDevice) {
         queueConversationRejoin('all-conversations', () =>
@@ -802,16 +817,13 @@ export class Account extends TypedEventEmitter<Events> {
    *
    * @param handlers Various logic handlers wired to notification callbacks
    */
-  private createNotificationStreamProcessor({
-    handleUnifiedNotification,
+  private createLegacyNotificationStreamProcessor({
+    handleLegacyNotification,
     handleMissedNotifications,
     onNotificationStreamProgress,
     onConnectionStateChanged,
   }: {
-    handleUnifiedNotification: (
-      notification: Notification | ConsumableNotification,
-      source: NotificationSource,
-    ) => Promise<void>;
+    handleLegacyNotification: (notification: Notification, source: NotificationSource) => Promise<void>;
     handleMissedNotifications: (notificationId: string) => Promise<void>;
     onNotificationStreamProgress: ({done, total}: {done: number; total: number}) => void;
     onConnectionStateChanged: (state: ConnectionState) => void;
@@ -824,13 +836,13 @@ export class Account extends TypedEventEmitter<Events> {
 
       const results = await this.service!.notification.processNotificationStream(
         async (notification, source, progress) => {
-          await handleUnifiedNotification(notification, source);
+          await handleLegacyNotification(notification, source);
           onNotificationStreamProgress(progress);
         },
         handleMissedNotifications,
       );
 
-      this.logger.info('Finished processing notifications', results);
+      this.logger.info('Finished processing notifications from the legacy endpoint', results);
 
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
@@ -845,20 +857,17 @@ export class Account extends TypedEventEmitter<Events> {
    * Sets up WebSocket event listeners for:
    * - Incoming backend messages
    * - WebSocket state changes
-   * On each new backend message, we pass it to the unified notification handler.
+   * On each new backend message, we pass it to the  notification handler.
    * On state changes, we map raw socket states to public connection states and emit them.
    */
   private setupWebSocketListeners(
-    handleUnifiedNotification: (
-      notification: Notification | ConsumableNotification,
-      source: NotificationSource,
-    ) => Promise<void>,
+    handleNotification: (notification: ConsumableNotification, source: NotificationSource) => Promise<void>,
     onConnectionStateChanged: (state: ConnectionState) => void,
   ) {
     this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
 
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
-      handleUnifiedNotification(notification, NotificationSource.WEBSOCKET),
+      handleNotification(notification, NotificationSource.WEBSOCKET),
     );
 
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
