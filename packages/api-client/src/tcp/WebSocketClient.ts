@@ -29,11 +29,7 @@ import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
-import {
-  ConsumableEvent,
-  ConsumableNotification,
-  ConsumableNotificationEvent,
-} from '../notification/ConsumableNotification.types';
+import {ConsumableNotification, ConsumableNotificationEvent} from '../notification/ConsumableNotification.types';
 
 enum TOPIC {
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
@@ -99,13 +95,6 @@ export class WebSocketClient extends EventEmitter {
       this.bufferedMessages.push(data);
     } else {
       const notification: ConsumableNotification = JSON.parse(data);
-      if (notification.type === ConsumableEvent.MISSED) {
-        this.acknowledgeMissedNotification();
-        setTimeout(() => {
-          this.handleMissedConsumableNotification();
-        }, 2000);
-        return;
-      }
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
@@ -253,6 +242,14 @@ export class WebSocketClient extends EventEmitter {
   public acknowledgeMissedNotification() {
     const jsonEvent = JSON.stringify({
       type: AcknowledgeType.ACK_FULL_SYNC,
+    });
+
+    this.socket.send(jsonEvent);
+  }
+
+  public acknowledgeMessageCountNotification() {
+    const jsonEvent = JSON.stringify({
+      type: AcknowledgeType.ACK_MESSAGE_COUNT,
     });
 
     this.socket.send(jsonEvent);

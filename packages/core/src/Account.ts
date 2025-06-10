@@ -151,6 +151,8 @@ export class Account extends TypedEventEmitter<Events> {
   private db?: CoreDatabase;
   private encryptedDb?: EncryptedStore<any>;
   private coreCallbacks?: CoreCallbacks;
+  private totalPendingNotifications: number = 0;
+  private remainingNotifications: number = 0;
 
   public service?: {
     mls?: MLSService;
@@ -612,7 +614,12 @@ export class Account extends TypedEventEmitter<Events> {
     }
 
     const handleEvent = this.createEventHandler(onEvent);
-    const handleUnifiedNotification = this.createUnifiedNotificationHandler(handleEvent, dryRun);
+    const handleUnifiedNotification = this.createUnifiedNotificationHandler(
+      handleEvent,
+      onNotificationStreamProgress,
+      onConnectionStateChanged,
+      dryRun,
+    );
     const handleMissedNotifications = this.createMissedNotificationsHandler(onMissedNotifications);
     const processNotificationStream = this.createNotificationStreamProcessor({
       handleUnifiedNotification,
@@ -649,11 +656,7 @@ export class Account extends TypedEventEmitter<Events> {
       await processNotificationStream();
     }
 
-    this.apiClient.connect(() => {
-      if (isClientCapabaleOfConsumableNotifications) {
-        onConnectionStateChanged(ConnectionState.LIVE);
-      }
-    });
+    this.apiClient.connect();
 
     return () => {
       this.apiClient.disconnect();
@@ -693,6 +696,8 @@ export class Account extends TypedEventEmitter<Events> {
    */
   private createUnifiedNotificationHandler(
     handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
+    onNotificationStreamProgress: ({done, total}: {done: number; total: number}) => void,
+    onConnectionStateChanged: (state: ConnectionState) => void,
     dryRun: boolean,
   ) {
     return async (notification: Notification | ConsumableNotification, source: NotificationSource): Promise<void> => {
@@ -704,8 +709,23 @@ export class Account extends TypedEventEmitter<Events> {
           return;
         }
 
+        if (isConsumable && notification.type === ConsumableEvent.MESSAGE_COUNT) {
+          const {
+            data: {count},
+          } = notification;
+          onNotificationStreamProgress({total: count, done: 0});
+          this.totalPendingNotifications = count;
+          this.remainingNotifications = 0;
+          this.apiClient.transport.ws.acknowledgeMessageCountNotification();
+
+          return;
+        }
+
         const event = isConsumable ? notification.data.event : notification;
         const messages = this.service!.notification.handleNotification(event, source, dryRun);
+
+        this.remainingNotifications++;
+        onNotificationStreamProgress({done: this.remainingNotifications, total: this.totalPendingNotifications});
 
         for await (const message of messages) {
           /**
@@ -717,6 +737,10 @@ export class Account extends TypedEventEmitter<Events> {
           }
 
           await handleEvent(message, source);
+        }
+
+        if (this.totalPendingNotifications === this.remainingNotifications) {
+          onConnectionStateChanged(ConnectionState.LIVE);
         }
       } catch (error) {
         const id = isConsumable ? notification.type : notification.id;
@@ -839,7 +863,8 @@ export class Account extends TypedEventEmitter<Events> {
    *
    * On the next load:
    * - If the flag is already present, we acknowledge the missed notification via
-   *   the WebSocket transport, unblocking the backend so it resumes sending updates.
+   * the WebSocket transport, unblocking the backend so it resumes sending updates
+   * then we remove the flag.
    */
   private reactToMissedNotification() {
     const localStorageKey = 'has_missing_notification';
@@ -853,6 +878,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     // After reload: acknowledge the missed notification so backend resumes notifications.
     this.apiClient.transport.ws.acknowledgeMissedNotification();
+    AccountLocalStorageStore.remove(localStorageKey);
   }
 
   public getClientCapabilities() {

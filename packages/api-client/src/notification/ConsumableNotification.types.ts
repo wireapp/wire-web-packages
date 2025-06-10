@@ -19,24 +19,53 @@
 
 import {BackendEvent} from '../event';
 
+/**
+ * Enum of all possible consumable notification types received via WebSocket.
+ * Now fully aligned with backend naming conventions.
+ */
+export enum ConsumableEvent {
+  EVENT = 'event',
+  MISSED = 'notifications_missed',
+  MESSAGE_COUNT = 'message_count',
+}
+
+/**
+ * Notification type received when the client has missed messages due to being offline too long.
+ * Requires a full re-sync before consuming more notifications.
+ */
 export interface ConsumableNotificationMissed {
   type: ConsumableEvent.MISSED;
 }
 
+/**
+ * Notification type for actual backend events, contains one or more event payloads.
+ * Includes a delivery tag for acknowledgment.
+ */
 export interface ConsumableNotificationEvent {
   type: ConsumableEvent.EVENT;
   data: {
     delivery_tag: number;
     event: {
-      id: 'uuid';
+      id: string;
       payload: BackendEvent[];
     };
   };
 }
 
-export type ConsumableNotification = ConsumableNotificationMissed | ConsumableNotificationEvent;
-
-export enum ConsumableEvent {
-  EVENT = 'event',
-  MISSED = 'notifications.missed',
+/**
+ * Notification sent after connecting to indicate current number of messages queued.
+ */
+export interface ConsumableNotificationMessageCount {
+  type: ConsumableEvent.MESSAGE_COUNT;
+  data: {
+    count: number;
+  };
 }
+
+/**
+ * Union of all valid notification types supported by the WebSocket backend.
+ */
+export type ConsumableNotification =
+  | ConsumableNotificationMissed
+  | ConsumableNotificationEvent
+  | ConsumableNotificationMessageCount;
