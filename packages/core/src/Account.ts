@@ -636,7 +636,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     this.setupWebSocketListeners(handleNotification, onConnectionStateChanged);
 
-    const isClientCapabaleOfConsumableNotifications = this.getClientCapabilities().includes(
+    const isClientCapableOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
     );
 
@@ -652,7 +652,7 @@ export class Account extends TypedEventEmitter<Events> {
      * These two systems are separate, and the transition timing
      * is important to avoid missing any messages during the switch.
      */
-    if (!isClientCapabaleOfConsumableNotifications) {
+    if (!isClientCapableOfConsumableNotifications) {
       // let the backend now client is capable of consumable notifications
       await this.service?.client.putClientCapabilities(this.currentClient.id, {
         capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS],
