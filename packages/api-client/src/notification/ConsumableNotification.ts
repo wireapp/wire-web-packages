@@ -34,7 +34,7 @@ export enum ConsumableEvent {
 /**
  * Notification type received when the client has missed messages due to being offline too long.
  * Requires a full re-sync before consuming more notifications.
- * TODO: use when BackendEvent is typed in zod
+ * TODO: when BackendEvent is typed in zod use:
  * export type ConsumableNotificationMissed = z.infer<typeof ConsumableNotificationMissedSchema>;
  */
 export interface ConsumableNotificationMissed {
@@ -44,7 +44,7 @@ export interface ConsumableNotificationMissed {
 /**
  * Notification type for actual backend events, contains one or more event payloads.
  * Includes a delivery tag for acknowledgment.
- * TODO: use when BackendEvent is typed in zod
+ * TODO: when BackendEvent is typed in zod use:
  * export type ConsumableNotificationEvent = z.infer<typeof ConsumableNotificationEventSchema>;
  */
 export interface ConsumableNotificationEvent {
@@ -60,7 +60,7 @@ export interface ConsumableNotificationEvent {
 
 /**
  * Notification sent after connecting to indicate current number of messages queued.
- * TODO: use when BackendEvent is typed in zod
+ * TODO: when BackendEvent is typed in zod use:
  * export type ConsumableNotificationMessageCount = z.infer<typeof ConsumableNotificationMessageCountSchema>;
  */
 export interface ConsumableNotificationMessageCount {
@@ -72,7 +72,7 @@ export interface ConsumableNotificationMessageCount {
 
 /**
  * Union of all valid notification types supported by the WebSocket backend.
- * TODO: use when BackendEvent is typed in zod
+ * TODO: when BackendEvent is typed in zod use:
  * export const ConsumableNotificationSchema = z.discriminatedUnion('type', [
     ConsumableNotificationMissedSchema,
     ConsumableNotificationEventSchema,
