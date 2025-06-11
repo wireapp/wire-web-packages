@@ -76,6 +76,8 @@ describe('CellsAPI', () => {
       createPublicLink: jest.fn(),
       nodeVersions: jest.fn(),
       getPublicLink: jest.fn(),
+      listNamespaceValues: jest.fn(),
+      patchNode: jest.fn(),
     } as unknown as jest.Mocked<NodeServiceApi>;
 
     (NodeServiceApi as jest.Mock).mockImplementation(() => mockNodeServiceApi);
@@ -742,6 +744,124 @@ describe('CellsAPI', () => {
     });
   });
 
+  describe('renameNode', () => {
+    it('renames a node with the correct parameters', async () => {
+      const currentPath = '/folder/old-name.txt';
+      const newName = 'new-name.txt';
+      const mockResponse: RestPerformActionResponse = {
+        Nodes: [
+          {
+            Path: '/folder/new-name.txt',
+          },
+        ],
+      } as RestPerformActionResponse;
+
+      mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.renameNode({currentPath, newName});
+
+      expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
+        Nodes: [{Path: currentPath}],
+        CopyMoveOptions: {TargetIsParent: false, TargetPath: '/folder/new-name.txt'},
+        AwaitStatus: 'Finished',
+        AwaitTimeout: '5000ms',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('handles root level files', async () => {
+      const currentPath = '/file.txt';
+      const newName = 'renamed.txt';
+      const mockResponse: RestPerformActionResponse = {
+        Nodes: [
+          {
+            Path: '/renamed.txt',
+          },
+        ],
+      } as RestPerformActionResponse;
+
+      mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.renameNode({currentPath, newName});
+
+      expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
+        Nodes: [{Path: currentPath}],
+        CopyMoveOptions: {TargetIsParent: false, TargetPath: '/renamed.txt'},
+        AwaitStatus: 'Finished',
+        AwaitTimeout: '5000ms',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('handles files in nested directories', async () => {
+      const currentPath = '/folder/subfolder/file.txt';
+      const newName = 'renamed.txt';
+      const mockResponse: RestPerformActionResponse = {
+        Nodes: [
+          {
+            Path: '/folder/subfolder/renamed.txt',
+          },
+        ],
+      } as RestPerformActionResponse;
+
+      mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.renameNode({currentPath, newName});
+
+      expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
+        Nodes: [{Path: currentPath}],
+        CopyMoveOptions: {TargetIsParent: false, TargetPath: '/folder/subfolder/renamed.txt'},
+        AwaitStatus: 'Finished',
+        AwaitTimeout: '5000ms',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when rename operation fails', async () => {
+      const currentPath = '/folder/file.txt';
+      const newName = 'renamed.txt';
+      const errorMessage = 'Rename operation failed';
+
+      mockNodeServiceApi.performAction.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.renameNode({currentPath, newName})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty current path', async () => {
+      const currentPath = '';
+      const newName = 'renamed.txt';
+      const errorMessage = 'Invalid path';
+
+      mockNodeServiceApi.performAction.mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.renameNode({currentPath, newName})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty new name', async () => {
+      const currentPath = '/folder/file.txt';
+      const newName = '';
+      const mockResponse: RestPerformActionResponse = {
+        Nodes: [
+          {
+            Path: '/folder/',
+          },
+        ],
+      } as RestPerformActionResponse;
+
+      mockNodeServiceApi.performAction.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.renameNode({currentPath, newName});
+
+      expect(mockNodeServiceApi.performAction).toHaveBeenCalledWith('move', {
+        Nodes: [{Path: currentPath}],
+        CopyMoveOptions: {TargetIsParent: false, TargetPath: '/folder/'},
+        AwaitStatus: 'Finished',
+        AwaitTimeout: '5000ms',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('promoteNodeDraft', () => {
     it('promotes a file draft with the correct parameters', async () => {
       const uuid = 'file-uuid';
@@ -1126,6 +1246,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1163,6 +1284,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Only',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1200,6 +1322,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1241,6 +1364,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '5',
@@ -1282,6 +1406,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1323,6 +1448,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1360,6 +1486,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1388,6 +1515,7 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1396,15 +1524,6 @@ describe('CellsAPI', () => {
         SortField: 'mtime',
       });
       expect(result).toEqual(mockResponse);
-    });
-
-    it('propagates errors from the NodeServiceApi', async () => {
-      const searchPhrase = 'test';
-      const errorMessage = 'Search failed';
-
-      mockNodeServiceApi.lookup.mockRejectedValueOnce(new Error(errorMessage));
-
-      await expect(cellsAPI.searchNodes({phrase: searchPhrase})).rejects.toThrow(errorMessage);
     });
 
     it('handles empty search phrase', async () => {
@@ -1425,6 +1544,77 @@ describe('CellsAPI', () => {
           Status: {
             Deleted: 'Not',
           },
+          Metadata: [],
+        },
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('filters by tags when provided', async () => {
+      const searchPhrase = 'test';
+      const tags = ['tag1', 'tag2'];
+      const mockResponse: RestNodeCollection = {
+        Nodes: [
+          {
+            Path: '/test.txt',
+            Uuid: 'file-uuid-1',
+          },
+        ],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.searchNodes({phrase: searchPhrase, tags});
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+          Metadata: [{Namespace: 'usermeta-tags', Term: tags.join(',')}],
+        },
+        Flags: ['WithPreSignedURLs'],
+        Limit: '10',
+        Offset: '0',
+        SortDirDesc: true,
+        SortField: 'mtime',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('handles empty tags array', async () => {
+      const searchPhrase = 'test';
+      const tags: string[] = [];
+      const mockResponse: RestNodeCollection = {
+        Nodes: [
+          {
+            Path: '/test.txt',
+            Uuid: 'file-uuid-1',
+          },
+        ],
+      } as RestNodeCollection;
+
+      mockNodeServiceApi.lookup.mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.searchNodes({phrase: searchPhrase, tags});
+
+      expect(mockNodeServiceApi.lookup).toHaveBeenCalledWith({
+        Scope: {Root: {Path: '/'}, Recursive: true},
+        Filters: {
+          Text: {SearchIn: 'BaseName', Term: searchPhrase},
+          Type: 'UNKNOWN',
+          Status: {
+            Deleted: 'Not',
+          },
+          Metadata: [],
         },
         Flags: ['WithPreSignedURLs'],
         Limit: '10',
@@ -1601,6 +1791,114 @@ describe('CellsAPI', () => {
       mockNodeServiceApi.create.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(cellsAPI.createFolder({path, uuid})).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('getAllTags', () => {
+    it('retrieves all tags successfully', async () => {
+      const mockResponse = {
+        Values: ['tag1', 'tag2', 'tag3'],
+      };
+
+      mockNodeServiceApi.listNamespaceValues = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.getAllTags();
+
+      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags');
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('returns empty array when no tags exist', async () => {
+      const mockResponse = {
+        Values: [],
+      };
+
+      mockNodeServiceApi.listNamespaceValues = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.getAllTags();
+
+      expect(mockNodeServiceApi.listNamespaceValues).toHaveBeenCalledWith('usermeta-tags');
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when tag retrieval fails', async () => {
+      const errorMessage = 'Failed to retrieve tags';
+
+      mockNodeServiceApi.listNamespaceValues = jest.fn().mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.getAllTags()).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('setNodeTags', () => {
+    it('sets tags for a node successfully', async () => {
+      const uuid = 'file-uuid';
+      const tags = ['tag1', 'tag2', 'tag3'];
+      const mockResponse = {
+        Uuid: uuid,
+        Meta: {
+          'usermeta-tags': tags.join(','),
+        },
+      };
+
+      mockNodeServiceApi.patchNode = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.setNodeTags({uuid, tags});
+
+      expect(mockNodeServiceApi.patchNode).toHaveBeenCalledWith(uuid, {
+        MetaUpdates: [
+          {
+            Operation: 'PUT',
+            UserMeta: {Namespace: 'usermeta-tags', JsonValue: `"${tags.join(',')}"`},
+          },
+        ],
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('sets empty tags array successfully', async () => {
+      const uuid = 'file-uuid';
+      const tags: string[] = [];
+      const mockResponse = {
+        Uuid: uuid,
+        Meta: {
+          'usermeta-tags': '',
+        },
+      };
+
+      mockNodeServiceApi.patchNode = jest.fn().mockResolvedValueOnce(createMockResponse(mockResponse));
+
+      const result = await cellsAPI.setNodeTags({uuid, tags});
+
+      expect(mockNodeServiceApi.patchNode).toHaveBeenCalledWith(uuid, {
+        MetaUpdates: [
+          {
+            Operation: 'DELETE',
+            UserMeta: {Namespace: 'usermeta-tags', JsonValue: '""'},
+          },
+        ],
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('propagates errors when setting tags fails', async () => {
+      const uuid = 'file-uuid';
+      const tags = ['tag1', 'tag2'];
+      const errorMessage = 'Failed to set tags';
+
+      mockNodeServiceApi.patchNode = jest.fn().mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.setNodeTags({uuid, tags})).rejects.toThrow(errorMessage);
+    });
+
+    it('handles empty UUID', async () => {
+      const uuid = '';
+      const tags = ['tag1', 'tag2'];
+      const errorMessage = 'Invalid UUID';
+
+      mockNodeServiceApi.patchNode = jest.fn().mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(cellsAPI.setNodeTags({uuid, tags})).rejects.toThrow(errorMessage);
     });
   });
 });

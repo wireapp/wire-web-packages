@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [46.24.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.24.3...@wireapp/core@46.24.4) (2025-06-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.24.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.24.2...@wireapp/core@46.24.3) (2025-06-11)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.24.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.24.1...@wireapp/core@46.24.2) (2025-06-06)
+
+### Reverts
+
+* Revert "feat: update to CC v4.x [WPB-16269] (#6969)" (#7071) ([aeac62e](https://github.com/wireapp/wire-web-packages/commit/aeac62e413c664898b3f2c4014ea03bf9dfe0ba8)), closes [#6969](https://github.com/wireapp/wire-web-packages/issues/6969) [#7071](https://github.com/wireapp/wire-web-packages/issues/7071)
+
+## [46.24.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.24.0...@wireapp/core@46.24.1) (2025-06-06)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.24.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.23.15...@wireapp/core@46.24.0) (2025-06-03)
+
+### Features
+
+* update to CC v4.x [WPB-16269] ([#6969](https://github.com/wireapp/wire-web-packages/issues/6969)) ([e0b14f2](https://github.com/wireapp/wire-web-packages/commit/e0b14f2a9443e4704aed9b4d7481cfaef8305f5e)), closes [#7051](https://github.com/wireapp/wire-web-packages/issues/7051)
+
+## [46.23.15](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.23.14...@wireapp/core@46.23.15) (2025-06-03)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.23.14](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.23.13...@wireapp/core@46.23.14) (2025-06-03)
+
+**Note:** Version bump only for package @wireapp/core
+
 ## [46.23.13](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.23.12...@wireapp/core@46.23.13) (2025-05-23)
 
 **Note:** Version bump only for package @wireapp/core

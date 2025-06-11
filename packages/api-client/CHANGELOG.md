@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.59.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.58.0...@wireapp/api-client@27.59.0) (2025-06-11)
+
+### Features
+
+* handle 503 from get-domain-reg [WPB-17940] ([#7075](https://github.com/wireapp/wire-web-packages/issues/7075)) ([50ce558](https://github.com/wireapp/wire-web-packages/commit/50ce5584a7b452c53a20ca464cbd966af95c9c91))
+
+# [27.58.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.57.0...@wireapp/api-client@27.58.0) (2025-06-11)
+
+### Features
+
+* **api-client:** cells rename node ([#7073](https://github.com/wireapp/wire-web-packages/issues/7073)) ([c6dd227](https://github.com/wireapp/wire-web-packages/commit/c6dd227696d7a25c264b65e20751291be80a1224))
+
+# [27.57.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.56.1...@wireapp/api-client@27.57.0) (2025-06-06)
+
+### Features
+
+* **api-client/cells:** filter by tags in searchNodes [WPB-17818] ([#7068](https://github.com/wireapp/wire-web-packages/issues/7068)) ([93f8ef6](https://github.com/wireapp/wire-web-packages/commit/93f8ef62a27e28b65ad66fc14c833b101715aefa))
+
+## [27.56.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.56.0...@wireapp/api-client@27.56.1) (2025-06-03)
+
+### Bug Fixes
+
+* **CellsAPI:** prevent update empty tags ([#7064](https://github.com/wireapp/wire-web-packages/issues/7064)) ([ffaf6d6](https://github.com/wireapp/wire-web-packages/commit/ffaf6d621b49072531330696212841fd050eadac))
+
+# [27.56.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.55.0...@wireapp/api-client@27.56.0) (2025-06-03)
+
+### Features
+
+* **CellsAPI:** tags [WPB-17811] ([#7059](https://github.com/wireapp/wire-web-packages/issues/7059)) ([754426a](https://github.com/wireapp/wire-web-packages/commit/754426af04cf0d0a3a94cc8588046ea8bdb21d85))
+
 # [27.55.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.54.0...@wireapp/api-client@27.55.0) (2025-05-23)
 
 ### Features
