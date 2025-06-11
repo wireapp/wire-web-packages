@@ -149,6 +149,8 @@ export type BackendVersionResponse = {
   domain: string;
 };
 
+const MINIMUM_API_VERSION = 8;
+
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;
 
@@ -200,7 +202,7 @@ export class APIClient extends EventEmitter {
       http: httpClient,
       ws: webSocket,
     };
-    this.backendFeatures = this.computeBackendFeatures(8);
+    this.backendFeatures = this.computeBackendFeatures(MINIMUM_API_VERSION);
     this.api = this.configureApis(this.backendFeatures);
   }
 
@@ -279,8 +281,8 @@ export class APIClient extends EventEmitter {
    * @throws Error if no compatible version is found
    */
   async useVersion(min: number, max: number, allowDev: boolean = false): Promise<BackendFeatures> {
-    if (min < 8) {
-      throw new Error(`Minimum supported API version is 8. Received: ${min}`);
+    if (min < MINIMUM_API_VERSION) {
+      throw new Error(`Minimum supported API version is ${MINIMUM_API_VERSION}. Received: ${min}`);
     }
 
     const response = await this.transport.http.sendRequest<BackendVersionResponse>({
