@@ -283,6 +283,7 @@ describe('Account', () => {
   it('emits text messages', () => {
     return new Promise<void>(async resolve => {
       const {account, apiClient} = await createAccount();
+      jest.spyOn(account, 'getClientCapabilities').mockReturnValue([ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT]);
 
       await account.login({
         clientType: ClientType.TEMPORARY,
@@ -305,23 +306,22 @@ describe('Account', () => {
         success: 1,
       });
 
-      const kill = await account.listen({
+      await account.listen({
         onEvent: ({event}) => {
+          console.info('TEST - ON-Event', event);
           expect(event.type).toBe(CONVERSATION_EVENT.OTR_MESSAGE_ADD);
           resolve();
         },
       });
 
+      console.info('TEST - EMIT');
       apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, mockWebSocketMessage);
-      kill();
     });
   });
 
   describe('Websocket connection', () => {
     let dependencies: {account: Account; apiClient: APIClient};
     let server: WS;
-
-    beforeEach(async () => {});
 
     const mockNotifications = (size: number) => {
       const notifications = Array.from(new Array(size)).map(() => ({
