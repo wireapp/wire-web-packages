@@ -34,6 +34,8 @@ export enum ConsumableEvent {
 /**
  * Notification type received when the client has missed messages due to being offline too long.
  * Requires a full re-sync before consuming more notifications.
+ * TODO: use when BackendEvent is typed in zod
+ * export type ConsumableNotificationMissed = z.infer<typeof ConsumableNotificationMissedSchema>;
  */
 export interface ConsumableNotificationMissed {
   type: ConsumableEvent.MISSED;
@@ -42,6 +44,8 @@ export interface ConsumableNotificationMissed {
 /**
  * Notification type for actual backend events, contains one or more event payloads.
  * Includes a delivery tag for acknowledgment.
+ * TODO: use when BackendEvent is typed in zod
+ * export type ConsumableNotificationEvent = z.infer<typeof ConsumableNotificationEventSchema>;
  */
 export interface ConsumableNotificationEvent {
   type: ConsumableEvent.EVENT;
@@ -56,6 +60,8 @@ export interface ConsumableNotificationEvent {
 
 /**
  * Notification sent after connecting to indicate current number of messages queued.
+ * TODO: use when BackendEvent is typed in zod
+ * export type ConsumableNotificationMessageCount = z.infer<typeof ConsumableNotificationMessageCountSchema>;
  */
 export interface ConsumableNotificationMessageCount {
   type: ConsumableEvent.MESSAGE_COUNT;
@@ -66,6 +72,12 @@ export interface ConsumableNotificationMessageCount {
 
 /**
  * Union of all valid notification types supported by the WebSocket backend.
+ * TODO: use when BackendEvent is typed in zod
+ * export const ConsumableNotificationSchema = z.discriminatedUnion('type', [
+    ConsumableNotificationMissedSchema,
+    ConsumableNotificationEventSchema,
+    ConsumableNotificationMessageCountSchema,
+  ]);
  */
 export type ConsumableNotification =
   | ConsumableNotificationMissed
@@ -74,7 +86,7 @@ export type ConsumableNotification =
 
 const BackendEventSchema = z.object({
   id: z.string(),
-  payload: z.array(z.any()), // TODO: Replace `z.any()` with BackendEvent schema when available
+  payload: z.array(z.unknown()), // TODO: Replace `z.any()` with BackendEvent schema when available
 });
 
 export const ConsumableNotificationMissedSchema = z.object({
