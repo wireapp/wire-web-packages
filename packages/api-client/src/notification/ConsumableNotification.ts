@@ -17,6 +17,8 @@
  *
  */
 
+import {z} from 'zod';
+
 import {BackendEvent} from '../event';
 
 /**
@@ -69,3 +71,33 @@ export type ConsumableNotification =
   | ConsumableNotificationMissed
   | ConsumableNotificationEvent
   | ConsumableNotificationMessageCount;
+
+const BackendEventSchema = z.object({
+  id: z.string(),
+  payload: z.array(z.any()), // TODO: Replace `z.any()` with BackendEvent schema when available
+});
+
+export const ConsumableNotificationMissedSchema = z.object({
+  type: z.literal(ConsumableEvent.MISSED),
+});
+
+export const ConsumableNotificationEventSchema = z.object({
+  type: z.literal(ConsumableEvent.EVENT),
+  data: z.object({
+    delivery_tag: z.number(),
+    event: BackendEventSchema,
+  }),
+});
+
+export const ConsumableNotificationMessageCountSchema = z.object({
+  type: z.literal(ConsumableEvent.MESSAGE_COUNT),
+  data: z.object({
+    count: z.number(),
+  }),
+});
+
+export const ConsumableNotificationSchema = z.discriminatedUnion('type', [
+  ConsumableNotificationMissedSchema,
+  ConsumableNotificationEventSchema,
+  ConsumableNotificationMessageCountSchema,
+]);

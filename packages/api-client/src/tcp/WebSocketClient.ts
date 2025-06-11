@@ -29,7 +29,11 @@ import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
 import {HttpClient, NetworkError} from '../http/';
-import {ConsumableNotification, ConsumableNotificationEvent} from '../notification/ConsumableNotification.types';
+import {
+  ConsumableNotification,
+  ConsumableNotificationEvent,
+  ConsumableNotificationSchema,
+} from '../notification/ConsumableNotification';
 
 enum TOPIC {
   ON_ERROR = 'WebSocketClient.TOPIC.ON_ERROR',
@@ -94,7 +98,7 @@ export class WebSocketClient extends EventEmitter {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification: ConsumableNotification = JSON.parse(data);
+      const notification = ConsumableNotificationSchema.parse(data);
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
