@@ -759,11 +759,6 @@ export class Account extends TypedEventEmitter<Events> {
       return false;
     }
 
-    // Check if the MLS service is initialized
-    if (this.service?.mls === undefined) {
-      return false;
-    }
-
     // Check if the backend supports MLS trough removal keys
     if (!(await this.apiClient.supportsMLS())) {
       return false;

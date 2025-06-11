@@ -235,9 +235,6 @@ export class MLSService extends TypedEventEmitter<Events> {
     groupInfo,
     welcome,
   }: CommitBundle): Promise<MlsTransportResponse> => {
-    // We need to lock the incoming mls messages queue while we are uploading the commit bundle
-    // it's possible that we will be sent some mls messages before we receive the response from backend and accept a commit locally.
-
     const bundlePayload = new Uint8Array([...commit, ...groupInfo.payload, ...(welcome || [])]);
     try {
       const response = await this.apiClient.api.conversation.postMlsCommitBundle(bundlePayload);
@@ -253,6 +250,7 @@ export class MLSService extends TypedEventEmitter<Events> {
 
       return 'success';
     } catch (error) {
+      this.logger.error(`Failed to upload commit bundle`, error);
       return {
         abort: {reason: error instanceof Error ? error.message : 'unknown error'},
       };
@@ -519,6 +517,8 @@ export class MLSService extends TypedEventEmitter<Events> {
 
       return keysClaimingFailures;
     }
+
+    await this.addUsersToExistingConversation(groupId, keyPackages);
 
     // We schedule a periodic key material renewal
     await this.scheduleKeyMaterialRenewal(groupId);
