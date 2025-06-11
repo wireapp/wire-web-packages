@@ -315,8 +315,8 @@ export class APIClient extends EventEmitter {
    */
   private findHighestCompatibleVersion(versions: number[], min: number, max: number): number | undefined {
     const inRangeVersions = versions.filter(version => version >= min && version <= max);
-    const sortedDescending = inRangeVersions.sort((a, b) => b - a);
-    return sortedDescending[0];
+    const [highestVersion] = inRangeVersions.sort((a, b) => b - a);
+    return highestVersion;
   }
 
   public async init(clientType: ClientType = ClientType.NONE, cookie?: Cookie): Promise<Context> {
