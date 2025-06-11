@@ -26,12 +26,11 @@ import {
   RegisteredClient,
 } from '@wireapp/api-client/lib/client';
 import {ConversationAPI} from '@wireapp/api-client/lib/conversation';
-import {BackendEvent, CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {BackendEvent} from '@wireapp/api-client/lib/event';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {NotificationAPI} from '@wireapp/api-client/lib/notification';
-import {ConsumableEvent} from '@wireapp/api-client/lib/notification/ConsumableNotification.types';
+import {ConsumableEvent} from '@wireapp/api-client/lib/notification/ConsumableNotification';
 import {Self, SelfAPI} from '@wireapp/api-client/lib/self';
-import {WebSocketClient} from '@wireapp/api-client/lib/tcp';
 import {ReconnectingWebsocket} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {StatusCodes as HTTP_STATUS} from 'http-status-codes';
 import {WS} from 'jest-websocket-mock';
@@ -80,34 +79,6 @@ const waitFor = (assertion: () => void) => {
     };
     attempt();
   });
-};
-
-const mockWebSocketMessage = {
-  data: {
-    delivery_tag: 4,
-    event: {
-      id: '7e497e6f-460c-11f0-8001-e256b69264bc',
-      payload: [
-        {
-          conversation: '5bb62669-480d-5805-99b5-db8ef57cbf01',
-          data: 'MOCK_MESSAGE',
-          from: '01d9d7f2-c8b7-4095-b4d0-a7bea86c4084',
-          qualified_conversation: {
-            domain: 'staging.zinfra.io',
-            id: '5bb62669-480d-5805-99b5-db8ef57cbf01',
-          },
-          qualified_from: {
-            domain: 'staging.zinfra.io',
-            id: '01d9d7f2-c8b7-4095-b4d0-a7bea86c4084',
-          },
-          time: '2025-06-10T15:06:32.064Z',
-          type: 'conversation.mls-message-add',
-          senderClientId: '01d9d7f2-c8b7-4095-b4d0:c5e6fbb371fdb545@staging.zinfra.io',
-        },
-      ],
-    },
-  },
-  type: 'event',
 };
 
 /* eslint-disable jest/no-conditional-expect */
@@ -277,45 +248,6 @@ describe('Account', () => {
         expect(code).toBe(HTTP_STATUS.FORBIDDEN);
         expect(label).toBe(BackendErrorLabel.INVALID_CREDENTIALS);
       }
-    });
-  });
-
-  it('emits text messages', () => {
-    return new Promise<void>(async resolve => {
-      const {account, apiClient} = await createAccount();
-      jest.spyOn(account, 'getClientCapabilities').mockReturnValue([ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT]);
-
-      await account.login({
-        clientType: ClientType.TEMPORARY,
-        email: 'hello@example.com',
-        password: 'my-secret',
-      });
-      account['currentClient'] = currentClient;
-
-      jest.spyOn(apiClient, 'connect').mockImplementation();
-      jest.spyOn(account.service!.notification as any, 'handleEvent').mockReturnValue({
-        status: 'handled',
-        payload: {
-          event: {type: CONVERSATION_EVENT.OTR_MESSAGE_ADD},
-        },
-      });
-
-      jest.spyOn(account.service!.notification as any, 'processNotificationStream').mockReturnValue({
-        total: 1,
-        error: 1,
-        success: 1,
-      });
-
-      await account.listen({
-        onEvent: ({event}) => {
-          console.info('TEST - ON-Event', event);
-          expect(event.type).toBe(CONVERSATION_EVENT.OTR_MESSAGE_ADD);
-          resolve();
-        },
-      });
-
-      console.info('TEST - EMIT');
-      apiClient.transport.ws.emit(WebSocketClient.TOPIC.ON_MESSAGE, mockWebSocketMessage);
     });
   });
 

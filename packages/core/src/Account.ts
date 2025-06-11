@@ -32,10 +32,7 @@ import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
 import {Notification} from '@wireapp/api-client/lib/notification/';
-import {
-  ConsumableEvent,
-  ConsumableNotification,
-} from '@wireapp/api-client/lib/notification/ConsumableNotification.types';
+import {ConsumableEvent, ConsumableNotification} from '@wireapp/api-client/lib/notification/ConsumableNotification';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {FEATURE_KEY, FeatureStatus} from '@wireapp/api-client/lib/team';
