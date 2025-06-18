@@ -41,7 +41,7 @@ import {parseAccessToken} from './auth/parseAccessToken';
 import {BroadcastAPI} from './broadcast/';
 import {CellsAPI} from './cells/CellsAPI';
 import {ClientAPI, ClientType} from './client/';
-import {Config} from './Config';
+import {Config, MINIMUM_API_VERSION} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
 import {Backend} from './env/';
@@ -148,8 +148,6 @@ export type BackendVersionResponse = {
   development?: number[];
   domain: string;
 };
-
-const MINIMUM_API_VERSION = 8;
 
 export class APIClient extends EventEmitter {
   private readonly logger: logdown.Logger;

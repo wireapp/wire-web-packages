@@ -28,6 +28,7 @@ import {AcknowledgeType} from './AcknowledgeEvent.types';
 import {ReconnectingWebsocket, WEBSOCKET_STATE} from './ReconnectingWebsocket';
 
 import {InvalidTokenError, MissingCookieAndTokenError, MissingCookieError} from '../auth/';
+import {MINIMUM_API_VERSION} from '../Config';
 import {HttpClient, NetworkError} from '../http/';
 import {
   ConsumableNotification,
@@ -81,7 +82,7 @@ export class WebSocketClient extends EventEmitter {
   }
 
   public useVersion(version: number): void {
-    if (version < 8) {
+    if (version < MINIMUM_API_VERSION) {
       throw new Error('Minium supported api version is 8 in order to connect to /events web socket endpoint');
     }
     this.versionPrefix = version > 0 ? `/v${version}` : '';

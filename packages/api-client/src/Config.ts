@@ -23,3 +23,5 @@ export interface Config {
   urls: BackendData;
   headers?: Record<string, string>;
 }
+
+export const MINIMUM_API_VERSION = 8;
