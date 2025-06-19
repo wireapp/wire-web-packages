@@ -95,7 +95,7 @@ describe('APIClient', () => {
       const client = new APIClient(testConfig);
       let errorMessage;
       try {
-        await client.useVersion(MINIMUM_API_VERSION + 2, 11);
+        await client.useVersion(MINIMUM_API_VERSION + 2, MINIMUM_API_VERSION + 3);
       } catch (error) {
         errorMessage = error.message;
       } finally {
