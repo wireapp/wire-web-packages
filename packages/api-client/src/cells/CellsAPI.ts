@@ -369,7 +369,7 @@ export class CellsAPI {
         Status: {
           Deleted: deleted ? 'Only' : 'Not',
         },
-        Metadata: tags?.length ? [{Namespace: USER_META_TAGS_NAMESPACE, Term: tags.join(',')}] : [],
+        Metadata: tags?.length ? [{Namespace: USER_META_TAGS_NAMESPACE, Term: JSON.stringify(tags)}] : [],
       },
       Flags: ['WithPreSignedURLs'],
       Limit: `${limit}`,
