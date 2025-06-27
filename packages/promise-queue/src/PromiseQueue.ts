@@ -131,6 +131,10 @@ export class PromiseQueue {
     return this;
   }
 
+  isPaused(): boolean {
+    return this.paused;
+  }
+
   /**
    * Queued function is executed when queue is empty or previous functions are executed.
    * @param fn Function to be executed in queue order

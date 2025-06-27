@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2023 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,10 @@
  *
  */
 
-import {CONVERSATION_EVENT} from './ConversationEvent';
-import {FEDERATION_EVENT} from './FederationEvent';
-import {EndOfInitialSyncEvent} from './NotificationEvent';
-import {TEAM_EVENT} from './TeamEvent';
-import {USER_EVENT} from './UserEvent';
+export enum NOTIFICATION_EVENT {
+  END_OF_INITIAL_SYNC = 'notification.end-of-initial-sync',
+}
 
-import {ConversationEvent, TeamEvent, UserEvent, FederationEvent} from '.';
-
-export type BackendEvent = ConversationEvent | UserEvent | TeamEvent | FederationEvent | EndOfInitialSyncEvent;
-export type BackendEventType = CONVERSATION_EVENT | USER_EVENT | TEAM_EVENT | FEDERATION_EVENT;
+export interface EndOfInitialSyncEvent {
+  type: NOTIFICATION_EVENT.END_OF_INITIAL_SYNC;
+}

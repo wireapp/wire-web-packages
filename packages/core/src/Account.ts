@@ -31,8 +31,13 @@ import {ClientCapability, ClientClassification, ClientType, RegisteredClient} fr
 import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import * as Events from '@wireapp/api-client/lib/event';
 import {CONVERSATION_EVENT} from '@wireapp/api-client/lib/event';
+import {NOTIFICATION_EVENT} from '@wireapp/api-client/lib/event/NotificationEvent';
 import {Notification} from '@wireapp/api-client/lib/notification/';
-import {ConsumableEvent, ConsumableNotification} from '@wireapp/api-client/lib/notification/ConsumableNotification';
+import {
+  ConsumableEvent,
+  ConsumableNotification,
+  ConsumableNotificationEvent,
+} from '@wireapp/api-client/lib/notification/ConsumableNotification';
 import {WebSocketClient} from '@wireapp/api-client/lib/tcp/';
 import {WEBSOCKET_STATE} from '@wireapp/api-client/lib/tcp/ReconnectingWebsocket';
 import {FEATURE_KEY, FeatureStatus} from '@wireapp/api-client/lib/team';
@@ -42,6 +47,7 @@ import logdown from 'logdown';
 
 import {APIClient, BackendFeatures} from '@wireapp/api-client';
 import {LogFactory, TypedEventEmitter} from '@wireapp/commons';
+import {PromiseQueue} from '@wireapp/promise-queue';
 import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 
 import {AccountService} from './account/';
@@ -84,13 +90,16 @@ import {RecurringTaskScheduler} from './util/RecurringTaskScheduler';
 export type ProcessedEventPayload = HandledEventPayload;
 
 export enum ConnectionState {
-  /** The websocket is closed and notifications stream is not being processed */
+  /** The WebSocket is closed and no notifications are being processed */
   CLOSED = 'closed',
-  /** The websocket is being opened */
+
+  /** The WebSocket is being opened or reconnected */
   CONNECTING = 'connecting',
+
   /** The websocket is open but locked and notifications stream is being processed */
   PROCESSING_NOTIFICATIONS = 'processing_notifications',
-  /** The websocket is open and message will go through and notifications stream is fully processed */
+
+  /** The WebSocket is open and new messages are processed live in real time */
   LIVE = 'live',
 }
 
@@ -148,9 +157,11 @@ export class Account extends TypedEventEmitter<Events> {
   private db?: CoreDatabase;
   private encryptedDb?: EncryptedStore<any>;
   private coreCallbacks?: CoreCallbacks;
-  private totalPendingNotifications: number = 0;
-  private remainingNotifications: number = 0;
+  private totalNotificationsDecrypted: number = 0;
+  private totalNotificationsPendingForDecryption: number = 0;
   private connectionState: ConnectionState = ConnectionState.CLOSED;
+
+  private notificationProcessingQueue = new PromiseQueue({name: 'notification-processing-queue', paused: true});
 
   public service?: {
     mls?: MLSService;
@@ -679,7 +690,9 @@ export class Account extends TypedEventEmitter<Events> {
       await processNotificationStream();
     }
 
-    this.apiClient.connect();
+    this.apiClient.connect(() => {
+      pauseMessageSending();
+    });
 
     return () => {
       this.apiClient.disconnect();
@@ -756,59 +769,74 @@ export class Account extends TypedEventEmitter<Events> {
           return;
         }
 
-        if (notification.type === ConsumableEvent.MESSAGE_COUNT) {
-          const {
-            data: {count},
-          } = notification;
+        if (this.isEndOfInitialSyncNotification(notification)) {
+          this.totalNotificationsDecrypted = 0;
+          this.totalNotificationsPendingForDecryption = this.notificationProcessingQueue.getLength();
+          this.notificationProcessingQueue.pause(false);
 
-          this.totalPendingNotifications = count;
-          this.remainingNotifications = 0;
-          this.apiClient.transport.ws.acknowledgeMessageCountNotification();
-          pauseMessageSending();
-
-          onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
-
-          if (count === 0) {
+          if (this.totalNotificationsPendingForDecryption === 0) {
             resumeMessageSending();
             onConnectionStateChanged(ConnectionState.LIVE);
-          } else {
-            onNotificationStreamProgress({total: count, done: 0});
           }
-
-          return;
         }
 
-        const event = notification.data.event;
-        const messages = this.service!.notification.handleNotification(event, source, dryRun);
-
-        if (this.connectionState !== ConnectionState.LIVE) {
-          this.remainingNotifications++;
-          onNotificationStreamProgress({
-            done: this.remainingNotifications,
-            total: this.totalPendingNotifications,
-          });
-        }
-
-        this.apiClient.transport.ws.acknowledgeNotification(notification);
-
-        for await (const message of messages) {
-          await handleEvent(message, source);
-        }
-
-        if (
-          this.totalPendingNotifications >= this.remainingNotifications &&
-          this.connectionState !== ConnectionState.LIVE
-        ) {
-          resumeMessageSending();
-          onConnectionStateChanged(ConnectionState.LIVE);
-        }
-      } catch (error) {
-        this.logger.error(
-          `Failed to handle consumable notification "${notification.type}": ${(error as any).message}`,
-          error,
+        void this.notificationProcessingQueue.push(() =>
+          this.decryptAckEmitNotification(
+            notification,
+            handleEvent,
+            source,
+            onNotificationStreamProgress,
+            onConnectionStateChanged,
+            dryRun,
+          ),
         );
+      } catch (error) {
+        this.logger.error(`Failed to handle notification "${notification.type}": ${(error as any).message}`, error);
       }
     };
+  }
+
+  private async decryptAckEmitNotification(
+    notification: ConsumableNotificationEvent,
+    handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
+    source: NotificationSource,
+    onNotificationStreamProgress: ({done, total}: {done: number; total: number}) => void,
+    onConnectionStateChanged: (state: ConnectionState) => void,
+    dryRun: boolean,
+  ): Promise<void> {
+    try {
+      const payloads = this.service!.notification.handleNotification(notification.data.event, source, dryRun);
+
+      if (this.connectionState !== ConnectionState.LIVE) {
+        this.totalNotificationsDecrypted++;
+        onNotificationStreamProgress({
+          done: this.totalNotificationsDecrypted,
+          total: this.totalNotificationsPendingForDecryption,
+        });
+      }
+
+      if (
+        this.totalNotificationsDecrypted === this.totalNotificationsPendingForDecryption &&
+        this.connectionState !== ConnectionState.LIVE
+      ) {
+        resumeMessageSending();
+        onConnectionStateChanged(ConnectionState.LIVE);
+      }
+
+      if (!dryRun) {
+        this.apiClient.transport.ws.acknowledgeNotification(notification);
+      }
+
+      for await (const payload of payloads ?? []) {
+        await handleEvent(payload, source);
+      }
+    } catch (err) {
+      this.logger.error(`Failed to process notification ${notification.data.delivery_tag}`, err);
+    }
+  }
+
+  private isEndOfInitialSyncNotification(notification: ConsumableNotificationEvent): boolean {
+    return notification?.data?.event?.payload?.some(p => p?.type === NOTIFICATION_EVENT.END_OF_INITIAL_SYNC);
   }
 
   /**
@@ -895,6 +923,11 @@ export class Account extends TypedEventEmitter<Events> {
       };
 
       const connectionState = mapping[wsState];
+
+      if (connectionState === ConnectionState.CLOSED) {
+        this.notificationProcessingQueue.pause();
+      }
+
       if (connectionState) {
         onConnectionStateChanged(connectionState);
       }

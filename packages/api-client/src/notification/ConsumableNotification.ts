@@ -28,7 +28,6 @@ import {BackendEvent} from '../event';
 export enum ConsumableEvent {
   EVENT = 'event',
   MISSED = 'notifications_missed',
-  MESSAGE_COUNT = 'message_count',
 }
 
 /**
@@ -59,34 +58,18 @@ export interface ConsumableNotificationEvent {
 }
 
 /**
- * Notification sent after connecting to indicate current number of messages queued.
- * TODO: when BackendEvent is typed in zod use:
- * export type ConsumableNotificationMessageCount = z.infer<typeof ConsumableNotificationMessageCountSchema>;
- */
-export interface ConsumableNotificationMessageCount {
-  type: ConsumableEvent.MESSAGE_COUNT;
-  data: {
-    count: number;
-  };
-}
-
-/**
  * Union of all valid notification types supported by the WebSocket backend.
  * TODO: when BackendEvent is typed in zod use:
  * export const ConsumableNotificationSchema = z.discriminatedUnion('type', [
-    ConsumableNotificationMissedSchema,
-    ConsumableNotificationEventSchema,
-    ConsumableNotificationMessageCountSchema,
-  ]);
+ *   ConsumableNotificationMissedSchema,
+ *   ConsumableNotificationEventSchema,
+ * ]);
  */
-export type ConsumableNotification =
-  | ConsumableNotificationMissed
-  | ConsumableNotificationEvent
-  | ConsumableNotificationMessageCount;
+export type ConsumableNotification = ConsumableNotificationMissed | ConsumableNotificationEvent;
 
 const BackendEventSchema = z.object({
   id: z.string(),
-  payload: z.array(z.unknown()), // TODO: Replace `z.any()` with BackendEvent schema when available
+  payload: z.array(z.unknown()), // TODO: Replace `z.unknown()` with BackendEvent schema when available
 });
 
 export const ConsumableNotificationMissedSchema = z.object({
@@ -101,15 +84,7 @@ export const ConsumableNotificationEventSchema = z.object({
   }),
 });
 
-export const ConsumableNotificationMessageCountSchema = z.object({
-  type: z.literal(ConsumableEvent.MESSAGE_COUNT),
-  data: z.object({
-    count: z.number(),
-  }),
-});
-
 export const ConsumableNotificationSchema = z.discriminatedUnion('type', [
   ConsumableNotificationMissedSchema,
   ConsumableNotificationEventSchema,
-  ConsumableNotificationMessageCountSchema,
 ]);
