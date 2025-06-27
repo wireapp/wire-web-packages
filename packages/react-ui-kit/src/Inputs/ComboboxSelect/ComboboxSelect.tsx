@@ -54,6 +54,7 @@ export interface ComboboxSelectProps {
   menuListCSS?: CSSObject;
   isLoading?: boolean;
   loadingMessage?: string;
+  closeMenuOnSelect?: boolean;
 }
 
 export const ComboboxSelect = ({
@@ -74,6 +75,7 @@ export const ComboboxSelect = ({
   menuListCSS,
   isLoading = false,
   loadingMessage,
+  closeMenuOnSelect = true,
 }: ComboboxSelectProps) => {
   return (
     <div css={wrapperStyles} data-uie-name={dataUieName}>
@@ -98,6 +100,7 @@ export const ComboboxSelect = ({
         noOptionsMessage={noOptionsMessage}
         loadingMessage={loadingMessage}
         menuListCSS={menuListCSS}
+        closeMenuOnSelect={closeMenuOnSelect}
       />
     </div>
   );
@@ -119,6 +122,7 @@ const Select = ({
   isLoading = false,
   loadingMessage,
   creatable = false,
+  closeMenuOnSelect = true,
 }: ComboboxSelectProps & {creatable?: boolean}) => {
   const theme = useTheme() as Theme;
 
@@ -147,7 +151,7 @@ const Select = ({
         menuPosition={menuPosition}
         styles={selectStyles({theme, menuListCSS})}
         classNamePrefix="select"
-        closeMenuOnSelect={false}
+        closeMenuOnSelect={closeMenuOnSelect}
         components={components}
       />
     );
@@ -169,7 +173,7 @@ const Select = ({
       classNamePrefix="select"
       formatCreateLabel={createOptionLabel}
       onCreateOption={onCreateOption}
-      closeMenuOnSelect={false}
+      closeMenuOnSelect={closeMenuOnSelect}
       isLoading={isLoading}
       components={components}
     />
