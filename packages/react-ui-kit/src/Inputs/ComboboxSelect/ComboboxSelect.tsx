@@ -23,7 +23,13 @@ import {CSSObject, useTheme} from '@emotion/react';
 import BaseSelect, {components, MenuPosition, MultiValueRemoveProps, NoticeProps} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import {selectStyles, noOptionsMessageStyles, wrapperStyles, loadingMessageStyles} from './ComboboxSelect.styles';
+import {
+  selectStyles,
+  noOptionsMessageStyles,
+  wrapperStyles,
+  loadingMessageStyles,
+  labelCSS,
+} from './ComboboxSelect.styles';
 
 import {CloseIcon} from '../../DataDisplay/Icon';
 import {Theme} from '../../Identity/Theme';
@@ -48,6 +54,7 @@ export interface ComboboxSelectProps {
   createOptionLabel?: (inputValue: string) => string;
   noOptionsMessage: string;
   label?: string;
+  labelVisuallyHidden?: boolean;
   required?: boolean;
   menuPortalTarget?: HTMLElement;
   menuPosition?: MenuPosition;
@@ -69,6 +76,7 @@ export const ComboboxSelect = ({
   createOptionLabel,
   noOptionsMessage,
   label,
+  labelVisuallyHidden = false,
   required,
   menuPortalTarget,
   menuPosition = 'absolute',
@@ -80,7 +88,7 @@ export const ComboboxSelect = ({
   return (
     <div css={wrapperStyles} data-uie-name={dataUieName}>
       {label && (
-        <InputLabel htmlFor={id} isRequired={required}>
+        <InputLabel htmlFor={id} isRequired={required} labelCSS={labelCSS({isVisuallyHidden: labelVisuallyHidden})}>
           {label}
         </InputLabel>
       )}
@@ -140,6 +148,7 @@ const Select = ({
     return (
       <BaseSelect
         id={id}
+        inputId={id}
         options={options}
         value={value}
         onChange={onChange}
@@ -160,6 +169,7 @@ const Select = ({
   return (
     <CreatableSelect
       id={id}
+      inputId={id}
       options={options}
       value={value}
       onChange={onChange}
