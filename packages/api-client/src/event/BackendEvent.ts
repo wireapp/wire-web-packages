@@ -19,11 +19,10 @@
 
 import {CONVERSATION_EVENT} from './ConversationEvent';
 import {FEDERATION_EVENT} from './FederationEvent';
-import {EndOfInitialSyncEvent} from './NotificationEvent';
 import {TEAM_EVENT} from './TeamEvent';
 import {USER_EVENT} from './UserEvent';
 
 import {ConversationEvent, TeamEvent, UserEvent, FederationEvent} from '.';
 
-export type BackendEvent = ConversationEvent | UserEvent | TeamEvent | FederationEvent | EndOfInitialSyncEvent;
+export type BackendEvent = ConversationEvent | UserEvent | TeamEvent | FederationEvent;
 export type BackendEventType = CONVERSATION_EVENT | USER_EVENT | TEAM_EVENT | FEDERATION_EVENT;

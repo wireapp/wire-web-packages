@@ -40,7 +40,6 @@ import {
   ConversationMemberLeaveEvent,
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
-import {NOTIFICATION_EVENT} from '@wireapp/api-client/lib/event/NotificationEvent';
 import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
@@ -769,8 +768,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
         return {status: 'handled', payload: await this.handleMLSWelcomeMessageEvent(event)};
       case CONVERSATION_EVENT.OTR_MESSAGE_ADD:
         return {status: 'handled', payload: await this.handleOtrMessageAddEvent(event)};
-      case NOTIFICATION_EVENT.END_OF_INITIAL_SYNC:
-        return {status: 'handled', payload: null};
     }
 
     return {status: 'unhandled'};

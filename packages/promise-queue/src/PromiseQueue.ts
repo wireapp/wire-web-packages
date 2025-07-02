@@ -168,4 +168,21 @@ export class PromiseQueue {
       this.interval = undefined;
     }
   }
+
+  /**
+   * Flushes the queue by removing all pending tasks without executing them.
+   * All flushed promises are rejected with the provided reason.
+   *
+   * Running tasks are unaffected.
+   */
+  flush(reason: Error = new Error('Queue was flushed')): void {
+    while (this.queue.length > 0) {
+      const entry = this.queue.shift();
+      if (entry) {
+        // Prevent accidental resolve if the task ever runs
+        entry.resolveFn = () => {};
+        entry.rejectFn(reason);
+      }
+    }
+  }
 }
