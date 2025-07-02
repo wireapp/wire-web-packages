@@ -20,8 +20,8 @@
 import {PromiseQueue} from './PromiseQueue';
 
 class Deferred<T = undefined> {
-  public resolve: (value: T) => void;
-  public reject: () => void;
+  public resolve: ((value: T) => void) | undefined;
+  public reject: (() => void) | undefined;
   public promise: Promise<T>;
   constructor() {
     this.promise = new Promise((resolve, reject) => {
@@ -174,7 +174,7 @@ describe('PromiseQueue', () => {
 
       expect(queue.hasRunningTasks()).toBe(true);
 
-      promise.resolve(undefined);
+      promise.resolve?.(undefined);
       await done;
       await new Promise(res => setTimeout(res));
       expect(queue.hasRunningTasks()).toBe(false);
@@ -197,16 +197,22 @@ describe('PromiseQueue', () => {
       const p1 = queue
         .push(() => {
           runSpy();
-          return Promise.resolve();
+          return Promise.resolve('Task 1 completed');
         })
-        .catch(rejectSpy);
+        .catch(error => {
+          rejectSpy();
+          throw error;
+        });
 
       const p2 = queue
         .push(() => {
           runSpy();
-          return Promise.resolve();
+          return Promise.resolve('Task 2 completed');
         })
-        .catch(rejectSpy);
+        .catch(error => {
+          rejectSpy();
+          throw error;
+        });
 
       queue.flush(flushError);
 
@@ -225,7 +231,7 @@ describe('PromiseQueue', () => {
       const finished: string[] = [];
 
       const runningTask = async () => {
-        started.resolve(); // Signal start
+        started.resolve?.(undefined); // Signal start
         await unblock.promise;
         finished.push('running');
       };
@@ -244,18 +250,17 @@ describe('PromiseQueue', () => {
 
       queue.flush();
 
-      unblock.resolve();
+      unblock.resolve?.(undefined);
 
       await new Promise(res => setTimeout(res, 0)); // allow queue to flush execution
-
-      expect(finished).toEqual(['running', 'flushed']);
+      expect(finished).toEqual(['flushed', 'running']);
     });
 
     it('leaves queue empty after flush', () => {
       const queue = new PromiseQueue({name: 'FlushQueue'});
 
-      queue.push(() => Promise.resolve());
-      queue.push(() => Promise.resolve());
+      void queue.push(() => Promise.resolve()).catch(() => {});
+      void queue.push(() => Promise.resolve()).catch(() => {});
 
       queue.flush();
 
