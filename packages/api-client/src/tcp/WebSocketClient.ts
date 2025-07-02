@@ -229,8 +229,8 @@ export class WebSocketClient extends EventEmitter {
     const {
       accessTokenStore: {getAccessToken, getNextMarkerToken},
     } = this.client;
-    const accessToken = getAccessToken() ?? '';
-    const markerToken = getNextMarkerToken();
+    const accessToken = getAccessToken?.() ?? '';
+    const markerToken = getNextMarkerToken?.();
 
     if (!accessToken) {
       this.logger.warn('Reconnecting WebSocket with unset token');

@@ -677,6 +677,8 @@ export class Account extends TypedEventEmitter<Events> {
      *
      * These two systems are separate, and the transition timing
      * is important to avoid missing any messages during the switch.
+     *
+     * @todo This can be removed when all clients are capable of consumable notifications.
      */
     if (!isClientCapableOfConsumableNotifications) {
       // let the backend now client is capable of consumable notifications
@@ -689,7 +691,14 @@ export class Account extends TypedEventEmitter<Events> {
     }
 
     this.apiClient.connect(() => {
-      pauseMessageSending();
+      pauseMessageSending(); // pause message sending while processing notifications, it will be resumed once the processing is done and we have the marker token
+      /**
+       * unpause the notification processing queue
+       * it will start processing notifications immediately and pause if web socket connection drops
+       * we should start decryption and therefore acknowledging the notifications in order for the backend to
+       * send us the next batch of notifications, currently total size of notifications coming from web socket is limited to 500
+       * so we need to acknowledge the notifications to let the backend know we are ready for the next batch
+       */
       this.notificationProcessingQueue.pause(false);
     });
 
@@ -736,6 +745,12 @@ export class Account extends TypedEventEmitter<Events> {
     };
   }
 
+  /**
+   * @deprecated This method is used to handle legacy notifications from the backend.
+   * It processes notifications from the legacy system, decrypts them, and emits events.
+   * It can be replaced with the new notification handling system using `ConsumableNotification`
+   * when all clients are capable of handling consumable notifications.
+   */
   private createLegacyNotificationHandler(
     handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
     dryRun: boolean,
@@ -849,6 +864,10 @@ export class Account extends TypedEventEmitter<Events> {
    * Returns a function to handle missed notifications — i.e., when the backend indicates
    * that some notifications were lost due to age (typically >28 days).
    * Also handles MLS-specific epoch mismatch recovery by triggering a conversation rejoin.
+   *
+   * @deprecated This is used to handle legacy missed notifications.
+   * It should be replaced with the new notification handling system using `ConsumableNotification`.
+   * when all clients are capable of handling consumable notifications.
    */
   private createLegacyMissedNotificationsHandler(onMissedNotifications: (notificationId: string) => void) {
     return async (notificationId: string) => {
@@ -866,6 +885,10 @@ export class Account extends TypedEventEmitter<Events> {
    * Returns a processor function for the notification stream (legacy sync).
    * It pauses message sending and MLS rejoining during stream handling to prevent race conditions,
    * then resumes normal operations after sync is complete.
+   *
+   * @deprecated This is used to do a final sync of the legacy notification stream
+   * before switching to the new notification handling system using `ConsumableNotification`.
+   * It should be replaced with the new notification handling system when all clients are capable of handling consumable notifications.
    *
    * @param handlers Various logic handlers wired to notification callbacks
    */
