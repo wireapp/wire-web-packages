@@ -225,7 +225,7 @@ export class WebSocketClient extends EventEmitter {
     return this.isSocketLocked;
   }
 
-  private buildWebSocketUrl(): string {
+  public buildWebSocketUrl(): string {
     const {
       accessTokenStore: {getAccessToken, getNextMarkerToken},
     } = this.client;
@@ -254,6 +254,9 @@ export class WebSocketClient extends EventEmitter {
     }
 
     const queryString = new URLSearchParams(queryParams).toString();
+
+    console.info(`WebSocket URL: ${this.baseUrl}${this.versionPrefix}/events?${queryString}`);
+
     return `${this.baseUrl}${this.versionPrefix}/events?${queryString}`;
   }
 

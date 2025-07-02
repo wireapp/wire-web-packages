@@ -690,6 +690,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     this.apiClient.connect(() => {
       pauseMessageSending();
+      this.notificationProcessingQueue.pause(false);
     });
 
     return () => {
@@ -703,6 +704,7 @@ export class Account extends TypedEventEmitter<Events> {
     onConnectionStateChanged: (state: ConnectionState) => void,
   ): (state: ConnectionState) => void {
     return (state: ConnectionState) => {
+      console.info(`Connection state changed to: ${state}`);
       this.connectionState = state;
       onConnectionStateChanged(state);
       this.logger.info(`Connection state changed to: ${state}`);
@@ -835,7 +837,7 @@ export class Account extends TypedEventEmitter<Events> {
     }
   }
 
-  private getNotificationEventTime(backendEvent: Events.BackendEvent) {
+  public getNotificationEventTime(backendEvent: Events.BackendEvent) {
     if ('time' in backendEvent && typeof backendEvent.time === 'string') {
       return backendEvent.time;
     }

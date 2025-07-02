@@ -60,14 +60,14 @@ export class AccessTokenStore extends EventEmitter {
     this.logger = LogFactory.getLogger('@wireapp/api-client/AccessTokenStore');
   }
 
-  public async delete(): Promise<void> {
+  public delete = async (): Promise<void> => {
     this.logger.log('Deleting local access token');
     this.accessTokenData = undefined;
     this.tokenExpirationDate = undefined;
     this.markerToken = undefined;
-  }
+  };
 
-  public async updateToken(accessToken: AccessTokenData): Promise<AccessTokenData> {
+  public updateToken = async (accessToken: AccessTokenData): Promise<AccessTokenData> => {
     if (this.accessTokenData !== accessToken) {
       this.logger.log('Saving local access token');
       this.tokenExpirationDate = Date.now() + accessToken.expires_in * 1000;
@@ -75,20 +75,21 @@ export class AccessTokenStore extends EventEmitter {
       this.emit(AccessTokenStore.TOPIC.ACCESS_TOKEN_REFRESH, this.accessTokenData);
     }
     return this.accessTokenData;
-  }
+  };
 
-  public getNextMarkerToken(): string {
+  public getNextMarkerToken = (): string => {
     const newMarkerToken = uuidv4();
     this.logger.info('Generated new marker token:', newMarkerToken, 'Previous marker token:', this.markerToken);
     this.markerToken = newMarkerToken;
     return this.markerToken;
-  }
+  };
 
-  public getAccessToken(): string | undefined {
+  public getAccessToken = (): string | undefined => {
+    console.trace('bardia getAccessToken called');
     if (this.accessTokenData && this.tokenExpirationDate && this.tokenExpirationDate > Date.now()) {
       return this.accessTokenData.access_token;
     }
     this.logger.warn('Access token is not set or has expired');
     return undefined;
-  }
+  };
 }
