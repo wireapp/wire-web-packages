@@ -85,7 +85,6 @@ export class AccessTokenStore extends EventEmitter {
   };
 
   public getAccessToken = (): string | undefined => {
-    console.trace('bardia getAccessToken called');
     if (this.accessTokenData && this.tokenExpirationDate && this.tokenExpirationDate > Date.now()) {
       return this.accessTokenData.access_token;
     }
