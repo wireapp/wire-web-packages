@@ -242,8 +242,11 @@ export class WebSocketClient extends EventEmitter {
 
     const queryParams: Record<string, string> = {
       access_token: accessToken,
-      sync_marker: markerToken,
     };
+
+    if (markerToken) {
+      queryParams.sync_marker = markerToken;
+    }
 
     /**
      * @note If no client ID is given, then the WebSocket connection
