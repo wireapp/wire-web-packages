@@ -242,7 +242,7 @@ export class WebSocketClient extends EventEmitter {
 
     const queryParams: Record<string, string> = {
       access_token: accessToken,
-      marker: markerToken,
+      sync_marker: markerToken,
     };
 
     /**
@@ -272,6 +272,7 @@ export class WebSocketClient extends EventEmitter {
     const jsonEvent = JSON.stringify({
       type: AcknowledgeType.ACK,
       data: {
+        multiple: false,
         delivery_tag: notification.data.delivery_tag,
       },
     });
