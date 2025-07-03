@@ -255,7 +255,7 @@ export class WebSocketClient extends EventEmitter {
 
     const queryString = new URLSearchParams(queryParams).toString();
 
-    console.info(`WebSocket URL: ${this.baseUrl}${this.versionPrefix}/events?${queryString}`);
+    this.logger.info(`WebSocket URL: ${this.baseUrl}${this.versionPrefix}/events?${queryString}`);
 
     return `${this.baseUrl}${this.versionPrefix}/events?${queryString}`;
   }
