@@ -703,6 +703,7 @@ export class Account extends TypedEventEmitter<Events> {
     });
 
     return () => {
+      this.pauseAndFlushNotificationQueue();
       this.apiClient.disconnect();
       onConnectionStateChanged(ConnectionState.CLOSED);
       this.apiClient.transport.ws.removeAllListeners();
@@ -929,6 +930,18 @@ export class Account extends TypedEventEmitter<Events> {
   }
 
   /**
+   * In case of a closed connection, we flush the notification processing queue.
+   * As we are not acknowledging them before decryption is done
+   * they will be resent next time the connection is opened
+   * this is to avoid duplicate decryption of notifications
+   */
+  private pauseAndFlushNotificationQueue() {
+    this.notificationProcessingQueue.pause();
+    this.notificationProcessingQueue.flush();
+    this.logger.info('Notification processing queue paused and flushed');
+  }
+
+  /**
    * Sets up WebSocket event listeners for:
    * - Incoming backend messages
    * - WebSocket state changes
@@ -953,15 +966,10 @@ export class Account extends TypedEventEmitter<Events> {
 
       const connectionState = mapping[wsState];
 
+      console.info(`WebSocket state changed to: ${wsState} (${connectionState})`);
+
       if (connectionState === ConnectionState.CLOSED) {
-        this.notificationProcessingQueue.pause();
-        /**
-         * In case of a closed connection, we flush the notification processing queue.
-         * As we are not acknowledging them before decryption is done
-         * they will be resent next time the connection is opened
-         * this is to avoid duplicate decryption of notifications
-         */
-        this.notificationProcessingQueue.flush();
+        this.pauseAndFlushNotificationQueue();
       }
 
       if (connectionState) {
