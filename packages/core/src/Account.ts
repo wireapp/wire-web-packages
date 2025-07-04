@@ -714,7 +714,6 @@ export class Account extends TypedEventEmitter<Events> {
     onConnectionStateChanged: (state: ConnectionState) => void,
   ): ((state: ConnectionState) => void) => {
     return (state: ConnectionState): void => {
-      console.info(`Connection state changed to: ${state}`);
       this.connectionState = state;
       onConnectionStateChanged(state);
       this.logger.info(`Connection state changed to: ${state}`);
@@ -976,8 +975,6 @@ export class Account extends TypedEventEmitter<Events> {
       };
 
       const connectionState = mapping[wsState];
-
-      console.info(`WebSocket state changed to: ${wsState} (${connectionState})`);
 
       if (connectionState === ConnectionState.CLOSED) {
         this.pauseAndFlushNotificationQueue();
