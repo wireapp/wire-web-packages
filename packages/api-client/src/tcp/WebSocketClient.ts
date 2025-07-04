@@ -240,12 +240,12 @@ export class WebSocketClient extends EventEmitter {
       throw new Error('Missing backend API version: cannot establish WebSocket connection');
     }
 
-    const queryParams: Record<string, string> = {
+    const queryParams = new URLSearchParams({
       access_token: accessToken,
-    };
+    });
 
     if (markerToken) {
-      queryParams.sync_marker = markerToken;
+      queryParams.append('sync_marker', markerToken);
     }
 
     /**
@@ -253,10 +253,10 @@ export class WebSocketClient extends EventEmitter {
      * will receive all notifications for all clients of the connected user
      */
     if (this.clientId) {
-      queryParams.client = this.clientId;
+      queryParams.append('client', this.clientId);
     }
 
-    const queryString = new URLSearchParams(queryParams).toString();
+    const queryString = queryParams.toString();
 
     this.logger.info(`WebSocket URL: ${this.baseUrl}${this.versionPrefix}/events?${queryString}`);
 
