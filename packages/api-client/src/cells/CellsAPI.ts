@@ -48,6 +48,8 @@ const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
 const USER_META_TAGS_NAMESPACE = 'usermeta-tags';
 
+// TODO: remove the apiKey (from pydio and s3) once the Pydio backend has fully support for the auth with the Wire's access token
+// If it's passed we use it to authenticate, instead of the access token
 interface CellsConfig {
   pydio: {
     apiKey?: string;
