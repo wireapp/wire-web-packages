@@ -50,12 +50,12 @@ const USER_META_TAGS_NAMESPACE = 'usermeta-tags';
 
 interface CellsConfig {
   pydio: {
-    apiKey: string;
+    apiKey?: string;
     segment: string;
     url: string;
   };
   s3: {
-    apiKey: string;
+    apiKey?: string;
     bucket: string;
     endpoint: string;
     region: string;
@@ -96,12 +96,14 @@ export class CellsAPI {
         {
           ...this.httpClientConfig,
           urls: {...this.httpClientConfig.urls, rest: cellsConfig.pydio.url + cellsConfig.pydio.segment},
-          headers: {...this.httpClientConfig.headers, Authorization: `Bearer ${cellsConfig.pydio.apiKey}`},
+          headers: {...this.httpClientConfig.headers},
         },
         this.accessTokenStore,
       );
 
-    this.storageService = storageService || new S3Service(cellsConfig.s3);
+    this.storageService =
+      storageService ||
+      new S3Service({config: cellsConfig.s3, getAccessToken: () => this.accessTokenStore.getAccessToken()});
     this.client = new NodeServiceApi(undefined, undefined, http.client);
   }
 
