@@ -107,6 +107,10 @@ export class CellsAPI {
       this.accessTokenStore,
     );
 
+    if (cellsConfig.pydio.apiKey) {
+      return http;
+    }
+
     // Add axios interceptor to automatically add Authorization header to every request
     // Althouht the HttpClient handles the authorization already (see _sendRequest), as we pass a custom axios instance to the NodeServiceApi, we need to add it manually
     http.client.interceptors.request.use(config => {
