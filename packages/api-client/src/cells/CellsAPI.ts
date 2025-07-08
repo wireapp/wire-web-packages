@@ -100,18 +100,23 @@ export class CellsAPI {
   }
 
   private getHttpClient({cellsConfig}: {cellsConfig: CellsConfig}) {
-    const http = new HttpClient(
-      {
-        ...this.httpClientConfig,
-        urls: {...this.httpClientConfig.urls, rest: cellsConfig.pydio.url + cellsConfig.pydio.segment},
-        headers: {...this.httpClientConfig.headers},
-      },
-      this.accessTokenStore,
-    );
+    const baseHttpClientConfig = {
+      ...this.httpClientConfig,
+      urls: {...this.httpClientConfig.urls, rest: cellsConfig.pydio.url + cellsConfig.pydio.segment},
+      headers: {...this.httpClientConfig.headers},
+    };
 
     if (cellsConfig.pydio.apiKey) {
-      return http;
+      return new HttpClient(
+        {
+          ...baseHttpClientConfig,
+          headers: {...baseHttpClientConfig.headers, Authorization: `Bearer ${cellsConfig.pydio.apiKey}`},
+        },
+        this.accessTokenStore,
+      );
     }
+
+    const http = new HttpClient(baseHttpClientConfig, this.accessTokenStore);
 
     // Add axios interceptor to automatically add Authorization header to every request
     // Althouht the HttpClient handles the authorization already (see _sendRequest), as we pass a custom axios instance to the NodeServiceApi, we need to add it manually
