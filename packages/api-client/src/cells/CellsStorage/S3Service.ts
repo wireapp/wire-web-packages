@@ -19,8 +19,11 @@
 
 import {S3Client, S3ServiceException} from '@aws-sdk/client-s3';
 import {Upload} from '@aws-sdk/lib-storage';
+import {AwsCredentialIdentityProvider} from '@aws-sdk/types';
 
 import {CellsStorage, CellsStorageError} from './CellsStorage';
+
+import {AccessTokenStore} from '../../auth';
 
 interface S3ServiceConfig {
   apiKey?: string;
@@ -33,37 +36,16 @@ export const MAX_QUEUE_SIZE = 3;
 export const PART_SIZE = 10 * 1024 * 1024; // 10MB
 
 export class S3Service implements CellsStorage {
-  private client: S3Client;
+  private config: S3ServiceConfig;
   private bucket: string;
-  private getAccessToken: () => string | undefined;
+  private accessTokenStore: AccessTokenStore;
+  private client: S3Client;
 
-  constructor({config, getAccessToken}: {config: S3ServiceConfig; getAccessToken: () => string | undefined}) {
+  constructor({config, accessTokenStore}: {config: S3ServiceConfig; accessTokenStore: AccessTokenStore}) {
+    this.config = config;
     this.bucket = config.bucket;
-    this.getAccessToken = getAccessToken;
-
-    this.client = new S3Client({
-      endpoint: config.endpoint,
-      forcePathStyle: true,
-      region: config.region,
-      credentials: async () => {
-        if (config.apiKey) {
-          return {
-            accessKeyId: config.apiKey,
-            secretAccessKey: 'gatewaysecret',
-          };
-        }
-
-        const accessToken = this.getAccessToken();
-        if (!accessToken) {
-          throw new Error('No access token available for S3 authentication');
-        }
-        return {
-          accessKeyId: accessToken,
-          secretAccessKey: 'gatewaysecret',
-        };
-      },
-      requestChecksumCalculation: 'WHEN_REQUIRED',
-    });
+    this.accessTokenStore = accessTokenStore;
+    this.client = this.createS3Client();
   }
 
   async putObject({
@@ -79,8 +61,10 @@ export class S3Service implements CellsStorage {
     progressCallback?: (progress: number) => void;
     abortController?: AbortController;
   }): Promise<void> {
+    const client = this.getS3Client();
+
     const upload = new Upload({
-      client: this.client,
+      client,
       partSize: PART_SIZE,
       queueSize: MAX_QUEUE_SIZE,
       leavePartsOnError: false,
@@ -120,5 +104,52 @@ export class S3Service implements CellsStorage {
       }
       throw caught;
     }
+  }
+
+  private getS3Client(): S3Client {
+    const tokenExpiration = this.accessTokenStore.tokenExpirationDate;
+    const shouldRecreate = !tokenExpiration || tokenExpiration <= Date.now();
+
+    if (this.config.apiKey) {
+      return this.client;
+    }
+
+    // Only recreate client if token has expired
+    if (shouldRecreate) {
+      this.client = this.createS3Client();
+    }
+
+    return this.client;
+  }
+
+  private createS3Client(): S3Client {
+    return new S3Client({
+      endpoint: this.config.endpoint,
+      forcePathStyle: true,
+      region: this.config.region,
+      credentials: this.createCredentialsProvider(),
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+    });
+  }
+
+  private createCredentialsProvider(): AwsCredentialIdentityProvider {
+    return async () => {
+      if (this.config.apiKey) {
+        return {
+          accessKeyId: this.config.apiKey,
+          secretAccessKey: 'gatewaysecret',
+        };
+      }
+
+      const accessToken = this.accessTokenStore.getAccessToken();
+      if (!accessToken) {
+        throw new Error('No access token available for S3 authentication');
+      }
+
+      return {
+        accessKeyId: accessToken,
+        secretAccessKey: 'gatewaysecret',
+      };
+    };
   }
 }
