@@ -38,21 +38,21 @@ export function bytesToUUID(uuid: Buffer | Uint8Array): string {
 const maxSize = 10_000;
 export function serializeArgs(args: any[]): any[] {
   return args.map(arg => {
-    const redacted = redactSensitiveData(arg);
+    let result: any;
 
-    if (typeof redacted === 'string') {
-      return redacted.length > maxSize ? `${redacted.slice(0, maxSize - 15)}... [truncated]` : redacted;
-    }
-
-    if (typeof redacted === 'object' && redacted !== null) {
+    if (typeof arg === 'string') {
+      result = arg.length > maxSize ? `${arg.slice(0, maxSize - 15)}... [truncated]` : arg;
+    } else if (typeof arg === 'object' && arg !== null) {
       try {
-        return safeJsonStringify(redacted);
+        result = safeJsonStringify(arg);
       } catch (e) {
-        return '[Unserializable Object]';
+        result = '[Unserializable Object]';
       }
+    } else {
+      result = arg;
     }
 
-    return redacted;
+    return redactSensitiveData(result);
   });
 }
 
