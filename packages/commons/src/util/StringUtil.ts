@@ -38,19 +38,21 @@ export function bytesToUUID(uuid: Buffer | Uint8Array): string {
 const maxSize = 10_000;
 export function serializeArgs(args: any[]): any[] {
   return args.map(arg => {
-    if (typeof arg === 'string') {
-      return arg.length > maxSize ? `${arg.slice(0, maxSize - 15)}... [truncated]` : arg;
+    const redacted = redactSensitiveData(arg);
+
+    if (typeof redacted === 'string') {
+      return redacted.length > maxSize ? `${redacted.slice(0, maxSize - 15)}... [truncated]` : redacted;
     }
 
-    if (typeof arg === 'object' && arg !== null) {
+    if (typeof redacted === 'object' && redacted !== null) {
       try {
-        return safeJsonStringify(arg);
+        return safeJsonStringify(redacted);
       } catch (e) {
         return '[Unserializable Object]';
       }
     }
 
-    return arg;
+    return redacted;
   });
 }
 
@@ -80,4 +82,20 @@ function safeJsonStringify(obj: any): string {
   } catch {
     return '[Unserializable Object]';
   }
+}
+
+export function redactSensitiveData(input: any): any {
+  if (typeof input === 'string') {
+    return input.replace(/Bearer\s+[\w\-._=]+/g, 'Bearer [REDACTED]');
+  }
+
+  if (typeof input === 'object' && input !== null) {
+    const clone = JSON.parse(JSON.stringify(input));
+    if (typeof clone.headers?.Authorization === 'string') {
+      clone.headers.Authorization = clone.headers.Authorization.replace(/Bearer\s+[\w\-._=]+/, 'Bearer [REDACTED]');
+    }
+    return clone;
+  }
+
+  return input;
 }
