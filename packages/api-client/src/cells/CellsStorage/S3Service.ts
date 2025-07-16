@@ -39,12 +39,15 @@ export class S3Service implements CellsStorage {
   private bucket: string;
   private accessTokenStore: AccessTokenStore;
   private client: S3Client;
+  private currentAccessToken: string | undefined = undefined;
 
   constructor({config, accessTokenStore}: {config: S3ServiceConfig; accessTokenStore: AccessTokenStore}) {
     this.config = config;
     this.bucket = config.bucket;
     this.accessTokenStore = accessTokenStore;
-    this.client = this.createS3Client();
+    const initialToken = this.accessTokenStore.getAccessToken();
+    this.client = this.createS3Client({accessToken: initialToken});
+    this.currentAccessToken = initialToken;
   }
 
   async putObject({
@@ -106,22 +109,26 @@ export class S3Service implements CellsStorage {
   }
 
   private getS3Client(): S3Client {
-    const tokenExpiration = this.accessTokenStore.tokenExpirationDate;
-    const shouldRecreate = !tokenExpiration || tokenExpiration <= Date.now();
-
     if (this.config.apiKey) {
       return this.client;
     }
 
-    // Only recreate client if token has expired
+    const currentAccessToken = this.accessTokenStore.getAccessToken();
+    const tokenExpiration = this.accessTokenStore.tokenExpirationDate;
+
+    // Recreate the client if the access token has changed or expired
+    const shouldRecreate =
+      this.currentAccessToken !== currentAccessToken || !tokenExpiration || tokenExpiration <= Date.now();
+
     if (shouldRecreate) {
-      this.client = this.createS3Client();
+      this.client = this.createS3Client({accessToken: currentAccessToken});
+      this.currentAccessToken = currentAccessToken;
     }
 
     return this.client;
   }
 
-  private createS3Client(): S3Client {
+  private createS3Client({accessToken}: {accessToken: string | undefined}): S3Client {
     return new S3Client({
       endpoint: this.config.endpoint,
       forcePathStyle: true,
@@ -134,7 +141,6 @@ export class S3Service implements CellsStorage {
           };
         }
 
-        const accessToken = this.accessTokenStore.getAccessToken();
         if (!accessToken) {
           throw new Error('No access token available for S3 authentication');
         }
