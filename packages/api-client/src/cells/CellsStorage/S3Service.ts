@@ -121,8 +121,10 @@ export class S3Service implements CellsStorage {
       this.currentAccessToken !== currentAccessToken || !tokenExpiration || tokenExpiration <= Date.now();
 
     if (shouldRecreate) {
-      this.client = this.createS3Client({accessToken: currentAccessToken});
+      const newClient = this.createS3Client({accessToken: currentAccessToken});
+      this.client = newClient;
       this.currentAccessToken = currentAccessToken;
+      return newClient;
     }
 
     return this.client;
