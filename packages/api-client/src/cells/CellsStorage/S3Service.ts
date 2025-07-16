@@ -45,7 +45,7 @@ export class S3Service implements CellsStorage {
     this.config = config;
     this.bucket = config.bucket;
     this.accessTokenStore = accessTokenStore;
-    const initialToken = this.accessTokenStore.getAccessToken();
+    const initialToken = accessTokenStore.getAccessToken();
     this.client = this.createS3Client({accessToken: initialToken});
     this.currentAccessToken = initialToken;
   }

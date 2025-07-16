@@ -42,7 +42,13 @@ describe('S3Service', () => {
 
     (S3Client as jest.Mock).mockImplementation(() => mockS3Client);
 
-    service = new S3Service({config: testConfig, accessTokenStore: {} as AccessTokenStore});
+    service = new S3Service({
+      config: testConfig,
+      accessTokenStore: {
+        getAccessToken: jest.fn().mockReturnValue('test-access-token'),
+        tokenExpirationDate: Date.now() + 1000,
+      } as unknown as AccessTokenStore,
+    });
   });
 
   it('creates an S3Client with the correct configuration', () => {
