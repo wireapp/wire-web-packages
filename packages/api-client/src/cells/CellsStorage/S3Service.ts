@@ -19,7 +19,6 @@
 
 import {S3Client, S3ServiceException} from '@aws-sdk/client-s3';
 import {Upload} from '@aws-sdk/lib-storage';
-import {AwsCredentialIdentityProvider} from '@aws-sdk/types';
 
 import {CellsStorage, CellsStorageError} from './CellsStorage';
 
@@ -127,29 +126,25 @@ export class S3Service implements CellsStorage {
       endpoint: this.config.endpoint,
       forcePathStyle: true,
       region: this.config.region,
-      credentials: this.createCredentialsProvider(),
-      requestChecksumCalculation: 'WHEN_REQUIRED',
-    });
-  }
+      credentials: async () => {
+        if (this.config.apiKey) {
+          return {
+            accessKeyId: this.config.apiKey,
+            secretAccessKey: 'gatewaysecret',
+          };
+        }
 
-  private createCredentialsProvider(): AwsCredentialIdentityProvider {
-    return async () => {
-      if (this.config.apiKey) {
+        const accessToken = this.accessTokenStore.getAccessToken();
+        if (!accessToken) {
+          throw new Error('No access token available for S3 authentication');
+        }
+
         return {
-          accessKeyId: this.config.apiKey,
+          accessKeyId: accessToken,
           secretAccessKey: 'gatewaysecret',
         };
-      }
-
-      const accessToken = this.accessTokenStore.getAccessToken();
-      if (!accessToken) {
-        throw new Error('No access token available for S3 authentication');
-      }
-
-      return {
-        accessKeyId: accessToken,
-        secretAccessKey: 'gatewaysecret',
-      };
-    };
+      },
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+    });
   }
 }
