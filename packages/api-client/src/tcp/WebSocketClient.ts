@@ -84,7 +84,7 @@ export class WebSocketClient extends EventEmitter {
 
   public useVersion(version: number): void {
     if (version < MINIMUM_API_VERSION) {
-      throw new Error('Minium supported api version is 8 in order to connect to /events web socket endpoint');
+      throw new Error(`Minium supported api version is ${MINIMUM_API_VERSION} `);
     }
     this.versionPrefix = version > 0 ? `/v${version}` : '';
   }
