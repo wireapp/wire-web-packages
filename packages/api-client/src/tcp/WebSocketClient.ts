@@ -68,6 +68,8 @@ export class WebSocketClient extends EventEmitter {
 
   public static readonly TOPIC = TOPIC;
 
+  private useLegacySocket: boolean = true;
+
   constructor(baseUrl: string, client: HttpClient) {
     super();
 
@@ -244,7 +246,7 @@ export class WebSocketClient extends EventEmitter {
       access_token: accessToken,
     });
 
-    if (markerToken) {
+    if (markerToken && !this.useLegacySocket) {
       queryParams.append('sync_marker', markerToken);
     }
 
@@ -260,7 +262,15 @@ export class WebSocketClient extends EventEmitter {
 
     this.logger.info(`WebSocket URL: ${this.baseUrl}${this.versionPrefix}/events?${queryString}`);
 
+    if (this.useLegacySocket) {
+      return `${this.baseUrl}/await?${queryString}`;
+    }
+
     return `${this.baseUrl}${this.versionPrefix}/events?${queryString}`;
+  }
+
+  public useAsyncNotificationsSocket() {
+    this.useLegacySocket = false;
   }
 
   public acknowledgeMissedNotification() {
