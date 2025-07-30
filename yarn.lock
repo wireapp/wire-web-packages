@@ -11763,11 +11763,11 @@ __metadata:
   linkType: hard
 
 "eazy-logger@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "eazy-logger@npm:4.0.1"
+  version: 4.1.0
+  resolution: "eazy-logger@npm:4.1.0"
   dependencies:
     chalk: 4.1.2
-  checksum: 2005f4676c29675facfce4143ce56f6560721ea60c770167138d2aa4bb27f3713ef76b0370fe1c093d76f71e4344b916a80d07e6f61ccd8dabf0afae5ad92735
+  checksum: 1e2009855dffeb3ba290f8698f4acd05fa6bb9997126aab312868913b7b47a7589f84a04286ab6b6c39dad25694dafcaaa5e5867dad8ad51d0b16b21c25a27f7
   languageName: node
   linkType: hard
 
