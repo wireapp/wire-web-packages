@@ -102,7 +102,9 @@ export class WebSocketClient extends EventEmitter {
     if (this.isLocked()) {
       this.bufferedMessages.push(data);
     } else {
-      const notification = ConsumableNotificationSchema.parse(JSON.parse(data));
+      const notification = this.useLegacySocket
+        ? JSON.parse(data)
+        : ConsumableNotificationSchema.parse(JSON.parse(data));
       this.emit(WebSocketClient.TOPIC.ON_MESSAGE, notification);
     }
   };
