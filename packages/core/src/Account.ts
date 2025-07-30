@@ -115,6 +115,8 @@ interface AccountOptions {
   systemCrypto?: SecretCrypto;
   coreCryptoConfig?: CoreCryptoConfig;
 
+  useLegacyNotificationStream?: boolean;
+
   /** Number of prekeys to generate when creating a new device (defaults to 2)
    * Prekeys are Diffie-Hellmann public keys which allow offline initiation of a secure Proteus session between two devices.
    * Having a high value will:
@@ -192,7 +194,11 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    private options: AccountOptions = {nbPrekeys: 100, coreCryptoConfig: {wasmFilePath: '', enabled: false}},
+    private options: AccountOptions = {
+      nbPrekeys: 100,
+      useLegacyNotificationStream: true,
+      coreCryptoConfig: {wasmFilePath: '', enabled: false},
+    },
   ) {
     super();
     this.apiClient = apiClient;
@@ -366,6 +372,9 @@ export class Account extends TypedEventEmitter<Events> {
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
     const clientId = client.id;
 
+    if (this.options.useLegacyNotificationStream) {
+      await this.service.notification.legacyInitializeNotificationStream(clientId);
+    }
     await this.service.client.synchronizeClients(clientId);
     return client;
   };
