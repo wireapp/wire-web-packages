@@ -2366,21 +2366,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7":
-  version: 7.23.2
-  resolution: "@babel/runtime@npm:7.23.2"
-  dependencies:
-    regenerator-runtime: ^0.14.0
-  checksum: 6c4df4839ec75ca10175f636d6362f91df8a3137f86b38f6cd3a4c90668a0fe8e9281d320958f4fbd43b394988958585a17c3aab2a4ea6bf7316b22916a371fb
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.17.8":
-  version: 7.26.7
-  resolution: "@babel/runtime@npm:7.26.7"
-  dependencies:
-    regenerator-runtime: ^0.14.0
-  checksum: a1664a08f3f4854b895b540cca2f5f5c6c1993b5fb788c9615d70fc201e16bb254df8e0550c83eaf2749a14d87775e11a7c9ded6161203e9da7a4a323d546925
+"@babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7":
+  version: 7.28.2
+  resolution: "@babel/runtime@npm:7.28.2"
+  checksum: 8673eb2311752929f5b0167f42cff4cc1d5fadddd0394baca27d06c1618680ffcf95e9f01061f5c4dc3f6a32b6bbf500e7762c02dc22bcd273c2947b9774ddad
   languageName: node
   linkType: hard
 
@@ -8353,7 +8342,7 @@ __metadata:
     axios: 1.9.0
     axios-retry: 4.5.0
     browser-sync: 3.0.3
-    cells-sdk-ts: "https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha12"
+    cells-sdk-ts: 0.1.1-alpha14
     concurrently: 9.1.2
     cross-env: 7.0.3
     dotenv: 16.4.7
@@ -8430,7 +8419,7 @@ __metadata:
     "@types/copy": 0.3.5
     "@types/fs-extra": 11.0.4
     "@types/jest": ^29.2.0
-    axios: 1.7.9
+    axios: 1.8.2
     copy: 0.3.2
     cosmiconfig: 9.0.0
     fs-extra: 11.3.0
@@ -8470,7 +8459,7 @@ __metadata:
     "@wireapp/promise-queue": "workspace:^"
     "@wireapp/protocol-messaging": 1.52.0
     "@wireapp/store-engine": "workspace:^"
-    axios: 1.7.9
+    axios: 1.8.2
     bazinga64: "workspace:^"
     commander: 13.0.0
     cross-env: 7.0.3
@@ -9557,14 +9546,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.7.9":
-  version: 1.7.9
-  resolution: "axios@npm:1.7.9"
+"axios@npm:1.8.2":
+  version: 1.8.2
+  resolution: "axios@npm:1.8.2"
   dependencies:
     follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: cb8ce291818effda09240cb60f114d5625909b345e10f389a945320e06acf0bc949d0f8422d25720f5dd421362abee302c99f5e97edec4c156c8939814b23d19
+  checksum: c47a43b79a058aa9e53a65bec9ade35c9f6e76a3999c795a79a2d205fb5f803fd4245497a0209a9727cbbe4f558791dd852ad2c168c5fc030259c11598ed8fd7
   languageName: node
   linkType: hard
 
@@ -10243,12 +10232,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cells-sdk-ts@https://github.com/pydio/cells-sdk-ts#v0.1.1-alpha12":
-  version: 0.1.0
-  resolution: "cells-sdk-ts@https://github.com/pydio/cells-sdk-ts.git#commit=7df0cf67605e2d53ab22a3c7b3deb1e04196db67"
+"cells-sdk-ts@npm:0.1.1-alpha14":
+  version: 0.1.1-alpha14
+  resolution: "cells-sdk-ts@npm:0.1.1-alpha14"
   dependencies:
     axios: ^1.9.0
-  checksum: 0f1147c1e1d3518ce332e4784170fbaa10d25e68f8f668f9588cf7eadca15f02a1e7637b71f81ce89ad120e12c7d2f87eb1c78bd94a3fc8acc718d4ab0271e8f
+  checksum: d64aa5fcb29edf96315cb7148bbd682cf48e7e9f8a84e37ec26c1e25ed9834dc815312b5d27ec47dcbe236541d0459276708541e2847a2567925a7f0555e2dc2
   languageName: node
   linkType: hard
 
@@ -11774,11 +11763,11 @@ __metadata:
   linkType: hard
 
 "eazy-logger@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "eazy-logger@npm:4.0.1"
+  version: 4.1.0
+  resolution: "eazy-logger@npm:4.1.0"
   dependencies:
     chalk: 4.1.2
-  checksum: 2005f4676c29675facfce4143ce56f6560721ea60c770167138d2aa4bb27f3713ef76b0370fe1c093d76f71e4344b916a80d07e6f61ccd8dabf0afae5ad92735
+  checksum: 1e2009855dffeb3ba290f8698f4acd05fa6bb9997126aab312868913b7b47a7589f84a04286ab6b6c39dad25694dafcaaa5e5867dad8ad51d0b16b21c25a27f7
   languageName: node
   linkType: hard
 
@@ -12244,6 +12233,18 @@ __metadata:
     has-tostringtag: ^1.0.2
     hasown: ^2.0.1
   checksum: 7227fa48a41c0ce83e0377b11130d324ac797390688135b8da5c28994c0165be8b252e15cd1de41e1325e5a5412511586960213e88f9ab4a5e7d028895db5129
+  languageName: node
+  linkType: hard
+
+"es-set-tostringtag@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "es-set-tostringtag@npm:2.1.0"
+  dependencies:
+    es-errors: ^1.3.0
+    get-intrinsic: ^1.2.6
+    has-tostringtag: ^1.0.2
+    hasown: ^2.0.2
+  checksum: 789f35de4be3dc8d11fdcb91bc26af4ae3e6d602caa93299a8c45cf05d36cc5081454ae2a6d3afa09cceca214b76c046e4f8151e092e6fc7feeb5efb9e794fc6
   languageName: node
   linkType: hard
 
@@ -13513,13 +13514,15 @@ __metadata:
   linkType: hard
 
 "form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
+  version: 4.0.4
+  resolution: "form-data@npm:4.0.4"
   dependencies:
     asynckit: ^0.4.0
     combined-stream: ^1.0.8
+    es-set-tostringtag: ^2.1.0
+    hasown: ^2.0.2
     mime-types: ^2.1.12
-  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
+  checksum: 9b7788836df9fa5a6999e0c02515b001946b2a868cfe53f026c69e2c537a2ff9fbfb8e9d2b678744628f3dc7a2d6e14e4e45dfaf68aa6239727f0bdb8ce0abf2
   languageName: node
   linkType: hard
 
@@ -19698,13 +19701,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: 3317a09b2f802da8db09aa276e469b57a6c0dd818347e05b8862959c6193408242f150db5de83c12c3fa99091ad95fb42a6db2c3329bfaa12a0ea4cbbeb30cb0
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "regenerator-runtime@npm:0.14.0"
-  checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
   languageName: node
   linkType: hard
 
