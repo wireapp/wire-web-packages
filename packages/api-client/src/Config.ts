@@ -24,4 +24,4 @@ export interface Config {
   headers?: Record<string, string>;
 }
 
-export const MINIMUM_API_VERSION = 0;
+export const MINIMUM_API_VERSION = 1;
