@@ -188,7 +188,10 @@ export class Account extends TypedEventEmitter<Events> {
    */
   constructor(
     apiClient: APIClient = new APIClient(),
-    private options: AccountOptions = {nbPrekeys: 100, coreCryptoConfig: {wasmFilePath: '', enabled: false}},
+    private options: AccountOptions = {
+      nbPrekeys: 100,
+      coreCryptoConfig: {wasmFilePath: '', enabled: false},
+    },
   ) {
     super();
     this.apiClient = apiClient;
@@ -347,11 +350,16 @@ export class Account extends TypedEventEmitter<Events> {
   public registerClient = async (
     loginData: LoginData,
     clientInfo: ClientInfo = coreDefaultClient,
+    useLegacyNotificationStream: boolean,
     /** will add extra manual entropy to the client's identity being created */
     entropyData?: Uint8Array,
   ): Promise<RegisteredClient> => {
     if (!this.service || !this.apiClient.context || !this.storeEngine) {
       throw new Error('Services are not set or context not initialized.');
+    }
+
+    if (typeof useLegacyNotificationStream !== 'boolean') {
+      throw new Error('use of legacy notifications must be explicitly set to true or false');
     }
 
     // we reset the services to re-instantiate a new CryptoClient instance
@@ -362,6 +370,9 @@ export class Account extends TypedEventEmitter<Events> {
     const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
     const clientId = client.id;
 
+    if (useLegacyNotificationStream) {
+      await this.service.notification.legacyInitializeNotificationStream(clientId);
+    }
     await this.service.client.synchronizeClients(clientId);
     return client;
   };
@@ -598,6 +609,7 @@ export class Account extends TypedEventEmitter<Events> {
    * @returns close a function that will disconnect from the websocket
    */
   public listen = async ({
+    useLegacy,
     onEvent = () => {},
     onConnectionStateChanged: onConnectionStateChangedCallBack = () => {},
     onNotificationStreamProgress = () => {},
@@ -631,12 +643,21 @@ export class Account extends TypedEventEmitter<Events> {
     onMissedNotifications?: (notificationId: string) => void;
 
     /**
+     * When set to true, will use the legacy notification stream instead of the new async notifications.
+     */
+    useLegacy?: boolean;
+
+    /**
      * When set will not decrypt and not store the last notification ID. This is useful if you only want to subscribe to unencrypted backend events
      */
     dryRun?: boolean;
   } = {}): Promise<() => void> => {
     if (!this.currentClient) {
       throw new Error('Client has not been initialized - please login first');
+    }
+
+    if (typeof useLegacy !== 'boolean') {
+      throw new Error('use of legacy notifications must be explicitly set to true or false');
     }
 
     const onConnectionStateChanged = this.createConnectionStateChangedHandler(onConnectionStateChangedCallBack);
@@ -659,7 +680,7 @@ export class Account extends TypedEventEmitter<Events> {
       onConnectionStateChanged,
     });
 
-    this.setupWebSocketListeners(handleNotification, onConnectionStateChanged);
+    this.setupWebSocketListeners(onConnectionStateChanged, handleNotification, handleLegacyNotification);
 
     const isClientCapableOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
@@ -679,7 +700,7 @@ export class Account extends TypedEventEmitter<Events> {
      *
      * @todo This can be removed when all clients are capable of consumable notifications.
      */
-    if (!isClientCapableOfConsumableNotifications) {
+    if (!isClientCapableOfConsumableNotifications && !useLegacy) {
       // let the backend now client is capable of consumable notifications
       await this.service?.client.putClientCapabilities(this.currentClient.id, {
         capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS],
@@ -687,9 +708,21 @@ export class Account extends TypedEventEmitter<Events> {
 
       // do a quick legacy sync without connecting to any websockets
       await processNotificationStream();
+    } else {
+      await this.service?.client.putClientCapabilities(this.currentClient.id, {
+        capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT],
+      });
     }
 
-    this.apiClient.connect(() => {
+    if (!useLegacy) {
+      this.apiClient.transport.ws.useAsyncNotificationsSocket();
+    }
+
+    this.apiClient.connect(async abortController => {
+      /**
+       * This is to avoid passing proposals too early to core crypto
+       * @See WPB-18995
+       */
       pauseMessageSending(); // pause message sending while processing notifications, it will be resumed once the processing is done and we have the marker token
       /**
        * unpause the notification processing queue
@@ -699,6 +732,14 @@ export class Account extends TypedEventEmitter<Events> {
        * so we need to acknowledge the notifications to let the backend know we are ready for the next batch
        */
       this.notificationProcessingQueue.pause(false);
+
+      if (useLegacy) {
+        // client only capable of legacy notifications
+        await this.service?.client.putClientCapabilities(this.currentClient!.id, {
+          capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT],
+        });
+        await processNotificationStream(abortController);
+      }
     });
 
     return () => {
@@ -755,18 +796,22 @@ export class Account extends TypedEventEmitter<Events> {
     dryRun: boolean,
   ) => {
     return async (notification: Notification, source: NotificationSource): Promise<void> => {
-      try {
-        const messages = this.service!.notification.handleNotification(notification, source, dryRun);
+      void this.notificationProcessingQueue
+        .push(async () => {
+          try {
+            const messages = this.service!.notification.handleNotification(notification, source, dryRun);
 
-        for await (const message of messages) {
-          await handleEvent(message, source);
-        }
-      } catch (error) {
-        this.logger.error(
-          `Failed to handle legacy notification "${notification.id}": ${(error as any).message}`,
-          error,
-        );
-      }
+            for await (const message of messages) {
+              await handleEvent(message, source);
+            }
+          } catch (error) {
+            this.logger.error(
+              `Failed to handle legacy notification "${notification.id}": ${(error as any).message}`,
+              error,
+            );
+          }
+        })
+        .catch(this.handleNotificationQueueError);
     };
   };
 
@@ -784,13 +829,13 @@ export class Account extends TypedEventEmitter<Events> {
         }
 
         if (notification.type === ConsumableEvent.SYNCHRONIZATION) {
-          void this.notificationProcessingQueue
+          this.notificationProcessingQueue
             .push(() => this.handleSynchronizationNotification(notification, onConnectionStateChanged))
             .catch(this.handleNotificationQueueError);
           return;
         }
 
-        void this.notificationProcessingQueue
+        this.notificationProcessingQueue
           .push(() =>
             this.decryptAckEmitNotification(notification, handleEvent, source, onNotificationStreamProgress, dryRun),
           )
@@ -913,19 +958,24 @@ export class Account extends TypedEventEmitter<Events> {
     onNotificationStreamProgress: (currentProcessingNotificationTimestamp: string) => void;
     onConnectionStateChanged: (state: ConnectionState) => void;
   }) => {
-    return async () => {
+    return async (abortController?: AbortController) => {
+      this.apiClient.transport.ws.lock();
       pauseMessageSending();
       // We want to avoid triggering rejoins of out-of-sync MLS conversations while we are processing the notification stream
       pauseRejoiningMLSConversations();
       onConnectionStateChanged(ConnectionState.PROCESSING_NOTIFICATIONS);
 
-      const results = await this.service!.notification.legacyProcessNotificationStream(async (notification, source) => {
-        await handleLegacyNotification(notification, source);
-        const notificationTime = this.getNotificationEventTime(notification.payload[0]);
-        if (notificationTime) {
-          onNotificationStreamProgress(notificationTime);
-        }
-      }, handleMissedNotifications);
+      const results = await this.service!.notification.legacyProcessNotificationStream(
+        async (notification, source) => {
+          await handleLegacyNotification(notification, source);
+          const notificationTime = this.getNotificationEventTime(notification.payload[0]);
+          if (notificationTime) {
+            onNotificationStreamProgress(notificationTime);
+          }
+        },
+        handleMissedNotifications,
+        abortController,
+      );
 
       this.logger.info('Finished processing notifications from the legacy endpoint', results);
 
@@ -934,7 +984,12 @@ export class Account extends TypedEventEmitter<Events> {
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
       resumeMessageSending();
       resumeRejoiningMLSConversations();
-      onConnectionStateChanged(ConnectionState.LIVE);
+      void this.notificationProcessingQueue
+        .push(async () => {
+          onConnectionStateChanged(ConnectionState.LIVE);
+        })
+        .catch(this.handleNotificationQueueError);
+      this.apiClient.transport.ws.unlock();
     };
   };
 
@@ -958,14 +1013,19 @@ export class Account extends TypedEventEmitter<Events> {
    * On state changes, we map raw socket states to public connection states and emit them.
    */
   private setupWebSocketListeners = (
-    handleNotification: (notification: ConsumableNotification, source: NotificationSource) => Promise<void>,
     onConnectionStateChanged: (state: ConnectionState) => void,
+    handleNotification: (notification: ConsumableNotification, source: NotificationSource) => Promise<void>,
+    handleLegacyNotification: (notification: Notification, source: NotificationSource) => Promise<void>,
   ) => {
     this.apiClient.transport.ws.removeAllListeners(WebSocketClient.TOPIC.ON_MESSAGE);
 
-    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification =>
-      handleNotification(notification, NotificationSource.WEBSOCKET),
-    );
+    this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
+      if (this.checkIsConsumable(notification)) {
+        void handleNotification(notification, NotificationSource.WEBSOCKET);
+        return;
+      }
+      void handleLegacyNotification(notification, NotificationSource.WEBSOCKET);
+    });
 
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_STATE_CHANGE, wsState => {
       const mapping: Partial<Record<WEBSOCKET_STATE, ConnectionState>> = {
