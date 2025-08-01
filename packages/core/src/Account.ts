@@ -829,13 +829,13 @@ export class Account extends TypedEventEmitter<Events> {
         }
 
         if (notification.type === ConsumableEvent.SYNCHRONIZATION) {
-          void this.notificationProcessingQueue
+          this.notificationProcessingQueue
             .push(() => this.handleSynchronizationNotification(notification, onConnectionStateChanged))
             .catch(this.handleNotificationQueueError);
           return;
         }
 
-        void this.notificationProcessingQueue
+        this.notificationProcessingQueue
           .push(() =>
             this.decryptAckEmitNotification(notification, handleEvent, source, onNotificationStreamProgress, dryRun),
           )
@@ -984,7 +984,11 @@ export class Account extends TypedEventEmitter<Events> {
       this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
       resumeMessageSending();
       resumeRejoiningMLSConversations();
-      onConnectionStateChanged(ConnectionState.LIVE);
+      void this.notificationProcessingQueue
+        .push(async () => {
+          onConnectionStateChanged(ConnectionState.LIVE);
+        })
+        .catch(this.handleNotificationQueueError);
       this.apiClient.transport.ws.unlock();
     };
   };
