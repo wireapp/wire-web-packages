@@ -8842,7 +8842,7 @@ __metadata:
     axios-retry: 4.5.0
     browser-sync: 3.0.3
     cells-sdk-ts: 0.1.1-alpha14
-    concurrently: 9.1.2
+    concurrently: 9.2.0
     cross-env: 7.0.3
     dotenv: 16.4.7
     http-status-codes: 2.3.0
@@ -11258,9 +11258,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:9.1.2":
-  version: 9.1.2
-  resolution: "concurrently@npm:9.1.2"
+"concurrently@npm:9.2.0":
+  version: 9.2.0
+  resolution: "concurrently@npm:9.2.0"
   dependencies:
     chalk: ^4.1.2
     lodash: ^4.17.21
@@ -11272,7 +11272,7 @@ __metadata:
   bin:
     conc: dist/bin/concurrently.js
     concurrently: dist/bin/concurrently.js
-  checksum: 9e25e8ee6272ada26739aff1fb43e96ac458fafca82f45b8360bdd9115d60bbc679d282dfc52001b861b6e9f32b3063aed975691d8dec9e62807a9679763a1d8
+  checksum: a138458968c791e0c5719771d3181c5add8b865beebf19fae43365ab4d49ac79de634de29ef150697e3aaf1145f27dcf634910bdc2bcb779c5dd92621607b854
   languageName: node
   linkType: hard
 
