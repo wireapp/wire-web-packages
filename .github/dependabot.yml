@@ -13,6 +13,10 @@ updates:
       - dependency-name: 'typescript'
         update-types: ['version-update:semver-minor', 'version-update:semver-major']
 
+      # Block major updates for react-test-renderer
+      - dependency-name: 'react-test-renderer'
+        update-types: ['version-update:semver-major']
+
   # Github actions
   - package-ecosystem: 'github-actions'
     directory: '/'
