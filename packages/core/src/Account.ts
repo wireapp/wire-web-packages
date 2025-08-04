@@ -367,7 +367,12 @@ export class Account extends TypedEventEmitter<Events> {
 
     const initialPreKeys = await this.service.proteus.createClient(entropyData);
 
-    const client = await this.service.client.register(loginData, clientInfo, initialPreKeys);
+    const client = await this.service.client.register(
+      loginData,
+      clientInfo,
+      initialPreKeys,
+      useLegacyNotificationStream,
+    );
     const clientId = client.id;
 
     if (useLegacyNotificationStream) {
@@ -673,7 +678,7 @@ export class Account extends TypedEventEmitter<Events> {
     );
 
     const handleMissedNotifications = this.createLegacyMissedNotificationsHandler(onMissedNotifications);
-    const processNotificationStream = this.createLegacyNotificationStreamProcessor({
+    const legacyProcessNotificationStream = this.createLegacyNotificationStreamProcessor({
       handleLegacyNotification,
       handleMissedNotifications,
       onNotificationStreamProgress,
@@ -685,6 +690,16 @@ export class Account extends TypedEventEmitter<Events> {
     const isClientCapableOfConsumableNotifications = this.getClientCapabilities().includes(
       ClientCapability.CONSUMABLE_NOTIFICATIONS,
     );
+
+    const capabilities = [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT];
+
+    if (!useLegacy) {
+      // let the backend now client is capable of consumable notifications
+      capabilities.push(ClientCapability.CONSUMABLE_NOTIFICATIONS);
+      this.apiClient.transport.ws.useAsyncNotificationsSocket();
+    }
+
+    await this.service?.client.putClientCapabilities(this.currentClient.id, {capabilities});
 
     /*
      * When enabling async notifications, be aware that the backend maintains a separate queue
@@ -701,23 +716,18 @@ export class Account extends TypedEventEmitter<Events> {
      * @todo This can be removed when all clients are capable of consumable notifications.
      */
     if (!isClientCapableOfConsumableNotifications && !useLegacy) {
-      // let the backend now client is capable of consumable notifications
-      await this.service?.client.putClientCapabilities(this.currentClient.id, {
-        capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT, ClientCapability.CONSUMABLE_NOTIFICATIONS],
-      });
-
       // do a quick legacy sync without connecting to any websockets
-      await processNotificationStream();
-    } else {
-      await this.service?.client.putClientCapabilities(this.currentClient.id, {
-        capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT],
-      });
+      await legacyProcessNotificationStream();
     }
 
-    if (!useLegacy) {
-      this.apiClient.transport.ws.useAsyncNotificationsSocket();
+    if (useLegacy) {
+      /**
+       * immediately lock the websocket to prevent any new messages from being received
+       * before legacy notifications endpoint is fetched otherwise it'll update the last notification ID
+       * and fetching legacy notifications will return an empty list
+       */
+      this.apiClient.transport.ws.lock();
     }
-
     this.apiClient.connect(async abortController => {
       /**
        * This is to avoid passing proposals too early to core crypto
@@ -734,11 +744,7 @@ export class Account extends TypedEventEmitter<Events> {
       this.notificationProcessingQueue.pause(false);
 
       if (useLegacy) {
-        // client only capable of legacy notifications
-        await this.service?.client.putClientCapabilities(this.currentClient!.id, {
-          capabilities: [ClientCapability.LEGAL_HOLD_IMPLICIT_CONSENT],
-        });
-        await processNotificationStream(abortController);
+        await legacyProcessNotificationStream(abortController);
       }
     });
 
@@ -796,7 +802,7 @@ export class Account extends TypedEventEmitter<Events> {
     dryRun: boolean,
   ) => {
     return async (notification: Notification, source: NotificationSource): Promise<void> => {
-      void this.notificationProcessingQueue
+      return this.notificationProcessingQueue
         .push(async () => {
           try {
             const messages = this.service!.notification.handleNotification(notification, source, dryRun);
@@ -981,15 +987,15 @@ export class Account extends TypedEventEmitter<Events> {
 
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
-      this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
-      resumeMessageSending();
-      resumeRejoiningMLSConversations();
       void this.notificationProcessingQueue
         .push(async () => {
+          this.logger.info(`Resuming message sending. ${getQueueLength()} messages to be sent`);
+          resumeMessageSending();
+          resumeRejoiningMLSConversations();
           onConnectionStateChanged(ConnectionState.LIVE);
+          this.apiClient.transport.ws.unlock();
         })
         .catch(this.handleNotificationQueueError);
-      this.apiClient.transport.ws.unlock();
     };
   };
 
