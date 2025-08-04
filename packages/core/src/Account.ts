@@ -802,7 +802,7 @@ export class Account extends TypedEventEmitter<Events> {
     dryRun: boolean,
   ) => {
     return async (notification: Notification, source: NotificationSource): Promise<void> => {
-      return this.notificationProcessingQueue
+      void this.notificationProcessingQueue
         .push(async () => {
           try {
             const messages = this.service!.notification.handleNotification(notification, source, dryRun);
