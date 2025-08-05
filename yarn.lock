@@ -9214,7 +9214,7 @@ __metadata:
     "@wireapp/store-engine": "workspace:^"
     axios: 1.11.0
     bazinga64: "workspace:^"
-    commander: 13.0.0
+    commander: 14.0.0
     cross-env: 7.0.3
     deepmerge-ts: 6.0.0
     dotenv-defaults: 5.0.2
@@ -11401,14 +11401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:13.0.0":
-  version: 13.0.0
-  resolution: "commander@npm:13.0.0"
-  checksum: 3981c8c197c93ceeb949f6e2250785ea319209c502b7c53d6dc36148347739c72b15de2e4bcad80bedc3f8e1e5544a89ca4e7d673b2f3238ac51b44292ad08d6
-  languageName: node
-  linkType: hard
-
-"commander@npm:^14.0.0":
+"commander@npm:14.0.0, commander@npm:^14.0.0":
   version: 14.0.0
   resolution: "commander@npm:14.0.0"
   checksum: 6e9bdaf2e8e4f512855ffc10579eeae2e84c4a7697a91b1a5f62aab3c9849182207855268dd7c3952ae7a2334312a7138f58e929e4b428aef5bf8af862685c9b
