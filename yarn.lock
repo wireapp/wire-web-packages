@@ -4746,9 +4746,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.37.3":
-  version: 0.37.5
-  resolution: "@mswjs/interceptors@npm:0.37.5"
+"@mswjs/interceptors@npm:^0.39.5":
+  version: 0.39.5
+  resolution: "@mswjs/interceptors@npm:0.39.5"
   dependencies:
     "@open-draft/deferred-promise": ^2.2.0
     "@open-draft/logger": ^0.3.0
@@ -4756,7 +4756,7 @@ __metadata:
     is-node-process: ^1.2.0
     outvariant: ^1.4.3
     strict-event-emitter: ^0.5.1
-  checksum: 5401b0c1ad65a10bcfc18c688a22d3424f55b06c7754f9956629bf095f870d5306ba816ad09a85accc7bbc34c908ad2bbaa692ce82c8992815119580cfb78cd8
+  checksum: ba555a9023a6e156feb195b4d47194aa8ae77b2e73affc7b378f97e9b9c77a8a29396c184e066b9d554fafbc0a092d6e70811916dfe8448f15c32857c9565241
   languageName: node
   linkType: hard
 
@@ -9116,7 +9116,7 @@ __metadata:
     http-status-codes: 2.3.0
     jest: ^29.2.1
     logdown: 3.3.1
-    nock: 14.0.1
+    nock: 14.0.8
     pako: 2.1.0
     react: 18.3.1
     react-dom: 18.3.1
@@ -9240,7 +9240,7 @@ __metadata:
     jest-websocket-mock: 2.5.0
     logdown: 3.3.1
     long: ^5.2.0
-    nock: 14.0.1
+    nock: 14.0.8
     rimraf: 6.0.1
     typescript: ^5.0.4
     uuid: 9.0.1
@@ -18551,14 +18551,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.1":
-  version: 14.0.1
-  resolution: "nock@npm:14.0.1"
+"nock@npm:14.0.8":
+  version: 14.0.8
+  resolution: "nock@npm:14.0.8"
   dependencies:
-    "@mswjs/interceptors": ^0.37.3
+    "@mswjs/interceptors": ^0.39.5
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: 7c8fd87b9a098c4d6a5c219e6c81af09e81878d5fd76ed8b42fc8ab0404985caf53f1eb54a175f6cd73c3981af2b6f75d0d708e247585d399f507318d529ddb7
+  checksum: a537766b53b884ad7809a4ee731c3f6618aa395e62adcd9b3be0a9b7b514e7fed8867a8d7330057a8011a902df4adbf6294d67bd0c88fbf0af39c47ec41cc18f
   languageName: node
   linkType: hard
 
