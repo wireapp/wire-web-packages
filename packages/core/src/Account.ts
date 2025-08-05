@@ -696,6 +696,7 @@ export class Account extends TypedEventEmitter<Events> {
     if (!useLegacy) {
       // let the backend now client is capable of consumable notifications
       capabilities.push(ClientCapability.CONSUMABLE_NOTIFICATIONS);
+      // we shouldn't send ping to the new async notifications sockets otherwise the backend will close the connection
       this.apiClient.transport.ws.useAsyncNotificationsSocket();
     }
 
