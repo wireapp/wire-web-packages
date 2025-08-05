@@ -273,6 +273,7 @@ export class WebSocketClient extends EventEmitter {
 
   public useAsyncNotificationsSocket() {
     this.useLegacySocket = false;
+    this.socket.disablePinging();
   }
 
   public acknowledgeMissedNotification() {
