@@ -13305,7 +13305,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:10.0.1, eslint-config-prettier@npm:^10":
+"eslint-config-prettier@npm:10.1.8":
+  version: 10.1.8
+  resolution: "eslint-config-prettier@npm:10.1.8"
+  peerDependencies:
+    eslint: ">=7.0.0"
+  bin:
+    eslint-config-prettier: bin/cli.js
+  checksum: 9140e19f78f0dbc888b160bb72b85f8043bada7b12a548faa56cea0ba74f8ef16653250ffd014d85d9a376a88c4941c96a3cdc9d39a07eb3def6967166635bd8
+  languageName: node
+  linkType: hard
+
+"eslint-config-prettier@npm:^10":
   version: 10.0.1
   resolution: "eslint-config-prettier@npm:10.0.1"
   peerDependencies:
@@ -21169,7 +21180,7 @@ __metadata:
     "@typescript-eslint/parser": 7.17.0
     "@wireapp/eslint-config": "workspace:^"
     eslint: 8.57.0
-    eslint-config-prettier: 10.0.1
+    eslint-config-prettier: 10.1.8
     eslint-import-resolver-alias: ^1.1.2
     eslint-import-resolver-typescript: ^4.4.4
     eslint-plugin-better-styled-components: ^1.1.2
