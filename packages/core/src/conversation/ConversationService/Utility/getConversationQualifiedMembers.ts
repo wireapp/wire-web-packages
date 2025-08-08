@@ -24,6 +24,7 @@ interface Params {
   apiClient: APIClient;
   conversationId: QualifiedId;
 }
+
 const getConversationQualifiedMembers = async ({apiClient, conversationId}: Params): Promise<QualifiedId[]> => {
   const conversation = await apiClient.api.conversation.getConversation(conversationId);
   /*
@@ -34,7 +35,7 @@ const getConversationQualifiedMembers = async ({apiClient, conversationId}: Para
   return conversation.members.others
     .filter(member => !!member.qualified_id)
     .map(member => member.qualified_id!)
-    .concat(conversation.members.self.qualified_id!);
+    .concat(conversation.members.self?.qualified_id!);
 };
 
 export {getConversationQualifiedMembers};
