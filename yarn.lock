@@ -4584,15 +4584,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/profiler@npm:3.12.1":
-  version: 3.12.1
-  resolution: "@lerna-lite/profiler@npm:3.12.1"
+"@lerna-lite/profiler@npm:4.6.2":
+  version: 4.6.2
+  resolution: "@lerna-lite/profiler@npm:4.6.2"
   dependencies:
-    "@lerna-lite/core": 3.12.1
-    "@lerna-lite/npmlog": 3.12.1
+    "@lerna-lite/core": 4.6.2
+    "@lerna-lite/npmlog": 4.6.2
     fs-extra: ^11.3.0
     upath: ^2.0.1
-  checksum: 64ec4710b68617d4caa0e9f8713e861e6dac58c156df090b42792a5f9bef0530dc0dafd059eed1ac45973e51026f67d886d8e306d6949fbf03db5b2838105874
+  checksum: e3256e170d0922110d61796e1c3a61f08c546d533d321375f4d834919a035b585defc9d59af385225b12619b7d1cb1776da2098f5d9dbb9f0b776960bc6e73f9
   languageName: node
   linkType: hard
 
@@ -4628,18 +4628,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/run@npm:3.12.1":
-  version: 3.12.1
-  resolution: "@lerna-lite/run@npm:3.12.1"
+"@lerna-lite/run@npm:4.6.2":
+  version: 4.6.2
+  resolution: "@lerna-lite/run@npm:4.6.2"
   dependencies:
-    "@lerna-lite/cli": 3.12.1
-    "@lerna-lite/core": 3.12.1
-    "@lerna-lite/npmlog": 3.12.1
-    "@lerna-lite/profiler": 3.12.1
+    "@lerna-lite/cli": 4.6.2
+    "@lerna-lite/core": 4.6.2
+    "@lerna-lite/npmlog": 4.6.2
+    "@lerna-lite/profiler": 4.6.2
     fs-extra: ^11.3.0
     p-map: ^7.0.3
     tinyrainbow: ^2.0.0
-  checksum: d1ae8c0a029ed0469f78a2f7c2f4f77b0ca0b9092e07da8fa0d4c41d197ecdc57047c44ff56851b837e4e908908f2a3ade0ff2e6d8300c727cbc1a8dceb7322f
+  checksum: 7a605a9e274f0affd8742f089cc98a93696ec340132d1bc5e1187d30bae4b5ab6cd1fd5e80365f37f1aa620e6ee93b40310723c43662403e9c453ec0cbe8f602
   languageName: node
   linkType: hard
 
@@ -21201,7 +21201,7 @@ __metadata:
     "@lerna-lite/changed": 3.12.1
     "@lerna-lite/cli": 3.12.1
     "@lerna-lite/publish": 4.6.2
-    "@lerna-lite/run": 3.12.1
+    "@lerna-lite/run": 4.6.2
     "@lerna-lite/version": 4.6.2
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
