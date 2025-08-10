@@ -13569,8 +13569,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-prettier@npm:^5":
-  version: 5.5.3
-  resolution: "eslint-plugin-prettier@npm:5.5.3"
+  version: 5.5.4
+  resolution: "eslint-plugin-prettier@npm:5.5.4"
   dependencies:
     prettier-linter-helpers: ^1.0.0
     synckit: ^0.11.7
@@ -13584,7 +13584,7 @@ __metadata:
       optional: true
     eslint-config-prettier:
       optional: true
-  checksum: d1d83fddcdd8c7b7378f2c554206f8cbd1ddf174fd62989c2dc6a61a88442b2326f06ebd7db5f302a2dde24604f11061d4e974f37e4a51c76c4b97cb55d115e0
+  checksum: 0dd05ed85018ab0e98da80325b7bd4c4ab6dd684398f1270a7c8cf4261df714dd4502ba4c7f85f651aade9989da0a7d2adda03af8873b73b52014141abf385de
   languageName: node
   linkType: hard
 
