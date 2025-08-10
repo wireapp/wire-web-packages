@@ -3863,12 +3863,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/create-cache-key-function@npm:^29.7.0":
-  version: 29.7.0
-  resolution: "@jest/create-cache-key-function@npm:29.7.0"
+"@jest/create-cache-key-function@npm:^30.0.0":
+  version: 30.0.5
+  resolution: "@jest/create-cache-key-function@npm:30.0.5"
   dependencies:
-    "@jest/types": ^29.6.3
-  checksum: 681bc761fa1d6fa3dd77578d444f97f28296ea80755e90e46d1c8fa68661b9e67f54dd38b988742db636d26cf160450dc6011892cec98b3a7ceb58cad8ff3aae
+    "@jest/types": 30.0.5
+  checksum: 369f08188e3e27a90cda458338d26bd94d2d23e495c0d2e6339f6669a3861045bd8d34e5d03eec62542fb71161bb5bd535866daa287a9297c01960261ddd6155
   languageName: node
   linkType: hard
 
@@ -7449,15 +7449,15 @@ __metadata:
   linkType: hard
 
 "@swc/jest@npm:^0.2.23":
-  version: 0.2.37
-  resolution: "@swc/jest@npm:0.2.37"
+  version: 0.2.39
+  resolution: "@swc/jest@npm:0.2.39"
   dependencies:
-    "@jest/create-cache-key-function": ^29.7.0
+    "@jest/create-cache-key-function": ^30.0.0
     "@swc/counter": ^0.1.3
     jsonc-parser: ^3.2.0
   peerDependencies:
     "@swc/core": "*"
-  checksum: 8d9a16404068c7f7d0548bc62f9d1465592178affbc7fe105dd59d463975d82cdcab2e0582c2a542250e6d240c76828bdbc404c77c85dd4d81061eb720351c4a
+  checksum: e1e69dc1434e6c8f708f969167325e6bc982e4373d123ae13c62a193a801bda9fd8d0ef2fe1efc8d17325feb41007c92906ecc6eca08d3cfe3b321ea2b15acf4
   languageName: node
   linkType: hard
 
