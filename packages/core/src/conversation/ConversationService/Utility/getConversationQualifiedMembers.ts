@@ -34,7 +34,7 @@ const getConversationQualifiedMembers = async ({apiClient, conversationId}: Para
   return conversation.members.others
     .filter(member => !!member.qualified_id)
     .map(member => member.qualified_id!)
-    .concat(conversation.members.self.qualified_id!);
+    .concat(conversation.members.self?.qualified_id!);
 };
 
 export {getConversationQualifiedMembers};
