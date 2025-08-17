@@ -4264,15 +4264,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/changed@npm:4.7.0":
-  version: 4.7.0
-  resolution: "@lerna-lite/changed@npm:4.7.0"
+"@lerna-lite/changed@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/changed@npm:4.7.2"
   dependencies:
-    "@lerna-lite/cli": 4.7.0
-    "@lerna-lite/core": 4.7.0
-    "@lerna-lite/list": 4.7.0
-    "@lerna-lite/listable": 4.7.0
-  checksum: 46a3f9e296f07768cbb5cc719261f947418055772dda9ef49718874df9971e61a3cd411f8dd6a36d78b96e617b589344e5bd2cf2e64b9bf1dc25de1362b037b8
+    "@lerna-lite/cli": 4.7.2
+    "@lerna-lite/core": 4.7.2
+    "@lerna-lite/list": 4.7.2
+    "@lerna-lite/listable": 4.7.2
+  checksum: 52747dd8a58692f5b40440955b492f26c3b782eef83ed52febec45c33883e045c6c815797247352176a39f754568cba2e7699bf783724645bf58c3bda8899a38
   languageName: node
   linkType: hard
 
@@ -4335,6 +4335,37 @@ __metadata:
   bin:
     lerna: dist/cli.js
   checksum: 85ed732b8600b7c2d2fa0cc511f8489ba529d466b5aa563430e476670ed9fe7a38abac575f5c1149d6f1b30554c72c813daee2cd809e38f5a5090d47997fb8a0
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/cli@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/cli@npm:4.7.2"
+  dependencies:
+    "@lerna-lite/core": 4.7.2
+    "@lerna-lite/init": 4.7.2
+    "@lerna-lite/npmlog": 4.7.1
+    dedent: ^1.6.0
+    dotenv: ^17.2.1
+    import-local: ^3.2.0
+    load-json-file: ^7.0.1
+    yargs: ^18.0.0
+  peerDependenciesMeta:
+    "@lerna-lite/exec":
+      optional: true
+    "@lerna-lite/list":
+      optional: true
+    "@lerna-lite/publish":
+      optional: true
+    "@lerna-lite/run":
+      optional: true
+    "@lerna-lite/version":
+      optional: true
+    "@lerna-lite/watch":
+      optional: true
+  bin:
+    lerna: dist/cli.js
+  checksum: d02f86dc4d7b228bb7648211da2acd114db3f8246c189ee597dabefb7c452611a5f483c750f5ef88af52321dde5fdb27d19fa0199f2a03c786ccf8d892e11125
   languageName: node
   linkType: hard
 
@@ -4413,6 +4444,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/core@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/core@npm:4.7.2"
+  dependencies:
+    "@inquirer/expand": ^4.0.17
+    "@inquirer/input": ^4.2.1
+    "@inquirer/select": ^4.3.1
+    "@lerna-lite/npmlog": 4.7.1
+    "@npmcli/run-script": ^9.1.0
+    ci-info: ^4.3.0
+    config-chain: ^1.1.13
+    dedent: ^1.6.0
+    execa: ^9.6.0
+    fs-extra: ^11.3.1
+    glob-parent: ^6.0.2
+    json5: ^2.2.3
+    lilconfig: ^3.1.3
+    load-json-file: ^7.0.1
+    npm-package-arg: ^13.0.0
+    p-map: ^7.0.3
+    p-queue: ^8.1.0
+    picomatch: ^4.0.3
+    resolve-from: ^5.0.0
+    semver: ^7.7.2
+    slash: ^5.1.0
+    tinyglobby: ^0.2.14
+    tinyrainbow: ^2.0.0
+    write-file-atomic: ^6.0.0
+    write-json-file: ^6.0.0
+    write-package: ^7.1.0
+    yaml: ^2.8.1
+    zeptomatch: ^2.0.2
+  checksum: b1636f326e721c4ba82467bcb88c5fdb8cf79830a5ab1b068c9f356cf3332fc738a733f212e36e78e7dfc9cb5853afd15404ebfcda5ab6f70f3db278afe88901
+  languageName: node
+  linkType: hard
+
 "@lerna-lite/init@npm:3.12.1":
   version: 3.12.1
   resolution: "@lerna-lite/init@npm:3.12.1"
@@ -4437,25 +4504,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:4.7.0":
-  version: 4.7.0
-  resolution: "@lerna-lite/list@npm:4.7.0"
+"@lerna-lite/init@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/init@npm:4.7.2"
   dependencies:
-    "@lerna-lite/cli": 4.7.0
-    "@lerna-lite/core": 4.7.0
-    "@lerna-lite/listable": 4.7.0
-  checksum: 5301bb806566817344c8e2bb4c77f251123bae67692f965dd0fa9adb3d55441ce9ce9b97ef23f51ac49188555dce4b55a786a85f8674b8ae3fbe152578d36df1
+    "@lerna-lite/core": 4.7.2
+    fs-extra: ^11.3.1
+    p-map: ^7.0.3
+    write-json-file: ^6.0.0
+  checksum: 0782d06e89895ea0b081a1744df980373c677f368a3890446dc51c3d8599ae5c545ad8c7d92bc6e77fd62dc02321786cfcd6eaf609935216a7d2b2d82a0f48cc
   languageName: node
   linkType: hard
 
-"@lerna-lite/listable@npm:4.7.0":
-  version: 4.7.0
-  resolution: "@lerna-lite/listable@npm:4.7.0"
+"@lerna-lite/list@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/list@npm:4.7.2"
   dependencies:
-    "@lerna-lite/core": 4.7.0
+    "@lerna-lite/cli": 4.7.2
+    "@lerna-lite/core": 4.7.2
+    "@lerna-lite/listable": 4.7.2
+  checksum: 99496c26a65b0ee0b66ce57b05e077a2a9a4b21448f799a3d444420e4cd53253ad1e6787d3d197200f0557e1349720e9003011960fffcca3f617dc2b208e79fe
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/listable@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/listable@npm:4.7.2"
+  dependencies:
+    "@lerna-lite/core": 4.7.2
     columnify: ^1.6.0
     tinyrainbow: ^2.0.0
-  checksum: e53ede5928247fd405d111a8d90bf76899a489dda079c533e68733203e07af2f1194c772cfc6b02e959b82d6f1358dba67e90dfc873af0700004a4c9c99394f5
+  checksum: b28b18c009c6bdfbcb04295e62a269c791b0e9e9318f83791ea666c93fb643137a2c624802ad9ec3941d653957404804619ee8364598e2fa0dbf67ecd2e7451d
   languageName: node
   linkType: hard
 
@@ -4488,6 +4567,22 @@ __metadata:
     string-width: ^7.2.0
     wide-align: ^1.1.5
   checksum: 44af12655225ac0744eb2b0537d2421b4005718db940e4c7f0f44d40f94eb6c71d5fe1424ac920cbfb19efcaf6889f94945831812941f3ef27a9998d725f423a
+  languageName: node
+  linkType: hard
+
+"@lerna-lite/npmlog@npm:4.7.1":
+  version: 4.7.1
+  resolution: "@lerna-lite/npmlog@npm:4.7.1"
+  dependencies:
+    aproba: ^2.1.0
+    color-support: ^1.1.3
+    console-control-strings: ^1.1.0
+    fast-string-width: ^2.0.0
+    has-unicode: ^2.0.1
+    set-blocking: ^2.0.0
+    signal-exit: ^4.1.0
+    wide-align: ^1.1.5
+  checksum: 9a295964be9f075b596d7cda224701677f9675eb1e7d3b88d28a4d3146002c853a693d97c78f558da414bd66108c7237beaae2134151568ea0b4d69dc1b51236
   languageName: node
   linkType: hard
 
@@ -14035,6 +14130,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-string-truncated-width@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "fast-string-truncated-width@npm:2.0.1"
+  checksum: ea63983cb82a87035d54b453154c78e4533ea2cc69b61ab4803675c3121d2b84d5a27c3004fb3f86264d21b88512014b9e54206a7e2e3838ea5fe06dcbbbe72d
+  languageName: node
+  linkType: hard
+
+"fast-string-width@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "fast-string-width@npm:2.0.0"
+  dependencies:
+    fast-string-truncated-width: ^2.0.0
+  checksum: 8496e41d91e4039ab629dbe8324cfdb120c758ca20ac397ef061ca2a436fb6897e4244c2bfe0bba18f018473e1c7ed69253c2f66709094f7736fc3830cb5ae7f
+  languageName: node
+  linkType: hard
+
 "fast-uri@npm:^3.0.1":
   version: 3.0.6
   resolution: "fast-uri@npm:3.0.6"
@@ -21205,7 +21316,7 @@ __metadata:
     "@babel/core": ^7.19.6
     "@babel/eslint-parser": ^7.19.1
     "@emotion/eslint-plugin": ^11.10.0
-    "@lerna-lite/changed": 4.7.0
+    "@lerna-lite/changed": 4.7.2
     "@lerna-lite/cli": 3.12.1
     "@lerna-lite/publish": 4.7.0
     "@lerna-lite/run": 4.7.0
