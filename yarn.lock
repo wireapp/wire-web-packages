@@ -4683,6 +4683,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lerna-lite/version@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@lerna-lite/version@npm:4.7.2"
+  dependencies:
+    "@conventional-changelog/git-client": ^2.5.1
+    "@lerna-lite/cli": 4.7.2
+    "@lerna-lite/core": 4.7.2
+    "@lerna-lite/npmlog": 4.7.1
+    "@octokit/plugin-enterprise-rest": ^6.0.1
+    "@octokit/rest": ^22.0.0
+    conventional-changelog: ^7.1.1
+    conventional-changelog-angular: ^8.0.0
+    conventional-changelog-writer: ^8.2.0
+    conventional-commits-parser: ^6.2.0
+    conventional-recommended-bump: ^11.2.0
+    dedent: ^1.6.0
+    fs-extra: ^11.3.1
+    git-url-parse: ^16.1.0
+    graceful-fs: ^4.2.11
+    is-stream: ^4.0.1
+    load-json-file: ^7.0.1
+    new-github-release-url: ^2.0.0
+    npm-package-arg: ^13.0.0
+    p-limit: ^7.0.0
+    p-map: ^7.0.3
+    p-pipe: ^4.0.0
+    p-reduce: ^3.0.0
+    pify: ^6.1.0
+    semver: ^7.7.2
+    slash: ^5.1.0
+    tinyrainbow: ^2.0.0
+    uuid: ^11.1.0
+    write-json-file: ^6.0.0
+    zeptomatch: ^2.0.2
+  checksum: 7fb87830627557363c37cee4ea7d1c06df8bcd1735a207177e5ceef4fae30f4d0228241d7540fa524f8fd34901a218771ddffe463a2464818cc4c87ffc56cc07
+  languageName: node
+  linkType: hard
+
 "@mdx-js/react@npm:^3.0.0":
   version: 3.1.0
   resolution: "@mdx-js/react@npm:3.1.0"
@@ -19436,6 +19474,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-limit@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "p-limit@npm:7.0.0"
+  dependencies:
+    yocto-queue: ^1.2.1
+  checksum: 82da80dfd46123c49e41a77ccb2091b534555d17cb5e6eeafb6824f9467e22ce7fdf6b91899be6de35c67e6161ec7cc47716364aa57914493f4fab0614d24b82
+  languageName: node
+  linkType: hard
+
 "p-locate@npm:^4.1.0":
   version: 4.1.0
   resolution: "p-locate@npm:4.1.0"
@@ -21320,7 +21367,7 @@ __metadata:
     "@lerna-lite/cli": 3.12.1
     "@lerna-lite/publish": 4.7.0
     "@lerna-lite/run": 4.7.2
-    "@lerna-lite/version": 4.7.0
+    "@lerna-lite/version": 4.7.2
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@testing-library/dom": ^10.0.0
@@ -25015,6 +25062,13 @@ __metadata:
   version: 1.1.1
   resolution: "yocto-queue@npm:1.1.1"
   checksum: f2e05b767ed3141e6372a80af9caa4715d60969227f38b1a4370d60bffe153c9c5b33a862905609afc9b375ec57cd40999810d20e5e10229a204e8bde7ef255c
+  languageName: node
+  linkType: hard
+
+"yocto-queue@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "yocto-queue@npm:1.2.1"
+  checksum: 0843d6c2c0558e5c06e98edf9c17942f25c769e21b519303a5c2adefd5b738c9b2054204dc856ac0cd9d134b1bc27d928ce84fd23c9e2423b7e013d5a6f50577
   languageName: node
   linkType: hard
 
