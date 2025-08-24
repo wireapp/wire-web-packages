@@ -13741,15 +13741,15 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-unused-imports@npm:^4, eslint-plugin-unused-imports@npm:^4.1.3":
-  version: 4.1.4
-  resolution: "eslint-plugin-unused-imports@npm:4.1.4"
+  version: 4.2.0
+  resolution: "eslint-plugin-unused-imports@npm:4.2.0"
   peerDependencies:
     "@typescript-eslint/eslint-plugin": ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
     eslint: ^9.0.0 || ^8.0.0
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 1f4ce3e3972699345513840f3af1b783033dbc3a3e85b62ce12b3f6a89fd8c92afe46d0c00af40bacb14465445983ba0ccc326a6fd5132553061fb0e47bcba19
+  checksum: f3ab84c3910a17c794b3776ede6645ff408e10340ffdf06893f6934653509f27e3637c3f5e9dd66d78031c6f42542fbda118f85bd24b978651787795b0f8cb6d
   languageName: node
   linkType: hard
 
