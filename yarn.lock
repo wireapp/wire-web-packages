@@ -9179,7 +9179,7 @@ __metadata:
     uuid: 11.1.0
     webpack: ^5.74.0
     ws: 8.18.1
-    zod: 3.24.2
+    zod: 4.1.1
   languageName: unknown
   linkType: soft
 
@@ -9294,7 +9294,7 @@ __metadata:
     rimraf: 6.0.1
     typescript: ^5.0.4
     uuid: 9.0.1
-    zod: 3.24.2
+    zod: 4.1.1
   languageName: unknown
   linkType: soft
 
@@ -25086,9 +25086,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.24.2":
-  version: 3.24.2
-  resolution: "zod@npm:3.24.2"
-  checksum: c02455c09678c5055c636d64f9fcda2424fea0aa46ac7d9681e7f41990bc55f488bcd84b9d7cfef0f6e906f51f55b245239d92a9f726248aa74c5b84edf00c2d
+"zod@npm:4.1.1":
+  version: 4.1.1
+  resolution: "zod@npm:4.1.1"
+  checksum: e643a378541e1b04ba1ebc1af64393645ba888d331d100bc4ec3acfdaac7dd7e673c00c7072d03666106b73778d7c01c9df92c38db043ab5ed6dafdddac9cff5
   languageName: node
   linkType: hard
