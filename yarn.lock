@@ -7075,14 +7075,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-themes@npm:^8.5.2":
-  version: 8.5.8
-  resolution: "@storybook/addon-themes@npm:8.5.8"
+"@storybook/addon-themes@npm:^9.1.3":
+  version: 9.1.3
+  resolution: "@storybook/addon-themes@npm:9.1.3"
   dependencies:
     ts-dedent: ^2.0.0
   peerDependencies:
-    storybook: ^8.5.8
-  checksum: 55f32efe0a8e6c3c7935b4466fc606bc94529d52e4c51e4d4891d61b3d647b1cd7eb7ce7fc2c5efa1c35628220b52ef347ab366e1e12588a7d179730218a09ef
+    storybook: ^9.1.3
+  checksum: d42bb5f7de77a9f98452ce025f5fb916a0d3f2b4d2c7f2129e2c02578cf99154f1e2fd6118f16a69a61f944e19c6ddae8c7199f32e313f0df11949c9f21755dd
   languageName: node
   linkType: hard
 
@@ -9460,7 +9460,7 @@ __metadata:
     "@storybook/addon-essentials": ^8.5.2
     "@storybook/addon-interactions": ^8.5.2
     "@storybook/addon-onboarding": ^8.5.2
-    "@storybook/addon-themes": ^8.5.2
+    "@storybook/addon-themes": ^9.1.3
     "@storybook/addon-webpack5-compiler-swc": ^3.0.0
     "@storybook/blocks": ^8.5.2
     "@storybook/react": ^9.1.0
