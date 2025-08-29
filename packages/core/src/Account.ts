@@ -673,7 +673,11 @@ export class Account extends TypedEventEmitter<Events> {
 
     const handleEvent = this.createEventHandler(onEvent);
 
-    const handleLegacyNotification = this.createLegacyNotificationHandler(handleEvent, dryRun);
+    const handleLegacyNotification = this.createLegacyNotificationHandler(
+      handleEvent,
+      onNotificationStreamProgress,
+      dryRun,
+    );
     const handleNotification = this.createNotificationHandler(
       handleEvent,
       onNotificationStreamProgress,
@@ -685,7 +689,6 @@ export class Account extends TypedEventEmitter<Events> {
     const legacyProcessNotificationStream = this.createLegacyNotificationStreamProcessor({
       handleLegacyNotification,
       handleMissedNotifications,
-      onNotificationStreamProgress,
       onConnectionStateChanged,
     });
 
@@ -720,7 +723,7 @@ export class Account extends TypedEventEmitter<Events> {
      * @todo This can be removed when all clients are capable of consumable notifications.
      */
     if (!isClientCapableOfConsumableNotifications && !useLegacy) {
-      // do a quick legacy sync without connecting to any websockets
+      // do the last legacy sync without connecting to any websockets
       await legacyProcessNotificationStream();
     }
 
@@ -740,13 +743,13 @@ export class Account extends TypedEventEmitter<Events> {
       pauseProposalProcessing();
       pauseMessageSending(); // pause message sending while processing notifications, it will be resumed once the processing is done and we have the marker token
       /**
-       * unpause the notification processing queue
+       * resume the notification processing queue
        * it will start processing notifications immediately and pause if web socket connection drops
        * we should start decryption and therefore acknowledging the notifications in order for the backend to
        * send us the next batch of notifications, currently total size of notifications coming from web socket is limited to 500
        * so we need to acknowledge the notifications to let the backend know we are ready for the next batch
        */
-      this.notificationProcessingQueue.pause(false);
+      this.notificationProcessingQueue.resume();
 
       if (useLegacy) {
         await legacyProcessNotificationStream(abortController);
@@ -804,12 +807,18 @@ export class Account extends TypedEventEmitter<Events> {
    */
   private createLegacyNotificationHandler = (
     handleEvent: (payload: HandledEventPayload, source: NotificationSource) => Promise<void>,
+    onNotificationStreamProgress: (currentProcessingNotificationTimestamp: string) => void,
     dryRun: boolean,
   ) => {
     return async (notification: Notification, source: NotificationSource): Promise<void> => {
       void this.notificationProcessingQueue
         .push(async () => {
           try {
+            const notificationTime = this.getNotificationEventTime(notification.payload[0]);
+            if (notificationTime) {
+              onNotificationStreamProgress(notificationTime);
+            }
+
             const messages = this.service!.notification.handleNotification(notification, source, dryRun);
 
             for await (const message of messages) {
@@ -858,12 +867,18 @@ export class Account extends TypedEventEmitter<Events> {
   };
 
   private handleNotificationQueueError = (error: unknown) => {
-    if (error instanceof Error && error.message.includes('Queue was flushed')) {
-      // queue is flushed manually so we ignore the error
-      this.logger.info('Notification processing queue was flushed, ignoring error', error);
-      return;
+    if (!(error instanceof Error)) {
+      throw error;
     }
-    throw error;
+
+    switch (error.cause) {
+      case PromiseQueue.ERROR_CAUSES.TIMEOUT:
+        this.logger.warn('Notification decryption task timed out', error);
+        break;
+      case PromiseQueue.ERROR_CAUSES.FLUSHED:
+        this.logger.info('Notification processing queue was flushed, ignoring error', error);
+        break;
+    }
   };
 
   private acknowledgeSynchronizationNotification = (notification: ConsumableNotificationSynchronization) => {
@@ -962,12 +977,10 @@ export class Account extends TypedEventEmitter<Events> {
   private createLegacyNotificationStreamProcessor = ({
     handleLegacyNotification,
     handleMissedNotifications,
-    onNotificationStreamProgress,
     onConnectionStateChanged,
   }: {
     handleLegacyNotification: (notification: Notification, source: NotificationSource) => Promise<void>;
     handleMissedNotifications: (notificationId: string) => Promise<void>;
-    onNotificationStreamProgress: (currentProcessingNotificationTimestamp: string) => void;
     onConnectionStateChanged: (state: ConnectionState) => void;
   }) => {
     return async (abortController?: AbortController) => {
@@ -981,10 +994,6 @@ export class Account extends TypedEventEmitter<Events> {
       const results = await this.service!.notification.legacyProcessNotificationStream(
         async (notification, source) => {
           await handleLegacyNotification(notification, source);
-          const notificationTime = this.getNotificationEventTime(notification.payload[0]);
-          if (notificationTime) {
-            onNotificationStreamProgress(notificationTime);
-          }
         },
         handleMissedNotifications,
         abortController,
@@ -1051,6 +1060,7 @@ export class Account extends TypedEventEmitter<Events> {
 
       if (connectionState === ConnectionState.CLOSED) {
         this.pauseAndFlushNotificationQueue();
+        this.apiClient.transport.ws.lock();
       }
 
       if (connectionState) {

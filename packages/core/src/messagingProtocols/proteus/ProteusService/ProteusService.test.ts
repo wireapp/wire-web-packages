@@ -682,6 +682,7 @@ describe('ProteusService', () => {
 
   describe('createConversation', () => {
     const newConversation: Conversation = {
+      id: '',
       qualified_id: {id: '', domain: ''},
       type: CONVERSATION_TYPE.REGULAR,
       creator: '',
