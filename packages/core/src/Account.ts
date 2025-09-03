@@ -73,6 +73,8 @@ import {
   getTokenCallback,
 } from './messagingProtocols/mls/E2EIdentityService/E2EIServiceInternal';
 import {
+  flushProposalsQueue,
+  getProposalQueueLength,
   pauseProposalProcessing,
   resumeProposalProcessing,
 } from './messagingProtocols/mls/EventHandler/events/messageAdd/IncomingProposalsQueue';
@@ -757,6 +759,7 @@ export class Account extends TypedEventEmitter<Events> {
     });
 
     return () => {
+      flushProposalsQueue();
       this.pauseAndFlushNotificationQueue();
       this.apiClient.disconnect();
       onConnectionStateChanged(ConnectionState.CLOSED);
@@ -814,7 +817,13 @@ export class Account extends TypedEventEmitter<Events> {
       void this.notificationProcessingQueue
         .push(async () => {
           try {
+            const start = Date.now();
             const notificationTime = this.getNotificationEventTime(notification.payload[0]);
+            this.logger.info(`Processing legacy notifwication "${notification.id}" at ${notificationTime}`, {
+              notification,
+            });
+            this.logger.info(`Total notifications queue length: ${this.notificationProcessingQueue.getLength()}`);
+            this.logger.info(`Total pending proposals queue length: ${getProposalQueueLength()}`);
             if (notificationTime) {
               onNotificationStreamProgress(notificationTime);
             }
@@ -824,6 +833,8 @@ export class Account extends TypedEventEmitter<Events> {
             for await (const message of messages) {
               await handleEvent(message, source);
             }
+
+            this.logger.info(`Finished processing legacy notification "${notification.id}" in ${Date.now() - start}ms`);
           } catch (error) {
             this.logger.error(
               `Failed to handle legacy notification "${notification.id}": ${(error as any).message}`,
@@ -999,7 +1010,10 @@ export class Account extends TypedEventEmitter<Events> {
         abortController,
       );
 
-      this.logger.info('Finished processing notifications from the legacy endpoint', results);
+      this.logger.info(
+        'Finished inserting notifications for decryption from the legacy endpoint to the process queue',
+        results,
+      );
 
       // We need to wait for the notification stream to be fully handled before releasing the message sending queue.
       // This is due to the nature of how message are encrypted, any change in mls epoch needs to happen before we start encrypting any kind of messages
@@ -1059,6 +1073,7 @@ export class Account extends TypedEventEmitter<Events> {
       const connectionState = mapping[wsState];
 
       if (connectionState === ConnectionState.CLOSED) {
+        flushProposalsQueue();
         this.pauseAndFlushNotificationQueue();
         this.apiClient.transport.ws.lock();
       }

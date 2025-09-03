@@ -38,3 +38,12 @@ export function pauseProposalProcessing(): void {
   logger.info('Pausing proposal processing');
   proposalsQueue.pause();
 }
+
+export function getProposalQueueLength() {
+  return proposalsQueue.getLength();
+}
+
+export function flushProposalsQueue(): void {
+  logger.info('Flushing proposals queue');
+  proposalsQueue.flush();
+}
