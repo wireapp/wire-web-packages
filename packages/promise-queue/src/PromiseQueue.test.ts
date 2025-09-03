@@ -234,4 +234,33 @@ describe('PromiseQueue', () => {
       expect(queue.getLength()).toBe(0);
     });
   });
+
+  describe('stack safety', () => {
+    jest.setTimeout(30000);
+
+    // This test would overflow with synchronous recursion in execute()
+    // because it would re-enter execute() ~N times on the same call stack.
+    // With microtask/macrotask handoff, the stack stays flat.
+    it('processes very long queues without call stack overflow', async () => {
+      const N = 100_000; // large enough to blow typical V8 stacks if recursion is sync
+      const queue = new PromiseQueue({name: 'HugeQueue', concurrent: 1, timeout: 10_000, paused: true});
+
+      let ran = 0;
+      const task = async () => {
+        ran++;
+      };
+
+      for (let i = 0; i < N; i++) {
+        void queue.push(task);
+      }
+
+      queue.resume();
+
+      // Push a sentinel task and await it: when it resolves,
+      // all previous tasks must have completed.
+      await queue.push(() => Promise.resolve('sentinel'));
+
+      expect(ran).toBe(N);
+    });
+  });
 });
