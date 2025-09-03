@@ -90,9 +90,12 @@ export class PromiseQueue {
     let timeoutId: ReturnType<typeof setTimeout>;
     const timeout = new Promise<never>((_, reject) => {
       timeoutId = setTimeout(() => {
-        this.logger?.warn?.(`Promise queue timed-out after ${this.timeout}ms, rejecting and advancing queue`, {
-          pending: this.queue.length,
-        });
+        this.logger?.warn?.(
+          `Promise queue task timed-out after ${this.timeout}ms, rejecting and advancing to the next task in queue`,
+          {
+            pending: this.queue.length,
+          },
+        );
         reject(PromiseQueue.createTimeoutError(this.timeout));
       }, this.timeout);
     });
