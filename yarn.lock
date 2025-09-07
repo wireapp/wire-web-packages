@@ -9106,7 +9106,7 @@ __metadata:
     tough-cookie: 4.1.4
     ts-node: ^10.9.1
     typescript: ^5.0.4
-    uuid: 11.1.0
+    uuid: 12.0.0
     webpack: ^5.74.0
     ws: 8.18.1
     zod: 3.24.2
@@ -9223,7 +9223,7 @@ __metadata:
     nock: 14.0.10
     rimraf: 6.0.1
     typescript: ^5.0.4
-    uuid: 9.0.1
+    uuid: 12.0.0
     zod: 3.24.2
   languageName: unknown
   linkType: soft
@@ -9451,7 +9451,7 @@ __metadata:
     rimraf: 6.0.1
     ts-node: ^10.9.1
     typescript: ^5.0.4
-    uuid: 9.0.1
+    uuid: 12.0.0
   peerDependencies:
     "@wireapp/store-engine": 5.x.x
   languageName: unknown
@@ -23962,7 +23962,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:11.1.0, uuid@npm:^11.1.0":
+"uuid@npm:12.0.0":
+  version: 12.0.0
+  resolution: "uuid@npm:12.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 0e0c2d137f61c7a44a9aefcd58e8df3957960ae2899f8dea42d2842304d8c0a42a052fc23240f4bc83fb96403f20af5b3c92b1e4402bb48f708dabee62ecd1a7
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^11.1.0":
   version: 11.1.0
   resolution: "uuid@npm:11.1.0"
   bin:
@@ -23971,19 +23980,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1, uuid@npm:^9.0.0, uuid@npm:^9.0.1":
+"uuid@npm:^2.0.1":
+  version: 2.0.3
+  resolution: "uuid@npm:2.0.3"
+  checksum: 44adb0e235a683005fda9a869ddf2e88decbea082ea6b938e6f21b83147fda494fdc25ed8eba56196c4d5794ffc1c3efa4e3fef3e6205be2ee4084497f434e0f
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0, uuid@npm:^9.0.1":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:
     uuid: dist/bin/uuid
   checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^2.0.1":
-  version: 2.0.3
-  resolution: "uuid@npm:2.0.3"
-  checksum: 44adb0e235a683005fda9a869ddf2e88decbea082ea6b938e6f21b83147fda494fdc25ed8eba56196c4d5794ffc1c3efa4e3fef3e6205be2ee4084497f434e0f
   languageName: node
   linkType: hard
 
