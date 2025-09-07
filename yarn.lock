@@ -6985,12 +6985,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-onboarding@npm:^8.5.2":
-  version: 8.5.8
-  resolution: "@storybook/addon-onboarding@npm:8.5.8"
+"@storybook/addon-onboarding@npm:^9.1.5":
+  version: 9.1.5
+  resolution: "@storybook/addon-onboarding@npm:9.1.5"
   peerDependencies:
-    storybook: ^8.5.8
-  checksum: 7504f780705c151502b68ef381d7c18ba654990182140489560aa2b5f687304b0d1d94a929893ed847b2dab3e139a0a10e35000ab0059333acde85d013a5d976
+    storybook: ^9.1.5
+  checksum: abb513bcfa4a07bf1294a3d74ce383191b735057a63055b9d267c488440e0d24890b2a56e606c972d259ea3511bd40cebe5f06cdf799b192df8d5c77c42ce531
   languageName: node
   linkType: hard
 
@@ -9389,7 +9389,7 @@ __metadata:
     "@radix-ui/react-dropdown-menu": 2.1.14
     "@storybook/addon-essentials": ^8.5.2
     "@storybook/addon-interactions": ^8.5.2
-    "@storybook/addon-onboarding": ^8.5.2
+    "@storybook/addon-onboarding": ^9.1.5
     "@storybook/addon-themes": ^8.5.2
     "@storybook/addon-webpack5-compiler-swc": ^3.0.0
     "@storybook/blocks": ^8.5.2
