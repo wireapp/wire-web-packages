@@ -17,6 +17,8 @@
  *
  */
 
+import {StatusCodes as StatusCode} from 'http-status-codes';
+
 import {
   IdentifierExistsError,
   InvalidCredentialsError,
@@ -31,7 +33,7 @@ import {ConversationIsUnknownError, ConversationOperationError} from '../convers
 import {InvalidInvitationCodeError, InviteEmailInUseError, ServiceNotFoundError} from '../team/';
 import {UnconnectedUserError, UserIsUnknownError} from '../user/';
 
-import {BackendError, BackendErrorLabel, StatusCode} from './';
+import {BackendError, BackendErrorLabel} from './';
 
 type BackendErrorWithLabel = BackendError & {label: BackendErrorLabel};
 type ErrorBuilder = (e: BackendErrorWithLabel) => BackendError;
@@ -145,7 +147,7 @@ export class BackendErrorMapper {
     }
   }
 
-  public static mapBackendError(error: BackendError): BackendError {
+  public static map(error: BackendError): BackendError {
     const code = Number(error.code) as StatusCode;
     const label = error.label as BackendErrorLabel;
     const message = error.message ?? '';

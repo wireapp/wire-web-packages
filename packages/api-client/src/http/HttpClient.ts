@@ -176,7 +176,7 @@ export class HttpClient extends EventEmitter {
       }
 
       if (HttpClient.isBackendError(error)) {
-        const mappedError = BackendErrorMapper.mapBackendError(
+        const mappedError = BackendErrorMapper.map(
           new BackendError(error.response.data.message, error.response.data.label, error.response.data.code),
         );
 

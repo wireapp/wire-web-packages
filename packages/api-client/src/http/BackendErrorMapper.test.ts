@@ -39,7 +39,7 @@ describe('BackendErrorMapper', () => {
         BackendErrorLabel.INVALID_CREDENTIALS,
         StatusCode.FORBIDDEN,
       );
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(InvalidTokenError);
     });
 
@@ -49,19 +49,19 @@ describe('BackendErrorMapper', () => {
         BackendErrorLabel.INVALID_CREDENTIALS,
         StatusCode.FORBIDDEN,
       );
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(InvalidCredentialsError);
     });
 
     it('maps "Token expired" to TokenExpiredError', () => {
       const error = new BackendError('Token expired', BackendErrorLabel.INVALID_CREDENTIALS, StatusCode.FORBIDDEN);
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(TokenExpiredError);
     });
 
     it('maps "Missing cookie" to MissingCookieError', () => {
       const error = new BackendError('Missing cookie', BackendErrorLabel.INVALID_CREDENTIALS, StatusCode.FORBIDDEN);
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(MissingCookieError);
     });
 
@@ -71,7 +71,7 @@ describe('BackendErrorMapper', () => {
         BackendErrorLabel.CLIENT_ERROR,
         StatusCode.BAD_REQUEST,
       );
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(ConversationIsUnknownError);
     });
 
@@ -81,13 +81,13 @@ describe('BackendErrorMapper', () => {
         BackendErrorLabel.CLIENT_ERROR,
         StatusCode.BAD_REQUEST,
       );
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(UserIsUnknownError);
     });
 
     it('maps suspended account to SuspendedAccountError', () => {
       const error = new BackendError('Account suspended.', BackendErrorLabel.SUSPENDED_ACCOUNT, StatusCode.FORBIDDEN);
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBeInstanceOf(SuspendedAccountError);
     });
   });
@@ -95,14 +95,14 @@ describe('BackendErrorMapper', () => {
   describe('Fallback behavior', () => {
     it('falls back to default handler when message variant is unknown', () => {
       const error = new BackendError('unknown message', BackendErrorLabel.INVALID_CREDENTIALS, StatusCode.FORBIDDEN);
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).not.toBe(error);
       expect(mapped).toBeInstanceOf(BackendError);
       expect(mapped.message).toBe('Authentication failed because the token is invalid.');
     });
     it('returns original error when no handler exists for code and label', () => {
       const error = new BackendError('unknown message', BackendErrorLabel.CLIENT_ERROR, StatusCode.UNAUTHORIZED);
-      const mapped = BackendErrorMapper.mapBackendError(error);
+      const mapped = BackendErrorMapper.map(error);
       expect(mapped).toBe(error);
     });
   });
