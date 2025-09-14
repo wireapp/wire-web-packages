@@ -13794,21 +13794,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-no-unsanitized@npm:4.1.4":
+"eslint-plugin-no-unsanitized@npm:4.1.4, eslint-plugin-no-unsanitized@npm:^4.0.1":
   version: 4.1.4
   resolution: "eslint-plugin-no-unsanitized@npm:4.1.4"
   peerDependencies:
     eslint: ^8 || ^9
   checksum: e6faca1eda01f0f6b9ceff2d9f10075c991f8b6146254527bf572073eee54402e74c8a5ce2ba3912c497df78fbab9e9e93b84bb19c82c2c28f609d435eb1dbcf
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-no-unsanitized@npm:^4.0.1":
-  version: 4.1.2
-  resolution: "eslint-plugin-no-unsanitized@npm:4.1.2"
-  peerDependencies:
-    eslint: ^8 || ^9
-  checksum: 6580f64f808b75b29a6f6bb2ae157079dbe5775fe1cbc24a3c71537f94fb465efc76f91e2d16ff729b9acd6a78a6030194464fa09930beb8fe2b7b235d136d3d
   languageName: node
   linkType: hard
 
