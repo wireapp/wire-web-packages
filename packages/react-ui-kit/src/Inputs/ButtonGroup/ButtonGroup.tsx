@@ -17,7 +17,7 @@
  *
  */
 
-import {forwardRef, ReactNode} from 'react';
+import {ButtonHTMLAttributes, forwardRef, ReactNode} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
@@ -74,10 +74,9 @@ const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (
   }),
 });
 
-interface GroupButtonProps {
-  children?: ReactNode;
+type GroupButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   icon?: ReactNode;
-}
+};
 
 interface ButtonGroupProps {
   children: ReactNode;
