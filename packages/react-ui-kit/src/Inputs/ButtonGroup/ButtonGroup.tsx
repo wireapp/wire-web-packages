@@ -74,7 +74,7 @@ const buttonStyle: <T>(theme: Theme, props: IconButtonProps<T>) => CSSObject = (
   }),
 });
 
-type GroupButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type GroupedButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   icon?: ReactNode;
 };
 
@@ -87,7 +87,7 @@ const ButtonGroup = ({children}: ButtonGroupProps) => (
   </div>
 );
 
-const Button = forwardRef<HTMLButtonElement, GroupButtonProps>(({children, icon, ...props}, ref) => {
+const Button = forwardRef<HTMLButtonElement, GroupedButtonProps>(({children, icon, ...props}, ref) => {
   return (
     <button ref={ref} css={(theme: Theme) => buttonStyle(theme, props)} {...props}>
       {icon}
