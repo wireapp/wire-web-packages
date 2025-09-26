@@ -7440,13 +7440,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-webpack5-compiler-swc@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@storybook/addon-webpack5-compiler-swc@npm:3.0.0"
+"@storybook/addon-webpack5-compiler-swc@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@storybook/addon-webpack5-compiler-swc@npm:4.0.1"
   dependencies:
-    "@swc/core": ^1.10.8
+    "@swc/core": ^1.13.5
     swc-loader: ^0.2.6
-  checksum: 4dbf7df5ed5c6c8a6f532c2761839206bdc9d3d4a11c5cf435b4ded44c8bcb57b83cf389dd8c9510e0dc90587d8ef0ba45730daf865ca8b24c58757dcb649f63
+  peerDependencies:
+    storybook: ^9.0.0 || ^10.0.0-0
+  checksum: 8f935e91ce39d8032e9912ff015d2feb66b8682422251bcde5fd90a829834b8c5dbffa88303c73b6eac261987d275a2c69e7e942ac587bb2c17c0cc8374110a3
   languageName: node
   linkType: hard
 
@@ -7852,7 +7854,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.10.8, @swc/core@npm:^1.3.10":
+"@swc/core@npm:^1.13.5, @swc/core@npm:^1.3.10":
   version: 1.13.5
   resolution: "@swc/core@npm:1.13.5"
   dependencies:
@@ -9794,7 +9796,7 @@ __metadata:
     "@storybook/addon-interactions": ^8.5.2
     "@storybook/addon-onboarding": ^8.5.2
     "@storybook/addon-themes": ^8.5.2
-    "@storybook/addon-webpack5-compiler-swc": ^3.0.0
+    "@storybook/addon-webpack5-compiler-swc": ^4.0.1
     "@storybook/blocks": ^8.5.2
     "@storybook/react": ^9.1.0
     "@storybook/react-webpack5": ^8.5.2
