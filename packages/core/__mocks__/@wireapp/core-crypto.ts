@@ -78,7 +78,6 @@ export function version() {
   return '1.0.0';
 }
 
-// Minimal class mocks used by tests
 class ByteContainer {
   protected readonly bytes: Uint8Array;
   constructor(bytes: Uint8Array) {
