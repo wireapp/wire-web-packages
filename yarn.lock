@@ -7916,17 +7916,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react-dom-shim@npm:9.1.8":
-  version: 9.1.8
-  resolution: "@storybook/react-dom-shim@npm:9.1.8"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-    storybook: ^9.1.8
-  checksum: cf87045b662c2742b8960453bed82d419720471b0a71766330eac55a89a2058efb0473e6e34e4a021604ab74e2bc110b1bd8cefce07ba4aa9a0cc5fcf4b914ea
-  languageName: node
-  linkType: hard
-
 "@storybook/react-webpack5@npm:^9.1.8":
   version: 9.1.8
   resolution: "@storybook/react-webpack5@npm:9.1.8"
@@ -7946,25 +7935,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react@npm:9.1.8":
-  version: 9.1.8
-  resolution: "@storybook/react@npm:9.1.8"
-  dependencies:
-    "@storybook/global": ^5.0.0
-    "@storybook/react-dom-shim": 9.1.8
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-    storybook: ^9.1.8
-    typescript: ">= 4.9.x"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 1d94f65ab7040a440e73e8fad1ce3d8ed49049ba26a4c6d505934cdc930465861e70ad9cc0146ed63aa2bed6c5cc2bbe8833c8d6e0de2d8ac6419221d5f9db66
-  languageName: node
-  linkType: hard
-
-"@storybook/react@npm:^9.1.0":
+"@storybook/react@npm:9.1.8, @storybook/react@npm:^9.1.0":
   version: 9.1.8
   resolution: "@storybook/react@npm:9.1.8"
   dependencies:
@@ -9807,10 +9778,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/core-crypto@npm:7.0.2":
-  version: 7.0.2
-  resolution: "@wireapp/core-crypto@npm:7.0.2"
-  checksum: 0178b5a6f23df03e8a87ae6c7f6d7cee691b6a133328ec5de776b442bac84178bd520e646b2f10b3903b54507dc99f18267980bcd602537e61349fb5abce4b21
+"@wireapp/core-crypto@npm:9.0.1":
+  version: 9.0.1
+  resolution: "@wireapp/core-crypto@npm:9.0.1"
+  checksum: 09a62e205d58de5d6b4eb0e77df373c903cf3d11e59be3c99e72e0615aa12a717a6c0031120f3969f9d41bfe639af39feb3c11283e25cad7d24bc2a785447fba
   languageName: node
   linkType: hard
 
@@ -9827,7 +9798,7 @@ __metadata:
     "@types/uuid": 9.0.8
     "@wireapp/api-client": "workspace:^"
     "@wireapp/commons": "workspace:^"
-    "@wireapp/core-crypto": 7.0.2
+    "@wireapp/core-crypto": 9.0.1
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"
