@@ -3,4 +3,4 @@
     update_type: 'semver:minor'
 - match:
     dependency_type: development
-    update_type: 'semver:major'
+    update_type: 'semver:minor'
