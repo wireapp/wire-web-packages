@@ -31,6 +31,7 @@ import {randomUUID} from 'crypto';
 import {APIClient} from '@wireapp/api-client';
 import {
   Ciphersuite,
+  ClientId,
   ConversationId,
   CoreCrypto,
   CoreCryptoContext,
@@ -364,7 +365,7 @@ describe('MLSService', () => {
       await mlsService.initClient(mockUserId, mockClient, config);
 
       expect(transactionContext.mlsInit).toHaveBeenCalledWith(
-        expect.any(Uint8Array),
+        expect.any(ClientId),
         [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
         100,
       );
@@ -392,7 +393,7 @@ describe('MLSService', () => {
       await mlsService.initClient(mockUserId, mockClient, config);
 
       expect(transactionContext.mlsInit).toHaveBeenCalledWith(
-        expect.any(Uint8Array),
+        expect.any(ClientId),
         [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
         config.nbKeyPackages,
       );
@@ -424,7 +425,7 @@ describe('MLSService', () => {
       await mlsService.initClient(mockUserId, mockClient, config);
 
       expect(transactionContext.mlsInit).toHaveBeenCalledWith(
-        expect.any(Uint8Array),
+        expect.any(ClientId),
         [Ciphersuite.MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519],
         100,
       );
