@@ -18,8 +18,13 @@
  */
 
 import type {ClaimedKeyPackages, MLSPublicKeyRecord, RegisteredClient} from '@wireapp/api-client/lib/client';
-import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+import {
+  MLSInvalidLeafNodeIndexError,
+  MLSInvalidLeafNodeSignatureError,
+  SUBCONVERSATION_ID,
+} from '@wireapp/api-client/lib/conversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
+import {BackendError, BackendErrorMapper, HttpClient} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Converter, Decoder, Encoder} from 'bazinga64';
 
@@ -40,6 +45,7 @@ import {
   NewCrlDistributionPoints,
   Welcome,
   ExternalSenderKey,
+  isMlsMessageRejectedError,
 } from '@wireapp/core-crypto';
 
 import {ClientMLSError, ClientMLSErrorLabel} from './ClientMLSError';
@@ -94,7 +100,7 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 };
 
 const defaultConfig = {
-  keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, //30 days
+  keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, // 30 days
   nbKeyPackages: 100,
 };
 
@@ -119,6 +125,18 @@ export class MLSService extends TypedEventEmitter<Events> {
   private _config?: MLSConfig;
   private readonly textEncoder = new TextEncoder();
   private readonly textDecoder = new TextDecoder();
+
+  public static UPLOAD_COMMIT_BUNDLE_ABORT_REASONS = {
+    BROKEN_MLS_CONVERSATION: 'BROKEN_MLS_CONVERSATION',
+    OTHER: 'OTHER',
+  };
+
+  public static isBrokenMLSConversationError(error: unknown) {
+    return (
+      isMlsMessageRejectedError(error) &&
+      error.context.context.reason === MLSService.UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.BROKEN_MLS_CONVERSATION
+    );
+  }
 
   constructor(
     private readonly apiClient: APIClient,
@@ -262,8 +280,22 @@ export class MLSService extends TypedEventEmitter<Events> {
       return 'success';
     } catch (error) {
       this.logger.error(`Failed to upload commit bundle`, error);
+      if (HttpClient.isBackendError(error)) {
+        const mappedError = BackendErrorMapper.map(
+          new BackendError(error.response.data.message, error.response.data.label, error.response.data.code),
+        );
+
+        if (
+          mappedError instanceof MLSInvalidLeafNodeSignatureError ||
+          mappedError instanceof MLSInvalidLeafNodeIndexError
+        ) {
+          return {
+            abort: {reason: MLSService.UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.BROKEN_MLS_CONVERSATION},
+          };
+        }
+      }
       return {
-        abort: {reason: error instanceof Error ? error.message : 'unknown error'},
+        abort: {reason: error instanceof Error ? error.message : MLSService.UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.OTHER},
       };
     }
   };
@@ -392,6 +424,7 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async joinByExternalCommit(getGroupInfo: () => Promise<Uint8Array>) {
+    this.logger.info('Trying to join MLS group via external commit');
     const credentialType = await this.getCredentialType();
 
     const groupInfo = await getGroupInfo();
@@ -906,18 +939,31 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param groupId groupId of the conversation
    */
-  public async commitPendingProposals(groupId: string, shouldRetry = true): Promise<void> {
+  public async commitPendingProposals(groupId: string, shouldRetry = true, params?: any): Promise<void> {
+    this.logger.info(`Committing pending proposals for groupId ${groupId}`, {shouldRetry, params});
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     try {
       await this.coreCryptoClient.transaction(cx => cx.commitPendingProposals(new ConversationId(groupIdBytes)));
       await this.cancelPendingProposalsTask(groupId);
     } catch (error) {
+      if (isMlsMessageRejectedError(error)) {
+        this.logger.warn('Failed to commit proposals, conversation is broken, letting the error bubble up', {
+          error,
+          groupId,
+        });
+        throw error;
+      }
+
       if (!shouldRetry) {
         throw error;
       }
 
-      this.logger.warn('Failed to commit proposals, clearing the pending commit and retrying', error);
+      this.logger.warn('Failed to commit proposals, clearing the pending commit and retrying', {
+        error,
+        groupId,
+        shouldRetry,
+      });
 
       return this.commitPendingProposals(groupId, false);
     }
