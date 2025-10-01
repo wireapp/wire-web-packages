@@ -500,8 +500,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
           }),
         );
       }
-    } finally {
-      return await this.getConversation(conversationId);
+
+      throw error;
     }
   }
 
