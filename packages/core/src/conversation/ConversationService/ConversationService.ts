@@ -554,8 +554,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     this.logger.info(
       `Re-establishing the conversation by re-adding all members (conversation_id: ${conversationId.id})`,
     );
-    const clientId = this.apiClient.validatedClientId;
-    const {userId, domain} = this.apiClient;
+    const {validatedClientId: clientId, userId, domain} = this.apiClient;
 
     if (!userId || !domain) {
       const errorMessage = 'Could not find userId or domain of the self user';
