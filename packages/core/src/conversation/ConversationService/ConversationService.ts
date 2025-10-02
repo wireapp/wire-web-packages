@@ -314,10 +314,15 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * - output: the value returned by the callback
    * - error: throws if reset fails or new group id is missing
    */
-  private async handleBrokenMLSConversation<T = void>(
+  private async handleBrokenMLSConversation<T>(
+    conversationId: QualifiedId,
+    afterReset: (newGroupId: string) => Promise<T>,
+  ): Promise<T>;
+  private async handleBrokenMLSConversation(conversationId: QualifiedId): Promise<undefined>;
+  private async handleBrokenMLSConversation<T>(
     conversationId: QualifiedId,
     afterReset?: (newGroupId: string) => Promise<T>,
-  ): Promise<T> {
+  ): Promise<T | undefined> {
     const {
       conversation: {group_id: newGroupId},
     } = await this.resetMLSConversation(conversationId);
@@ -329,7 +334,8 @@ export class ConversationService extends TypedEventEmitter<Events> {
     if (afterReset) {
       return afterReset(newGroupId);
     }
-    return undefined as unknown as T;
+
+    return undefined;
   }
 
   /**
