@@ -524,9 +524,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
           this.logger.warn("Tried to join MLS conversation but it's still broken after reset", error);
           throw error;
         }
-        return this.handleBrokenMLSConversation(conversationId, (_newGroupId: string) =>
-          this.joinByExternalCommit(conversationId, false),
-        );
+        return this.handleBrokenMLSConversation(conversationId);
       }
       throw error;
     }
