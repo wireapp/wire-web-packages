@@ -130,7 +130,14 @@ export class AssetAPI {
   ): RequestCancelable<AssetUploadData> {
     const BOUNDARY = `Frontier${unsafeAlphanumeric()}`;
 
-    const metadataObject: Record<string, any> = {
+    const metadataObject: {
+      public: boolean;
+      retention: AssetRetentionPolicy;
+      domain?: string;
+      convId?: QualifiedConversationId;
+      filename?: string;
+      filetype?: string;
+    } = {
       public: options?.public ?? true,
       retention: options?.retention || AssetRetentionPolicy.PERSISTENT,
       domain: options?.domain,
