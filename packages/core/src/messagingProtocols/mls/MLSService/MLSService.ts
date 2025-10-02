@@ -100,7 +100,7 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 };
 
 const defaultConfig = {
-  keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, // 30 days
+  keyingMaterialUpdateThreshold: TimeUtil.TimeInMillis.DAY * 30,
   nbKeyPackages: 100,
 };
 
