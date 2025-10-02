@@ -572,10 +572,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
     this.logger.info(`MLS conversation new group ID fetched from backend ${conversationId.id}`, {
       newGroupId,
     });
-    if (!newGroupId || !selfUserQualifiedId || !clientId) {
-      throw new Error(
-        `Failed to recover MLS conversation: missing groupId (${newGroupId}), selfUserQualifiedId (${selfUserQualifiedId}), or clientId (${clientId})`,
-      );
+
+    if (!newGroupId || !clientId) {
+      throw new Error(`Failed to recover MLS conversation: missing groupId (${newGroupId}), or clientId (${clientId})`);
     }
 
     const usersToReAdd = members.others.map(member => member.qualified_id).filter(userId => !!userId);
