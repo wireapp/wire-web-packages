@@ -947,15 +947,15 @@ export class MLSService extends TypedEventEmitter<Events> {
       await this.coreCryptoClient.transaction(cx => cx.commitPendingProposals(new ConversationId(groupIdBytes)));
       await this.cancelPendingProposalsTask(groupId);
     } catch (error) {
+      if (!shouldRetry) {
+        throw error;
+      }
+
       if (isMlsMessageRejectedError(error)) {
         this.logger.warn('Failed to commit proposals, conversation is broken, letting the error bubble up', {
           error,
           groupId,
         });
-        throw error;
-      }
-
-      if (!shouldRetry) {
         throw error;
       }
 
