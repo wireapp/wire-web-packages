@@ -550,7 +550,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       groupId,
     });
 
-    // STEP 3: Re-establish the conversation by re-adding all members
+    // STEP 3: fetch self user info
     this.logger.info(
       `Re-establishing the conversation by re-adding all members (conversation_id: ${conversationId.id})`,
     );
