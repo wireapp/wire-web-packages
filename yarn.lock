@@ -859,7 +859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.23.9, @babel/core@npm:^7.27.4":
+"@babel/core@npm:^7.23.9, @babel/core@npm:^7.24.4, @babel/core@npm:^7.27.4":
   version: 7.28.4
   resolution: "@babel/core@npm:7.28.4"
   dependencies:
@@ -1410,7 +1410,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.23.9, @babel/parser@npm:^7.28.3, @babel/parser@npm:^7.28.4":
+"@babel/parser@npm:^7.23.9, @babel/parser@npm:^7.24.4, @babel/parser@npm:^7.28.3, @babel/parser@npm:^7.28.4":
   version: 7.28.4
   resolution: "@babel/parser@npm:7.28.4"
   dependencies:
@@ -9702,7 +9702,7 @@ __metadata:
     eslint-plugin-no-unsanitized: ^4.0.1
     eslint-plugin-prettier: ^5
     eslint-plugin-react: ^7.31.10
-    eslint-plugin-react-hooks: ^5.0.0
+    eslint-plugin-react-hooks: ^6.1.1
     eslint-plugin-simple-import-sort: ^12.0.0
     eslint-plugin-testing-library: ^7.0.0
     eslint-plugin-unused-imports: ^4
@@ -14268,12 +14268,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:5.2.0, eslint-plugin-react-hooks@npm:^5.0.0":
-  version: 5.2.0
-  resolution: "eslint-plugin-react-hooks@npm:5.2.0"
+"eslint-plugin-react-hooks@npm:6.1.1, eslint-plugin-react-hooks@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "eslint-plugin-react-hooks@npm:6.1.1"
+  dependencies:
+    "@babel/core": ^7.24.4
+    "@babel/parser": ^7.24.4
+    zod: ^3.22.4 || ^4.0.0
+    zod-validation-error: ^3.0.3 || ^4.0.0
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
-  checksum: 5920736a78c0075488e7e30e04fbe5dba5b6b5a6c8c4b5742fdae6f9b8adf4ee387bc45dc6e03b4012865e6fd39d134da7b83a40f57c90cc9eecf80692824e3a
+  checksum: 9bcef231fa5b95bb3b9b7720c4b437316894997e097b1c2f8a97b726f71102dcfe986e71147b86e971f1916aa4a977e941e37899ec288f659d68cbfc59409721
   languageName: node
   linkType: hard
 
@@ -22146,7 +22151,7 @@ __metadata:
     eslint-plugin-no-unsanitized: 4.1.4
     eslint-plugin-prettier: ^5
     eslint-plugin-react: 7.37.5
-    eslint-plugin-react-hooks: 5.2.0
+    eslint-plugin-react-hooks: 6.1.1
     eslint-plugin-simple-import-sort: 12.1.1
     eslint-plugin-testing-library: ^7.0.0
     eslint-plugin-unused-imports: ^4.1.3
@@ -25978,9 +25983,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"zod-validation-error@npm:^3.0.3 || ^4.0.0":
+  version: 4.0.2
+  resolution: "zod-validation-error@npm:4.0.2"
+  peerDependencies:
+    zod: ^3.25.0 || ^4.0.0
+  checksum: f16ccbc08c5345f28788beea814d82e1f047978414f1511bd97a171580d7dbe63cecc368caa352c1391e201539288c241d61145e57c6b84cb19112dc88a72098
+  languageName: node
+  linkType: hard
+
 "zod@npm:3.24.2":
   version: 3.24.2
   resolution: "zod@npm:3.24.2"
   checksum: c02455c09678c5055c636d64f9fcda2424fea0aa46ac7d9681e7f41990bc55f488bcd84b9d7cfef0f6e906f51f55b245239d92a9f726248aa74c5b84edf00c2d
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4 || ^4.0.0":
+  version: 4.1.11
+  resolution: "zod@npm:4.1.11"
+  checksum: 022d59f85ebe054835fbcdc96a93c01479a64321104f846cb5644812c91e00d17ae3479f823956ec9b04e4351dd32841e1f12c567e81bc43f6e21ef5cc02ce3c
   languageName: node
   linkType: hard
