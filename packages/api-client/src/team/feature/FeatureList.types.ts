@@ -17,9 +17,9 @@
  *
  */
 
-import {
-  FeatureAllowedGlobalOperations,
+import type {
   FeatureAppLock,
+  FeatureAllowedGlobalOperations,
   FeatureChannels,
   FeatureClassifiedDomains,
   FeatureConferenceCalling,
@@ -35,11 +35,14 @@ import {
   FeatureSelfDeletingMessages,
   FeatureSndFactorPassword,
   FeatureVideoCalling,
-  FeatureWithoutConfig,
-} from './Feature';
+  FeatureConversationGuestLink,
+  FeatureCells,
+} from './FeatureList.schema';
 
-import {FeatureConversationGuestLink} from '.';
-
+/**
+ * FEATURE_KEY enum defines the canonical keys for all Wire feature flags.
+ * These keys match the camelCase property names returned by the Wire backend API.
+ */
 export enum FEATURE_KEY {
   APPLOCK = 'appLock',
   ALLOWED_GLOBAL_OPERATIONS = 'allowedGlobalOperations',
@@ -65,6 +68,44 @@ export enum FEATURE_KEY {
   CELLS = 'cells',
 }
 
+export enum FeatureStatus {
+  DISABLED = 'disabled',
+  ENABLED = 'enabled',
+}
+
+export enum FeatureLockStatus {
+  LOCKED = 'locked',
+  UNLOCKED = 'unlocked',
+}
+
+export enum AccessType {
+  TEAM_MEMBERS = 'team-members',
+  EVERYONE = 'everyone',
+  ADMINS = 'admins',
+}
+
+export enum SelfDeletingTimeout {
+  OFF = 0,
+  SECONDS_10 = 10,
+  MINUTES_5 = 300,
+  HOURS_1 = 3_600,
+  DAYS_1 = 86_400,
+  WEEKS_1 = 604_800,
+  WEEKS_4 = 2_419_200,
+}
+
+/**
+ * FeatureList represents the response from the Wire backend feature flags API.
+ *
+ * IMPORTANT: This type uses types derived from Zod schemas in FeatureList.schema.ts.
+ * The Zod schema is the single source of truth for structure and validation.
+ *
+ * When adding a new feature flag:
+ * 1. Add the key to the FEATURE_KEY enum above
+ * 2. Add the Zod schema in FeatureList.schema.ts
+ * 3. Export the z.infer<> type from FeatureList.schema.ts
+ * 4. Import and use it here
+ */
 export type FeatureList = {
   [FEATURE_KEY.APPLOCK]?: FeatureAppLock;
   [FEATURE_KEY.ALLOWED_GLOBAL_OPERATIONS]?: FeatureAllowedGlobalOperations;
@@ -77,15 +118,17 @@ export type FeatureList = {
   [FEATURE_KEY.CONVERSATION_GUEST_LINKS]?: FeatureConversationGuestLink;
   [FEATURE_KEY.FILE_SHARING]?: FeatureFileSharing;
   [FEATURE_KEY.LEGALHOLD]?: FeatureLegalhold;
-  [FEATURE_KEY.SEARCH_VISIBILITY]?: FeatureWithoutConfig;
+  [FEATURE_KEY.SEARCH_VISIBILITY]?: FeatureDigitalSignature; // Uses FeatureWithoutConfig
   [FEATURE_KEY.SELF_DELETING_MESSAGES]?: FeatureSelfDeletingMessages;
   [FEATURE_KEY.SND_FACTOR_PASSWORD]?: FeatureSndFactorPassword;
-  [FEATURE_KEY.SSO]?: FeatureWithoutConfig;
+  [FEATURE_KEY.SSO]?: FeatureDigitalSignature; // Uses FeatureWithoutConfig
   [FEATURE_KEY.MLS]?: FeatureMLS;
   [FEATURE_KEY.MLSE2EID]?: FeatureMLSE2EId;
   [FEATURE_KEY.MLS_MIGRATION]?: FeatureMLSMigration;
-  [FEATURE_KEY.VALIDATE_SAML_EMAILS]?: FeatureWithoutConfig;
+  [FEATURE_KEY.VALIDATE_SAML_EMAILS]?: FeatureDigitalSignature; // Uses FeatureWithoutConfig
   [FEATURE_KEY.VIDEO_CALLING]?: FeatureVideoCalling;
   [FEATURE_KEY.CHANNELS]?: FeatureChannels;
-  [FEATURE_KEY.CELLS]?: FeatureWithoutConfig;
+  [FEATURE_KEY.CELLS]?: FeatureCells;
+  // Allow additional unknown features from newer API versions (matches Zod schema .passthrough())
+  [key: string]: unknown;
 };
