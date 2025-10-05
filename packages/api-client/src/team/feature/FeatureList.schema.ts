@@ -158,26 +158,35 @@ export const allFeaturesResponseSchema = z
   .object({
     [FEATURE_KEY.APPLOCK]: appLockFeatureSchema,
     [FEATURE_KEY.ALLOWED_GLOBAL_OPERATIONS]: allowedGlobalOperationsFeatureSchema,
+    [FEATURE_KEY.APPS]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.ASSET_AUDIT_LOG]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.CELLS]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.CHANNELS]: channelsFeatureSchema,
+    [FEATURE_KEY.CHAT_BUBBLES]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.CLASSIFIED_DOMAINS]: classifiedDomainsFeatureSchema,
     [FEATURE_KEY.CONFERENCE_CALLING]: conferenceCallingFeatureSchema,
+    [FEATURE_KEY.CONSUMABLE_NOTIFICATIONS]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.CONVERSATION_GUEST_LINKS]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.DIGITAL_SIGNATURES]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.DOMAIN_REGISTRATION]: baseFeatureWithoutConfigSchema.optional(),
-    [FEATURE_KEY.CONSUMABLE_NOTIFICATIONS]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.ENFORCE_DOWNLOAD_PATH]: enforceFileDownloadLocationFeatureSchema,
-    [FEATURE_KEY.CONVERSATION_GUEST_LINKS]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.EXPOSE_INVITATION_URLS_TO_TEAM_ADMIN]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.FILE_SHARING]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.LEGALHOLD]: baseFeatureWithoutConfigSchema.optional(),
-    [FEATURE_KEY.SEARCH_VISIBILITY]: baseFeatureWithoutConfigSchema.optional(),
-    [FEATURE_KEY.SELF_DELETING_MESSAGES]: selfDeletingMessagesFeatureSchema,
-    [FEATURE_KEY.SND_FACTOR_PASSWORD]: baseFeatureWithoutConfigSchema.optional(),
-    [FEATURE_KEY.SSO]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.LIMITED_EVENT_FANOUT]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.MLS]: mlsFeatureSchema,
     [FEATURE_KEY.MLSE2EID]: mlsE2EIdFeatureSchema,
     [FEATURE_KEY.MLS_MIGRATION]: mlsMigrationFeatureSchema,
+    [FEATURE_KEY.OUTLOOK_CAL_INTEGRATION]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.SEARCH_VISIBILITY]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.SEARCH_VISIBILITY_INBOUND]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.SELF_DELETING_MESSAGES]: selfDeletingMessagesFeatureSchema,
+    [FEATURE_KEY.SIMPLIFIED_USER_CONNECTION_REQUEST_QR_CODE]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.SND_FACTOR_PASSWORD]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.SSO]: baseFeatureWithoutConfigSchema.optional(),
+    [FEATURE_KEY.STEALTH_USERS]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.VALIDATE_SAML_EMAILS]: baseFeatureWithoutConfigSchema.optional(),
     [FEATURE_KEY.VIDEO_CALLING]: baseFeatureWithoutConfigSchema.optional(),
-    [FEATURE_KEY.CHANNELS]: channelsFeatureSchema,
-    [FEATURE_KEY.CELLS]: baseFeatureWithoutConfigSchema.optional(),
   })
   .passthrough(); // Allow unknown features from newer backend versions
 
@@ -208,15 +217,24 @@ export type FeatureMLSMigration = z.infer<typeof mlsMigrationFeatureSchema>;
 export type FeatureWithoutConfig = z.infer<typeof baseFeatureWithoutConfigSchema>;
 
 // Additional feature types that use baseFeatureWithoutConfigSchema
-export type FeatureDigitalSignature = FeatureWithoutConfig;
-export type FeatureDomainRegistration = FeatureWithoutConfig;
+export type FeatureApps = FeatureWithoutConfig;
+export type FeatureAssetAuditLog = FeatureWithoutConfig;
+export type FeatureCells = FeatureWithoutConfig;
+export type FeatureChatBubbles = FeatureWithoutConfig;
 export type FeatureConsumableNotifications = FeatureWithoutConfig;
 export type FeatureConversationGuestLink = FeatureWithoutConfig;
+export type FeatureDigitalSignature = FeatureWithoutConfig;
+export type FeatureDomainRegistration = FeatureWithoutConfig;
+export type FeatureExposeInvitationURLsToTeamAdmin = FeatureWithoutConfig;
 export type FeatureFileSharing = FeatureWithoutConfig;
 export type FeatureLegalhold = FeatureWithoutConfig;
+export type FeatureLimitedEventFanout = FeatureWithoutConfig;
+export type FeatureOutlookCalIntegration = FeatureWithoutConfig;
 export type FeatureSearchVisibility = FeatureWithoutConfig;
+export type FeatureSearchVisibilityInbound = FeatureWithoutConfig;
+export type FeatureSimplifiedUserConnectionRequestQRCode = FeatureWithoutConfig;
 export type FeatureSndFactorPassword = FeatureWithoutConfig;
 export type FeatureSSO = FeatureWithoutConfig;
+export type FeatureStealthUsers = FeatureWithoutConfig;
 export type FeatureValidateSAMLEmails = FeatureWithoutConfig;
 export type FeatureVideoCalling = FeatureWithoutConfig;
-export type FeatureCells = FeatureWithoutConfig;
