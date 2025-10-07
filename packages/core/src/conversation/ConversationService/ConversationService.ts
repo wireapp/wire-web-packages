@@ -819,30 +819,36 @@ export class ConversationService extends TypedEventEmitter<Events> {
     selfUserId: QualifiedId;
     qualifiedUsers: QualifiedId[];
   }): Promise<void> {
-    const wasGroupEstablishedBySelfClient = await this.mlsService.tryEstablishingMLSGroup(groupId);
+    try {
+      const wasGroupEstablishedBySelfClient = await this.mlsService.tryEstablishingMLSGroup(groupId);
 
-    if (!wasGroupEstablishedBySelfClient) {
-      this.logger.debug('Group was not established by self client, skipping adding users to the group.');
-      return;
-    }
+      if (!wasGroupEstablishedBySelfClient) {
+        this.logger.debug('Group was not established by self client, skipping adding users to the group.');
+        return;
+      }
 
-    this.logger.debug('Group was established by self client, adding other users to the group...');
-    const usersToAdd: KeyPackageClaimUser[] = [
-      ...qualifiedUsers,
-      {...selfUserId, skipOwnClientId: this.apiClient.validatedClientId},
-    ];
+      this.logger.debug('Group was established by self client, adding other users to the group...');
 
-    const {conversation} = await this.addUsersToMLSConversation({
-      conversationId,
-      groupId,
-      qualifiedUsers: usersToAdd,
-    });
+      const usersToAdd: KeyPackageClaimUser[] = [
+        ...qualifiedUsers,
+        {...selfUserId, skipOwnClientId: this.apiClient.validatedClientId},
+      ];
 
-    const addedUsers = conversation.members.others;
-    if (addedUsers.length > 0) {
-      this.logger.debug(`Successfully added ${addedUsers} users to the group.`);
-    } else {
-      this.logger.debug('No other users were added to the group.');
+      const {conversation} = await this.addUsersToMLSConversation({
+        conversationId,
+        groupId,
+        qualifiedUsers: usersToAdd,
+      });
+
+      const addedUsers = conversation.members.others;
+      if (addedUsers.length > 0) {
+        this.logger.debug(`Successfully added ${addedUsers} users to the group.`);
+      } else {
+        this.logger.debug('No other users were added to the group.');
+      }
+    } catch (error) {
+      this.logger.error('Failed to establish MLS group', error);
+      throw error;
     }
   }
 

@@ -46,6 +46,7 @@ import {
   Welcome,
   ExternalSenderKey,
   isMlsMessageRejectedError,
+  GroupInfo,
 } from '@wireapp/core-crypto';
 
 import {ClientMLSError, ClientMLSErrorLabel} from './ClientMLSError';
@@ -424,26 +425,34 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async joinByExternalCommit(getGroupInfo: () => Promise<Uint8Array>) {
-    this.logger.info('Trying to join MLS group via external commit');
-    const credentialType = await this.getCredentialType();
+    try {
+      this.logger.info('Trying to join MLS group via external commit');
+      const credentialType = await this.getCredentialType();
 
-    const groupInfo = await getGroupInfo();
-    const welcomeBundle = await this.coreCryptoClient.transaction(cx =>
-      cx.joinByExternalCommit(new ConversationId(groupInfo), credentialType),
-    );
-    await this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
+      const groupInfo = await getGroupInfo();
 
-    if (welcomeBundle.id) {
-      //after we've successfully joined via external commit, we schedule periodic key material renewal
-      const groupIdStr = Encoder.toBase64(welcomeBundle.id.copyBytes()).asString;
-      const newEpoch = await this.getEpoch(groupIdStr);
+      const welcomeBundle = await this.coreCryptoClient.transaction(cx =>
+        cx.joinByExternalCommit(new GroupInfo(groupInfo), credentialType),
+      );
 
-      // Schedule the next key material renewal
-      await this.scheduleKeyMaterialRenewal(groupIdStr);
+      await this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
 
-      // Notify subscribers about the new epoch
-      this.emit(MLSServiceEvents.NEW_EPOCH, {groupId: groupIdStr, epoch: newEpoch});
-      this.logger.info(`Joined MLS group with id ${groupIdStr} via external commit, new epoch: ${newEpoch}`);
+      this.logger.info('welcome bundle after joining via external commit');
+      if (welcomeBundle.id) {
+        //after we've successfully joined via external commit, we schedule periodic key material renewal
+        const groupIdStr = Encoder.toBase64(welcomeBundle.id.copyBytes()).asString;
+        const newEpoch = await this.getEpoch(groupIdStr);
+
+        // Schedule the next key material renewal
+        await this.scheduleKeyMaterialRenewal(groupIdStr);
+
+        // Notify subscribers about the new epoch
+        this.emit(MLSServiceEvents.NEW_EPOCH, {groupId: groupIdStr, epoch: newEpoch});
+        this.logger.info(`Joined MLS group with id ${groupIdStr} via external commit, new epoch: ${newEpoch}`);
+      }
+    } catch (error) {
+      this.logger.error('Failed to join MLS group via external commit', error);
+      throw error;
     }
   }
 
@@ -659,6 +668,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       await this.registerConversation(groupId, []);
       return true;
     } catch (error) {
+      this.logger.warn("Couldn't establish the MLS group", error);
       // If conversation already existed, locally, nothing more to do, we've received a welcome message.
       if (isCoreCryptoMLSConversationAlreadyExistsError(error)) {
         this.logger.debug(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
