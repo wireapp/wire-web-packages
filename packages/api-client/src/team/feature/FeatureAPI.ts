@@ -18,89 +18,91 @@
  */
 
 import {AxiosRequestConfig} from 'axios';
+import logdown from 'logdown';
 
+import {LogFactory} from '@wireapp/commons';
+
+import {InvalidAppLockTimeoutError} from './FeatureError';
 import {
+  allFeaturesResponseSchema,
+  FeatureAllowedGlobalOperations,
   FeatureAppLock,
-  FeatureVideoCalling,
+  FeatureCells,
+  FeatureChannels,
   FeatureConferenceCalling,
+  FeatureConsumableNotifications,
   FeatureDigitalSignature,
-  FeatureLegalhold,
-  FeatureSSO,
+  FeatureDomainRegistration,
+  FeatureDownloadPath,
   FeatureFileSharing,
-  FeatureSelfDeletingMessages,
-  FeatureSndFactorPassword,
+  FeatureLegalhold,
   FeatureMLS,
   FeatureMLSE2EId,
   FeatureMLSMigration,
-  FeatureDownloadPath,
-  FeatureDomainRegistration,
-  FeatureChannels,
-  FeatureCells,
-  FeatureAllowedGlobalOperations,
-  FeatureConsumableNotifications,
-} from './Feature';
-import {InvalidAppLockTimeoutError} from './FeatureError';
-import {FeatureList} from './FeatureList';
+  FeatureSelfDeletingMessages,
+  FeatureSndFactorPassword,
+  FeatureSSO,
+  FeatureVideoCalling,
+} from './FeatureList.schema';
+import {FeatureList} from './FeatureList.types';
 
 import {BackendError, BackendErrorLabel, HttpClient} from '../../http';
 
 import {FeatureConversationGuestLink, FeatureLockedError} from '.';
 
 export class FeatureAPI {
-  constructor(private readonly client: HttpClient) {}
+  private readonly logger: logdown.Logger;
 
-  public static readonly URL = {
-    APPLOCK: 'appLock',
-    ALLOWED_GLOBAL_OPERATIONS: 'allowedGlobalOperations',
-    CALLING_CONFERENCE: 'conferenceCalling',
-    CALLING_VIDEO: 'videoCalling',
-    CONSUMABLE_NOTIFICATIONS: 'consumableNotifications',
-    SELF_DELETING_MESSAGES: 'selfDeletingMessages',
-    DIGITAL_SIGNATURES: 'digitalSignatures',
-    DOMAIN_REGISTRATION: 'domainRegistration',
-    DL_PATH: 'enforceFileDownloadLocation',
-    CELLS: 'cells',
-    CHANNELS: 'channels',
-    CONVERSATION_GUEST_LINKS: 'conversationGuestLinks',
-    FEATURE_CONFIGS: '/feature-configs',
-    FEATURES: 'features',
-    FILE_SHARING: 'fileSharing',
-    LEGAL_HOLD: 'legalhold',
-    SND_FACTOR_PASSWORD: 'sndFactorPasswordChallenge',
-    SSO: 'sso',
-    MLS: 'mls',
-    MLSE2EID: 'mlsE2EId',
-    MLS_MIGRATION: 'mlsMigration',
-    TEAMS: '/teams',
-  };
-
-  public async getAllFeatures(): Promise<FeatureList> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: FeatureAPI.URL.FEATURE_CONFIGS,
-    };
-
-    const response = await this.client.sendJSON<FeatureList>(config);
-    return response.data;
+  constructor(private readonly client: HttpClient) {
+    this.logger = LogFactory.getLogger('@wireapp/api-client/FeatureAPI');
   }
 
   /**
-   * @deprecated Use `getAllFeatures()` instead. It is teamId agnostic.
+   * Retrieves all feature flags for the current user/team.
+   *
+   * This endpoint is backwards and forwards compatible across Wire backend API versions:
+   * - Validates response structure using Zod but never throws validation errors
+   * - Logs validation errors for debugging/monitoring purposes
+   * - Returns original API response even if validation fails
+   * - Works with older backends (missing features) and newer backends (unknown features)
    */
-  public async getAllTeamFeatures(teamId: string): Promise<FeatureList> {
+  public async getAllFeatures(): Promise<FeatureList> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}`,
+      url: '/feature-configs',
     };
 
     const response = await this.client.sendJSON<FeatureList>(config);
+
+    // Validate response schema without throwing errors (backwards/forwards compatibility)
+    const validationResult = allFeaturesResponseSchema.safeParse(response.data);
+
+    if (!validationResult.success) {
+      const validationErrorDetails = validationResult.error.format();
+
+      this.logger.error(
+        'Feature flags response failed schema validation. ' +
+          'This may indicate an API version mismatch between client and backend. ' +
+          'The response will still be returned to maintain compatibility.',
+        {
+          validationErrors: validationErrorDetails,
+          receivedResponse: response.data,
+        },
+      );
+    }
+
+    // Always return the original response data to ensure compatibility
+    // across different backend API versions. This allows consumers to mutate
+    // the response if needed (e.g., wire-webapp's TeamRepository).
+    // Once all consumers are updated to not mutate the response, we can
+    // return validationResult.data instead for immutability benefits.
     return response.data;
   }
 
   public async getLegalholdFeature(teamId: string): Promise<FeatureLegalhold> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.LEGAL_HOLD}`,
+      url: `/teams/${teamId}/features/legalhold`,
     };
 
     const response = await this.client.sendJSON<FeatureLegalhold>(config);
@@ -110,7 +112,7 @@ export class FeatureAPI {
   public async getConversationGuestLinkFeature(teamId: string): Promise<FeatureConversationGuestLink> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CONVERSATION_GUEST_LINKS}`,
+      url: `/teams/${teamId}/features/conversation_guest_links`,
     };
 
     const response = await this.client.sendJSON<FeatureConversationGuestLink>(config);
@@ -124,7 +126,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: conversationGuestLinkFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CONVERSATION_GUEST_LINKS}`,
+      url: `/teams/${teamId}/features/conversation_guest_links`,
     };
 
     try {
@@ -143,7 +145,7 @@ export class FeatureAPI {
   public async getConferenceCallingFeature(teamId: string): Promise<FeatureConferenceCalling> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_CONFERENCE}`,
+      url: `/teams/${teamId}/features/conferenceCalling`,
     };
 
     const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
@@ -157,7 +159,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: conferenceCallingFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_CONFERENCE}`,
+      url: `/teams/${teamId}/features/conferenceCalling`,
     };
 
     try {
@@ -179,10 +181,10 @@ export class FeatureAPI {
   public async getVideoCallingFeature(teamId: string): Promise<FeatureVideoCalling> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_VIDEO}`,
+      url: `/teams/${teamId}/features/callingVideo`,
     };
 
-    const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
+    const response = await this.client.sendJSON<FeatureVideoCalling>(config);
     return response.data;
   }
 
@@ -196,7 +198,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: videoCallingFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CALLING_VIDEO}`,
+      url: `/teams/${teamId}/features/callingVideo`,
     };
 
     try {
@@ -215,7 +217,7 @@ export class FeatureAPI {
   public async getSelfDeletingMessagesFeature(teamId: string): Promise<FeatureSelfDeletingMessages> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SELF_DELETING_MESSAGES}`,
+      url: `/teams/${teamId}/features/selfDeletingMessages`,
     };
 
     const response = await this.client.sendJSON<FeatureSelfDeletingMessages>(config);
@@ -229,7 +231,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: selfDeleteingMessagesFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SELF_DELETING_MESSAGES}`,
+      url: `/teams/${teamId}/features/selfDeletingMessages`,
     };
 
     try {
@@ -248,7 +250,7 @@ export class FeatureAPI {
   public async getFileSharingFeature(teamId: string): Promise<FeatureFileSharing> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.FILE_SHARING}`,
+      url: `/teams/${teamId}/features/fileSharing`,
     };
 
     const response = await this.client.sendJSON<FeatureFileSharing>(config);
@@ -262,7 +264,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: fileSharingFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.FILE_SHARING}`,
+      url: `/teams/${teamId}/features/fileSharing`,
     };
 
     try {
@@ -281,7 +283,7 @@ export class FeatureAPI {
   public async getSndFactorPasswordFeature(teamId: string): Promise<FeatureSndFactorPassword> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SND_FACTOR_PASSWORD}`,
+      url: `/teams/${teamId}/features/sndFactorPasswordChallenge`,
     };
 
     const response = await this.client.sendJSON<FeatureSndFactorPassword>(config);
@@ -291,7 +293,7 @@ export class FeatureAPI {
   public async getSSOFeature(teamId: string): Promise<FeatureSSO> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.SSO}`,
+      url: `/teams/${teamId}/features/sso`,
     };
 
     const response = await this.client.sendJSON<FeatureSSO>(config);
@@ -301,7 +303,7 @@ export class FeatureAPI {
   public async getMLSFeature(teamId: string): Promise<FeatureMLS> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.MLS}`,
+      url: `/teams/${teamId}/features/mls`,
     };
 
     const response = await this.client.sendJSON<FeatureMLS>(config);
@@ -312,7 +314,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: mlsFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.MLS}`,
+      url: `/teams/${teamId}/features/mls`,
     };
 
     const response = await this.client.sendJSON<FeatureMLS>(config);
@@ -326,7 +328,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: mlsFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.MLSE2EID}`,
+      url: `/teams/${teamId}/features/mlsE2EId`,
     };
 
     const response = await this.client.sendJSON<FeatureMLSE2EId>(config);
@@ -340,7 +342,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: mlsMigrationFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.MLS_MIGRATION}`,
+      url: `/teams/${teamId}/features/mlsMigration`,
     };
 
     const response = await this.client.sendJSON<FeatureMLSMigration>(config);
@@ -350,7 +352,7 @@ export class FeatureAPI {
   public async getDigitalSignatureFeature(teamId: string): Promise<FeatureDigitalSignature> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.DIGITAL_SIGNATURES}`,
+      url: `/teams/${teamId}/features/digitalSignatures`,
     };
 
     const response = await this.client.sendJSON<FeatureDigitalSignature>(config);
@@ -361,7 +363,7 @@ export class FeatureAPI {
   public async getDomainRegistrationFeature(teamId: string): Promise<FeatureDomainRegistration> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.DOMAIN_REGISTRATION}`,
+      url: `/teams/${teamId}/features/domainRegistration`,
     };
 
     const response = await this.client.sendJSON<FeatureDomainRegistration>(config);
@@ -371,7 +373,7 @@ export class FeatureAPI {
   public async getAppLockFeature(teamId: string): Promise<FeatureAppLock> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.APPLOCK}`,
+      url: `/teams/${teamId}/features/appLock`,
     };
 
     const response = await this.client.sendJSON<FeatureAppLock>(config);
@@ -381,7 +383,7 @@ export class FeatureAPI {
   public async getAllowedGlobalOperationsFeature(teamId: string): Promise<FeatureAllowedGlobalOperations> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.ALLOWED_GLOBAL_OPERATIONS}`,
+      url: `/teams/${teamId}/features/allowedGlobalOperations`,
     };
 
     const response = await this.client.sendJSON<FeatureAllowedGlobalOperations>(config);
@@ -391,7 +393,7 @@ export class FeatureAPI {
   public async getConsumableNotificationsFeature(teamId: string): Promise<FeatureConsumableNotifications> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CONSUMABLE_NOTIFICATIONS}`,
+      url: `/teams/${teamId}/features/consumableNotifications`,
     };
 
     const response = await this.client.sendJSON<FeatureConsumableNotifications>(config);
@@ -405,7 +407,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: appLockFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.APPLOCK}`,
+      url: `/teams/${teamId}/features/appLock`,
     };
 
     try {
@@ -430,7 +432,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: dlPathFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.DL_PATH}`,
+      url: `/teams/${teamId}/features/enforceFileDownloadLocation`,
     };
 
     const response = await this.client.sendJSON<FeatureDownloadPath>(config);
@@ -441,7 +443,7 @@ export class FeatureAPI {
     const config: AxiosRequestConfig = {
       data: channelFeature,
       method: 'put',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CHANNELS}`,
+      url: `/teams/${teamId}/features/channels`,
     };
 
     const response = await this.client.sendJSON<FeatureChannels>(config);
@@ -451,7 +453,7 @@ export class FeatureAPI {
   public async getCellsFeature(teamId: string): Promise<FeatureCells> {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${FeatureAPI.URL.TEAMS}/${teamId}/${FeatureAPI.URL.FEATURES}/${FeatureAPI.URL.CELLS}`,
+      url: `/teams/${teamId}/features/cells`,
     };
 
     const response = await this.client.sendJSON<FeatureCells>(config);

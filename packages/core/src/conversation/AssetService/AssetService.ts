@@ -26,11 +26,12 @@ import {EncryptedAsset, EncryptedAssetUploaded} from '../../cryptography';
 import {decryptAsset, encryptAsset} from '../../cryptography/AssetCryptography/AssetCryptography';
 
 export {ProgressCallback};
+
 export type AssetUrlData = {
   assetKey: string;
-  assetToken: string;
   assetDomain: string;
-  forceCaching: boolean;
+  forceCaching?: boolean;
+  assetToken?: string;
 };
 
 export class AssetService {
