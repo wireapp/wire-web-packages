@@ -336,6 +336,7 @@ export class CellsAPI {
     sortDirection,
     type,
     deleted = false,
+    draft = false,
   }: {
     path: string;
     limit?: number;
@@ -344,6 +345,7 @@ export class CellsAPI {
     sortDirection?: SortDirection;
     type?: RestIncomingNode['Type'];
     deleted?: boolean;
+    draft?: boolean;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -358,6 +360,7 @@ export class CellsAPI {
         Type: type || 'UNKNOWN',
         Status: {
           Deleted: deleted ? 'Only' : 'Not',
+          IsDraft: draft,
         },
       },
       SortField: sortBy,
@@ -378,6 +381,7 @@ export class CellsAPI {
     type,
     tags,
     deleted = false,
+    draft = false,
   }: {
     phrase: string;
     limit?: number;
@@ -387,6 +391,7 @@ export class CellsAPI {
     type?: RestIncomingNode['Type'];
     tags?: string[];
     deleted?: boolean;
+    draft?: boolean;
   }): Promise<RestNodeCollection> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
@@ -399,6 +404,7 @@ export class CellsAPI {
         Type: type || 'UNKNOWN',
         Status: {
           Deleted: deleted ? 'Only' : 'Not',
+          IsDraft: draft,
         },
         Metadata: tags?.length ? [{Namespace: USER_META_TAGS_NAMESPACE, Term: this.transformTagsToJson(tags)}] : [],
       },
