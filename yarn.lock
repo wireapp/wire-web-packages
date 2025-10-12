@@ -18270,20 +18270,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:16.2.3":
-  version: 16.2.3
-  resolution: "lint-staged@npm:16.2.3"
+"lint-staged@npm:16.2.4":
+  version: 16.2.4
+  resolution: "lint-staged@npm:16.2.4"
   dependencies:
     commander: ^14.0.1
     listr2: ^9.0.4
     micromatch: ^4.0.8
-    nano-spawn: ^1.0.3
+    nano-spawn: ^2.0.0
     pidtree: ^0.6.0
     string-argv: ^0.3.2
     yaml: ^2.8.1
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 61b2f8c4fa199f7da6516f927115146bbb25c511760b85fc514aadbecec7e2346bddb4317c41145d31357bde29f23abea37b820144c93b32d2b6bae236829108
+  checksum: e09497196df24f3d9c134ea81e2e470f455c461925a6fa9d72fa409278ddb7d6c8506797268df497f3e908629fd275ef171361d8e0d6581efb2a7131bb7c0a26
   languageName: node
   linkType: hard
 
@@ -19179,10 +19179,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nano-spawn@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "nano-spawn@npm:1.0.3"
-  checksum: 5b3ec4b459e9f015bef29c4fd69736567b775d8744faf6ab2b54907043839eaf15caf8e9f3180de06321224c47d8f67a2ba541c83ff2127af0d7353aa13e8ab2
+"nano-spawn@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "nano-spawn@npm:2.0.0"
+  checksum: 48223f6f5b2ab3f7562d0e6e85abb9b9c4ee52f5c096bd50012c0776664ddc63cd2602c9e4dc3d6cd47ae5189e9c71b51afb2d44b2746d8ca80cb52fc8013904
   languageName: node
   linkType: hard
 
@@ -22049,7 +22049,7 @@ __metadata:
     husky: 9.1.7
     jest: ^29.2.1
     jest-environment-jsdom: ^30.0.5
-    lint-staged: 16.2.3
+    lint-staged: 16.2.4
     prettier: 3.3.2
     rimraf: 6.0.1
     tsconfig-paths: 4.2.0
