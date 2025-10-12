@@ -8449,6 +8449,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^24.7.2":
+  version: 24.7.2
+  resolution: "@types/node@npm:24.7.2"
+  dependencies:
+    undici-types: ~7.14.0
+  checksum: dd676a9041e36825e9c6917b34105da0c3f390ee95cca8e050a9efb7d55851dcb48d05f23700eb5540a22a8d4fd3da289b4c07a3888aeb74d3304dcb07b813b0
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:~14":
   version: 14.18.63
   resolution: "@types/node@npm:14.18.63"
@@ -9446,7 +9455,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/axios": ^0.14.0
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     "@types/pako": 2
     "@types/spark-md5": 3.0.5
     "@types/tough-cookie": 4.0.5
@@ -9498,7 +9507,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/jsrsasign": 10.5.15
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     jest: ^29.2.1
     jsrsasign: 11.1.0
     rimraf: 6.0.1
@@ -9696,7 +9705,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     jest: ^29.2.1
     rimraf: 6.0.1
     ts-node: ^10.9.1
@@ -9773,7 +9782,7 @@ __metadata:
     "@testing-library/user-event": 14.6.1
     "@types/color": 3.0.6
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     "@types/react": ^18.0.25
     "@types/react-dom": ^18.0.8
     "@types/webpack-env": 1.18.8
@@ -9810,7 +9819,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     "@types/uuid": 9.0.8
     "@wireapp/store-engine": 5.1.12
     core-js: ^3.36.0
@@ -9835,7 +9844,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/fs-extra": 11.0.4
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     "@wireapp/store-engine": 5.1.12
     fs-extra: 11.3.1
     jest: ^29.2.1
@@ -9854,7 +9863,7 @@ __metadata:
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     jest: ^29.2.1
     rimraf: 6.0.1
     ts-node: 10.9.2
@@ -9875,7 +9884,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/telemetry@workspace:packages/telemetry"
   dependencies:
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     countly-sdk-web: 24.11.4
     rimraf: 6.0.1
     typescript: ^5.0.4
@@ -10975,7 +10984,7 @@ __metadata:
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
     "@types/libsodium-wrappers-sumo": 0.7.8
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     cross-env: 10.1.0
     jest: ^29.2.1
     libsodium-wrappers-sumo: 0.7.15
@@ -22024,7 +22033,7 @@ __metadata:
     "@testing-library/dom": ^10.0.0
     "@types/babel__core": ^7
     "@types/jest": ^29.2.0
-    "@types/node": ^22.0.0
+    "@types/node": ^24.7.2
     "@typescript-eslint/eslint-plugin": 7.17.0
     "@typescript-eslint/parser": 7.17.0
     "@wireapp/eslint-config": "workspace:^"
@@ -24360,6 +24369,13 @@ __metadata:
   version: 6.20.0
   resolution: "undici-types@npm:6.20.0"
   checksum: b7bc50f012dc6afbcce56c9fd62d7e86b20a62ff21f12b7b5cbf1973b9578d90f22a9c7fe50e638e96905d33893bf2f9f16d98929c4673c2480de05c6c96ea8b
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.14.0":
+  version: 7.14.0
+  resolution: "undici-types@npm:7.14.0"
+  checksum: bd28cb36b33a51359f02c27b84bfe8563cdad57bdab0aa6ac605ce64d51aff49fd0aa4cb2d3b043caaa93c3ec42e96b5757df5d2d9bcc06a5f3e71899c765035
   languageName: node
   linkType: hard
 
