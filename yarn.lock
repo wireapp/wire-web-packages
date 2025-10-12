@@ -12922,9 +12922,9 @@ __metadata:
   linkType: hard
 
 "dexie@npm:>3.2.0":
-  version: 4.2.0
-  resolution: "dexie@npm:4.2.0"
-  checksum: 2ab356fdb16fd0ce95f9249ec3458a9b5b10dd296bc139061ac327682156a1fe94fd46bedd36f47c80902754bc6ead339b7b28019541c740579e3b1c54e6163a
+  version: 4.2.1
+  resolution: "dexie@npm:4.2.1"
+  checksum: 171e42113832239e84bd2ebf3ab993a2b0106f370b23eadb1967a118a74a8370ce244c3b90b066cb9bab813d71d9b2bef7f9e00be6c3cab1920d486bbf33fdd8
   languageName: node
   linkType: hard
 
