@@ -21,7 +21,7 @@
     "@types/uuid": "9.0.8",
     "@wireapp/store-engine": "5.1.12",
     "core-js": "^3.36.0",
-    "fake-indexeddb": "^5.0.2",
+    "fake-indexeddb": "^6.2.3",
     "jest": "^29.2.1",
     "logdown": "3.3.1",
     "rimraf": "6.0.1",
