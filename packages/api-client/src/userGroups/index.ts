@@ -22,3 +22,4 @@ export * from './UserGroupAPI';
 export * from './UserGroupCreateRequest';
 export * from './UserGroupSearchResult';
 export * from './UserGroupUpdateRequest';
+export * from './UserGroupManagedBy';
