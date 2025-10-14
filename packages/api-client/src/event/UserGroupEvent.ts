@@ -17,9 +17,31 @@
  *
  */
 
-export * from './UserGroup';
-export * from './UserGroupAPI';
-export * from './UserGroupCreateRequest';
-export * from './UserGroupSearchResult';
-export * from './UserGroupUpdateRequest';
-export * from './UserGroupManagedBy';
+export enum USER_GROUP_EVENT {
+  CREATED = 'user-group.created',
+  UPDATED = 'user-group.updated',
+  DELETED = 'user-group.deleted',
+}
+
+export interface UserGroupData {
+  id: string;
+}
+
+export type UserGroupEventData = UserGroupData | null;
+
+export type UserGroupEvent = UserGroupCreatedEvent | UserGroupUpdatedEvent | UserGroupDeletedEvent;
+
+export interface UserGroupCreatedEvent {
+  type: USER_GROUP_EVENT.CREATED;
+  user_group: UserGroupData;
+}
+
+export interface UserGroupUpdatedEvent {
+  type: USER_GROUP_EVENT.UPDATED;
+  user_group: UserGroupData;
+}
+
+export interface UserGroupDeletedEvent {
+  type: USER_GROUP_EVENT.DELETED;
+  user_group: UserGroupData;
+}

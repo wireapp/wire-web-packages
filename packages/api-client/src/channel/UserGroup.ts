@@ -17,10 +17,12 @@
  *
  */
 
+import {UserGroupManagedBy} from './UserGroupManagedBy';
+
 export interface UserGroup {
   createdAt: string;
   id: string;
-  managedBy: string;
+  managedBy: UserGroupManagedBy;
   members: string[];
   name: string;
 }
