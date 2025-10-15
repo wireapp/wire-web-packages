@@ -63,6 +63,7 @@ export enum FEATURE_KEY {
   VIDEO_CALLING = 'videoCalling',
   CHANNELS = 'channels',
   CELLS = 'cells',
+  STEALTH_USERS = 'stealthUsers',
 }
 
 export type FeatureList = {
@@ -88,4 +89,5 @@ export type FeatureList = {
   [FEATURE_KEY.VIDEO_CALLING]?: FeatureVideoCalling;
   [FEATURE_KEY.CHANNELS]?: FeatureChannels;
   [FEATURE_KEY.CELLS]?: FeatureWithoutConfig;
+  [FEATURE_KEY.STEALTH_USERS]?: FeatureWithoutConfig;
 };
