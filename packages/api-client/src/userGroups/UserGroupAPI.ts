@@ -35,7 +35,7 @@ export class UserGroupAPI {
     base: '/user-groups',
     byId: (gid: string) => `/user-groups/${gid}`,
     users: (gid: string) => `/user-groups/${gid}/users`,
-    userInGroup: (gid: string, uid: string) => `/user-groups/${gid}/users/${uid}`,
+    channels: (gid: string) => `/user-groups/${gid}/channels`,
   };
 
   /**
@@ -101,15 +101,17 @@ export class UserGroupAPI {
     return data;
   }
 
-  public async updateUserGroup(gid: string, body: UserGroupUpdateRequest): Promise<UserGroup> {
+  /**
+   * Update a user group by ID.
+   */
+  public async updateUserGroup(gid: string, body: UserGroupUpdateRequest): Promise<void> {
     const config: AxiosRequestConfig = {
       url: UserGroupAPI.ENDPOINTS.byId(gid),
       method: 'put',
       data: body,
     };
 
-    const {data} = await this.client.sendJSON<UserGroup>(config);
-    return data;
+    await this.client.sendJSON<UserGroup>(config);
   }
 
   /**
@@ -125,35 +127,24 @@ export class UserGroupAPI {
   }
 
   /**
-   * Add a user to a group.
+   * Update multiple users in a group.
    */
-  public async addUserToGroup(gid: string, uid: string): Promise<void> {
-    const config: AxiosRequestConfig = {
-      url: UserGroupAPI.ENDPOINTS.userInGroup(gid, uid),
-      method: 'post',
-    };
-
-    await this.client.sendJSON<void>(config);
-  }
-
-  /**
-   * Remove a user from a group.
-   */
-  public async removeUserFromGroup(gid: string, uid: string): Promise<void> {
-    const config: AxiosRequestConfig = {
-      url: UserGroupAPI.ENDPOINTS.userInGroup(gid, uid),
-      method: 'delete',
-    };
-
-    await this.client.sendJSON<void>(config);
-  }
-
-  /**
-   * Add multiple users to a group.
-   */
-  public async addUsersToGroup(gid: string, body: {members: string[]}): Promise<void> {
+  public async updateUsersInGroup(gid: string, body: {members: string[]}): Promise<void> {
     const config: AxiosRequestConfig = {
       url: UserGroupAPI.ENDPOINTS.users(gid),
+      method: 'post',
+      data: body,
+    };
+
+    await this.client.sendJSON<void>(config);
+  }
+
+  /**
+   * Update multiple channels in a group.
+   */
+  public async updateChannelsInGroup(gid: string, body: {channels: string[]}): Promise<void> {
+    const config: AxiosRequestConfig = {
+      url: UserGroupAPI.ENDPOINTS.channels(gid),
       method: 'post',
       data: body,
     };

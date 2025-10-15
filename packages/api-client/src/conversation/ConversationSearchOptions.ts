@@ -17,8 +17,15 @@
  *
  */
 
-export interface UserGroupUpdateRequest {
-  name: string;
-  members: string[];
-  channels?: string[];
+export interface ConversationSearchOptions {
+  /** Search string */
+  q?: string;
+  /** Page size, integer from [1..500] */
+  page_size?: number;
+  /** `name` of the last seen channel of the current page, used to get the next page */
+  last_seen_name?: string;
+  /** `id` of the last seen channel, used to get the next page, used as a tie breaker. **Must** be sent to get the next page. */
+  last_seen_id?: string;
+  /** Filter by discoverable status */
+  discoverable?: boolean;
 }

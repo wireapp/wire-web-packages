@@ -17,8 +17,8 @@
  *
  */
 
-export interface UserGroupUpdateRequest {
-  name: string;
-  members: string[];
-  channels?: string[];
+import {Conversation} from './Conversation';
+
+export interface ConversationPage {
+  page: Conversation[];
 }
