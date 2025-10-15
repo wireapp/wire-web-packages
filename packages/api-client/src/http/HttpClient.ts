@@ -130,6 +130,10 @@ export class HttpClient extends EventEmitter {
     this.enableGzip = enabled;
   }
 
+  public isGzipEnabled(): boolean {
+    return this.enableGzip;
+  }
+
   public getBaseUrl() {
     return `${this.config.urls.rest}${this.versionPrefix}`;
   }
