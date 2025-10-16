@@ -25,10 +25,8 @@ import {
   ADD_PERMISSION,
   Conversation,
   ConversationCode,
-  ConversationPage,
   ConversationProtocol,
   ConversationRolesList,
-  ConversationSearchOptions,
   DefaultConversationRoleName,
   Invite,
   JoinConversationByCodePayload,
@@ -116,8 +114,6 @@ export class ConversationAPI {
     PROTOCOL: 'protocol',
     RECEIPT_MODE: 'receipt-mode',
     ROLES: 'roles',
-    SEARCH: 'search',
-    SEARCH_CHANNELS: 'channels',
     SELF: 'self',
     MLS_SELF: 'mls-self',
     TYPING: 'typing',
@@ -1013,27 +1009,5 @@ export class ConversationAPI {
     };
 
     await this.client.sendJSON(config);
-  }
-
-  /**
-   * Search for channels.
-   * @param options Search options including query string, pagination parameters, and discoverable filter
-   * @see https://staging-nginz-https.zinfra.io/api/swagger-ui/#/default/get_search_channels
-   */
-  public async searchChannels(options?: ConversationSearchOptions): Promise<ConversationPage> {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: `/${ConversationAPI.URL.SEARCH}/${ConversationAPI.URL.SEARCH_CHANNELS}`,
-      params: {
-        q: options?.q,
-        page_size: options?.page_size,
-        last_seen_name: options?.last_seen_name,
-        last_seen_id: options?.last_seen_id,
-        discoverable: options?.discoverable,
-      },
-    };
-
-    const response = await this.client.sendJSON<ConversationPage>(config);
-    return response.data;
   }
 }

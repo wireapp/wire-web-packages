@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2021 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,19 @@
  *
  */
 
-export * from './ChannelSearchOptions';
-export * from './ChannelSearchResult';
-export * from './TeamContact';
-export * from './TeamSearchAPI';
-export * from './TeamSearchOptions';
-export * from './TeamSearchResult';
+import {CONVERSATION_ACCESS} from '../../conversation';
+
+export interface ChannelSearchItem {
+  /** The conversation ID of the channel */
+  id: string;
+  /** Number of conversation members */
+  member_count: number;
+  /** Number of conversation admins */
+  admin_count: number;
+  /** Conversation access field */
+  access: CONVERSATION_ACCESS[];
+}
+
+export interface ChannelSearchResult {
+  page: ChannelSearchItem[];
+}
