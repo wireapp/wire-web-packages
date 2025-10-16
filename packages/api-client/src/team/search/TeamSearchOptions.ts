@@ -29,6 +29,8 @@ export enum SearchOrder {
 export interface TeamSearchOptions {
   /** Filter results by member role */
   frole?: Role[];
+  /** Filter results by searchable status */
+  searchable?: boolean;
   /** Max number of search results. Defaults to 15 results. Min 1, max 500. */
   size?: number;
   /** Sort results */
