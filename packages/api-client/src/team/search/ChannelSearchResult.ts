@@ -22,6 +22,8 @@ import {CONVERSATION_ACCESS} from '../../conversation';
 export interface ChannelSearchItem {
   /** The conversation ID of the channel */
   id: string;
+  /** Conversation name */
+  name: string;
   /** Number of conversation members */
   member_count: number;
   /** Number of conversation admins */
