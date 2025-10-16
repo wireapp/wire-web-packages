@@ -47,7 +47,15 @@ import {Decoder, Encoder} from 'bazinga64';
 
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory, TypedEventEmitter} from '@wireapp/commons';
-import {ConversationId, isMlsConversationAlreadyExistsError, isMlsOrphanWelcomeError} from '@wireapp/core-crypto';
+import {
+  ConversationId,
+  CoreCryptoError,
+  ErrorContext,
+  ErrorType,
+  isMlsConversationAlreadyExistsError,
+  isMlsOrphanWelcomeError,
+  MlsErrorType,
+} from '@wireapp/core-crypto';
 import {GenericMessage} from '@wireapp/protocol-messaging';
 
 import {
@@ -910,43 +918,68 @@ export class ConversationService extends TypedEventEmitter<Events> {
         this.logger.error('Failed to handle MLS welcome message event and unable to recover', {event, error});
         throw error;
       }
+
       this.logger.warn('Failed to handle MLS welcome message event', {event, error});
+
       if (isMlsOrphanWelcomeError(error)) {
-        this.logger.warn('Received an orphan welcome message, trying to join the conversation via external commit');
-        const {qualified_conversation: conversationId} = event;
-
-        // Note that we don't care about a subconversation here, as the welcome message is always for the parent conversation.
-        // Subconversations are always joined via external commit.
-
-        if (!conversationId) {
-          throw new Error('Qualified conversation id is missing in the event');
-        }
-
-        this.logger.warn(
-          `Received an orphan welcome message, joining the conversation (${conversationId.id}) via external commit...`,
-        );
-
-        void queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
-        return null;
+        return this.handleMlsOrphanWelcomeEvent(event);
       }
 
-      /**
-       * In case of an "MLS conversation already exists" error, we have to wipe the conversation from core-crypto
-       * and retry processing the welcome message.
-       */
       if (isMlsConversationAlreadyExistsError(error)) {
-        const conversationIdArray = error.context?.context?.conversationId;
-        const groupId = Encoder.toBase64(new Uint8Array(conversationIdArray)).asString;
-        this.logger.info(
-          'Conversation already exists error when processing welcome message, wiping the local conversation and retrying',
-          {
-            extractedGroupIdFromError: groupId,
-          },
-        );
-        await this.wipeMLSConversation(groupId);
-        return this.handleMLSWelcomeMessageEvent(event, false);
+        return this.handleMlsConversationAlreadyExistsEvent(event, error);
       }
 
+      throw error;
+    }
+  }
+
+  private handleMlsOrphanWelcomeEvent(event: ConversationMLSWelcomeEvent) {
+    this.logger.warn('Received an orphan welcome message, trying to join the conversation via external commit');
+    const {qualified_conversation: conversationId} = event;
+
+    // Note that we don't care about a subconversation here, as the welcome message is always for the parent conversation.
+    // Subconversations are always joined via external commit.
+
+    if (!conversationId) {
+      throw new Error('Qualified conversation id is missing in the event');
+    }
+
+    this.logger.warn(
+      `Received an orphan welcome message, joining the conversation (${conversationId.id}) via external commit...`,
+    );
+
+    void queueConversationRejoin(conversationId.id, () => this.joinByExternalCommit(conversationId));
+    return null;
+  }
+
+  /**
+   * In case of an "MLS conversation already exists" error, we have to wipe the conversation from core-crypto
+   * and retry processing the welcome message.
+   */
+  private async handleMlsConversationAlreadyExistsEvent(
+    event: ConversationMLSWelcomeEvent,
+    error: CoreCryptoError<ErrorType.Mls> & {
+      context: Extract<
+        ErrorContext[ErrorType.Mls],
+        {
+          type: MlsErrorType.ConversationAlreadyExists;
+        }
+      >;
+    },
+  ) {
+    try {
+      const conversationIdArray = error.context?.context?.conversationId;
+      const groupId = Encoder.toBase64(new Uint8Array(conversationIdArray)).asString;
+      this.logger.info(
+        'Conversation already exists error when processing welcome message, wiping the local conversation and retrying',
+        {
+          extractedGroupIdFromError: groupId,
+        },
+      );
+      await this.wipeMLSConversation(groupId);
+      return this.handleMLSWelcomeMessageEvent(event, false);
+    } catch (error) {
+      this.logger.error('Failed to handle MLS conversation already exists event', {event, error});
       throw error;
     }
   }
