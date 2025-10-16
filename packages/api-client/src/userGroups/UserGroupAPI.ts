@@ -104,11 +104,11 @@ export class UserGroupAPI {
   /**
    * Update a user group by ID.
    */
-  public async updateUserGroup(gid: string, body: UserGroupUpdateRequest): Promise<void> {
+  public async updateUserGroup(gid: string, name: string): Promise<void> {
     const config: AxiosRequestConfig = {
       url: UserGroupAPI.ENDPOINTS.byId(gid),
       method: 'put',
-      data: body,
+      data: {name},
     };
 
     await this.client.sendJSON<UserGroup>(config);
