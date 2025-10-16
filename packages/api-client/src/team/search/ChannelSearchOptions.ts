@@ -17,13 +17,13 @@
  *
  */
 
-import {SearchOrder} from './TeamSearchOptions';
+import {SortOrder} from './TeamSearchOptions';
 
 export interface ChannelSearchOptions {
   /** The query string, to be used to match with the name of the channel. When not provided, the search would return the first page of the list. */
   q?: string;
   /** Sort order: "asc" or "desc" */
-  sort_order?: SearchOrder;
+  sort_order?: SortOrder;
   /** The desired number of results */
   page_size?: number;
   /** Name of the last channel of the previous page (required for pages after the first) */
