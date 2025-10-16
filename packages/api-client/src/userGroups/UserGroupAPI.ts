@@ -23,7 +23,6 @@ import {UserGroup} from './UserGroup';
 import {UserGroupCreateRequest} from './UserGroupCreateRequest';
 import {UserGroupSearchOptions} from './UserGroupSearchOptions';
 import {UserGroupSearchResult} from './UserGroupSearchResult';
-import {UserGroupUpdateRequest} from './UserGroupUpdateRequest';
 
 import {BackendError, HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http';
 import {RequestCancellationError} from '../user/UserError';
