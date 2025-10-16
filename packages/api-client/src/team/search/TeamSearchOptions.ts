@@ -21,7 +21,7 @@ import {TeamContact} from './TeamContact';
 
 import {Role} from '..';
 
-export enum SearchOrder {
+export enum SortOrder {
   ASCENDING = 'asc',
   DESCENDING = 'desc',
 }
@@ -36,7 +36,7 @@ export interface TeamSearchOptions {
   /** Sort results */
   sortby?: keyof Pick<TeamContact, 'email' | 'name' | 'handle' | 'created_at' | 'role' | 'managed_by' | 'saml_idp'>;
   /** Sort order (asc | desc | undefined) */
-  sortorder?: SearchOrder;
+  sortorder?: SortOrder;
   /** Paging state. returns next page when provided*/
   pagingState?: string;
 }

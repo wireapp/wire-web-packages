@@ -17,12 +17,12 @@
  *
  */
 
-import {SearchOrder} from '../team/search';
+import {SortOrder} from '../team/search';
 
 export interface UserGroupSearchOptions {
   query?: string;
   sort_by?: 'name' | 'created_at';
-  sort_order?: SearchOrder;
+  sort_order?: SortOrder;
   page_size?: number;
   last_seen_name?: string;
   last_seen_created_at?: string;
