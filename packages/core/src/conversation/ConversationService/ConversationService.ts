@@ -25,7 +25,6 @@ import {
   QualifiedUserClients,
   ConversationProtocol,
   RemoteConversations,
-  PostMlsMessageResponse,
   MLSConversation,
   SUBCONVERSATION_ID,
   Subconversation,
@@ -40,7 +39,6 @@ import {
   ConversationMemberLeaveEvent,
   ConversationOtrMessageAddEvent,
 } from '@wireapp/api-client/lib/event';
-import {BackendError, BackendErrorLabel} from '@wireapp/api-client/lib/http';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {XOR} from '@wireapp/commons/lib/util/TypeUtil';
 import {Decoder} from 'bazinga64';
@@ -397,10 +395,10 @@ export class ConversationService extends TypedEventEmitter<Events> {
         state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELED,
       };
     } catch (error) {
-      this.logger.error('Failed to execute pending proposals', {error, groupId});
+      this.logger.error('Failed to send MLS message', {error, groupId});
 
       if (!shouldRetry) {
-        this.logger.warn("Tried to execute pending proposals but it's still failing after recovery", {
+        this.logger.warn("Tried to send MLS message but it's still failing after recovery", {
           error,
           groupId,
         });
@@ -408,7 +406,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       }
 
       if (MLSService.isBrokenMLSConversationError(error)) {
-        this.logger.info('Failed to execute pending proposals because broken MLS conversation, triggering a reset', {
+        this.logger.info('Failed to send MLS message because broken MLS conversation, triggering a reset', {
           error,
           groupId,
         });
@@ -419,7 +417,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
       if (MLSService.isMLSStaleMessageError(error)) {
         this.logger.info(
-          'Failed to execute pending proposals because of stale message, recovering by joining with external commit',
+          'Failed to send MLS message because of stale message, recovering by joining with external commit',
           {
             error,
             groupId,
