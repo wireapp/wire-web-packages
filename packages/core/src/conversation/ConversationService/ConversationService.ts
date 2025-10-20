@@ -430,6 +430,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
       if (shouldRetry) {
         // Attempt one final retry before giving up
+        this.logger.info('Retrying to send MLS message after failure', {error, groupId});
         return this.sendMLSMessage(params, false);
       }
 
