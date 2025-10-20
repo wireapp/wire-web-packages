@@ -34,6 +34,7 @@ import {
   ConversationOperationError,
   MLSInvalidLeafNodeIndexError,
   MLSInvalidLeafNodeSignatureError,
+  MLSStaleMessageError,
 } from '../conversation/';
 import {InvalidInvitationCodeError, InviteEmailInUseError, ServiceNotFoundError} from '../team/';
 import {UnconnectedUserError, UserIsUnknownError} from '../user/';
@@ -144,6 +145,12 @@ export class BackendErrorMapper {
       [BackendErrorLabel.CLIENT_ERROR]: {
         'Failed reading: Invalid zauth token': e =>
           new InvalidTokenError('Authentication failed because the token is invalid.', e.label, e.code),
+      },
+    },
+    [StatusCode.CONFLICT]: {
+      [BackendErrorLabel.MLS_STALE_MESSAGE]: {
+        'The conversation epoch in a message is too old': e =>
+          new MLSStaleMessageError('The conversation epoch in a message is too old', e.label, e.code),
       },
     },
   };

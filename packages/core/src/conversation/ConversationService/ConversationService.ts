@@ -370,54 +370,72 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const {payload, groupId, conversationId} = params;
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
-    // immediately execute pending commits before sending the message
-    await this.mlsService.commitPendingProposals(groupId, true, params).catch(async error => {
+    try {
+      // immediately execute pending commits before sending the message
+      await this.mlsService.commitPendingProposals(groupId, true, params);
+
+      const encrypted = await this.mlsService.encryptMessage(
+        new ConversationId(groupIdBytes),
+        GenericMessage.encode(payload).finish(),
+      );
+
+      const response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
+      const sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
+
+      const failedToSend =
+        response?.failed || (response?.failed_to_send ?? []).length > 0
+          ? {
+              queued: response?.failed_to_send,
+              failed: response?.failed,
+            }
+          : undefined;
+
+      return {
+        id: payload.messageId,
+        sentAt,
+        failedToSend,
+        state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELED,
+      };
+    } catch (error) {
+      this.logger.error('Failed to execute pending proposals', {error, groupId});
+
+      if (!shouldRetry) {
+        this.logger.warn("Tried to execute pending proposals but it's still failing after recovery", {
+          error,
+          groupId,
+        });
+        throw error;
+      }
+
       if (MLSService.isBrokenMLSConversationError(error)) {
         this.logger.info('Failed to execute pending proposals because broken MLS conversation, triggering a reset', {
           error,
           groupId,
         });
+
         await this.handleBrokenMLSConversation(conversationId);
+        return this.sendMLSMessage(params, false);
       }
-    });
 
-    const encrypted = await this.mlsService.encryptMessage(
-      new ConversationId(groupIdBytes),
-      GenericMessage.encode(payload).finish(),
-    );
+      if (MLSService.isMLSStaleMessageError(error)) {
+        this.logger.info(
+          'Failed to execute pending proposals because of stale message, recovering by joining with external commit',
+          {
+            error,
+            groupId,
+          },
+        );
 
-    let response: PostMlsMessageResponse | null = null;
-    let sentAt: string = '';
-    try {
-      response = await this.apiClient.api.conversation.postMlsMessage(encrypted);
-      sentAt = response.time?.length > 0 ? response.time : new Date().toISOString();
-    } catch (error) {
-      const isMLSStaleMessageError =
-        error instanceof BackendError && error.label === BackendErrorLabel.MLS_STALE_MESSAGE;
-      if (isMLSStaleMessageError) {
         await this.recoverMLSGroupFromEpochMismatch(conversationId);
-        if (shouldRetry) {
-          return this.sendMLSMessage(params, false);
-        }
+        return this.sendMLSMessage(params, false);
       }
 
+      this.logger.error('Failed to send MLS message, error did not match any known patterns, rethrowing the error', {
+        error,
+        groupId,
+      });
       throw error;
     }
-
-    const failedToSend =
-      response?.failed || (response?.failed_to_send ?? []).length > 0
-        ? {
-            queued: response?.failed_to_send,
-            failed: response?.failed,
-          }
-        : undefined;
-
-    return {
-      id: payload.messageId,
-      sentAt,
-      failedToSend,
-      state: sentAt ? MessageSendingState.OUTGOING_SENT : MessageSendingState.CANCELED,
-    };
   }
 
   /**
