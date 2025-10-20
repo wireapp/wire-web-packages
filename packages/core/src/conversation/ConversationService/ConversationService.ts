@@ -431,13 +431,13 @@ export class ConversationService extends TypedEventEmitter<Events> {
       if (shouldRetry) {
         // Attempt one final retry before giving up
         return this.sendMLSMessage(params, false);
-      } else {
-        this.logger.error('Failed to send MLS message, error did not match any known patterns, rethrowing the error', {
-          error,
-          groupId,
-        });
-        throw error;
       }
+
+      this.logger.error('Failed to send MLS message, error did not match any known patterns, rethrowing the error', {
+        error,
+        groupId,
+      });
+      throw error;
     }
   }
 
