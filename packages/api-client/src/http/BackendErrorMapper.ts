@@ -91,8 +91,9 @@ export class BackendErrorMapper {
 
       [BackendErrorLabel.KEY_EXISTS]: e =>
         new IdentifierExistsError('The given e-mail address is in use.', e.label, e.code),
+      [BackendErrorLabel.MLS_STALE_MESSAGE]: e =>
+        new MLSStaleMessageError('The conversation epoch in a message is too old', e.label, e.code),
     },
-
     [StatusCode.NOT_FOUND]: {
       [BackendErrorLabel.NOT_FOUND]: e => new ServiceNotFoundError('Service not found', e.label, e.code),
     },
@@ -145,12 +146,6 @@ export class BackendErrorMapper {
       [BackendErrorLabel.CLIENT_ERROR]: {
         'Failed reading: Invalid zauth token': e =>
           new InvalidTokenError('Authentication failed because the token is invalid.', e.label, e.code),
-      },
-    },
-    [StatusCode.CONFLICT]: {
-      [BackendErrorLabel.MLS_STALE_MESSAGE]: {
-        'The conversation epoch in a message is too old': e =>
-          new MLSStaleMessageError('The conversation epoch in a message is too old', e.label, e.code),
       },
     },
   };

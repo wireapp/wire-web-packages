@@ -29,6 +29,7 @@ import {
   SUBCONVERSATION_ID,
   Subconversation,
   isMLS1to1Conversation,
+  MLSStaleMessageError,
 } from '@wireapp/api-client/lib/conversation';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/lib/conversation/data';
 import {
@@ -405,6 +406,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
         throw error;
       }
 
+      /**
+       * Only thrown by core-crypto when we call commitPendingProposals
+       */
       if (MLSService.isBrokenMLSConversationError(error)) {
         this.logger.info('Failed to send MLS message because broken MLS conversation, triggering a reset', {
           error,
@@ -415,7 +419,12 @@ export class ConversationService extends TypedEventEmitter<Events> {
         return this.sendMLSMessage(params, false);
       }
 
-      if (MLSService.isMLSStaleMessageError(error)) {
+      /**
+       * We may have the same error from core-crypto or from the backend error mapper
+       * core-crypto throws its own error class when we call commitPendingProposals
+       * backend error mapper throws its own error class when we call postMlsMessage
+       */
+      if (MLSService.isMLSStaleMessageError(error) || error instanceof MLSStaleMessageError) {
         this.logger.info(
           'Failed to send MLS message because of stale message, recovering by joining with external commit',
           {
