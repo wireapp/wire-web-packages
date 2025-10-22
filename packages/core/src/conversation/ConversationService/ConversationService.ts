@@ -455,7 +455,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
         await this.addUsersToMLSConversation({
           groupId,
-          conversationId: conversationId,
+          conversationId,
           qualifiedUsers: error.missing_users,
         });
       }
