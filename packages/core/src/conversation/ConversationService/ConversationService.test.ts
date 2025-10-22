@@ -276,10 +276,9 @@ describe('ConversationService', () => {
       ];
 
       const outOfSyncError = new MLSGroupOutOfSyncError(
-        'Group out of sync',
-        BackendErrorLabel.MLS_GROUP_OUT_OF_SYNC,
         HTTP_STATUS.CONFLICT,
         missingUsers,
+        BackendErrorLabel.MLS_GROUP_OUT_OF_SYNC,
       );
 
       // First send fails with out-of-sync, second succeeds via default mock
