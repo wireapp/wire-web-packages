@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   test_build_release:
     runs-on: ubuntu-latest
@@ -57,7 +61,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: 'yarn'
 
       - name: Authenticate git clone
@@ -71,15 +75,15 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Release
+      - name: Release (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
           !startsWith(env.TITLE, 'chore') &&
           !startsWith(env.TITLE, 'test')
-        env:
-          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
+          # Enable npm provenance and use GitHub OIDC (npm Trusted Publishing)
+          npm config set provenance true
+          npm config set registry https://registry.npmjs.org/
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
           yarn release

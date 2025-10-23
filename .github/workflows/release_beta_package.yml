@@ -8,6 +8,10 @@ on:
         default: 'beta'
         required: true
 
+permissions:
+  id-token: write # Required for npm Trusted Publishing
+  contents: read
+
 jobs:
   test_build_release_beta:
     runs-on: ubuntu-latest
@@ -53,7 +57,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: 'yarn'
 
       - name: Authenticate git clone
@@ -67,11 +71,11 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Release beta versions
-        env:
-          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
+      - name: Release beta versions (Trusted Publishing)
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
+          # Enable npm provenance and use GitHub OIDC (npm Trusted Publishing)
+          npm config set provenance true
+          npm config set registry https://registry.npmjs.org/
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
           yarn beta-release ${{inputs.preid}}
