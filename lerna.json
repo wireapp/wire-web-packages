@@ -2,8 +2,7 @@
   "command": {
     "publish": {
       "conventionalCommits": true,
-      "message": "chore: Publish [skip ci]",
-      "concurrency": 1
+      "message": "chore: Publish [skip ci]"
     }
   },
   "exact": true,
