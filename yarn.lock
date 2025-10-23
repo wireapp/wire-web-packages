@@ -9811,7 +9811,7 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/node": ^22.0.0
     "@types/uuid": 9.0.8
-    "@wireapp/store-engine": 5.1.15
+    "@wireapp/store-engine": 5.1.16
     core-js: ^3.36.0
     dexie: ">3.2.0"
     fake-indexeddb: ^5.0.2
@@ -9835,7 +9835,7 @@ __metadata:
     "@types/fs-extra": 11.0.4
     "@types/jest": ^29.2.0
     "@types/node": ^22.0.0
-    "@wireapp/store-engine": 5.1.15
+    "@wireapp/store-engine": 5.1.16
     fs-extra: 11.3.1
     jest: ^29.2.1
     rimraf: 6.0.1
@@ -9846,7 +9846,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@5.1.15, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@5.1.16, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
