@@ -1,0 +1,121 @@
+name: Reusable Release Workflow
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "Release mode: main | beta | hotfix | all"
+        required: true
+        type: string
+      preid:
+        description: "Prerelease identifier (for beta mode)"
+        required: false
+        default: "beta"
+        type: string
+      run_tests:
+        description: "Run tests (for 'all' mode or general control)"
+        required: false
+        default: true
+        type: boolean
+    secrets:
+      OTTO_THE_BOT_GH_TOKEN:
+        required: false
+      WIRE_EMAIL:
+        required: false
+      WIRE_PASSWORD:
+        required: false
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  release:
+    name: release-${{ inputs.mode }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-${{ inputs.mode }}-${{ github.ref_name }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.OTTO_THE_BOT_GH_TOKEN || github.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'yarn'
+
+      - name: Set environment variables
+        run: |
+          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
+          echo "COMMITTER=${{github.event.head_commit.committer.name}}" >> $GITHUB_ENV
+          echo "COMMIT_URL=${{github.event.head_commit.url}}" >> $GITHUB_ENV
+
+      - name: Set TITLE
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title || env.COMMIT_MESSAGE }}
+        run: echo "TITLE=$PR_TITLE" >> $GITHUB_ENV
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Install JS dependencies
+        run: yarn --immutable
+
+      - name: Build (all mode)
+        if: inputs.mode == 'all'
+        run: yarn dist
+
+      - name: Test
+        if: inputs.mode != 'all'
+        run: yarn test
+
+      - name: Test all
+        if: inputs.mode == 'all' && inputs.run_tests
+        run: yarn test:all
+
+      - name: Configure Git and npm (Trusted Publishing)
+        run: |
+          npm config set provenance true
+          npm config set registry https://registry.npmjs.org/
+          git config --global user.email webapp+otto@wire.com
+          git config --global user.name "Otto the Bot"
+
+      - name: Release (main)
+        if: |
+          inputs.mode == 'main' && env.BRANCH_NAME == 'main' &&
+          !startsWith(env.TITLE, 'chore') && !startsWith(env.TITLE, 'test')
+        run: |
+          yarn release
+
+      - name: Release (beta)
+        if: inputs.mode == 'beta'
+        run: |
+          yarn beta-release ${{ inputs.preid }}
+
+      - name: Release (hotfix)
+        if: inputs.mode == 'hotfix'
+        run: |
+          yarn hotfix-release
+
+      - name: Release (all)
+        if: inputs.mode == 'all'
+        run: |
+          yarn new-version --force-publish && yarn new-publish --force-publish
+
+      - name: Notify CI error
+        if: failure() && github.event_name != 'pull_request'
+        uses: wireapp/github-action-wire-messenger@v2.0.0
+        with:
+          email: ${{secrets.WIRE_EMAIL}}
+          password: ${{secrets.WIRE_PASSWORD}}
+          conversation: 'b2cc7120-4154-4be4-b0c0-45a8c361c4d1'
+          text: '🌵 ${{env.COMMITTER}} broke the "${{env.BRANCH_NAME}}" branch on "${{github.repository}}" with [${{env.TITLE}}](${{env.COMMIT_URL}})'
