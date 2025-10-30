@@ -17,9 +17,6 @@
  *
  */
 
-// Use the package's manual mock for @wireapp/core-crypto
-jest.mock('@wireapp/core-crypto');
-
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {ErrorType, MlsErrorType} from '@wireapp/core-crypto';
@@ -46,7 +43,7 @@ describe('CoreCryptoMLSError helpers', () => {
 
       const other = new Error('nope');
       expect(isCoreCryptoMLSWrongEpochError(other)).toBe(false);
-      expect(isCoreCryptoMLSWrongEpochError('not-an-error' as any)).toBe(false);
+      expect(isCoreCryptoMLSWrongEpochError('not-an-error')).toBe(false);
     });
 
     it('detects MlsErrorConversationAlreadyExists by name', () => {
@@ -56,7 +53,7 @@ describe('CoreCryptoMLSError helpers', () => {
 
       const other = new Error('nope');
       expect(isCoreCryptoMLSConversationAlreadyExistsError(other)).toBe(false);
-      expect(isCoreCryptoMLSConversationAlreadyExistsError(42 as any)).toBe(false);
+      expect(isCoreCryptoMLSConversationAlreadyExistsError(42)).toBe(false);
     });
   });
 
@@ -89,7 +86,7 @@ describe('CoreCryptoMLSError helpers', () => {
       const err = new Error('some real failure');
       err.name = 'RandomErrorName';
       expect(shouldMLSDecryptionErrorBeIgnored(err)).toBe(false);
-      expect(shouldMLSDecryptionErrorBeIgnored('not-an-error' as any)).toBe(false);
+      expect(shouldMLSDecryptionErrorBeIgnored('not-an-error')).toBe(false);
     });
   });
 
@@ -103,7 +100,7 @@ describe('CoreCryptoMLSError helpers', () => {
             reason,
           },
         },
-      } as any;
+      };
     }
 
     it('detects broken MLS conversation errors', () => {
@@ -135,7 +132,7 @@ describe('CoreCryptoMLSError helpers', () => {
         serializeAbortReason({
           message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.MLS_GROUP_OUT_OF_SYNC,
           missing_users: missing,
-        } as any),
+        }),
       );
 
       expect(isMLSGroupOutOfSyncError(err)).toBe(true);
@@ -159,7 +156,7 @@ describe('CoreCryptoMLSError helpers', () => {
             reason: serializeAbortReason({message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.MLS_STALE_MESSAGE}),
           },
         },
-      } as any;
+      };
 
       expect(isBrokenMLSConversationError(err)).toBe(false);
       expect(isMLSStaleMessageError(err)).toBe(false);
