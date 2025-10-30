@@ -649,37 +649,41 @@ export class ConversationService extends TypedEventEmitter<Events> {
   }
 
   private reactToKeyMaterialUpdateFailure = async ({error, groupId}: {error: unknown; groupId: string}) => {
-    this.logger.info(`Reacting to key material update failure for group ${groupId}`);
+    try {
+      this.logger.info(`Reacting to key material update failure for group ${groupId}`);
 
-    const conversations = await this.apiClient.api.conversation.getConversationList();
-    const conversation = (conversations.found || []).find(conversation => conversation.group_id === groupId);
+      const conversations = await this.apiClient.api.conversation.getConversationList();
+      const conversation = (conversations.found || []).find(conversation => conversation.group_id === groupId);
 
-    if (!conversation) {
-      this.logger.warn(`No conversation found for group ${groupId}`);
-      throw error;
-    }
+      if (!conversation) {
+        this.logger.warn(`No conversation found for group ${groupId}`);
+        throw error;
+      }
 
-    if (isBrokenMLSConversationError(error)) {
-      this.logger.info('Tried to update key material for a broken MLS conversation, initiating reset', error);
-      return this.handleBrokenMLSConversation(conversation.qualified_id);
-    }
+      if (isBrokenMLSConversationError(error)) {
+        this.logger.info('Tried to update key material for a broken MLS conversation, initiating reset', error);
+        return this.handleBrokenMLSConversation(conversation.qualified_id);
+      }
 
-    if (isMLSGroupOutOfSyncError(error)) {
-      this.logger.info(
-        'Tried to update key material for an out of sync conversation, recovering by adding missing users',
-        {
-          error,
+      if (isMLSGroupOutOfSyncError(error)) {
+        this.logger.info(
+          'Tried to update key material for an out of sync conversation, recovering by adding missing users',
+          {
+            error,
+            groupId,
+          },
+        );
+
+        const missingUsers = getMLSGroupOutOfSyncErrorMissingUsers(error);
+
+        await this.addUsersToMLSConversation({
           groupId,
-        },
-      );
-
-      const missingUsers = getMLSGroupOutOfSyncErrorMissingUsers(error);
-
-      await this.addUsersToMLSConversation({
-        groupId,
-        conversationId: conversation.qualified_id,
-        qualifiedUsers: missingUsers,
-      });
+          conversationId: conversation.qualified_id,
+          qualifiedUsers: missingUsers,
+        });
+      }
+    } catch (error) {
+      this.logger.error('Failed to react to key material update failure', {error, groupId});
     }
   };
 
