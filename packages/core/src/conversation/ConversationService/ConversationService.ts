@@ -98,6 +98,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
   private readonly logger = LogFactory.getLogger('@wireapp/core/ConversationService');
   // Track groups currently undergoing recovery due to key material update failure to prevent duplicate work
   private readonly recoveringKeyMaterialGroups: Set<string> = new Set();
+  private groupIdConversationMap: Map<string, Conversation> = new Map();
 
   constructor(
     private readonly apiClient: APIClient,
@@ -650,9 +651,21 @@ export class ConversationService extends TypedEventEmitter<Events> {
     }
   }
 
-  private async getConversationByGroupId(groupId: string): Promise<Conversation | undefined> {
+  private async refreshGroupIdConversationMap(): Promise<void> {
     const conversations = await this.apiClient.api.conversation.getConversationList();
-    return (conversations.found || []).find(conversation => conversation.group_id === groupId);
+    this.groupIdConversationMap.clear();
+    for (const conversation of conversations.found || []) {
+      if (conversation.group_id) {
+        this.groupIdConversationMap.set(conversation.group_id, conversation);
+      }
+    }
+  }
+
+  private async getConversationByGroupId(groupId: string): Promise<Conversation | undefined> {
+    if (!this.groupIdConversationMap.has(groupId)) {
+      await this.refreshGroupIdConversationMap();
+    }
+    return this.groupIdConversationMap.get(groupId);
   }
 
   private reactToKeyMaterialUpdateFailure = async ({error, groupId}: {error: unknown; groupId: string}) => {
@@ -697,7 +710,6 @@ export class ConversationService extends TypedEventEmitter<Events> {
       }
     } catch (error) {
       this.logger.error('Failed to react to key material update failure', {error, groupId});
-      throw error;
     } finally {
       this.recoveringKeyMaterialGroups.delete(groupId);
     }

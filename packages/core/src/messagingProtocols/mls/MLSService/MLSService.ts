@@ -542,8 +542,15 @@ export class MLSService extends TypedEventEmitter<Events> {
       this.logger.warn(`Failed to update keying material for group`, {error, groupId});
       this.emit(MLSServiceEvents.KEY_MATERIAL_UPDATE_FAILURE, {error, groupId});
 
-      setTimeout(() => {
-        return this.updateKeyingMaterial(groupId, false);
+      setTimeout(async () => {
+        try {
+          await this.updateKeyingMaterial(groupId, false);
+        } catch (error) {
+          this.logger.error(`Failed to update keying material for group on retry`, {
+            error,
+            groupId,
+          });
+        }
       }, TimeUtil.TimeInMillis.SECOND * 10); // retry after 10 seconds
     }
   }

@@ -931,19 +931,6 @@ describe('ConversationService', () => {
       expect(resetSpy).not.toHaveBeenCalled();
     });
 
-    it('throws the original error when no conversation matches the group id', async () => {
-      const build = await buildConversationService();
-      const {apiClient, mlsService} = build[1];
-      const groupId = 'group-3';
-
-      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValueOnce({found: [] as any});
-
-      const handler = getKeyMaterialFailureHandler(mlsService);
-      const err = new Error('original');
-
-      await expect(handler({error: err, groupId})).rejects.toBe(err);
-    });
-
     it('deduplicates concurrent recoveries for the same group id', async () => {
       const [conversationService, {apiClient, mlsService}] = await buildConversationService();
       const groupId = 'group-dup';
@@ -982,6 +969,65 @@ describe('ConversationService', () => {
       await Promise.allSettled([p1, p2]);
 
       expect(resetSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('groupIdConversationMap cache', () => {
+    function makeConversation(group_id: string, id: string): Conversation {
+      return {
+        group_id,
+        qualified_id: {id, domain: 'staging.zinfra.io'},
+        protocol: ConversationProtocol.MLS,
+        epoch: 1,
+      } as unknown as Conversation;
+    }
+
+    it('refreshGroupIdConversationMap builds the cache from backend list', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      const conv1 = makeConversation('g-1', 'c-1');
+      const conv2 = makeConversation('g-2', 'c-2');
+
+      const getListSpy = jest
+        .spyOn(apiClient.api.conversation, 'getConversationList')
+        .mockResolvedValueOnce({found: [conv1, conv2]});
+
+      await (conversationService as any).refreshGroupIdConversationMap();
+
+      expect(getListSpy).toHaveBeenCalledTimes(1);
+
+      // Validate through the private cache map
+      const cache: Map<string, Conversation> = (conversationService as any).groupIdConversationMap;
+      expect(cache.get('g-1')?.qualified_id.id).toBe('c-1');
+      expect(cache.get('g-2')?.qualified_id.id).toBe('c-2');
+    });
+
+    it('getConversationByGroupId uses cache when available without backend call', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      const conv = makeConversation('g-hit', 'c-hit');
+      // Pre-populate cache
+      (conversationService as any).groupIdConversationMap.set('g-hit', conv);
+
+      const getListSpy = jest
+        .spyOn(apiClient.api.conversation, 'getConversationList')
+        .mockImplementation(() => Promise.reject(new Error('should not be called')));
+
+      const result: Conversation | undefined = await (conversationService as any).getConversationByGroupId('g-hit');
+      expect(result?.qualified_id.id).toBe('c-hit');
+      expect(getListSpy).not.toHaveBeenCalled();
+    });
+
+    it('getConversationByGroupId refreshes on cache miss and returns undefined if not found', async () => {
+      const [conversationService, {apiClient}] = await buildConversationService();
+
+      const getListSpy = jest
+        .spyOn(apiClient.api.conversation, 'getConversationList')
+        .mockResolvedValueOnce({found: [makeConversation('g-else', 'c-else')]});
+
+      const result: Conversation | undefined = await (conversationService as any).getConversationByGroupId('g-missing');
+      expect(result).toBeUndefined();
+      expect(getListSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
