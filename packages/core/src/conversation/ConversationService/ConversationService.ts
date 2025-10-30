@@ -648,12 +648,16 @@ export class ConversationService extends TypedEventEmitter<Events> {
     }
   }
 
+  private async getConversationByGroupId(groupId: string): Promise<Conversation | undefined> {
+    const conversations = await this.apiClient.api.conversation.getConversationList();
+    return (conversations.found || []).find(conversation => conversation.group_id === groupId);
+  }
+
   private reactToKeyMaterialUpdateFailure = async ({error, groupId}: {error: unknown; groupId: string}) => {
     try {
       this.logger.info(`Reacting to key material update failure for group ${groupId}`);
 
-      const conversations = await this.apiClient.api.conversation.getConversationList();
-      const conversation = (conversations.found || []).find(conversation => conversation.group_id === groupId);
+      const conversation = await this.getConversationByGroupId(groupId);
 
       if (!conversation) {
         this.logger.warn(`No conversation found for group ${groupId}`);
