@@ -943,6 +943,46 @@ describe('ConversationService', () => {
 
       await expect(handler({error: err, groupId})).rejects.toBe(err);
     });
+
+    it('deduplicates concurrent recoveries for the same group id', async () => {
+      const [conversationService, {apiClient, mlsService}] = await buildConversationService();
+      const groupId = 'group-dup';
+      const qualified_id = {id: 'conv-dup', domain: 'staging.zinfra.io'};
+
+      jest.spyOn(apiClient.api.conversation, 'getConversationList').mockResolvedValue({
+        found: [{group_id: groupId, qualified_id, protocol: ConversationProtocol.MLS, epoch: 1}] as any,
+      });
+
+      // Make the recovery hang until we resolve it, to simulate overlapping calls
+      let resolveDeferred: (() => void) | undefined;
+      const deferred = new Promise<void>(res => (resolveDeferred = res));
+      const resetSpy = jest
+        .spyOn(conversationService as any, 'handleBrokenMLSConversation')
+        .mockReturnValue(deferred as any);
+
+      const handler = getKeyMaterialFailureHandler(mlsService);
+
+      const brokenErr = {
+        type: ErrorType.Mls,
+        context: {
+          type: MlsErrorType.MessageRejected,
+          context: {
+            reason: serializeAbortReason({message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.BROKEN_MLS_CONVERSATION}),
+          },
+        },
+      };
+
+      const p1 = handler({error: brokenErr, groupId});
+      const p2 = handler({error: brokenErr, groupId});
+
+      // Complete the first recovery
+      if (resolveDeferred) {
+        resolveDeferred();
+      }
+      await Promise.allSettled([p1, p2]);
+
+      expect(resetSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

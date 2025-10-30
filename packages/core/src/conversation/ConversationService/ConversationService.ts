@@ -96,6 +96,8 @@ type Events = {
 export class ConversationService extends TypedEventEmitter<Events> {
   public readonly messageTimer: MessageTimer;
   private readonly logger = LogFactory.getLogger('@wireapp/core/ConversationService');
+  // Track groups currently undergoing recovery due to key material update failure to prevent duplicate work
+  private readonly recoveringKeyMaterialGroups: Set<string> = new Set();
 
   constructor(
     private readonly apiClient: APIClient,
@@ -654,6 +656,13 @@ export class ConversationService extends TypedEventEmitter<Events> {
   }
 
   private reactToKeyMaterialUpdateFailure = async ({error, groupId}: {error: unknown; groupId: string}) => {
+    // Deduplicate concurrent recoveries for the same group
+    if (this.recoveringKeyMaterialGroups.has(groupId)) {
+      this.logger.info(`Recovery already in progress for group ${groupId}, skipping duplicate trigger`);
+      return;
+    }
+
+    this.recoveringKeyMaterialGroups.add(groupId);
     try {
       this.logger.info(`Reacting to key material update failure for group ${groupId}`);
 
@@ -688,6 +697,9 @@ export class ConversationService extends TypedEventEmitter<Events> {
       }
     } catch (error) {
       this.logger.error('Failed to react to key material update failure', {error, groupId});
+      throw error;
+    } finally {
+      this.recoveringKeyMaterialGroups.delete(groupId);
     }
   };
 
