@@ -7526,6 +7526,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/react-dom-shim@npm:10.0.2":
+  version: 10.0.2
+  resolution: "@storybook/react-dom-shim@npm:10.0.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    storybook: ^10.0.2
+  checksum: a59d7060983d26e2d8c2eb87b9e805e8bcdac273a1c252ea61ff1f8dbd552ee241f33d4d03d7d99162347a0e5bd077d4f96723a1d269f49e0b226d09cd12abc0
+  languageName: node
+  linkType: hard
+
 "@storybook/react-dom-shim@npm:8.6.14":
   version: 8.6.14
   resolution: "@storybook/react-dom-shim@npm:8.6.14"
@@ -7556,7 +7567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react@npm:8.6.14, @storybook/react@npm:^8.5.2":
+"@storybook/react@npm:8.6.14":
   version: 8.6.14
   resolution: "@storybook/react@npm:8.6.14"
   dependencies:
@@ -7578,6 +7589,24 @@ __metadata:
     typescript:
       optional: true
   checksum: f05cc63a690c0320f59df2c84837be51291eabab3f8b3eee64a28ff9bf2e1d36a4f46e99b174db01a71859d6b415b4528590fb01f1ebb6f0e4877b226b4271f8
+  languageName: node
+  linkType: hard
+
+"@storybook/react@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "@storybook/react@npm:10.0.2"
+  dependencies:
+    "@storybook/global": ^5.0.0
+    "@storybook/react-dom-shim": 10.0.2
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    storybook: ^10.0.2
+    typescript: ">= 4.9.x"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 066a974b9d46d41da3868834350afde9c393ca7322cd74a6e6cad32ed84f909c671292c18952387cf0bc0d025d40c0938edd98f59ea9e7be3976d473e918b4c1
   languageName: node
   linkType: hard
 
@@ -9762,7 +9791,7 @@ __metadata:
     "@storybook/addon-themes": ^8.5.2
     "@storybook/addon-webpack5-compiler-swc": ^4.0.1
     "@storybook/blocks": ^8.5.2
-    "@storybook/react": ^8.5.2
+    "@storybook/react": ^10.0.2
     "@storybook/react-webpack5": ^8.5.2
     "@storybook/test": ^8.5.2
     "@swc/core": ^1.3.10
