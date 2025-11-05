@@ -131,7 +131,7 @@ export class UserGroupAPI {
   public async updateUsersInGroup(gid: string, body: {members: string[]}): Promise<void> {
     const config: AxiosRequestConfig = {
       url: UserGroupAPI.ENDPOINTS.users(gid),
-      method: 'post',
+      method: 'put',
       data: body,
     };
 
