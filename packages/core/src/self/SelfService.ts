@@ -18,10 +18,10 @@
  */
 
 import {Self} from '@wireapp/api-client/lib/self/';
+import {CONVERSATION_PROTOCOL} from '@wireapp/api-client/lib/team';
 
 import {APIClient} from '@wireapp/api-client';
 import {LogFactory} from '@wireapp/commons';
-import {CONVERSATION_PROTOCOL} from '@wireapp/api-client/lib/team';
 
 export class SelfService {
   private readonly logger = LogFactory.getLogger('@wireapp/core/SelfService');
