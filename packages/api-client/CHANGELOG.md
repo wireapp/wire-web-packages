@@ -3,6 +3,114 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.84.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.83.0...@wireapp/api-client@27.84.0) (2025-10-30)
+
+### Features
+
+* **api-client:** update UserGroup.ts to include membersCount ([#7521](https://github.com/wireapp/wire-web-packages/issues/7521)) ([72139a9](https://github.com/wireapp/wire-web-packages/commit/72139a9bc9007351069c9c54410df6f593f8ad0e))
+
+# [27.83.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.82.4...@wireapp/api-client@27.83.0) (2025-10-30)
+
+### Features
+
+* **api-client:** add user_groups in User and TeamContact [WPB-16801] ([#7519](https://github.com/wireapp/wire-web-packages/issues/7519)) ([5db751e](https://github.com/wireapp/wire-web-packages/commit/5db751edf400bd6a31094c6ba41c5dd5e15a5d81))
+
+## [27.82.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.82.3...@wireapp/api-client@27.82.4) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.82.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.82.2...@wireapp/api-client@27.82.3) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.82.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.82.1...@wireapp/api-client@27.82.2) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.82.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.82.0...@wireapp/api-client@27.82.1) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.82.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.81.0...@wireapp/api-client@27.82.0) (2025-10-23)
+
+### Features
+
+* Handle missing MLS users in a conversation [WPB-20863] ([#7488](https://github.com/wireapp/wire-web-packages/issues/7488)) ([66ce8f5](https://github.com/wireapp/wire-web-packages/commit/66ce8f549ce38f1d87311df6f041548078b78934))
+
+# [27.81.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.80.2...@wireapp/api-client@27.81.0) (2025-10-21)
+
+### Features
+
+* **api-client:** add payload on the postUserSearchable endpoint ([#7487](https://github.com/wireapp/wire-web-packages/issues/7487)) ([c46a645](https://github.com/wireapp/wire-web-packages/commit/c46a64586b09bcf5c5b3b3e443ff7135a5477214))
+
+## [27.80.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.80.1...@wireapp/api-client@27.80.2) (2025-10-20)
+
+### Bug Fixes
+
+* Recover from MLS stale message error [WPB-21170] ([#7485](https://github.com/wireapp/wire-web-packages/issues/7485)) ([cf44d24](https://github.com/wireapp/wire-web-packages/commit/cf44d2417acfb039e97fad54da4f9263c0c357c7))
+
+## [27.80.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.80.0...@wireapp/api-client@27.80.1) (2025-10-17)
+
+### Bug Fixes
+
+* use correct key for conversation id [WPB-20663] ([#7462](https://github.com/wireapp/wire-web-packages/issues/7462)) ([e04d7e5](https://github.com/wireapp/wire-web-packages/commit/e04d7e5f08a825646bfc88860fc3277d660bb470))
+
+# [27.80.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.79.1...@wireapp/api-client@27.80.0) (2025-10-16)
+
+### Features
+
+* add EP endpoints and update designs in ui-kit [WPB-10627] ([#7325](https://github.com/wireapp/wire-web-packages/issues/7325)) ([81d7a2f](https://github.com/wireapp/wire-web-packages/commit/81d7a2fd666060c34171aa7c5f95af097c157e62))
+
+## [27.79.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.79.0...@wireapp/api-client@27.79.1) (2025-10-15)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+# [27.79.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.78.1...@wireapp/api-client@27.79.0) (2025-10-15)
+
+### Features
+
+* **api-client:** add searchable attribute in the user model [WPB-20577] ([#7456](https://github.com/wireapp/wire-web-packages/issues/7456)) ([c2a66b2](https://github.com/wireapp/wire-web-packages/commit/c2a66b2b3e4df3eea74236895a67a86149c347b4))
+
+## [27.78.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.78.0...@wireapp/api-client@27.78.1) (2025-10-14)
+
+### Bug Fixes
+
+* correct conversation type ([#7458](https://github.com/wireapp/wire-web-packages/issues/7458)) ([43b252d](https://github.com/wireapp/wire-web-packages/commit/43b252d923857f02c730780e95b6b40374b54889))
+
+# [27.78.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.77.3...@wireapp/api-client@27.78.0) (2025-10-14)
+
+### Features
+
+* implement audit metadata in asset API [WPB-20665] ([#7457](https://github.com/wireapp/wire-web-packages/issues/7457)) ([2bb3a4e](https://github.com/wireapp/wire-web-packages/commit/2bb3a4edebbc62b6b57571e19cf495083927c9f2))
+
+## [27.77.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.77.2...@wireapp/api-client@27.77.3) (2025-10-13)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+## [27.77.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.77.1...@wireapp/api-client@27.77.2) (2025-10-09)
+
+### Bug Fixes
+
+* Use the 400 error code for mls invalid leaf node errors [WPB-20935] ([#7435](https://github.com/wireapp/wire-web-packages/issues/7435)) ([21e3ac9](https://github.com/wireapp/wire-web-packages/commit/21e3ac90cfe3669e313d4e3076f50f14361f2f27))
+
+## [27.77.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.77.0...@wireapp/api-client@27.77.1) (2025-10-08)
+
+### Reverts
+
+* Revert "feat: update AssetAPI [WPB-20663] (#7406)" (#7434) ([6c925b8](https://github.com/wireapp/wire-web-packages/commit/6c925b82ac99e704040748b8683931c4e117396a)), closes [#7406](https://github.com/wireapp/wire-web-packages/issues/7406) [#7434](https://github.com/wireapp/wire-web-packages/issues/7434)
+
+# [27.77.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.76.1...@wireapp/api-client@27.77.0) (2025-10-07)
+
+### Features
+
+* Initiate reset of broken MLS conversations [WPB-19701] ([#7405](https://github.com/wireapp/wire-web-packages/issues/7405)) ([71a34d8](https://github.com/wireapp/wire-web-packages/commit/71a34d87f084f3c14ce5a1ea247d3180635082cd))
+
+## [27.76.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.76.0...@wireapp/api-client@27.76.1) (2025-10-06)
+
+### Bug Fixes
+
+* User gets logged out while trying to delete a device - using a wrong password ([#7431](https://github.com/wireapp/wire-web-packages/issues/7431)) ([b124c27](https://github.com/wireapp/wire-web-packages/commit/b124c270afca04e307684abc9531df59a967a2a1))
+
 # [27.76.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.75.10...@wireapp/api-client@27.76.0) (2025-10-02)
 
 ### Features

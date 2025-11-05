@@ -19,6 +19,8 @@
 
 import {StatusCodes as StatusCode} from 'http-status-codes';
 
+import {LogFactory} from '@wireapp/commons';
+
 import {
   IdentifierExistsError,
   InvalidCredentialsError,
@@ -29,7 +31,14 @@ import {
   MissingCookieError,
   TokenExpiredError,
 } from '../auth/';
-import {ConversationIsUnknownError, ConversationOperationError} from '../conversation/';
+import {
+  ConversationIsUnknownError,
+  ConversationOperationError,
+  MLSGroupOutOfSyncError,
+  MLSInvalidLeafNodeIndexError,
+  MLSInvalidLeafNodeSignatureError,
+  MLSStaleMessageError,
+} from '../conversation/';
 import {InvalidInvitationCodeError, InviteEmailInUseError, ServiceNotFoundError} from '../team/';
 import {UnconnectedUserError, UserIsUnknownError} from '../user/';
 
@@ -46,6 +55,8 @@ type MessageToBuilderMap = Record<string, ErrorBuilder>;
 type StatusCodeToMessageVariantMap = Partial<
   Record<StatusCode, Partial<Record<BackendErrorLabel, MessageToBuilderMap>>>
 >;
+
+const logger = LogFactory.getLogger('@wireapp/api-client/http/BackendErrorMapper');
 
 export class BackendErrorMapper {
   /**
@@ -85,8 +96,20 @@ export class BackendErrorMapper {
 
       [BackendErrorLabel.KEY_EXISTS]: e =>
         new IdentifierExistsError('The given e-mail address is in use.', e.label, e.code),
-    },
+      [BackendErrorLabel.MLS_STALE_MESSAGE]: e =>
+        new MLSStaleMessageError('The conversation epoch in a message is too old', e.label, e.code),
+      [BackendErrorLabel.MLS_GROUP_OUT_OF_SYNC]: error => {
+        if (BackendErrorMapper.isMlsGroupOutOfSyncError(error)) {
+          return new MLSGroupOutOfSyncError(error.code, error.missing_users, error.message);
+        }
 
+        logger.warn(
+          'Failed to detect missing_users field in MLSGroupOutOfSyncError, using empty array for missing_users',
+          {error},
+        );
+        return new MLSGroupOutOfSyncError(error.code, [], error.message);
+      },
+    },
     [StatusCode.NOT_FOUND]: {
       [BackendErrorLabel.NOT_FOUND]: e => new ServiceNotFoundError('Service not found', e.label, e.code),
     },
@@ -104,6 +127,13 @@ export class BackendErrorMapper {
           new ConversationIsUnknownError('Conversation ID is unknown.', e.label, e.code),
         "[path] 'usr' invalid: Failed reading: Invalid UUID": e =>
           new UserIsUnknownError('User ID is unknown.', e.label, e.code),
+      },
+      [BackendErrorLabel.MLS_INVALID_LEAF_NODE_SIGNATURE]: {
+        'Invalid leaf node signature': e =>
+          new MLSInvalidLeafNodeSignatureError('Invalid leaf node signature', e.label, e.code),
+      },
+      [BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX]: {
+        'Invalid leaf node index': e => new MLSInvalidLeafNodeIndexError('Invalid leaf node index', e.label, e.code),
       },
     },
     [StatusCode.FORBIDDEN]: {
@@ -147,10 +177,22 @@ export class BackendErrorMapper {
     }
   }
 
+  public static isMlsGroupOutOfSyncError(error: BackendError): error is MLSGroupOutOfSyncError {
+    return (
+      error.code === StatusCode.CONFLICT &&
+      error.label === BackendErrorLabel.MLS_GROUP_OUT_OF_SYNC &&
+      'missing_users' in error
+    );
+  }
+
   public static map(error: BackendError): BackendError {
     const code = Number(error.code) as StatusCode;
     const label = error.label as BackendErrorLabel;
     const message = error.message ?? '';
+
+    if (BackendErrorMapper.isMlsGroupOutOfSyncError(error)) {
+      return new MLSGroupOutOfSyncError(error.code, error.missing_users, error.message);
+    }
 
     // 1) Message-specific variant
     const messageVariantHandler = BackendErrorMapper.messageVariantHandlers[code]?.[label]?.[message];

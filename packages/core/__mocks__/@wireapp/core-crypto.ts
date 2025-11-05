@@ -95,3 +95,60 @@ export class ConversationId extends ByteContainer {}
 export class ExternalSenderKey extends ByteContainer {}
 export class KeyPackage extends ByteContainer {}
 export class SecretKey extends ByteContainer {}
+
+export enum ErrorType {
+  Mls = 'Mls',
+  Proteus = 'Proteus',
+  E2ei = 'E2ei',
+  TransactionFailed = 'TransactionFailed',
+  Other = 'Other',
+}
+
+export enum ProteusErrorType {
+  SessionNotFound = 'SessionNotFound',
+  DuplicateMessage = 'DuplicateMessage',
+  RemoteIdentityChanged = 'RemoteIdentityChanged',
+  Other = 'Other',
+}
+
+export enum MlsErrorType {
+  ConversationAlreadyExists = 'ConversationAlreadyExists',
+  DuplicateMessage = 'DuplicateMessage',
+  BufferedFutureMessage = 'BufferedFutureMessage',
+  WrongEpoch = 'WrongEpoch',
+  BufferedCommit = 'BufferedCommit',
+  MessageEpochTooOld = 'MessageEpochTooOld',
+  SelfCommitIgnored = 'SelfCommitIgnored',
+  UnmergedPendingGroup = 'UnmergedPendingGroup',
+  StaleProposal = 'StaleProposal',
+  StaleCommit = 'StaleCommit',
+  OrphanWelcome = 'OrphanWelcome',
+  MessageRejected = 'MessageRejected',
+  Other = 'Other',
+}
+
+type CcError<T extends ErrorType> = Error & {type: T; context?: {type: string}};
+
+export const isCcError = <E extends ErrorType>(error: unknown, errorType: E): error is CcError<E> => {
+  return typeof error === 'object' && error !== null && (error as any).type === errorType;
+};
+
+export const isProteusError = <E extends ProteusErrorType>(
+  error: unknown,
+  errorType: E,
+): error is CcError<ErrorType.Proteus> & {context: {type: E}} => {
+  return isCcError(error, ErrorType.Proteus) && (error as any).context?.type === errorType;
+};
+
+export const isProteusSessionNotFoundError = (error: unknown) =>
+  isProteusError(error, ProteusErrorType.SessionNotFound);
+export const isProteusDuplicateMessageError = (error: unknown) =>
+  isProteusError(error, ProteusErrorType.DuplicateMessage);
+export const isProteusRemoteIdentityChangedError = (error: unknown) =>
+  isProteusError(error, ProteusErrorType.RemoteIdentityChanged);
+
+export const isMlsOrphanWelcomeError = (error: unknown) =>
+  isCcError(error, ErrorType.Mls) && (error as any).context?.type === MlsErrorType.OrphanWelcome;
+
+export const isMlsMessageRejectedError = (error: unknown) =>
+  isCcError(error, ErrorType.Mls) && (error as any).context?.type === MlsErrorType.MessageRejected;

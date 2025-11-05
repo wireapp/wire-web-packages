@@ -18,7 +18,13 @@
  */
 
 import type {ClaimedKeyPackages, MLSPublicKeyRecord, RegisteredClient} from '@wireapp/api-client/lib/client';
-import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
+import {
+  MLSGroupOutOfSyncError,
+  MLSInvalidLeafNodeIndexError,
+  MLSInvalidLeafNodeSignatureError,
+  MLSStaleMessageError,
+  SUBCONVERSATION_ID,
+} from '@wireapp/api-client/lib/conversation';
 import {ConversationMLSMessageAddEvent, ConversationMLSWelcomeEvent} from '@wireapp/api-client/lib/event';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Converter, Decoder, Encoder} from 'bazinga64';
@@ -40,10 +46,17 @@ import {
   NewCrlDistributionPoints,
   Welcome,
   ExternalSenderKey,
+  isMlsMessageRejectedError,
+  GroupInfo,
 } from '@wireapp/core-crypto';
 
 import {ClientMLSError, ClientMLSErrorLabel} from './ClientMLSError';
-import {isCoreCryptoMLSConversationAlreadyExistsError, shouldMLSDecryptionErrorBeIgnored} from './CoreCryptoMLSError';
+import {
+  isCoreCryptoMLSConversationAlreadyExistsError,
+  serializeAbortReason,
+  shouldMLSDecryptionErrorBeIgnored,
+  UPLOAD_COMMIT_BUNDLE_ABORT_REASONS,
+} from './CoreCryptoMLSError';
 
 import {AddUsersFailure, AddUsersFailureReasons, KeyPackageClaimUser} from '../../../conversation';
 import {CoreDatabase} from '../../../storage/CoreDB';
@@ -94,7 +107,7 @@ export const optionalToUint8Array = (array: Uint8Array | []): Uint8Array => {
 };
 
 const defaultConfig = {
-  keyingMaterialUpdateThreshold: 1000 * 60 * 60 * 24 * 30, //30 days
+  keyingMaterialUpdateThreshold: TimeUtil.TimeInMillis.DAY * 30,
   nbKeyPackages: 100,
 };
 
@@ -103,9 +116,11 @@ export enum MLSServiceEvents {
   MLS_CLIENT_MISMATCH = 'mlsClientMismatch',
   NEW_CRL_DISTRIBUTION_POINTS = 'newCrlDistributionPoints',
   MLS_EVENT_DISTRIBUTED = 'mlsEventDistributed',
+  KEY_MATERIAL_UPDATE_FAILURE = 'keyMaterialUpdateFailure',
 }
 
 type Events = {
+  [MLSServiceEvents.KEY_MATERIAL_UPDATE_FAILURE]: {error: unknown; groupId: string};
   [MLSServiceEvents.NEW_EPOCH]: {epoch: number; groupId: string};
   [MLSServiceEvents.NEW_CRL_DISTRIBUTION_POINTS]: string[];
   [MLSServiceEvents.MLS_CLIENT_MISMATCH]: void;
@@ -261,9 +276,47 @@ export class MLSService extends TypedEventEmitter<Events> {
 
       return 'success';
     } catch (error) {
-      this.logger.error(`Failed to upload commit bundle`, error);
+      this.logger.warn(`Failed to upload commit bundle`, error);
+
+      if (error instanceof MLSInvalidLeafNodeSignatureError || error instanceof MLSInvalidLeafNodeIndexError) {
+        this.logger.info('Aborting commit bundle upload due to broken MLS conversation');
+        return {
+          abort: {
+            reason: serializeAbortReason({
+              message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.BROKEN_MLS_CONVERSATION,
+            }),
+          },
+        };
+      }
+
+      if (error instanceof MLSStaleMessageError) {
+        this.logger.info('Aborting commit bundle upload due to stale MLS message');
+        return {
+          abort: {
+            reason: serializeAbortReason({message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.MLS_STALE_MESSAGE}),
+          },
+        };
+      }
+
+      if (error instanceof MLSGroupOutOfSyncError) {
+        this.logger.info('Aborting commit bundle upload due to group out of sync');
+        return {
+          abort: {
+            reason: serializeAbortReason({
+              message: UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.MLS_GROUP_OUT_OF_SYNC,
+              missing_users: error.missing_users,
+            }),
+          },
+        };
+      }
+
+      this.logger.info('Aborting commit bundle upload due to unknown error');
       return {
-        abort: {reason: error instanceof Error ? error.message : 'unknown error'},
+        abort: {
+          reason: serializeAbortReason({
+            message: error instanceof Error ? error.message : UPLOAD_COMMIT_BUNDLE_ABORT_REASONS.OTHER,
+          }),
+        },
       };
     }
   };
@@ -392,25 +445,34 @@ export class MLSService extends TypedEventEmitter<Events> {
   }
 
   public async joinByExternalCommit(getGroupInfo: () => Promise<Uint8Array>) {
-    const credentialType = await this.getCredentialType();
+    try {
+      this.logger.info('Trying to join MLS group via external commit');
+      const credentialType = await this.getCredentialType();
 
-    const groupInfo = await getGroupInfo();
-    const welcomeBundle = await this.coreCryptoClient.transaction(cx =>
-      cx.joinByExternalCommit(new ConversationId(groupInfo), credentialType),
-    );
-    await this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
+      const groupInfo = await getGroupInfo();
 
-    if (welcomeBundle.id) {
-      //after we've successfully joined via external commit, we schedule periodic key material renewal
-      const groupIdStr = Encoder.toBase64(welcomeBundle.id.copyBytes()).asString;
-      const newEpoch = await this.getEpoch(groupIdStr);
+      const welcomeBundle = await this.coreCryptoClient.transaction(cx =>
+        cx.joinByExternalCommit(new GroupInfo(groupInfo), credentialType),
+      );
 
-      // Schedule the next key material renewal
-      await this.scheduleKeyMaterialRenewal(groupIdStr);
+      await this.dispatchNewCrlDistributionPoints(welcomeBundle.crlNewDistributionPoints);
 
-      // Notify subscribers about the new epoch
-      this.emit(MLSServiceEvents.NEW_EPOCH, {groupId: groupIdStr, epoch: newEpoch});
-      this.logger.info(`Joined MLS group with id ${groupIdStr} via external commit, new epoch: ${newEpoch}`);
+      this.logger.info('welcome bundle after joining via external commit');
+      if (welcomeBundle.id) {
+        //after we've successfully joined via external commit, we schedule periodic key material renewal
+        const groupIdStr = Encoder.toBase64(welcomeBundle.id.copyBytes()).asString;
+        const newEpoch = await this.getEpoch(groupIdStr);
+
+        // Schedule the next key material renewal
+        await this.scheduleKeyMaterialRenewal(groupIdStr);
+
+        // Notify subscribers about the new epoch
+        this.emit(MLSServiceEvents.NEW_EPOCH, {groupId: groupIdStr, epoch: newEpoch});
+        this.logger.info(`Joined MLS group with id ${groupIdStr} via external commit, new epoch: ${newEpoch}`);
+      }
+    } catch (error) {
+      this.logger.warn('Failed to join MLS group via external commit', error);
+      throw error;
     }
   }
 
@@ -464,9 +526,33 @@ export class MLSService extends TypedEventEmitter<Events> {
     return this.coreCryptoClient.transaction(cx => cx.encryptMessage(conversationId, message));
   }
 
-  private async updateKeyingMaterial(groupId: string) {
-    const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
-    await this.coreCryptoClient.transaction(cx => cx.updateKeyingMaterial(new ConversationId(groupIdBytes)));
+  private async updateKeyingMaterial(groupId: string, retry = true) {
+    try {
+      const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
+      await this.coreCryptoClient.transaction(cx => cx.updateKeyingMaterial(new ConversationId(groupIdBytes)));
+    } catch (error) {
+      if (!retry) {
+        this.logger.error(`Failed to update keying material for group retrying did not fix the issue`, {
+          error,
+          groupId,
+        });
+        throw error;
+      }
+
+      this.logger.warn(`Failed to update keying material for group`, {error, groupId});
+      this.emit(MLSServiceEvents.KEY_MATERIAL_UPDATE_FAILURE, {error, groupId});
+
+      setTimeout(async () => {
+        try {
+          await this.updateKeyingMaterial(groupId, false);
+        } catch (error) {
+          this.logger.error(`Failed to update keying material for group on retry`, {
+            error,
+            groupId,
+          });
+        }
+      }, TimeUtil.TimeInMillis.SECOND * 10); // retry after 10 seconds
+    }
   }
 
   /**
@@ -626,6 +712,7 @@ export class MLSService extends TypedEventEmitter<Events> {
       await this.registerConversation(groupId, []);
       return true;
     } catch (error) {
+      this.logger.warn("Couldn't establish the MLS group", error);
       // If conversation already existed, locally, nothing more to do, we've received a welcome message.
       if (isCoreCryptoMLSConversationAlreadyExistsError(error)) {
         this.logger.debug(`MLS Group with id ${groupId} already exists, skipping the initialisation.`);
@@ -906,7 +993,8 @@ export class MLSService extends TypedEventEmitter<Events> {
    *
    * @param groupId groupId of the conversation
    */
-  public async commitPendingProposals(groupId: string, shouldRetry = true): Promise<void> {
+  public async commitPendingProposals(groupId: string, shouldRetry = true, params?: any): Promise<void> {
+    this.logger.info(`Committing pending proposals for groupId ${groupId}`, {shouldRetry, params});
     const groupIdBytes = Decoder.fromBase64(groupId).asBytes;
 
     try {
@@ -917,7 +1005,19 @@ export class MLSService extends TypedEventEmitter<Events> {
         throw error;
       }
 
-      this.logger.warn('Failed to commit proposals, clearing the pending commit and retrying', error);
+      if (isMlsMessageRejectedError(error)) {
+        this.logger.warn('Failed to commit proposals, conversation is broken, letting the error bubble up', {
+          error,
+          groupId,
+        });
+        throw error;
+      }
+
+      this.logger.warn('Failed to commit proposals, clearing the pending commit and retrying', {
+        error,
+        groupId,
+        shouldRetry,
+      });
 
       return this.commitPendingProposals(groupId, false);
     }

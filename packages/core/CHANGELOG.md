@@ -3,6 +3,132 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [46.41.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.8...@wireapp/core@46.41.0) (2025-11-03)
+
+### Features
+
+* **core:** Add missing users to MLS conversation on commit bundle upload failure [WPB-20863] ([#7518](https://github.com/wireapp/wire-web-packages/issues/7518)) ([290bf94](https://github.com/wireapp/wire-web-packages/commit/290bf9416f860e42bfd8806aa8da52d8486cefb4))
+
+## [46.40.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.7...@wireapp/core@46.40.8) (2025-10-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.6...@wireapp/core@46.40.7) (2025-10-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.5...@wireapp/core@46.40.6) (2025-10-30)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.4...@wireapp/core@46.40.5) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.3...@wireapp/core@46.40.4) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.2...@wireapp/core@46.40.3) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.1...@wireapp/core@46.40.2) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.40.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.40.0...@wireapp/core@46.40.1) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/core
+
+# [46.40.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.12...@wireapp/core@46.40.0) (2025-10-23)
+
+### Features
+
+* Handle missing MLS users in a conversation [WPB-20863] ([#7488](https://github.com/wireapp/wire-web-packages/issues/7488)) ([66ce8f5](https://github.com/wireapp/wire-web-packages/commit/66ce8f549ce38f1d87311df6f041548078b78934))
+
+## [46.39.12](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.11...@wireapp/core@46.39.12) (2025-10-21)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.11](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.10...@wireapp/core@46.39.11) (2025-10-20)
+
+### Bug Fixes
+
+* Recover from MLS stale message error [WPB-21170] ([#7485](https://github.com/wireapp/wire-web-packages/issues/7485)) ([cf44d24](https://github.com/wireapp/wire-web-packages/commit/cf44d2417acfb039e97fad54da4f9263c0c357c7))
+
+## [46.39.10](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.9...@wireapp/core@46.39.10) (2025-10-17)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.9](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.8...@wireapp/core@46.39.9) (2025-10-16)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.8](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.7...@wireapp/core@46.39.8) (2025-10-16)
+
+### Bug Fixes
+
+* **core:** Recover when mls conversation already exists when processing welcome message [WPB-21118] ([#7461](https://github.com/wireapp/wire-web-packages/issues/7461)) ([8a0354f](https://github.com/wireapp/wire-web-packages/commit/8a0354f81e1ca0a277f9120d5279c60acdd819e2))
+
+## [46.39.7](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.6...@wireapp/core@46.39.7) (2025-10-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.6](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.5...@wireapp/core@46.39.6) (2025-10-15)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.5](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.4...@wireapp/core@46.39.5) (2025-10-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.3...@wireapp/core@46.39.4) (2025-10-14)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.2...@wireapp/core@46.39.3) (2025-10-13)
+
+**Note:** Version bump only for package @wireapp/core
+
+## [46.39.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.1...@wireapp/core@46.39.2) (2025-10-10)
+
+### Bug Fixes
+
+* **core:** Use core crypto provided utils to detect mls orphan welcome error [WPB-20967] ([#7438](https://github.com/wireapp/wire-web-packages/issues/7438)) ([7efcf61](https://github.com/wireapp/wire-web-packages/commit/7efcf6119bb17ad3b5ccb4a6e563338d074fa8d7))
+
+## [46.39.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.39.0...@wireapp/core@46.39.1) (2025-10-10)
+
+### Bug Fixes
+
+* Use correct MLS conversation reset value in allowed global operations [WPB-20946] ([#7437](https://github.com/wireapp/wire-web-packages/issues/7437)) ([b4488c4](https://github.com/wireapp/wire-web-packages/commit/b4488c487406c7e8ae7cbe84fb84dae67f1be361))
+
+# [46.39.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.38.1...@wireapp/core@46.39.0) (2025-10-09)
+
+### Bug Fixes
+
+* Use the 400 error code for mls invalid leaf node errors [WPB-20935] ([#7435](https://github.com/wireapp/wire-web-packages/issues/7435)) ([21e3ac9](https://github.com/wireapp/wire-web-packages/commit/21e3ac90cfe3669e313d4e3076f50f14361f2f27))
+
+### Features
+
+* **core:** Use feature flag for reseting mls conversations [WPB-20946] ([#7436](https://github.com/wireapp/wire-web-packages/issues/7436)) ([44a0c9c](https://github.com/wireapp/wire-web-packages/commit/44a0c9ceb118812ab35364bc15021c25793e4219))
+
+## [46.38.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.38.0...@wireapp/core@46.38.1) (2025-10-08)
+
+### Reverts
+
+* Revert "feat: update AssetAPI [WPB-20663] (#7406)" (#7434) ([6c925b8](https://github.com/wireapp/wire-web-packages/commit/6c925b82ac99e704040748b8683931c4e117396a)), closes [#7406](https://github.com/wireapp/wire-web-packages/issues/7406) [#7434](https://github.com/wireapp/wire-web-packages/issues/7434)
+
+# [46.38.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.37.1...@wireapp/core@46.38.0) (2025-10-07)
+
+### Features
+
+* Initiate reset of broken MLS conversations [WPB-19701] ([#7405](https://github.com/wireapp/wire-web-packages/issues/7405)) ([71a34d8](https://github.com/wireapp/wire-web-packages/commit/71a34d87f084f3c14ce5a1ea247d3180635082cd))
+
+## [46.37.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.37.0...@wireapp/core@46.37.1) (2025-10-06)
+
+**Note:** Version bump only for package @wireapp/core
+
 # [46.37.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/core@46.36.0...@wireapp/core@46.37.0) (2025-10-02)
 
 ### Features

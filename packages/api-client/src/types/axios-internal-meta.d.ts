@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2025 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,12 @@
  *
  */
 
-import {z} from 'zod';
+import 'axios';
 
-/**
- * Zod schema for validating POST /assets response (201 Created)
- * Based on backend API specification
- */
-export const PostAssetsResponseSchema = z.object({
-  /** Asset domain (example.com) */
-  domain: z.string().optional(),
-  /** ISO 8601 formatted expiration date */
-  expires: z.string().datetime(),
-  /** Asset key (e.g., "3-1-47de4580-ae51-4650-acbb-d10c028cb0ac") */
-  key: z.string().min(1),
-  /** Base64 encoded token (e.g., "aGVsbG8") */
-  token: z.string().min(1),
-});
-
-export type AssetUploadData = z.infer<typeof PostAssetsResponseSchema>;
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    requestOptions?: {
+      skipLogout?: boolean;
+    };
+  }
+}

@@ -523,6 +523,7 @@ export class Account extends TypedEventEmitter<Events> {
       this.db,
       this.groupIdFromConversationId,
       subconversationService,
+      this.isMLSConversationRecoveryEnabled,
       mlsService,
     );
     const notificationService = new NotificationService(this.apiClient, this.storeEngine, conversationService);
@@ -856,7 +857,7 @@ export class Account extends TypedEventEmitter<Events> {
           try {
             const start = Date.now();
             const notificationTime = this.getNotificationEventTime(notification.payload[0]);
-            this.logger.info(`Processing legacy notifwication "${notification.id}" at ${notificationTime}`, {
+            this.logger.info(`Processing legacy notification "${notification.id}" at ${notificationTime}`, {
               notification,
             });
             this.logger.info(`Total notifications queue length: ${this.notificationProcessingQueue.getLength()}`);
@@ -1110,7 +1111,7 @@ export class Account extends TypedEventEmitter<Events> {
 
     this.apiClient.transport.ws.on(WebSocketClient.TOPIC.ON_MESSAGE, notification => {
       this.logger.info('Received new notification from backend', {notification});
-      if (this.checkIsConsumable(notification)) {
+      if (Account.checkIsConsumable(notification)) {
         void handleNotification(notification, NotificationSource.WEBSOCKET);
         return;
       }
@@ -1182,10 +1183,16 @@ export class Account extends TypedEventEmitter<Events> {
     return this.currentClient?.capabilities || [];
   };
 
-  public checkIsConsumable = (
+  public static checkIsConsumable = (
     notification: Notification | ConsumableNotification,
   ): notification is ConsumableNotification => {
     return 'type' in notification;
+  };
+
+  public static checkIsLegacyNotification = (
+    notification: Notification | ConsumableNotification,
+  ): notification is Notification => {
+    return !Account.checkIsConsumable(notification);
   };
 
   private readonly generateDbName = (context: Context) => {
@@ -1249,5 +1256,10 @@ export class Account extends TypedEventEmitter<Events> {
     // Check if MLS is enabled for the public via backend feature flag
     const commonConfig = (await this.service?.team.getCommonFeatureConfig()) ?? {};
     return commonConfig[FEATURE_KEY.MLS]?.status === FeatureStatus.ENABLED;
+  };
+
+  private isMLSConversationRecoveryEnabled = async () => {
+    const commonConfig = (await this.service?.team.getCommonFeatureConfig()) ?? {};
+    return commonConfig[FEATURE_KEY.ALLOWED_GLOBAL_OPERATIONS]?.config?.mlsConversationReset === true;
   };
 }

@@ -29,6 +29,7 @@ import {
   FeatureAppLock,
   FeatureCells,
   FeatureChannels,
+  FeatureAssetAuditLog,
   FeatureConferenceCalling,
   FeatureConsumableNotifications,
   FeatureDigitalSignature,
@@ -49,6 +50,10 @@ import {FeatureList} from './FeatureList.types';
 import {BackendError, BackendErrorLabel, HttpClient} from '../../http';
 
 import {FeatureConversationGuestLink, FeatureLockedError} from '.';
+
+export const isBackendError = (error: unknown): error is BackendError => {
+  return error instanceof Error && 'label' in error && typeof (error as any).label === 'string';
+};
 
 export class FeatureAPI {
   private readonly logger: logdown.Logger;
@@ -133,10 +138,8 @@ export class FeatureAPI {
       const response = await this.client.sendJSON<FeatureConversationGuestLink>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
-        case BackendErrorLabel.FEATURE_LOCKED: {
-          throw new FeatureLockedError((error as BackendError).message);
-        }
+      if (isBackendError(error) && error.label === BackendErrorLabel.FEATURE_LOCKED) {
+        throw new FeatureLockedError(error.message);
       }
       throw error;
     }
@@ -166,10 +169,8 @@ export class FeatureAPI {
       const response = await this.client.sendJSON<FeatureConferenceCalling>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
-        case BackendErrorLabel.FEATURE_LOCKED: {
-          throw new FeatureLockedError((error as BackendError).message);
-        }
+      if (isBackendError(error) && error.label === BackendErrorLabel.FEATURE_LOCKED) {
+        throw new FeatureLockedError(error.message);
       }
       throw error;
     }
@@ -205,10 +206,8 @@ export class FeatureAPI {
       const response = await this.client.sendJSON<FeatureVideoCalling>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
-        case BackendErrorLabel.FEATURE_LOCKED: {
-          throw new FeatureLockedError((error as BackendError).message);
-        }
+      if (isBackendError(error) && error.label === BackendErrorLabel.FEATURE_LOCKED) {
+        throw new FeatureLockedError(error.message);
       }
       throw error;
     }
@@ -238,10 +237,8 @@ export class FeatureAPI {
       const response = await this.client.sendJSON<FeatureSelfDeletingMessages>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
-        case BackendErrorLabel.FEATURE_LOCKED: {
-          throw new FeatureLockedError((error as BackendError).message);
-        }
+      if (isBackendError(error) && error.label === BackendErrorLabel.FEATURE_LOCKED) {
+        throw new FeatureLockedError(error.message);
       }
       throw error;
     }
@@ -271,10 +268,8 @@ export class FeatureAPI {
       const response = await this.client.sendJSON<FeatureFileSharing>(config);
       return response.data;
     } catch (error) {
-      switch ((error as BackendError).label) {
-        case BackendErrorLabel.FEATURE_LOCKED: {
-          throw new FeatureLockedError((error as BackendError).message);
-        }
+      if (isBackendError(error) && error.label === BackendErrorLabel.FEATURE_LOCKED) {
+        throw new FeatureLockedError(error.message);
       }
       throw error;
     }
@@ -457,6 +452,16 @@ export class FeatureAPI {
     };
 
     const response = await this.client.sendJSON<FeatureCells>(config);
+    return response.data;
+  }
+
+  public async getAssetAuditLog(teamId: string): Promise<FeatureAssetAuditLog> {
+    const config: AxiosRequestConfig = {
+      method: 'get',
+      url: `/teams/${teamId}/features/assetAuditLog`,
+    };
+
+    const response = await this.client.sendJSON<FeatureAssetAuditLog>(config);
     return response.data;
   }
 }

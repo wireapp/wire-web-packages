@@ -18,6 +18,7 @@
  */
 
 import {BackendError, BackendErrorLabel, StatusCode} from '../http/';
+import {QualifiedId} from '../user';
 
 export class ConversationError extends BackendError {
   constructor(message: string, label: BackendErrorLabel, code: StatusCode) {
@@ -84,5 +85,57 @@ export class ConversationFullError extends ConversationError {
     super(message, label, code);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = 'ConversationFullError';
+  }
+}
+
+export class MLSInvalidLeafNodeSignatureError extends ConversationError {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.MLS_INVALID_LEAF_NODE_SIGNATURE,
+    code: StatusCode = StatusCode.BAD_REQUEST,
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'MLSInvalidLeafNodeSignatureError';
+  }
+}
+
+export class MLSInvalidLeafNodeIndexError extends ConversationError {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX,
+    code: StatusCode = StatusCode.BAD_REQUEST,
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'MLSInvalidLeafNodeIndexError';
+  }
+}
+
+export class MLSStaleMessageError extends ConversationError {
+  constructor(
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.MLS_STALE_MESSAGE,
+    code: StatusCode = StatusCode.CONFLICT,
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'MLSStaleMessageError';
+  }
+}
+
+export class MLSGroupOutOfSyncError extends ConversationError {
+  public missing_users: QualifiedId[];
+
+  constructor(
+    code: StatusCode = StatusCode.CONFLICT,
+    missingUsers: QualifiedId[] = [],
+    message: string,
+    label: BackendErrorLabel = BackendErrorLabel.MLS_GROUP_OUT_OF_SYNC,
+  ) {
+    super(message, label, code);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = 'MLSGroupOutOfSyncError';
+    this.missing_users = missingUsers;
   }
 }

@@ -46,11 +46,13 @@ export class AssetService {
    * @return Resolves when the asset has been uploaded
    */
   public downloadRawAsset(assetData: AssetUrlData, progressCallback?: ProgressCallback) {
+    const {forceCaching} = assetData;
+
     return this.apiClient.api.asset.getAsset(
       assetData.assetKey,
       assetData.assetDomain,
       assetData.assetToken,
-      assetData.forceCaching,
+      forceCaching,
       progressCallback,
     );
   }
