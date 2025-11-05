@@ -69,6 +69,8 @@ export class HttpClient extends EventEmitter {
   public static readonly TOPIC = TOPIC;
   private versionPrefix = '';
 
+  private enableGzip: boolean = true;
+
   constructor(
     private readonly config: Config,
     public accessTokenStore: AccessTokenStore,
@@ -120,6 +122,18 @@ export class HttpClient extends EventEmitter {
     });
   }
 
+  /**
+   * Toggle gzip compression for sendJSON requests.
+   * @param enabled - true to enable gzip, false to disable
+   */
+  public toggleGzip(enabled: boolean): void {
+    this.enableGzip = enabled;
+  }
+
+  public isGzipEnabled(): boolean {
+    return this.enableGzip;
+  }
+
   public getBaseUrl() {
     return `${this.config.urls.rest}${this.versionPrefix}`;
   }
@@ -145,6 +159,7 @@ export class HttpClient extends EventEmitter {
         Authorization: `${token_type} ${access_token}`,
       };
     }
+    const skipLogout = config.requestOptions?.skipLogout === true;
 
     try {
       const response = await this.client.request<T>({
@@ -188,9 +203,10 @@ export class HttpClient extends EventEmitter {
         }
 
         if (
-          mappedError instanceof InvalidTokenError ||
-          mappedError instanceof MissingCookieError ||
-          mappedError instanceof MissingCookieAndTokenError
+          !skipLogout &&
+          (mappedError instanceof InvalidTokenError ||
+            mappedError instanceof MissingCookieError ||
+            mappedError instanceof MissingCookieAndTokenError)
         ) {
           // On invalid cookie the application is supposed to logout.
           this.logger.warn(
@@ -308,6 +324,7 @@ export class HttpClient extends EventEmitter {
     abortController?: AbortController,
   ): Promise<AxiosResponse<T>> {
     const shouldGzipData =
+      this.enableGzip &&
       process.env.NODE_ENV !== 'test' &&
       !!config.data &&
       ['post', 'put', 'patch'].includes(config.method?.toLowerCase() ?? '');

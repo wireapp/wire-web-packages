@@ -9,6 +9,10 @@ on:
         default: true
         type: boolean
 
+permissions:
+  id-token: write # Required for npm Trusted Publishing
+  contents: write
+
 jobs:
   publish_all:
     runs-on: ubuntu-latest
@@ -18,6 +22,7 @@ jobs:
         uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
+          token: ${{ secrets.OTTO_THE_BOT_GH_TOKEN }}
 
       - name: Set environment variables
         run: |
@@ -55,13 +60,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           cache: 'yarn'
 
-      - name: Authenticate git clone
-        env:
-          GH_TOKEN: ${{secrets.OTTO_THE_BOT_GH_TOKEN}}
-        run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
+      # Auth is provided via checkout token; no separate netrc needed
 
       - name: Install JS dependencies
         run: yarn --immutable
@@ -73,15 +75,15 @@ jobs:
         if: ${{ inputs.test }}
         run: yarn test:all
 
-      - name: Set release environment variables
+      - name: Configure Git and npm (Trusted Publishing)
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> "${HOME}/.npmrc"
+          # Enable npm provenance and use GitHub OIDC (npm Trusted Publishing)
+          npm config set provenance true
+          npm config set registry https://registry.npmjs.org/
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
 
-      - name: Release
-        env:
-          NPM_TOKEN: ${{secrets.WEBTEAM_NPM_TOKEN}}
+      - name: Release (Trusted Publishing)
         run: yarn new-version --force-publish && yarn new-publish --force-publish
 
       - name: Notify CI error

@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.69.4](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.69.3...@wireapp/react-ui-kit@9.69.4) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.69.3](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.69.2...@wireapp/react-ui-kit@9.69.3) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.69.2](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.69.1...@wireapp/react-ui-kit@9.69.2) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+## [9.69.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.69.0...@wireapp/react-ui-kit@9.69.1) (2025-10-23)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
+# [9.69.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.68.0...@wireapp/react-ui-kit@9.69.0) (2025-10-16)
+
+### Features
+
+* add EP endpoints and update designs in ui-kit [WPB-10627] ([#7325](https://github.com/wireapp/wire-web-packages/issues/7325)) ([81d7a2f](https://github.com/wireapp/wire-web-packages/commit/81d7a2fd666060c34171aa7c5f95af097c157e62))
+
+# [9.68.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.67.0...@wireapp/react-ui-kit@9.68.0) (2025-10-07)
+
+### Features
+
+* **react-ui-kit:** update attribute from :first-child to :first-of-type ([#7433](https://github.com/wireapp/wire-web-packages/issues/7433)) ([e07b246](https://github.com/wireapp/wire-web-packages/commit/e07b24652ba77b901c783a2d6a5008e01a963a2f))
+
+# [9.67.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.66.1...@wireapp/react-ui-kit@9.67.0) (2025-10-07)
+
+### Features
+
+* **react-ui-kit:** add ShareLink and CirclePlus icons [WPB-20283] ([#7432](https://github.com/wireapp/wire-web-packages/issues/7432)) ([371f1a2](https://github.com/wireapp/wire-web-packages/commit/371f1a2c48e0f4e13dbf71713062cb6f0a773b4c))
+
+## [9.66.1](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.66.0...@wireapp/react-ui-kit@9.66.1) (2025-10-06)
+
+**Note:** Version bump only for package @wireapp/react-ui-kit
+
 # [9.66.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.65.0...@wireapp/react-ui-kit@9.66.0) (2025-09-29)
 
 ### Features
