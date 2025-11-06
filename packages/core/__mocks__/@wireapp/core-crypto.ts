@@ -150,5 +150,11 @@ export const isProteusRemoteIdentityChangedError = (error: unknown) =>
 export const isMlsOrphanWelcomeError = (error: unknown) =>
   isCcError(error, ErrorType.Mls) && (error as any).context?.type === MlsErrorType.OrphanWelcome;
 
+// Added to support tests that rely on the core-crypto guard for ConversationAlreadyExists classification
+export const isMlsConversationAlreadyExistsError = (error: unknown) =>
+  isCcError(error, ErrorType.Mls) &&
+  (error as any).context?.type === MlsErrorType.ConversationAlreadyExists &&
+  Array.isArray((error as any).context?.context?.conversationId);
+
 export const isMlsMessageRejectedError = (error: unknown) =>
   isCcError(error, ErrorType.Mls) && (error as any).context?.type === MlsErrorType.MessageRejected;
