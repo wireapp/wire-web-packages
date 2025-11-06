@@ -31,7 +31,10 @@ import {GenericMessage, Text} from '@wireapp/protocol-messaging';
 
 import {MessageService} from './MessageService';
 
-import {buildProteusService, cleanupProteusServiceMocks} from '../../messagingProtocols/proteus/ProteusService/ProteusService.mocks';
+import {
+  buildProteusService,
+  cleanupProteusServiceMocks,
+} from '../../messagingProtocols/proteus/ProteusService/ProteusService.mocks';
 import {getUUID} from '../../test/PayloadHelper';
 
 const baseMessageSendingStatus: MessageSendingStatus = {
