@@ -36,6 +36,7 @@ describe('AssetService', () => {
       const assetService = new AssetService(apiClient);
 
       const assetServerData = {
+        domain: 'asset-server.test.wire.com',
         key: `3-2-${uuidv4()}`,
         token: uuidv4(),
         expires: '',
