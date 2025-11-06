@@ -77,7 +77,6 @@ describe('APIClient', () => {
     it('constructs a client with production backend and StoreEngine by default', () => {
       const client = new APIClient(testConfig);
       apiClients.push(client);
-      apiClients.push(client);
       expect(client.transport.http['client'].defaults.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
@@ -85,14 +84,12 @@ describe('APIClient', () => {
     it('constructs StoreEngine when only the URLs is provided', () => {
       const client = new APIClient({urls: APIClient.BACKEND.PRODUCTION, cells: testConfig.cells});
       apiClients.push(client);
-      apiClients.push(client);
       expect(client.transport.http['client'].defaults.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
     });
 
     it('constructs URLs when only the StoreEngine is provided', () => {
       const client = new APIClient(testConfig);
-      apiClients.push(client);
       apiClients.push(client);
       expect(client.transport.http['client'].defaults.baseURL).toBe(APIClient.BACKEND.PRODUCTION.rest);
       expect(client.transport.ws['baseUrl']).toBe(APIClient.BACKEND.PRODUCTION.ws);
@@ -105,7 +102,6 @@ describe('APIClient', () => {
         .get('/api-version')
         .reply(200, {supported: [MINIMUM_API_VERSION, MINIMUM_API_VERSION + 1]});
       const client = new APIClient(testConfig);
-      apiClients.push(client);
       apiClients.push(client);
       let errorMessage;
       try {
