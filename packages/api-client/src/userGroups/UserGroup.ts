@@ -25,5 +25,6 @@ export interface UserGroup {
   managedBy: UserGroupManagedBy;
   members: string[];
   membersCount?: number;
+  channelsCount?: number;
   name: string;
 }
