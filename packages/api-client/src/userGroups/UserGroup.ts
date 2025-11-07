@@ -19,6 +19,8 @@
 
 import {UserGroupManagedBy} from './UserGroupManagedBy';
 
+import {QualifiedId} from '../user/QualifiedId';
+
 export interface UserGroup {
   createdAt: string;
   id: string;
@@ -27,4 +29,5 @@ export interface UserGroup {
   membersCount?: number;
   channelsCount?: number;
   name: string;
+  channels: QualifiedId[];
 }
