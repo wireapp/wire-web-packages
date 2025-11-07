@@ -29,5 +29,5 @@ export interface UserGroup {
   membersCount?: number;
   channelsCount?: number;
   name: string;
-  channels: QualifiedId[];
+  channels?: QualifiedId[];
 }
