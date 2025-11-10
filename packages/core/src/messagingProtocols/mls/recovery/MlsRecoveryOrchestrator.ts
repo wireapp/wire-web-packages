@@ -140,6 +140,10 @@ type runWithRecoveryParams<T> = {
   retry?: boolean;
 };
 
+function isRecoveryPolicy(entry: RecoveryPolicy | PerOperationPolicies): entry is RecoveryPolicy {
+  return 'action' in entry && typeof entry.action === 'string';
+}
+
 /**
  * Default implementation with in-process deduplication keyed by action and context.
  */
@@ -163,13 +167,13 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
       return await callBack();
     } catch (rawError) {
       this.logger.info('Operation failed, invoking MLS recovery orchestrator', {rawError});
-      const domainErr = this.mapper.map(rawError, {
+      const normalizedError = this.mapper.map(rawError, {
         qualifiedConversationId: context.qualifiedConversationId,
         groupId: context.groupId,
         subconvId: context.subconvId,
       });
-      this.logger.info(`Mapped error to domain MLS error of type ${domainErr.type}`, {domainErr});
-      const policy = this.getPolicyFor(domainErr, context);
+      this.logger.info(`Mapped error to domain MLS error of type ${normalizedError.type}`, {normalizedError});
+      const policy = this.getPolicyFor(normalizedError, context);
       this.logger.info(`Resolved recovery policy: action=${policy.action}`, {policy});
 
       if (policy.action === 'Unknown' || !retry) {
@@ -178,7 +182,7 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
       }
 
       const key = this.getRecoveryKey(context, policy.action);
-      await this.performRecovery(context, domainErr, policy, key);
+      await this.performRecovery(context, normalizedError, policy, key);
       await this.maybeDelay(policy.retryConfig);
 
       if (policy.retryConfig.reRunOriginalOperation) {
@@ -195,11 +199,11 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
       return {action: 'Unknown', retryConfig: {maxAttempts: 0}};
     }
 
-    if ((entry as RecoveryPolicy).action) {
-      return entry as RecoveryPolicy;
+    if (isRecoveryPolicy(entry)) {
+      return entry;
     }
 
-    const perOperationPolicy = entry as PerOperationPolicies;
+    const perOperationPolicy = entry;
     return perOperationPolicy[ctx.operationName] ?? {action: 'Unknown', retryConfig: {maxAttempts: 0}};
   };
 
@@ -247,7 +251,7 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
       }
       case 'WipeAndReprocessWelcome': {
         // We rely on either the operation context groupId (preferred) or any mapped error context
-        const groupId = context.groupId ?? (err.context?.groupId as string | undefined);
+        const groupId = context.groupId ?? err.context?.groupId;
         if (!groupId) {
           this.logger.warn('Could not determine groupId for WipeAndReprocessWelcome; skipping wipe');
           break;

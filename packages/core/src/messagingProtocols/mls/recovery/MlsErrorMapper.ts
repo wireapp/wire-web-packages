@@ -36,6 +36,7 @@ import {
   isMLSGroupOutOfSyncError,
   isBrokenMLSConversationError,
   getMLSGroupOutOfSyncErrorMissingUsers,
+  ConversationAlreadyExistsError,
 } from '../MLSService/CoreCryptoMLSError';
 
 /**
@@ -93,7 +94,7 @@ export interface ErrorHandler {
   /** True if this handler can map the provided error given optional context. */
   canHandle(error: unknown, context?: ErrorContextInput): boolean;
   /** Return a mapped error or undefined to defer to later handlers. */
-  map(error: unknown, context?: ErrorContextInput): DomainMlsError | undefined;
+  map(error: unknown, context?: ErrorContextInput): DomainMlsError;
   /** Lower runs earlier (higher precedence). */
   priority?: number;
 }
@@ -125,7 +126,8 @@ export class ChainedMlsErrorMapper implements MlsErrorMapper {
         }
       }
     }
-    return {type: 'Unknown', message: (error as any)?.message, cause: error, context: context};
+
+    return FallbackHandler.map(error, context);
   }
 }
 
@@ -165,9 +167,17 @@ const GroupOutOfSyncHandler: ErrorHandler = {
   priority: 20,
   canHandle: err => isMLSGroupOutOfSyncError?.(err) === true || err instanceof MLSGroupOutOfSyncError,
   map: (err, context) => {
-    const missingUsers = isMLSGroupOutOfSyncError?.(err)
-      ? getMLSGroupOutOfSyncErrorMissingUsers(err)
-      : (err as any)?.missing_users ?? [];
+    let missingUsers: QualifiedId[] = [];
+    if (isMLSGroupOutOfSyncError?.(err)) {
+      missingUsers = getMLSGroupOutOfSyncErrorMissingUsers(err);
+    } else if (err instanceof MLSGroupOutOfSyncError) {
+      missingUsers = err.missing_users;
+    }
+
+    if (missingUsers.length === 0) {
+      throw new Error('Error is not a GroupOutOfSync error with missing users');
+    }
+
     return {
       type: 'GroupOutOfSync',
       message: 'Group out of sync; missing users detected',
@@ -180,13 +190,16 @@ const GroupOutOfSyncHandler: ErrorHandler = {
 /** core-crypto indicates a local group already exists for the welcome's group id. */
 const ConversationAlreadyExistsHandler: ErrorHandler = {
   priority: 30,
-  canHandle: err => isMlsConversationAlreadyExistsError?.(err) === true,
-  map: (err, context) => {
-    const groupId = tryExtractGroupIdFromCoreCryptoError(err);
+  canHandle: error => isMlsConversationAlreadyExistsError?.(error) === true,
+  map: (error, context) => {
+    if (!isMlsConversationAlreadyExistsError(error)) {
+      throw new Error('Error is not a ConversationAlreadyExists error');
+    }
+    const groupId = tryExtractGroupIdFromCoreCryptoError(error);
     return {
       type: 'ConversationAlreadyExists',
       message: 'Conversation already exists',
-      cause: err,
+      cause: error,
       context: {groupId, qualifiedConversationId: context?.qualifiedConversationId},
     };
   },
@@ -208,7 +221,10 @@ const OrphanWelcomeHandler: ErrorHandler = {
 const FallbackHandler: ErrorHandler = {
   priority: 999,
   canHandle: () => true,
-  map: (err, context) => ({type: 'Unknown', message: (err as any)?.message, cause: err, context: context}),
+  map: (err, context): DomainMlsError =>
+    err instanceof Error
+      ? {type: 'Unknown', message: err.message, cause: err, context}
+      : {type: 'Unknown', message: String(err), cause: err, context},
 };
 
 /**
@@ -236,10 +252,10 @@ export function createDefaultMlsErrorMapper(): MlsErrorMapper {
  * core-crypto encodes the conversation id bytes under `error.context.context.conversationId`.
  * We convert the byte array to base64 for uniform handling in higher layers.
  */
-function tryExtractGroupIdFromCoreCryptoError(err: unknown): string | undefined {
+function tryExtractGroupIdFromCoreCryptoError(err: ConversationAlreadyExistsError): string | undefined {
   try {
     // core-crypto error.context?.context?.conversationId is a byte array (number[])
-    const conversationIdArray = (err as any)?.context?.context?.conversationId;
+    const conversationIdArray = err?.context?.context?.conversationId;
     if (!conversationIdArray) {
       return undefined;
     }
