@@ -127,7 +127,7 @@ export enum MlsErrorType {
   Other = 'Other',
 }
 
-type CcError<T extends ErrorType> = Error & {type: T; context?: {type: string}};
+type CcError<T extends ErrorType> = Error & {type: T; context?: {type: string; context: {conversationId?: Uint8Array}}};
 
 export const isCcError = <E extends ErrorType>(error: unknown, errorType: E): error is CcError<E> => {
   return typeof error === 'object' && error !== null && (error as any).type === errorType;
@@ -153,8 +153,8 @@ export const isMlsOrphanWelcomeError = (error: unknown) =>
 // Added to support tests that rely on the core-crypto guard for ConversationAlreadyExists classification
 export const isMlsConversationAlreadyExistsError = (error: unknown) =>
   isCcError(error, ErrorType.Mls) &&
-  (error as any).context?.type === MlsErrorType.ConversationAlreadyExists &&
-  Array.isArray((error as any).context?.context?.conversationId);
+  error.context?.type === MlsErrorType.ConversationAlreadyExists &&
+  Array.isArray(error.context?.context?.conversationId);
 
 export const isMlsMessageRejectedError = (error: unknown) =>
-  isCcError(error, ErrorType.Mls) && (error as any).context?.type === MlsErrorType.MessageRejected;
+  isCcError(error, ErrorType.Mls) && error.context?.type === MlsErrorType.MessageRejected;
