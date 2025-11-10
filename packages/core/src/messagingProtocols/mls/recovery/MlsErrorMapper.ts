@@ -27,7 +27,7 @@ import {SUBCONVERSATION_ID, MLSStaleMessageError, MLSGroupOutOfSyncError} from '
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 import {Encoder} from 'bazinga64';
 
-import {isMlsConversationAlreadyExistsError, isMlsOrphanWelcomeError} from '@wireapp/core-crypto';
+import {isMlsConversationAlreadyExistsError, isMlsOrphanWelcomeError, MlsErrorType} from '@wireapp/core-crypto';
 
 // Reuse existing type-guards from the MLS layer
 import {
@@ -44,14 +44,7 @@ import {
  *
  * These are intentionally decoupled from concrete error classes to keep the orchestrator stable.
  */
-export type DomainMlsErrorType =
-  | 'WrongEpoch'
-  | 'ConversationAlreadyExists'
-  | 'OrphanWelcome'
-  | 'KeyMaterialUpdateFailure'
-  | 'GroupOutOfSync'
-  | 'GroupNotEstablished'
-  | 'Unknown';
+export type DomainMlsErrorType = MlsErrorType | 'KeyMaterialUpdateFailure' | 'GroupOutOfSync' | 'GroupNotEstablished';
 
 /**
  * Normalized error shape produced by the mapper.
@@ -139,7 +132,7 @@ const WrongEpochHandler: ErrorHandler = {
   canHandle: err =>
     isCoreCryptoMLSWrongEpochError?.(err) || isMLSStaleMessageError?.(err) || err instanceof MLSStaleMessageError,
   map: (err, context) => ({
-    type: 'WrongEpoch',
+    type: MlsErrorType.WrongEpoch,
     message: 'Epoch mismatch or stale message',
     cause: err,
     context: {
@@ -197,7 +190,7 @@ const ConversationAlreadyExistsHandler: ErrorHandler = {
     }
     const groupId = tryExtractGroupIdFromCoreCryptoError(error);
     return {
-      type: 'ConversationAlreadyExists',
+      type: MlsErrorType.ConversationAlreadyExists,
       message: 'Conversation already exists',
       cause: error,
       context: {groupId, qualifiedConversationId: context?.qualifiedConversationId},
@@ -210,7 +203,7 @@ const OrphanWelcomeHandler: ErrorHandler = {
   priority: 40,
   canHandle: err => isMlsOrphanWelcomeError?.(err) === true,
   map: (err, context) => ({
-    type: 'OrphanWelcome',
+    type: MlsErrorType.OrphanWelcome,
     message: 'Orphan welcome message',
     cause: err,
     context: {qualifiedConversationId: context?.qualifiedConversationId},
@@ -223,8 +216,8 @@ const FallbackHandler: ErrorHandler = {
   canHandle: () => true,
   map: (err, context): DomainMlsError =>
     err instanceof Error
-      ? {type: 'Unknown', message: err.message, cause: err, context}
-      : {type: 'Unknown', message: String(err), cause: err, context},
+      ? {type: MlsErrorType.Other, message: err.message, cause: err, context}
+      : {type: MlsErrorType.Other, message: String(err), cause: err, context},
 };
 
 /**
