@@ -61,6 +61,7 @@ import {MLSService, MLSServiceEvents} from '../../messagingProtocols/mls';
 import {
   MlsRecoveryOrchestrator,
   MlsRecoveryOrchestratorImpl,
+  OperationName,
   createDefaultMlsErrorMapper,
   minimalDefaultPolicies,
 } from '../../messagingProtocols/mls/recovery';
@@ -390,7 +391,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     const {groupId, conversationId} = params;
 
     return this.mlsRecovery.runWithRecovery({
-      context: {operationName: 'send', qualifiedConversationId: conversationId, groupId},
+      context: {operationName: OperationName.send, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performSendMLSMessageAPI(params),
     });
   }
@@ -444,7 +445,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     conversationId,
   }: Required<AddUsersParams> & {shouldRetry?: boolean}): Promise<BaseCreateConversationResponse> {
     return this.mlsRecovery.runWithRecovery({
-      context: {operationName: 'addUsers', qualifiedConversationId: conversationId, groupId},
+      context: {operationName: OperationName.addUsers, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performAddUsersToMLSConversationAPI({qualifiedUsers, groupId, conversationId}),
     });
   }
@@ -490,7 +491,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     qualifiedUserIds,
   }: RemoveUsersParams & {shouldRetry?: boolean}): Promise<Conversation> {
     return this.mlsRecovery.runWithRecovery({
-      context: {operationName: 'removeUsers', qualifiedConversationId: conversationId, groupId},
+      context: {operationName: OperationName.removeUsers, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performRemoveUsersFromMLSConversationAPI({groupId, conversationId, qualifiedUserIds}),
     });
   }
@@ -523,7 +524,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    */
   public async joinByExternalCommit(conversationId: QualifiedId): Promise<void> {
     await this.mlsRecovery.runWithRecovery({
-      context: {operationName: 'joinExternalCommit', qualifiedConversationId: conversationId},
+      context: {operationName: OperationName.joinExternalCommit, qualifiedConversationId: conversationId},
       callBack: () => this.performJoinByExternalCommitAPI(conversationId),
     });
   }
@@ -569,7 +570,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     try {
       await this.mlsRecovery.runWithRecovery({
         context: {
-          operationName: 'keyMaterialUpdate',
+          operationName: OperationName.keyMaterialUpdate,
           qualifiedConversationId: conversation.qualified_id,
           groupId,
         },
@@ -930,7 +931,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       }
       return await this.mlsRecovery.runWithRecovery<HandledEventPayload | null>({
         context: {
-          operationName: 'handleMessageAdd',
+          operationName: OperationName.handleMessageAdd,
           qualifiedConversationId,
           subconvId: subconv,
         },
@@ -988,7 +989,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     this.logger.info('Handling MLS welcome message event (orchestrated)', {event});
     await this.mlsRecovery.runWithRecovery({
       context: {
-        operationName: 'handleWelcome',
+        operationName: OperationName.handleWelcome,
         qualifiedConversationId: event.qualified_conversation,
       },
       callBack: () => this.mlsService.handleMLSWelcomeMessageEvent(event, this.apiClient.validatedClientId),

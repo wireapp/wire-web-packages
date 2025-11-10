@@ -49,14 +49,14 @@ import {DomainMlsError, DomainMlsErrorType, MlsErrorMapper} from './MlsErrorMapp
  * - Noop: Explicitly do nothing (useful for policy overrides).
  * - Unknown: No matching policy found; treated as no-op and the original error is re-thrown.
  */
-export type RecoveryActionKind =
-  | 'JoinViaExternalCommit'
-  | 'RecoverFromEpochMismatch'
-  | 'ResetAndReestablish'
-  | 'AddMissingUsers'
-  | 'WipeAndReprocessWelcome'
-  | 'Noop'
-  | 'Unknown';
+export enum RecoveryActionKind {
+  JoinViaExternalCommit = 'JoinViaExternalCommit',
+  RecoverFromEpochMismatch = 'RecoverFromEpochMismatch',
+  ResetAndReestablish = 'ResetAndReestablish',
+  AddMissingUsers = 'AddMissingUsers',
+  WipeAndReprocessWelcome = 'WipeAndReprocessWelcome',
+  Unknown = 'Unknown',
+}
 
 /**
  * Retry behavior for an operation under recovery.
@@ -78,7 +78,6 @@ export type RecoveryPolicy = {
   retryConfig: RetryPolicy;
 };
 
-type OperationName = OperationContext['operationName'];
 type PerOperationPolicies = Partial<Record<OperationName, RecoveryPolicy>>;
 /**
  * Global policy table from DomainMlsErrorType to RecoveryPolicy.
@@ -88,18 +87,21 @@ type PerOperationPolicies = Partial<Record<OperationName, RecoveryPolicy>>;
  */
 export type PolicyTable = Partial<Record<DomainMlsErrorType, RecoveryPolicy | PerOperationPolicies>>;
 
+export enum OperationName {
+  send = 'send',
+  addUsers = 'addUsers',
+  removeUsers = 'removeUsers',
+  joinExternalCommit = 'joinExternalCommit',
+  handleWelcome = 'handleWelcome',
+  handleMessageAdd = 'handleMessageAdd',
+  keyMaterialUpdate = 'keyMaterialUpdate',
+}
+
 /**
  * Context about the operation being orchestrated. Used for policy selection and keying.
  */
 export type OperationContext = {
-  operationName:
-    | 'send'
-    | 'addUsers'
-    | 'removeUsers'
-    | 'joinExternalCommit'
-    | 'handleWelcome'
-    | 'handleMessageAdd'
-    | 'keyMaterialUpdate';
+  operationName: OperationName;
   qualifiedConversationId?: QualifiedId;
   groupId?: string;
   subconvId?: SUBCONVERSATION_ID;
@@ -196,7 +198,7 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
   private getPolicyFor = (err: DomainMlsError, ctx: OperationContext): RecoveryPolicy => {
     const entry = this.policies[err.type];
     if (!entry) {
-      return {action: 'Unknown', retryConfig: {maxAttempts: 0}};
+      return {action: RecoveryActionKind.Unknown, retryConfig: {maxAttempts: 0}};
     }
 
     if (isRecoveryPolicy(entry)) {
@@ -204,7 +206,7 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
     }
 
     const perOperationPolicy = entry;
-    return perOperationPolicy[ctx.operationName] ?? {action: 'Unknown', retryConfig: {maxAttempts: 0}};
+    return perOperationPolicy[ctx.operationName] ?? {action: RecoveryActionKind.Unknown, retryConfig: {maxAttempts: 0}};
   };
 
   /**
@@ -259,7 +261,6 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
         await this.runOnceWithKey(recoveryKey, () => this.deps.wipeMLSConversation(groupId));
         break;
       }
-      case 'Noop':
       default:
         this.logger.info(`No recovery action taken for action ${policy.action}`);
         break;
@@ -326,49 +327,76 @@ export const minimalDefaultPolicies: PolicyTable = {
   WrongEpoch: {
     // For join operations, recover from epoch mismatch; do not re-run original op
     joinExternalCommit: {
-      action: 'RecoverFromEpochMismatch',
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
       retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
     },
     // For non-join operations, recover from epoch mismatch and retry original once
-    send: {action: 'RecoverFromEpochMismatch', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    addUsers: {action: 'RecoverFromEpochMismatch', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    removeUsers: {action: 'RecoverFromEpochMismatch', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    send: {
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
+    addUsers: {
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
+    removeUsers: {
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
     // For inbound message-add processing, fix epoch and allow normal flow to progress (no auto re-run)
     handleMessageAdd: {
-      action: 'RecoverFromEpochMismatch',
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
       retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
     },
     keyMaterialUpdate: {
-      action: 'RecoverFromEpochMismatch',
+      action: RecoveryActionKind.RecoverFromEpochMismatch,
       retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
     },
   },
   // Use per-operation semantics so typed operations re-run once post-recovery
   GroupNotEstablished: {
-    joinExternalCommit: {action: 'ResetAndReestablish', retryConfig: {maxAttempts: 1, reRunOriginalOperation: false}},
-    send: {action: 'ResetAndReestablish', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    addUsers: {action: 'ResetAndReestablish', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    removeUsers: {action: 'ResetAndReestablish', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    joinExternalCommit: {
+      action: RecoveryActionKind.ResetAndReestablish,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
+    },
+    send: {action: RecoveryActionKind.ResetAndReestablish, retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    addUsers: {
+      action: RecoveryActionKind.ResetAndReestablish,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
+    removeUsers: {
+      action: RecoveryActionKind.ResetAndReestablish,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
     keyMaterialUpdate: {
-      action: 'ResetAndReestablish',
+      action: RecoveryActionKind.ResetAndReestablish,
       retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
     },
   },
   GroupOutOfSync: {
-    send: {action: 'AddMissingUsers', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    addUsers: {action: 'AddMissingUsers', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
-    removeUsers: {action: 'AddMissingUsers', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    send: {action: RecoveryActionKind.AddMissingUsers, retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    addUsers: {action: RecoveryActionKind.AddMissingUsers, retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    removeUsers: {
+      action: RecoveryActionKind.AddMissingUsers,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
     keyMaterialUpdate: {
-      action: 'AddMissingUsers',
+      action: RecoveryActionKind.AddMissingUsers,
       retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
     },
   },
   ConversationAlreadyExists: {
     // For welcome handling, wipe local state; do not auto re-run the original callback
-    handleWelcome: {action: 'WipeAndReprocessWelcome', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+    handleWelcome: {
+      action: RecoveryActionKind.WipeAndReprocessWelcome,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+    },
   },
   OrphanWelcome: {
     // For orphan welcome, attempt an external commit join; no auto re-run
-    handleWelcome: {action: 'JoinViaExternalCommit', retryConfig: {maxAttempts: 1, reRunOriginalOperation: false}},
+    handleWelcome: {
+      action: RecoveryActionKind.JoinViaExternalCommit,
+      retryConfig: {maxAttempts: 1, reRunOriginalOperation: false},
+    },
   },
 };

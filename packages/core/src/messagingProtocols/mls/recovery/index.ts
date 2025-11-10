@@ -34,4 +34,4 @@ export type {
   MlsRecoveryOrchestrator,
   OrchestratorDeps,
 } from './MlsRecoveryOrchestrator';
-export {MlsRecoveryOrchestratorImpl, minimalDefaultPolicies} from './MlsRecoveryOrchestrator';
+export {MlsRecoveryOrchestratorImpl, minimalDefaultPolicies, OperationName} from './MlsRecoveryOrchestrator';
