@@ -88,8 +88,6 @@ export interface ErrorHandler {
   canHandle(error: unknown, context?: ErrorContextInput): boolean;
   /** Return a mapped error or undefined to defer to later handlers. */
   map(error: unknown, context?: ErrorContextInput): DomainMlsError;
-  /** Lower runs earlier (higher precedence). */
-  priority?: number;
 }
 
 /** Public mapper interface returning a normalized {@link DomainMlsError}. */
@@ -98,16 +96,16 @@ export interface MlsErrorMapper {
 }
 
 /**
- * Deterministic chain execution with priority ordering.
+ * Deterministic chain execution
  *
- * Handlers are sorted ascending by {@link ErrorHandler.priority}. The first handler that both
+ * The first handler that both
  * canHandle and returns a non-undefined mapping wins. If none map, an Unknown error is returned.
  */
 export class ChainedMlsErrorMapper implements MlsErrorMapper {
   private readonly handlers: ErrorHandler[];
 
   constructor(handlers: ErrorHandler[]) {
-    this.handlers = handlers.slice().sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100));
+    this.handlers = handlers.slice();
   }
 
   map(error: unknown, context?: ErrorContextInput): DomainMlsError {
@@ -128,7 +126,6 @@ export class ChainedMlsErrorMapper implements MlsErrorMapper {
 
 /** Wrong epoch or stale message from MLS/core-crypto/backend. */
 const WrongEpochHandler: ErrorHandler = {
-  priority: 10,
   canHandle: err =>
     isCoreCryptoMLSWrongEpochError?.(err) || isMLSStaleMessageError?.(err) || err instanceof MLSStaleMessageError,
   map: (err, context) => ({
@@ -145,7 +142,6 @@ const WrongEpochHandler: ErrorHandler = {
 
 /** Local MLS state indicates the conversation is broken/not established. */
 const BrokenConversationHandler: ErrorHandler = {
-  priority: 15,
   canHandle: err => isBrokenMLSConversationError?.(err) === true,
   map: (err, context) => ({
     type: 'GroupNotEstablished',
@@ -157,7 +153,6 @@ const BrokenConversationHandler: ErrorHandler = {
 
 /** Backend/MLS reports missing users; group is out-of-sync. */
 const GroupOutOfSyncHandler: ErrorHandler = {
-  priority: 20,
   canHandle: err => isMLSGroupOutOfSyncError?.(err) === true || err instanceof MLSGroupOutOfSyncError,
   map: (err, context) => {
     let missingUsers: QualifiedId[] = [];
@@ -182,7 +177,6 @@ const GroupOutOfSyncHandler: ErrorHandler = {
 
 /** core-crypto indicates a local group already exists for the welcome's group id. */
 const ConversationAlreadyExistsHandler: ErrorHandler = {
-  priority: 30,
   canHandle: error => isMlsConversationAlreadyExistsError?.(error) === true,
   map: (error, context) => {
     if (!isMlsConversationAlreadyExistsError(error)) {
@@ -200,7 +194,6 @@ const ConversationAlreadyExistsHandler: ErrorHandler = {
 
 /** Orphan welcome (no matching state); caller should try to join. */
 const OrphanWelcomeHandler: ErrorHandler = {
-  priority: 40,
   canHandle: err => isMlsOrphanWelcomeError?.(err) === true,
   map: (err, context) => ({
     type: MlsErrorType.OrphanWelcome,
@@ -212,7 +205,6 @@ const OrphanWelcomeHandler: ErrorHandler = {
 
 /** Fallback classification when no handler matches. */
 const FallbackHandler: ErrorHandler = {
-  priority: 999,
   canHandle: () => true,
   map: (err, context): DomainMlsError =>
     err instanceof Error
