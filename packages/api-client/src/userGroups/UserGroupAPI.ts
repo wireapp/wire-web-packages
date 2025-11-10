@@ -86,6 +86,7 @@ export class UserGroupAPI {
   public async getUserGroup(gid: string): Promise<UserGroup> {
     const config: AxiosRequestConfig = {
       url: `/user-groups/${gid}`,
+      params: {include_channels: true},
       method: 'get',
     };
 
