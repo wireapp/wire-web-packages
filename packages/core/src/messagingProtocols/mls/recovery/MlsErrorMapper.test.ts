@@ -110,7 +110,7 @@ describe('MlsErrorMapper', () => {
   it('falls back to Unknown for unmapped error', () => {
     const err = new Error('random');
     const mapped = map(err);
-    expect(mapped.type).toBe('Unknown');
+    expect(mapped.type).toBe(MlsErrorType.Other);
     expect(mapped.cause).toBe(err);
   });
 
