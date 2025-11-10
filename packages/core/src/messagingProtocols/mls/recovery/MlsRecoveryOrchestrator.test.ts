@@ -21,7 +21,13 @@ import {SUBCONVERSATION_ID} from '@wireapp/api-client/lib/conversation';
 import {QualifiedId} from '@wireapp/api-client/lib/user';
 
 import {DomainMlsError, MlsErrorMapper} from './MlsErrorMapper';
-import {MlsRecoveryOrchestratorImpl, minimalDefaultPolicies, PolicyTable} from './MlsRecoveryOrchestrator';
+import {
+  MlsRecoveryOrchestratorImpl,
+  minimalDefaultPolicies,
+  PolicyTable,
+  OperationName,
+  RecoveryActionKind,
+} from './MlsRecoveryOrchestrator';
 
 function qid(id = 'conv-1'): QualifiedId {
   return {id, domain: 'wire.test'};
@@ -47,7 +53,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockResolvedValue('ok');
     const res = await orch.runWithRecovery({
-      context: {operationName: 'send', qualifiedConversationId: qid()},
+      context: {operationName: OperationName.send, qualifiedConversationId: qid()},
       callBack: cb,
     });
 
@@ -64,7 +70,11 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce('ok');
     const res = await orch.runWithRecovery({
-      context: {operationName: 'send', qualifiedConversationId: qid(), subconvId: SUBCONVERSATION_ID.CONFERENCE},
+      context: {
+        operationName: OperationName.send,
+        qualifiedConversationId: qid(),
+        subconvId: SUBCONVERSATION_ID.CONFERENCE,
+      },
       callBack: cb,
     });
 
@@ -80,7 +90,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValue(new Error('orphan'));
     const res = await orch.runWithRecovery({
-      context: {operationName: 'handleWelcome', qualifiedConversationId: qid()},
+      context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
       callBack: cb,
     });
 
@@ -97,7 +107,11 @@ describe('MlsRecoveryOrchestrator', () => {
     const cb = jest.fn().mockRejectedValueOnce('exists').mockResolvedValueOnce(undefined);
 
     await orch.runWithRecovery({
-      context: {operationName: 'handleWelcome', qualifiedConversationId: qid(), groupId: 'gid-from-context'},
+      context: {
+        operationName: OperationName.handleWelcome,
+        qualifiedConversationId: qid(),
+        groupId: 'gid-from-context',
+      },
       callBack: cb,
     });
 
@@ -117,7 +131,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const cb = jest.fn().mockRejectedValueOnce('exists').mockResolvedValueOnce(undefined);
 
     await orch.runWithRecovery({
-      context: {operationName: 'handleWelcome', qualifiedConversationId: qid()},
+      context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
       callBack: cb,
     });
 
@@ -129,7 +143,10 @@ describe('MlsRecoveryOrchestrator', () => {
     const deps = baseDeps();
     const mapper = makeMapperReturning({type: 'GroupOutOfSync', context: {missingUsers: []}} as DomainMlsError);
     const policies: PolicyTable = {
-      GroupOutOfSync: {action: 'AddMissingUsers', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+      GroupOutOfSync: {
+        action: RecoveryActionKind.AddMissingUsers,
+        retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+      },
     };
     const orch = new MlsRecoveryOrchestratorImpl(mapper, policies, deps);
 
@@ -137,7 +154,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     await expect(
       orch.runWithRecovery({
-        context: {operationName: 'send', qualifiedConversationId: qid(), groupId: 'gid'},
+        context: {operationName: OperationName.send, qualifiedConversationId: qid(), groupId: 'gid'},
         callBack: cb,
       }),
     ).rejects.toThrow('No missing users reported in error context for AddMissingUsers');
@@ -148,13 +165,16 @@ describe('MlsRecoveryOrchestrator', () => {
     const missing = [qid('u1'), qid('u2')];
     const mapper = makeMapperReturning({type: 'GroupOutOfSync', context: {missingUsers: missing}} as DomainMlsError);
     const policies: PolicyTable = {
-      GroupOutOfSync: {action: 'AddMissingUsers', retryConfig: {maxAttempts: 1, reRunOriginalOperation: true}},
+      GroupOutOfSync: {
+        action: RecoveryActionKind.AddMissingUsers,
+        retryConfig: {maxAttempts: 1, reRunOriginalOperation: true},
+      },
     };
     const orch = new MlsRecoveryOrchestratorImpl(mapper, policies, deps);
 
     const cb = jest.fn().mockRejectedValueOnce('oops').mockResolvedValueOnce('ok');
     const res = await orch.runWithRecovery({
-      context: {operationName: 'send', qualifiedConversationId: qid(), groupId: 'gid'},
+      context: {operationName: OperationName.send, qualifiedConversationId: qid(), groupId: 'gid'},
       callBack: cb,
     });
 
@@ -166,12 +186,17 @@ describe('MlsRecoveryOrchestrator', () => {
   it('rethrows when action is Unknown', async () => {
     const deps = baseDeps();
     const mapper = makeMapperReturning({type: 'ConversationAlreadyExists'} as DomainMlsError);
-    const policies: PolicyTable = {ConversationAlreadyExists: {action: 'Unknown', retryConfig: {maxAttempts: 0}}};
+    const policies: PolicyTable = {
+      ConversationAlreadyExists: {action: RecoveryActionKind.Unknown, retryConfig: {maxAttempts: 0}},
+    };
     const orch = new MlsRecoveryOrchestratorImpl(mapper, policies, deps);
 
     const cb = jest.fn().mockRejectedValue(new Error('problem'));
     await expect(
-      orch.runWithRecovery({context: {operationName: 'handleWelcome', qualifiedConversationId: qid()}, callBack: cb}),
+      orch.runWithRecovery({
+        context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
+        callBack: cb,
+      }),
     ).rejects.toThrow('problem');
   });
 
@@ -187,7 +212,10 @@ describe('MlsRecoveryOrchestrator', () => {
     });
     deps.joinViaExternalCommit.mockImplementation(() => joinPromise);
 
-    const ctx = {operationName: 'handleWelcome', qualifiedConversationId: qid('same') as QualifiedId} as const;
+    const ctx = {
+      operationName: OperationName.handleWelcome,
+      qualifiedConversationId: qid('same') as QualifiedId,
+    } as const;
     const callBack = () => Promise.reject(new Error('orphan'));
 
     const p1 = orch.runWithRecovery({context: ctx, callBack});
@@ -219,7 +247,11 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce('ok');
     const runPromise = orch.runWithRecovery({
-      context: {operationName: 'send', qualifiedConversationId: qid(), subconvId: SUBCONVERSATION_ID.CONFERENCE},
+      context: {
+        operationName: OperationName.send,
+        qualifiedConversationId: qid(),
+        subconvId: SUBCONVERSATION_ID.CONFERENCE,
+      },
       callBack: cb,
     });
 
@@ -251,7 +283,7 @@ describe('MlsRecoveryOrchestrator', () => {
     // addUsers path
     const cbAdd = jest.fn().mockRejectedValueOnce(new Error('broken')).mockResolvedValueOnce('ok-add');
     const resAdd = await orch.runWithRecovery({
-      context: {operationName: 'addUsers', qualifiedConversationId: qid()},
+      context: {operationName: OperationName.addUsers, qualifiedConversationId: qid()},
       callBack: cbAdd,
     });
     expect(deps.resetAndReestablish).toHaveBeenCalledWith(qid());
@@ -261,7 +293,7 @@ describe('MlsRecoveryOrchestrator', () => {
     // removeUsers path
     const cbRemove = jest.fn().mockRejectedValueOnce(new Error('broken')).mockResolvedValueOnce('ok-remove');
     const resRemove = await orch.runWithRecovery({
-      context: {operationName: 'removeUsers', qualifiedConversationId: qid()},
+      context: {operationName: OperationName.removeUsers, qualifiedConversationId: qid()},
       callBack: cbRemove,
     });
     expect(deps.resetAndReestablish).toHaveBeenCalledWith(qid());

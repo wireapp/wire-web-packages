@@ -126,7 +126,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       recoverFromEpochMismatch: (conversationId: QualifiedId, subconvId?: SUBCONVERSATION_ID) =>
         this.recoverMLSGroupFromEpochMismatch(conversationId, subconvId),
       addMissingUsers: (conversationId: QualifiedId, groupId: string, users: QualifiedId[]) =>
-        this.addUsersToMLSConversation({conversationId, groupId, qualifiedUsers: users}).then(() => undefined),
+        this.performAddUsersToMLSConversationAPI({conversationId, groupId, qualifiedUsers: users}),
       wipeMLSConversation: (groupId: string) => this.wipeMLSConversation(groupId),
     });
   }

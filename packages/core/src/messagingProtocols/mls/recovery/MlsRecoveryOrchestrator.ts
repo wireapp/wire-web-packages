@@ -24,6 +24,8 @@ import {LogFactory} from '@wireapp/commons';
 
 import {DomainMlsError, DomainMlsErrorType, MlsErrorMapper} from './MlsErrorMapper';
 
+import {BaseCreateConversationResponse} from '../../../conversation';
+
 /**
  * Coordinates recovery actions for MLS operations.
  *
@@ -128,7 +130,11 @@ export type OrchestratorDeps = {
   joinViaExternalCommit: (conversationId: QualifiedId) => Promise<void>;
   resetAndReestablish: (conversationId: QualifiedId) => Promise<void>;
   recoverFromEpochMismatch: (conversationId: QualifiedId, subconvId?: SUBCONVERSATION_ID) => Promise<void>;
-  addMissingUsers: (conversationId: QualifiedId, groupId: string, users: QualifiedId[]) => Promise<void>;
+  addMissingUsers: (
+    conversationId: QualifiedId,
+    groupId: string,
+    users: QualifiedId[],
+  ) => Promise<BaseCreateConversationResponse>;
   // Wipes local MLS state so welcome processing can be retried cleanly
   wipeMLSConversation: (groupId: string) => Promise<void>;
 };

@@ -433,7 +433,7 @@ describe('ConversationService', () => {
       jest.spyOn(apiClient.api.conversation, 'postMlsMessage').mockRejectedValueOnce(outOfSyncError);
 
       const addUsersSpy = jest
-        .spyOn(conversationService, 'addUsersToMLSConversation')
+        .spyOn(conversationService as any, 'performAddUsersToMLSConversationAPI')
         .mockResolvedValueOnce({conversation: {members: {others: []}}} as any);
 
       await conversationService.send({
@@ -1133,7 +1133,7 @@ describe('ConversationService', () => {
       });
 
       const addUsersSpy = jest
-        .spyOn(conversationService, 'addUsersToMLSConversation')
+        .spyOn(conversationService as any, 'performAddUsersToMLSConversationAPI')
         .mockResolvedValue({conversation: {}} as any);
       const resetSpy = jest
         .spyOn(conversationService as any, 'handleBrokenMLSConversation')
