@@ -245,7 +245,7 @@ function tryExtractGroupIdFromCoreCryptoError(err: ConversationAlreadyExistsErro
       return undefined;
     }
     return Encoder.toBase64(new Uint8Array(conversationIdArray)).asString;
-  } catch (_) {
+  } catch {
     return undefined;
   }
 }
