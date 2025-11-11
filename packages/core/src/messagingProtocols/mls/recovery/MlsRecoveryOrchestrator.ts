@@ -42,21 +42,31 @@ import {BaseCreateConversationResponse} from '../../../conversation';
 
 /**
  * Concrete recovery actions the orchestrator can trigger.
- *
- * - JoinViaExternalCommit: Issue an external-commit join for the conversation.
- * - RecoverFromEpochMismatch: Fetch missing epoch state and reconcile.
- * - ResetAndReestablish: Tear down local MLS state and re-create the group.
- * - AddMissingUsers: Add users reported as missing to get the group back in sync.
- * - WipeAndReprocessWelcome: Remove local MLS artifacts for the group and retry welcome handling.
- * - Noop: Explicitly do nothing (useful for policy overrides).
- * - Unknown: No matching policy found; treated as no-op and the original error is re-thrown.
  */
 export enum RecoveryActionKind {
+  /**
+   * Issue an external-commit join for the conversation.
+   */
   JoinViaExternalCommit = 'JoinViaExternalCommit',
+  /**
+   * Fetch missing epoch state and reconcile.
+   */
   RecoverFromEpochMismatch = 'RecoverFromEpochMismatch',
+  /**
+   * Tear down local MLS state and re-create the group.
+   */
   ResetAndReestablish = 'ResetAndReestablish',
+  /**
+   * Add users reported as missing to get the group back in sync.
+   */
   AddMissingUsers = 'AddMissingUsers',
+  /**
+   * Remove local MLS artifacts for the group and retry welcome handling.
+   */
   WipeAndReprocessWelcome = 'WipeAndReprocessWelcome',
+  /**
+   * No matching policy found; treated as no-op and the original error is re-thrown.
+   */
   Unknown = 'Unknown',
 }
 
