@@ -87,7 +87,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
   private readonly logger = LogFactory.getLogger('@wireapp/core/ConversationService');
   // Track groups currently undergoing recovery due to key material update failure to prevent duplicate work
   private groupIdConversationMap: Map<string, Conversation> = new Map();
-  private mlsRecovery: MlsRecoveryOrchestrator;
+  private MLSRecoveryOrchestrator: MlsRecoveryOrchestrator;
 
   constructor(
     private readonly apiClient: APIClient,
@@ -119,7 +119,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
 
     // Initialize MLS recovery orchestrator with default policies and single-flight de-duplication
     const mapper = createDefaultMlsErrorMapper();
-    this.mlsRecovery = new MlsRecoveryOrchestratorImpl(mapper, minimalDefaultPolicies, {
+    this.MLSRecoveryOrchestrator = new MlsRecoveryOrchestratorImpl(mapper, minimalDefaultPolicies, {
       // Call the low-level API to avoid nested recovery when orchestrator triggers an external commit join
       joinViaExternalCommit: (conversationId: QualifiedId) => this.performJoinByExternalCommitAPI(conversationId),
       resetAndReestablish: (conversationId: QualifiedId) => this.handleBrokenMLSConversation(conversationId),
@@ -390,7 +390,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
   private async sendMLSMessage(params: SendMlsMessageParams): Promise<SendResult> {
     const {groupId, conversationId} = params;
 
-    return this.mlsRecovery.runWithRecovery({
+    return this.MLSRecoveryOrchestrator.execute({
       context: {operationName: OperationName.send, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performSendMLSMessageAPI(params),
     });
@@ -444,7 +444,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     groupId,
     conversationId,
   }: Required<AddUsersParams> & {shouldRetry?: boolean}): Promise<BaseCreateConversationResponse> {
-    return this.mlsRecovery.runWithRecovery({
+    return this.MLSRecoveryOrchestrator.execute({
       context: {operationName: OperationName.addUsers, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performAddUsersToMLSConversationAPI({qualifiedUsers, groupId, conversationId}),
     });
@@ -490,7 +490,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     conversationId,
     qualifiedUserIds,
   }: RemoveUsersParams & {shouldRetry?: boolean}): Promise<Conversation> {
-    return this.mlsRecovery.runWithRecovery({
+    return this.MLSRecoveryOrchestrator.execute({
       context: {operationName: OperationName.removeUsers, qualifiedConversationId: conversationId, groupId},
       callBack: () => this.performRemoveUsersFromMLSConversationAPI({groupId, conversationId, qualifiedUserIds}),
     });
@@ -523,7 +523,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    * The join operation itself is not automatically re-run by policy.
    */
   public async joinByExternalCommit(conversationId: QualifiedId): Promise<void> {
-    await this.mlsRecovery.runWithRecovery({
+    await this.MLSRecoveryOrchestrator.execute({
       context: {operationName: OperationName.joinExternalCommit, qualifiedConversationId: conversationId},
       callBack: () => this.performJoinByExternalCommitAPI(conversationId),
     });
@@ -568,7 +568,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     }
 
     try {
-      await this.mlsRecovery.runWithRecovery({
+      await this.MLSRecoveryOrchestrator.execute({
         context: {
           operationName: OperationName.keyMaterialUpdate,
           qualifiedConversationId: conversation.qualified_id,
@@ -929,7 +929,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
       if (!qualifiedConversationId) {
         throw new Error('Qualified conversation id is missing in the MLS message-add event');
       }
-      return await this.mlsRecovery.runWithRecovery<HandledEventPayload | null>({
+      return await this.MLSRecoveryOrchestrator.execute<HandledEventPayload | null>({
         context: {
           operationName: OperationName.handleMessageAdd,
           qualifiedConversationId,
@@ -987,7 +987,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     _retry = true,
   ): Promise<HandledEventPayload | null> {
     this.logger.info('Handling MLS welcome message event (orchestrated)', {event});
-    await this.mlsRecovery.runWithRecovery({
+    await this.MLSRecoveryOrchestrator.execute({
       context: {
         operationName: OperationName.handleWelcome,
         qualifiedConversationId: event.qualified_conversation,

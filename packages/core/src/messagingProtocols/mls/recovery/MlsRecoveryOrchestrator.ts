@@ -110,16 +110,16 @@ export type OperationContext = {
 };
 
 /**
- * Public orchestrator interface. Wrap your async operation with {@link runWithRecovery}.
+ * Public orchestrator interface. Wrap your async operation with {@link execute}.
  *
  * The callback is invoked immediately. If it throws, the orchestrator maps the error,
  * performs recovery according to policies, optionally waits, and may re-run the callback once.
  */
 export interface MlsRecoveryOrchestrator {
   // Void-returning ops (e.g., joinExternalCommit)
-  runWithRecovery(params: runWithRecoveryParams<void>): Promise<void>;
+  execute(params: executeParams<void>): Promise<void>;
   // Value-returning ops (e.g., send/add/remove)
-  runWithRecovery<T>(params: runWithRecoveryParams<T>): Promise<T>;
+  execute<T>(params: executeParams<T>): Promise<T>;
 }
 
 /**
@@ -140,9 +140,9 @@ export type OrchestratorDeps = {
 };
 
 /**
- * Parameters for {@link runWithRecovery}.
+ * Parameters for {@link execute}.
  */
-type runWithRecoveryParams<T> = {
+type executeParams<T> = {
   context: OperationContext;
   callBack: () => Promise<T>;
   retry?: boolean;
@@ -168,9 +168,9 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
    * Execute the provided callback, and on failure, map and perform a configured recovery.
    * If {@link RetryPolicy.reRunOriginalOperation} is true, the callback is re-invoked once after recovery.
    */
-  public async runWithRecovery(params: runWithRecoveryParams<void>): Promise<void>;
-  public async runWithRecovery<T>(params: runWithRecoveryParams<T>): Promise<T>;
-  public async runWithRecovery<T>({context, callBack, retry = true}: runWithRecoveryParams<T>): Promise<T | void> {
+  public async execute(params: executeParams<void>): Promise<void>;
+  public async execute<T>(params: executeParams<T>): Promise<T>;
+  public async execute<T>({context, callBack, retry = true}: executeParams<T>): Promise<T | void> {
     try {
       return await callBack();
     } catch (rawError) {
@@ -195,7 +195,7 @@ export class MlsRecoveryOrchestratorImpl implements MlsRecoveryOrchestrator {
 
       if (policy.retryConfig.reRunOriginalOperation) {
         this.logger.info(`Re-running original operation after recovery for key ${key}`);
-        return this.runWithRecovery({context, callBack, retry: false});
+        return this.execute({context, callBack, retry: false});
       }
     }
   }
