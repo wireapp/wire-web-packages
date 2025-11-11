@@ -466,7 +466,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
     );
 
     // We had cases where did not get any key packages, but still used core-crypto to call the backend (which results in failure).
-    if (keyPackages && keyPackages.length > 0) {
+    if (keyPackages && keyPackages?.length > 0) {
       await this.mlsService.addUsersToExistingConversation(groupId, keyPackages);
 
       // We store the info when user was added (and key material was created), so we will know when to renew it
