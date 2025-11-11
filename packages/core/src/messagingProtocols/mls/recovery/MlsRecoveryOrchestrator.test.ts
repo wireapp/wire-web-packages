@@ -52,7 +52,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const orch = new MlsRecoveryOrchestratorImpl(mapper, minimalDefaultPolicies, deps);
 
     const cb = jest.fn().mockResolvedValue('ok');
-    const res = await orch.runWithRecovery({
+    const res = await orch.execute({
       context: {operationName: OperationName.send, qualifiedConversationId: qid()},
       callBack: cb,
     });
@@ -69,7 +69,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const orch = new MlsRecoveryOrchestratorImpl(mapper, minimalDefaultPolicies, deps);
 
     const cb = jest.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce('ok');
-    const res = await orch.runWithRecovery({
+    const res = await orch.execute({
       context: {
         operationName: OperationName.send,
         qualifiedConversationId: qid(),
@@ -89,7 +89,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const orch = new MlsRecoveryOrchestratorImpl(mapper, minimalDefaultPolicies, deps);
 
     const cb = jest.fn().mockRejectedValue(new Error('orphan'));
-    const res = await orch.runWithRecovery({
+    const res = await orch.execute({
       context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
       callBack: cb,
     });
@@ -106,7 +106,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValueOnce('exists').mockResolvedValueOnce(undefined);
 
-    await orch.runWithRecovery({
+    await orch.execute({
       context: {
         operationName: OperationName.handleWelcome,
         qualifiedConversationId: qid(),
@@ -130,7 +130,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValueOnce('exists').mockResolvedValueOnce(undefined);
 
-    await orch.runWithRecovery({
+    await orch.execute({
       context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
       callBack: cb,
     });
@@ -153,7 +153,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const cb = jest.fn().mockRejectedValueOnce('oops');
 
     await expect(
-      orch.runWithRecovery({
+      orch.execute({
         context: {operationName: OperationName.send, qualifiedConversationId: qid(), groupId: 'gid'},
         callBack: cb,
       }),
@@ -173,7 +173,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const orch = new MlsRecoveryOrchestratorImpl(mapper, policies, deps);
 
     const cb = jest.fn().mockRejectedValueOnce('oops').mockResolvedValueOnce('ok');
-    const res = await orch.runWithRecovery({
+    const res = await orch.execute({
       context: {operationName: OperationName.send, qualifiedConversationId: qid(), groupId: 'gid'},
       callBack: cb,
     });
@@ -193,7 +193,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     const cb = jest.fn().mockRejectedValue(new Error('problem'));
     await expect(
-      orch.runWithRecovery({
+      orch.execute({
         context: {operationName: OperationName.handleWelcome, qualifiedConversationId: qid()},
         callBack: cb,
       }),
@@ -218,8 +218,8 @@ describe('MlsRecoveryOrchestrator', () => {
     } as const;
     const callBack = () => Promise.reject(new Error('orphan'));
 
-    const p1 = orch.runWithRecovery({context: ctx, callBack});
-    const p2 = orch.runWithRecovery({context: ctx, callBack});
+    const p1 = orch.execute({context: ctx, callBack});
+    const p2 = orch.execute({context: ctx, callBack});
 
     // Let both catch handlers run and start recovery
     await new Promise(r => setImmediate(r));
@@ -246,7 +246,7 @@ describe('MlsRecoveryOrchestrator', () => {
     const orch = new MlsRecoveryOrchestratorImpl(mapper, policies, deps);
 
     const cb = jest.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce('ok');
-    const runPromise = orch.runWithRecovery({
+    const runPromise = orch.execute({
       context: {
         operationName: OperationName.send,
         qualifiedConversationId: qid(),
@@ -282,7 +282,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     // addUsers path
     const cbAdd = jest.fn().mockRejectedValueOnce(new Error('broken')).mockResolvedValueOnce('ok-add');
-    const resAdd = await orch.runWithRecovery({
+    const resAdd = await orch.execute({
       context: {operationName: OperationName.addUsers, qualifiedConversationId: qid()},
       callBack: cbAdd,
     });
@@ -292,7 +292,7 @@ describe('MlsRecoveryOrchestrator', () => {
 
     // removeUsers path
     const cbRemove = jest.fn().mockRejectedValueOnce(new Error('broken')).mockResolvedValueOnce('ok-remove');
-    const resRemove = await orch.runWithRecovery({
+    const resRemove = await orch.execute({
       context: {operationName: OperationName.removeUsers, qualifiedConversationId: qid()},
       callBack: cbRemove,
     });
