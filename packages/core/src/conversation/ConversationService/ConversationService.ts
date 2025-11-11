@@ -982,10 +982,7 @@ export class ConversationService extends TypedEventEmitter<Events> {
    *
    * Always resolves to null; the effects are applied to local state.
    */
-  private async handleMLSWelcomeMessageEvent(
-    event: ConversationMLSWelcomeEvent,
-    _retry = true,
-  ): Promise<HandledEventPayload | null> {
+  private async handleMLSWelcomeMessageEvent(event: ConversationMLSWelcomeEvent): Promise<HandledEventPayload | null> {
     this.logger.info('Handling MLS welcome message event (orchestrated)', {event});
     await this.MLSRecoveryOrchestrator.execute({
       context: {
