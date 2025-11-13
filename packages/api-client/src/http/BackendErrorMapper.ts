@@ -58,11 +58,30 @@ type StatusCodeToMessageVariantMap = Partial<
 
 const logger = LogFactory.getLogger('@wireapp/api-client/http/BackendErrorMapper');
 
+// BAD_REQUEST / CLIENT_ERROR
+const MESSAGE_BAD_REQUEST_SATISFY = 'Error in $: Failed reading: satisfy';
+const MESSAGE_INVALID_CONVERSATION_UUID = "[path] 'cnv' invalid: Failed reading: Invalid UUID";
+const MESSAGE_INVALID_USER_UUID = "[path] 'usr' invalid: Failed reading: Invalid UUID";
+// BAD_REQUEST / MLS
+const MESSAGE_MLS_INVALID_LEAF_NODE_SIGNATURE = 'Invalid leaf node signature';
+const MESSAGE_MLS_INVALID_LEAF_NODE_INDEX = 'Invalid leaf node index';
+// FORBIDDEN / INVALID_CREDENTIALS and related variants
+const MESSAGE_INVALID_ZAUTH_TOKEN = 'Invalid zauth token';
+const MESSAGE_INVALID_TOKEN = 'Invalid token';
+const MESSAGE_AUTHENTICATION_FAILED = 'Authentication failed.';
+const MESSAGE_MISSING_COOKIE = 'Missing cookie';
+const MESSAGE_TOKEN_EXPIRED = 'Token expired';
+const MESSAGE_MISSING_COOKIE_AND_TOKEN = 'Missing cookie and token';
+// FORBIDDEN / INVALID_OPERATION
+const MESSAGE_INVALID_OPERATION_FOR_ONE_TO_ONE = 'invalid operation for 1:1 conversations';
+// FORBIDDEN / CLIENT_ERROR variant
+const MESSAGE_FAILED_READING_INVALID_ZAUTH_TOKEN = 'Failed reading: Invalid zauth token';
+
 // Consolidated token-invalid messages to reduce duplication across variants.
 const INVALID_TOKEN_MESSAGES = new Set<string>([
-  'Invalid zauth token',
-  'Invalid token',
-  'Failed reading: Invalid zauth token',
+  MESSAGE_INVALID_ZAUTH_TOKEN,
+  MESSAGE_INVALID_TOKEN,
+  MESSAGE_FAILED_READING_INVALID_ZAUTH_TOKEN,
 ]);
 
 /**
@@ -128,33 +147,33 @@ const defaultHandlers: StatusCodeToLabelMap = {
 const messageVariantHandlers: StatusCodeToMessageVariantMap = {
   [StatusCode.BAD_REQUEST]: {
     [BackendErrorLabel.CLIENT_ERROR]: {
-      'Error in $: Failed reading: satisfy': e => new BackendError('Wrong set of parameters.', e.label, e.code),
-      "[path] 'cnv' invalid: Failed reading: Invalid UUID": e =>
+      [MESSAGE_BAD_REQUEST_SATISFY]: e => new BackendError('Wrong set of parameters.', e.label, e.code),
+      [MESSAGE_INVALID_CONVERSATION_UUID]: e =>
         new ConversationIsUnknownError('Conversation ID is unknown.', e.label, e.code),
-      "[path] 'usr' invalid: Failed reading: Invalid UUID": e =>
-        new UserIsUnknownError('User ID is unknown.', e.label, e.code),
+      [MESSAGE_INVALID_USER_UUID]: e => new UserIsUnknownError('User ID is unknown.', e.label, e.code),
     },
     [BackendErrorLabel.MLS_INVALID_LEAF_NODE_SIGNATURE]: {
-      'Invalid leaf node signature': e =>
+      [MESSAGE_MLS_INVALID_LEAF_NODE_SIGNATURE]: e =>
         new MLSInvalidLeafNodeSignatureError('Invalid leaf node signature', e.label, e.code),
     },
     [BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX]: {
-      'Invalid leaf node index': e => new MLSInvalidLeafNodeIndexError('Invalid leaf node index', e.label, e.code),
+      [MESSAGE_MLS_INVALID_LEAF_NODE_INDEX]: e =>
+        new MLSInvalidLeafNodeIndexError('Invalid leaf node index', e.label, e.code),
     },
   },
   [StatusCode.FORBIDDEN]: {
     [BackendErrorLabel.INVALID_CREDENTIALS]: {
-      'Invalid zauth token': e =>
+      [MESSAGE_INVALID_ZAUTH_TOKEN]: e =>
         new InvalidTokenError('Authentication failed because the token is invalid.', e.label, e.code),
-      'Invalid token': e =>
+      [MESSAGE_INVALID_TOKEN]: e =>
         new InvalidTokenError('Authentication failed because the token is invalid.', e.label, e.code),
-      'Authentication failed.': e =>
+      [MESSAGE_AUTHENTICATION_FAILED]: e =>
         new InvalidCredentialsError('Authentication failed because of invalid credentials.', e.label, e.code),
-      'Missing cookie': e =>
+      [MESSAGE_MISSING_COOKIE]: e =>
         new MissingCookieError('Authentication failed because the cookie is missing.', e.label, e.code),
-      'Token expired': e =>
+      [MESSAGE_TOKEN_EXPIRED]: e =>
         new TokenExpiredError('Authentication failed because the token is expired.', e.label, e.code),
-      'Missing cookie and token': e =>
+      [MESSAGE_MISSING_COOKIE_AND_TOKEN]: e =>
         new MissingCookieAndTokenError(
           'Authentication failed because both cookie and token are missing.',
           e.label,
@@ -162,11 +181,11 @@ const messageVariantHandlers: StatusCodeToMessageVariantMap = {
         ),
     },
     [BackendErrorLabel.INVALID_OPERATION]: {
-      'invalid operation for 1:1 conversations': e =>
+      [MESSAGE_INVALID_OPERATION_FOR_ONE_TO_ONE]: e =>
         new ConversationOperationError('Cannot leave 1:1 conversation.', e.label, e.code),
     },
     [BackendErrorLabel.CLIENT_ERROR]: {
-      'Failed reading: Invalid zauth token': e =>
+      [MESSAGE_FAILED_READING_INVALID_ZAUTH_TOKEN]: e =>
         new InvalidTokenError('Authentication failed because the token is invalid.', e.label, e.code),
     },
   },
