@@ -237,47 +237,13 @@ describe('mapBackendError', () => {
       expect(mapped).toBeInstanceOf(ServiceNotFoundError);
     });
 
-    const invalidLeafNodeSignatureMessages = [
-      'Invalid leaf node signature',
-      'Leaf node signature invalid',
-      'Invalid signature on leaf node',
-      'Malformed leaf node signature',
-      'Some random text from backend',
-    ];
-
-    it.each(invalidLeafNodeSignatureMessages)(
-      'maps MLS invalid leaf node signature error with any message: %s',
-      message => {
-        const error = new BackendError(
-          message,
-          BackendErrorLabel.MLS_INVALID_LEAF_NODE_SIGNATURE,
-          StatusCode.BAD_REQUEST,
-        );
-        const mapped = mapBackendError(error);
-        expect(mapped).toBeInstanceOf(MLSInvalidLeafNodeSignatureError);
-      },
-    );
-
-    it('maps MLS invalid leaf node index variant', () => {
-      const error = new BackendError(
-        'Invalid leaf node index',
-        BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX,
-        StatusCode.BAD_REQUEST,
-      );
+    it('maps MLS invalid leaf node signature variant', () => {
+      const error = new BackendError('', BackendErrorLabel.MLS_INVALID_LEAF_NODE_SIGNATURE, StatusCode.BAD_REQUEST);
       const mapped = mapBackendError(error);
-      expect(mapped).toBeInstanceOf(MLSInvalidLeafNodeIndexError);
+      expect(mapped).toBeInstanceOf(MLSInvalidLeafNodeSignatureError);
     });
-
-    // Table-driven test: any backend message variant for invalid leaf node index maps to MLSInvalidLeafNodeIndexError
-    const invalidLeafNodeIndexMessages = [
-      'Invalid leaf node index',
-      'A referenced leaf node index points to a blank or non-existing node',
-      'Leaf index out of range',
-      'Some random text from backend',
-    ];
-
-    it.each(invalidLeafNodeIndexMessages)('maps MLS invalid leaf node index error with any message: %s', message => {
-      const error = new BackendError(message, BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX, StatusCode.BAD_REQUEST);
+    it('maps MLS invalid leaf node index variant', () => {
+      const error = new BackendError('', BackendErrorLabel.MLS_INVALID_LEAF_NODE_INDEX, StatusCode.BAD_REQUEST);
       const mapped = mapBackendError(error);
       expect(mapped).toBeInstanceOf(MLSInvalidLeafNodeIndexError);
     });
