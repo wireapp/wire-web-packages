@@ -39,6 +39,8 @@ export interface InputProps<T = HTMLInputElement> extends TextProps<T> {
   inputCSS?: CSSObject;
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
+  togglePasswordShowLabel?: string;
+  togglePasswordHideLabel?: string;
 }
 
 export const inputStyle: <T>(theme: Theme, props: InputProps<T>, hasError?: boolean) => CSSObject = (
@@ -146,6 +148,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps<HTMLInputElem
 
     const toggleSetPassword = () => setTogglePassword(prevState => !prevState);
 
+    const togglepasswordLabel = togglePassword ? props.togglePasswordHideLabel : props.togglePasswordShowLabel;
+
     return (
       <div
         className={INPUT_GROUP}
@@ -191,7 +195,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps<HTMLInputElem
               data-uie-name={!togglePassword ? 'do-show-password' : 'do-hide-password'}
               css={{...centerInputAction, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0}}
               onClick={toggleSetPassword}
-              title="Toggle password visibility"
+              title={togglepasswordLabel}
+              aria-label={togglepasswordLabel}
               aria-controls={props.id}
               aria-expanded={togglePassword}
             >
