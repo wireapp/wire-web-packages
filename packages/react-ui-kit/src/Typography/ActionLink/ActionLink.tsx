@@ -22,6 +22,8 @@ import {forwardRef} from 'react';
 
 import {CSSObject} from '@emotion/react';
 
+import {styles as actionLinkButtonStyles} from './ActionLinkButton.style';
+
 import {COLOR_V2} from '../../Identity/colors-v2/colors-v2';
 import {Theme} from '../../Identity/Theme';
 import {LinkProps, linkStyle, filterLinkProps} from '../Link';
@@ -39,109 +41,78 @@ type ButtonVariant = {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>;
 
-export type ActionLinkProps = VisualProps & (AnchorVariant | ButtonVariant);
-
-const resetButtonCss: CSSObject = {
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  margin: 0,
-};
-
-const stateCss = (disabled?: boolean): CSSObject => {
-  const base = {
-    color: disabled ? COLOR_V2.GRAY_80 : COLOR_V2.BLACK,
-    cursor: disabled ? 'default' : 'pointer',
-    textDecoration: 'underline',
-  } as const;
-
-  if (disabled) {
-    return base;
-  }
-
-  return {
-    ...base,
-    '&:hover': {
-      color: COLOR_V2.BLUE,
-      textDecorationThickness: '2px',
-    },
-    '&:focus-visible': {
-      color: COLOR_V2.BLUE,
-      background: 'rgba(255, 255, 255, 0.01)',
-      borderRadius: 4,
-      outline: '2px solid transparent',
-      boxShadow: `0 0 0 2px ${COLOR_V2.BLUE_LIGHT_300}`,
-    },
-  };
-};
+export type ActionLinkButtonProps = VisualProps & (AnchorVariant | ButtonVariant);
 
 export type LinkStyleProps<T = HTMLAnchorElement> = LinkProps<T>;
 
-export const ActionLink = forwardRef<HTMLAnchorElement | HTMLButtonElement, ActionLinkProps>((props, ref) => {
-  const {
-    bold = false,
-    color = COLOR_V2.BLACK,
-    fontSize,
-    textTransform = 'none',
-    disabled,
-    children,
-    ...restProps
-  } = props;
+export const ActionLinkButton = forwardRef<HTMLAnchorElement | HTMLButtonElement, ActionLinkButtonProps>(
+  (props, ref) => {
+    const {
+      bold = false,
+      color = COLOR_V2.BLACK,
+      fontSize,
+      textTransform = 'none',
+      disabled,
+      children,
+      ...restProps
+    } = props;
 
-  const baseCss = (theme: Theme) =>
-    ({
-      ...linkStyle(theme, {
-        bold,
-        color,
-        fontSize: fontSize ?? theme.fontSizes.base,
-        textTransform,
-      } as LinkProps),
-      ...stateCss(disabled),
-    }) satisfies CSSObject;
+    const baseCss = (theme: Theme) =>
+      ({
+        ...linkStyle(theme, {
+          bold,
+          color,
+          fontSize: fontSize ?? theme.fontSizes.base,
+          textTransform,
+        } as LinkProps),
+        ...actionLinkButtonStyles.link.base,
+        ...(disabled ? actionLinkButtonStyles.link.disabled : actionLinkButtonStyles.link.enabled),
+      }) satisfies CSSObject;
 
-  if ('href' in restProps && restProps.href) {
-    const {href, target, ...anchorProps} = restProps;
-    const linkProps = filterLinkProps(anchorProps as unknown as LinkProps);
+    if ('href' in restProps && restProps.href) {
+      const {href, target, ...anchorProps} = restProps;
+      const linkProps = filterLinkProps(anchorProps as unknown as LinkProps);
 
-    const handleAnchorClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
-      if (disabled) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      onClick?.(e as any);
-    };
+      const handleAnchorClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
+        if (disabled) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        onClick?.(e as any);
+      };
 
+      return (
+        <a
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          href={href}
+          css={(theme: Theme) => baseCss(theme)}
+          target={target}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+          aria-disabled={disabled || undefined}
+          tabIndex={disabled ? -1 : undefined}
+          onClick={handleAnchorClick}
+          {...linkProps}
+        >
+          {children}
+        </a>
+      );
+    }
+
+    const {onClick, ...btnProps} = props as React.ButtonHTMLAttributes<HTMLButtonElement>;
     return (
-      <a
-        ref={ref as React.Ref<HTMLAnchorElement>}
-        href={href}
-        css={(theme: Theme) => baseCss(theme)}
-        target={target}
-        rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-        aria-disabled={disabled || undefined}
-        tabIndex={disabled ? -1 : undefined}
-        onClick={handleAnchorClick}
-        {...linkProps}
+      <button
+        ref={ref as React.Ref<HTMLButtonElement>}
+        type="button"
+        disabled={disabled || btnProps.disabled}
+        onClick={onClick}
+        css={(theme: Theme) => [actionLinkButtonStyles.buttonReset, baseCss(theme)]}
+        {...btnProps}
       >
         {children}
-      </a>
+      </button>
     );
-  }
+  },
+);
 
-  const {onClick, ...btnProps} = props as React.ButtonHTMLAttributes<HTMLButtonElement>;
-  return (
-    <button
-      ref={ref as React.Ref<HTMLButtonElement>}
-      type="button"
-      disabled={disabled || btnProps.disabled}
-      onClick={onClick}
-      css={(theme: Theme) => [resetButtonCss, baseCss(theme)]}
-      {...btnProps}
-    >
-      {children}
-    </button>
-  );
-});
-
-ActionLink.displayName = 'ActionLink';
+ActionLinkButton.displayName = 'ActionLinkButton';

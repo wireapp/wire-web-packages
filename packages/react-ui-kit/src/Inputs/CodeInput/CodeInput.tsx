@@ -84,7 +84,6 @@ export interface CodeInputProps<T = HTMLInputElement> extends InputProps<T> {
 export const CodeInput = ({
   style,
   digits = 6,
-  autoFocus = false,
   markInvalid,
   onCodeComplete = noop,
   disabled,
@@ -174,7 +173,7 @@ export const CodeInput = ({
 
   return (
     <CodeInputWrapper role="group" aria-labelledby={labelId} style={style}>
-      <span id={labelId} css={(theme: Theme) => codeInputLabelStyle(theme)}>
+      <span id={labelId} css={codeInputLabelStyle}>
         {codeInputLabel}
       </span>
       <div
@@ -188,8 +187,6 @@ export const CodeInput = ({
       >
         {Array.from({length: digits}, (_, index) => (
           <DigitInput
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus={index === 0 && autoFocus}
             key={index}
             onPaste={event => handlePaste(index, event)}
             onFocus={forceSelection}
@@ -200,7 +197,6 @@ export const CodeInput = ({
             markInvalid={markInvalid}
             ref={node => (inputs[index] = node)}
             value={values[index]}
-            onChange={() => {}}
             disabled={disabled}
             id={`code-input-digit-${index}`}
             inputMode="numeric"
