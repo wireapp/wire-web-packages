@@ -31,9 +31,9 @@ type VisualProps = Pick<LinkProps, 'bold' | 'color' | 'fontSize' | 'textTransfor
   children: React.ReactNode;
 };
 
-type AnchorVariant = {
+type AnchorVariant = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick' | 'children' | 'disabled'> & {
   href: string;
-} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick' | 'children' | 'disabled'>;
+};
 
 type ButtonVariant = {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
