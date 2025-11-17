@@ -28,8 +28,8 @@ import {MenuScrollableItems} from './MenuScrollableItems';
 export interface HeaderMenuProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   centerElement?: React.ReactNode;
   logoElement?: React.ReactNode;
-  menuOpen?: string;
-  menuClose?: string;
+  openMenuLabel?: string;
+  closeMenuLabel?: string;
 }
 
 export const HeaderMenu = ({children, logoElement = null, centerElement = null, ...props}: HeaderMenuProps) => {
@@ -62,8 +62,8 @@ export const HeaderMenu = ({children, logoElement = null, centerElement = null, 
           onClick={toggleMenu}
           onKeyDown={onKeyDown}
           open={isOpen}
-          menuOpen={props.menuOpen}
-          menuClose={props.menuClose}
+          openMenuLabel={props.openMenuLabel}
+          closeMenuLabel={props.closeMenuLabel}
           style={{justifySelf: 'end', position: isOpen ? 'fixed' : undefined, right: '16px', top: '21px'}}
           data-uie-name="do-toggle-header-menu"
         />

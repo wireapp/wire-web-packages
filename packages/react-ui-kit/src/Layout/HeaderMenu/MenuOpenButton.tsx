@@ -27,8 +27,8 @@ import {QueryKeys, media, filterProps} from '../../utils';
 
 export interface MenuOpenButtonProps<T = HTMLDivElement> extends React.HTMLProps<T> {
   open?: boolean;
-  menuOpen?: string;
-  menuClose?: string;
+  openMenuLabel?: string;
+  closeMenuLabel?: string;
 }
 
 export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T>) => CSSObject = (theme, {open}) => ({
@@ -70,16 +70,21 @@ export const menuOpenButtonStyle: <T>(theme: Theme, props: MenuOpenButtonProps<T
 
 const filterMenuOpenButtonProps = (props: MenuOpenButtonProps) => filterProps(props, ['open']);
 
-export const MenuOpenButton = ({open, onClick, onKeyDown, ...menuBtnProps}: MenuOpenButtonProps) => {
+export const MenuOpenButton = ({
+  open,
+  onClick,
+  onKeyDown,
+  openMenuLabel,
+  closeMenuLabel,
+  ...menuBtnProps
+}: MenuOpenButtonProps) => {
   return (
     <div
       role="button"
       tabIndex={0}
       aria-haspopup="menu"
-      aria-expanded={!!open}
-      aria-label={open ? menuBtnProps.menuClose : menuBtnProps.menuOpen}
-      onKeyDown={onKeyDown}
-      onClick={onClick}
+      aria-expanded={open}
+      aria-label={open ? closeMenuLabel : openMenuLabel}
       css={(theme: Theme) => menuOpenButtonStyle(theme, menuBtnProps)}
       {...filterMenuOpenButtonProps(menuBtnProps)}
     >

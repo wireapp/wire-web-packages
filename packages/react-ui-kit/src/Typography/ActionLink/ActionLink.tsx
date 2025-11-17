@@ -33,7 +33,7 @@ type VisualProps = Pick<LinkProps, 'bold' | 'color' | 'fontSize' | 'textTransfor
   children: React.ReactNode;
 };
 
-type AnchorVariant = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick' | 'children' | 'disabled'> & {
+type AnchorVariant = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'disabled'> & {
   href: string;
 };
 
@@ -70,7 +70,7 @@ export const ActionLinkButton = forwardRef<HTMLAnchorElement | HTMLButtonElement
       }) satisfies CSSObject;
 
     if ('href' in restProps && restProps.href) {
-      const {href, target, ...anchorProps} = restProps;
+      const {href, target, onClick, ...anchorProps} = restProps;
       const linkProps = filterLinkProps(anchorProps as unknown as LinkProps);
 
       const handleAnchorClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
