@@ -86,6 +86,8 @@ export const MenuOpenButton = ({
       aria-expanded={open}
       aria-label={open ? closeMenuLabel : openMenuLabel}
       css={(theme: Theme) => menuOpenButtonStyle(theme, menuBtnProps)}
+      onKeyDown={onKeyDown}
+      onClick={onClick}
       {...filterMenuOpenButtonProps(menuBtnProps)}
     >
       <div />
