@@ -1,4 +1,4 @@
-# Labels based on PR title
+# Types
 'type: refactoring 🛠':
   title: '^refactor(\(.+\))?:.*'
 'type: bug / fix 🐞':
@@ -12,6 +12,24 @@
 'type: test 👷':
   title: '^test(\(.+\))?:.*'
 
+# Sizes
+'👕 size: XS':
+  size-below: 10
+'👕 size: S':
+  size-above: 9
+  size-below: 100
+'👕 size: M':
+  size-above: 99
+  size-below: 300
+'👕 size: L':
+  size-above: 299
+  size-below: 500
+'👕 size: XL':
+  size-above: 499
+  size-below: 1000
+'👕 size: XXL':
+  size-above: 999
+
 # Labels based on changed files
 'comp: infrastructure':
   files:
@@ -19,3 +37,28 @@
     - '.github/.*'
     - '.travis.yml'
     - 'lerna.json'
+'comp: api-client':
+  files:
+    - 'packages/api-client/.*'
+'comp: core':
+  files:
+    - 'packages/core/.*'
+'comp: ui-kit':
+  files:
+    - 'packages/ui-kit/.*'
+'comp: store':
+  files:
+    - 'packages/store-engine/.*'
+    - 'packages/store-engine-dexie/.*'
+    - 'packages/store-engine-fs/.*'
+'comp: config':
+  files:
+    - 'packages/eslint-config/.*'
+    - 'packages/prettier-config/.*'
+    - 'packages/copy-config/.*'
+'comp: telemetry':
+  files:
+    - 'packages/telemetry/.*'
+'comp: events':
+  files:
+    - 'packages/webapp-events/.*'
