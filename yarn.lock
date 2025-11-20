@@ -11938,10 +11938,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:14.0.1, commander@npm:^14.0.1":
+"commander@npm:14.0.1":
   version: 14.0.1
   resolution: "commander@npm:14.0.1"
   checksum: a072b714e73a69cc85e68f588a3c910f330e5b31861fe1f9abc9312e81bdca193676fc1fea99f739b4237ee903751fb20b4adcdd409ec4c4df0964792e9daa47
+  languageName: node
+  linkType: hard
+
+"commander@npm:^14.0.2":
+  version: 14.0.2
+  resolution: "commander@npm:14.0.2"
+  checksum: 0a9e549565d368dde2965821833324069b92b099b415c2106996e47db1f0b8c10c77367e9876873c00a52ca627af4c7472eba9b51dc0d6a3ef152ea063d3e9e9
   languageName: node
   linkType: hard
 
@@ -18269,12 +18276,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:16.2.4":
-  version: 16.2.4
-  resolution: "lint-staged@npm:16.2.4"
+"lint-staged@npm:16.2.7":
+  version: 16.2.7
+  resolution: "lint-staged@npm:16.2.7"
   dependencies:
-    commander: ^14.0.1
-    listr2: ^9.0.4
+    commander: ^14.0.2
+    listr2: ^9.0.5
     micromatch: ^4.0.8
     nano-spawn: ^2.0.0
     pidtree: ^0.6.0
@@ -18282,13 +18289,13 @@ __metadata:
     yaml: ^2.8.1
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: e09497196df24f3d9c134ea81e2e470f455c461925a6fa9d72fa409278ddb7d6c8506797268df497f3e908629fd275ef171361d8e0d6581efb2a7131bb7c0a26
+  checksum: fbf234787ed1f6fe9e754c03ef64571ef09d68e4ebce21141a85972e5b7c00fee9d00a4c892db3c00ddc22e8b0c337d757734a4df4848661469b7591f14cbc24
   languageName: node
   linkType: hard
 
-"listr2@npm:^9.0.4":
-  version: 9.0.4
-  resolution: "listr2@npm:9.0.4"
+"listr2@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "listr2@npm:9.0.5"
   dependencies:
     cli-truncate: ^5.0.0
     colorette: ^2.0.20
@@ -18296,7 +18303,7 @@ __metadata:
     log-update: ^6.1.0
     rfdc: ^1.4.1
     wrap-ansi: ^9.0.0
-  checksum: 642c5774049e3b6d0e67beb49dcf6fd6b4ea6687c70bcf8a9f9d1867bc0028ebd29ebfd7f5db38f064ea3f7997f5684820e264b62020c29878976e481e3a788e
+  checksum: 64ef0dcd6f69e131f5699f584c13096d828a747472d4a18e68a9418848a54aef86bf953bf4a8a03a3dff24dacf771fab919dad59dce115244308a06d147acbfa
   languageName: node
   linkType: hard
 
@@ -22048,7 +22055,7 @@ __metadata:
     husky: 9.1.7
     jest: ^29.2.1
     jest-environment-jsdom: ^30.0.5
-    lint-staged: 16.2.4
+    lint-staged: 16.2.7
     prettier: 3.3.2
     rimraf: 6.0.1
     tsconfig-paths: 4.2.0
