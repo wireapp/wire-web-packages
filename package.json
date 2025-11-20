@@ -70,7 +70,7 @@
     "prettier": "prettier \"**/*.{json,md,scss,yml}\"",
     "release:beta": "yarn release:beta-version && yarn release:beta-publish",
     "release:beta-version": "lerna version prerelease --sync-workspace-lock --preid beta --no-changelog",
-    "release:beta-publish": "lerna publish from-package --dist-tag beta",
+    "release:beta-publish": "lerna publish from-package --canary --dist-tag beta",
     "new-version": "lerna version --sync-workspace-lock",
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
