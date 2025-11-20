@@ -2,12 +2,12 @@ name: Test, Build & Release
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
-  id-token: write # Required for OIDC
+  id-token: write # Required for Trusted Publishing
   contents: write
 
 jobs:
@@ -65,26 +65,29 @@ jobs:
           node-version: 22.x
           cache: 'yarn'
 
-      # Auth is provided via checkout token; no separate netrc needed
-
       - name: Install JS dependencies
         run: yarn --immutable
 
       - name: Test
         run: yarn test
 
+      - name: Configure git user
+        run: |
+          git config --global user.email webapp+otto@wire.com
+          git config --global user.name "Otto the Bot"
+
+      # Stable release (current main behavior)
       - name: Release (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
           !startsWith(env.TITLE, 'chore') &&
           !startsWith(env.TITLE, 'test')
-        run: |
-          # Enable npm provenance and use GitHub OIDC (npm Trusted Publishing)
-          npm config set provenance true
-          npm config set registry https://registry.npmjs.org/
-          git config --global user.email webapp+otto@wire.com
-          git config --global user.name "Otto the Bot"
-          yarn release
+        run: yarn release
+
+      # Beta release (current dev behavior)
+      - name: Release beta versions (Trusted Publishing)
+        if: env.BRANCH_NAME == 'dev'
+        run: yarn release:next
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
