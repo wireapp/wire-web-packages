@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.0
         with:
           fetch-depth: 0
           token: ${{ secrets.OTTO_THE_BOT_GH_TOKEN }}
