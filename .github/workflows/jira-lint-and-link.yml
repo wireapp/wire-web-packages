@@ -8,7 +8,7 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: cakeinpanic/jira-description-action@master
+      - uses: cakeinpanic/jira-description-action@235b8296c8b4f88c564297246810f084f853dac1
         name: jira-description-action
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
