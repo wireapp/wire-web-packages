@@ -87,7 +87,7 @@ jobs:
       # Beta release (current dev behavior)
       - name: Release beta versions (Trusted Publishing)
         if: env.BRANCH_NAME == 'dev'
-        run: yarn release:next
+        run: yarn release:beta
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
