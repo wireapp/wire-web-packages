@@ -21,7 +21,7 @@
     "@babel/core": "7.28.0",
     "@babel/preset-env": "7.26.9",
     "@babel/preset-react": "7.26.3",
-    "@babel/preset-typescript": "7.26.0",
+    "@babel/preset-typescript": "7.28.5",
     "@chromatic-com/storybook": "^3.2.4",
     "@emotion/babel-preset-css-prop": "^11.12.0",
     "@emotion/jest": "11.13.0",
