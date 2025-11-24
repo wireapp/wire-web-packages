@@ -616,6 +616,7 @@ describe('MLSService', () => {
     it('Throws if decryption fails', async () => {
       const [mlsService, {transactionContext}] = await createMLSService();
 
+      const mockGroupId = 'mXOagqRIX/RFd7QyXJA8/Ed8X+hvQgLXIiwYHm3OQFc=';
       const getGroupIdFromConversationId = () => Promise.resolve(mockGroupId);
       jest
         .spyOn(transactionContext, 'decryptMessage')
