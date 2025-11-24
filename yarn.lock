@@ -14235,15 +14235,15 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-unused-imports@npm:^4, eslint-plugin-unused-imports@npm:^4.1.3":
-  version: 4.2.0
-  resolution: "eslint-plugin-unused-imports@npm:4.2.0"
+  version: 4.3.0
+  resolution: "eslint-plugin-unused-imports@npm:4.3.0"
   peerDependencies:
     "@typescript-eslint/eslint-plugin": ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
     eslint: ^9.0.0 || ^8.0.0
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: f3ab84c3910a17c794b3776ede6645ff408e10340ffdf06893f6934653509f27e3637c3f5e9dd66d78031c6f42542fbda118f85bd24b978651787795b0f8cb6d
+  checksum: e03d2399f429a865c156a2f76de40060f8b290f4e2626a6102a1bac22ccea5ac42eb63280b3b1abe5c32eccc8e90dd2ce27f8066f62bb4ffb0fe6754612eceb1
   languageName: node
   linkType: hard
 
