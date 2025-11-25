@@ -25,16 +25,18 @@ jobs:
   test_build_release:
     runs-on: ubuntu-latest
     env:
-      COMMITTER: ${{ github.event.head_commit.committer.name || 'Otto the Bot' }}
+      COMMITTER: ${{ github.triggering_actor || github.actor }}
+      # Try to link to the commit, otherwise repo URL
       COMMIT_URL: ${{ github.event.head_commit.url || format('{0}/{1}', github.server_url, github.repository) }}
+      # Button input (or "none" for push/PR)
       FORCE_PUBLISH: ${{ github.event.inputs.force_publish || 'none' }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.OTTO_THE_BOT_GH_TOKEN }}
+          ref: ${{ github.ref }}
 
       - name: Set environment variables
         run: |
@@ -57,6 +59,9 @@ jobs:
           echo -e "COMMIT_MESSAGE = ${COMMIT_MESSAGE}"
           echo -e "COMMIT_URL = ${COMMIT_URL}"
           echo -e "COMMITTER = ${COMMITTER}"
+          echo -e "FORCE_PUBLISH = ${FORCE_PUBLISH}"
+          echo -e "GITHUB_ACTOR = ${GITHUB_ACTOR}"
+          echo -e "GITHUB_ACTOR_ID = ${GITHUB_ACTOR_ID}"
           echo -e "HOME = ${HOME}"
           echo -e "GITHUB_CONTEXT = ${GITHUB_CONTEXT}"
 
@@ -85,10 +90,10 @@ jobs:
 
       - name: Configure git user
         run: |
-          git config --global user.email webapp+otto@wire.com
-          git config --global user.name "Otto the Bot"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
 
-      # Automatic stable release on main (push / PR merge)
+      # Automatic stable release on main (push / merge)
       - name: Release (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
@@ -97,7 +102,7 @@ jobs:
           !startsWith(env.TITLE, 'test')
         run: yarn release
 
-      # Automatic beta release on dev (push / PR merge)
+      # Automatic beta release on dev (push / merge)
       - name: Release beta versions (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'dev' &&
@@ -112,8 +117,8 @@ jobs:
           env.FORCE_PUBLISH == 'beta'
         run: yarn release:beta --force-publish
 
-      # Manual force publish latest on main via "Run workflow" button
-      - name: Manual force publish latest (Trusted Publishing)
+      # Manual force publish stable (latest packages) on main via "Run workflow" button
+      - name: Manual force publish stable (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
           github.event_name == 'workflow_dispatch' &&
