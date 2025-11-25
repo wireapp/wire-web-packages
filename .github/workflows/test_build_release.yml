@@ -69,14 +69,26 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && env.FORCE_PUBLISH != 'none'
         run: |
           echo "Validating branch (${BRANCH_NAME}) and dist-tag (${FORCE_PUBLISH})..."
+
+          # Only allow manual publish from main or dev
+          if [[ "${BRANCH_NAME}" != "main" && "${BRANCH_NAME}" != "dev" ]]; then
+            echo "Error: Manual publish with force_publish=${FORCE_PUBLISH} is only allowed from 'main' or 'dev' branches (got '${BRANCH_NAME}')."
+            exit 1
+          fi
+
+          # Dev → only beta
           if [[ "${BRANCH_NAME}" == "dev" && "${FORCE_PUBLISH}" != "beta" ]]; then
-            echo "Error: Can only publish 'beta' from dev branch"
+            echo "Error: Can only publish 'beta' from dev branch (got force_publish='${FORCE_PUBLISH}')."
             exit 1
           fi
+
+          # Main → only latest
           if [[ "${BRANCH_NAME}" == "main" && "${FORCE_PUBLISH}" != "latest" ]]; then
-            echo "Error: Can only publish 'latest' from main branch"
+            echo "Error: Can only publish 'latest' from main branch (got force_publish='${FORCE_PUBLISH}')."
             exit 1
           fi
+
+          echo "Branch/dist-tag validation passed ✅"
 
       - name: Skip CI
         if: |
