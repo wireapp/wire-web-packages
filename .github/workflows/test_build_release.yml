@@ -36,8 +36,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.ref }}
-
       - name: Set environment variables
         run: |
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
