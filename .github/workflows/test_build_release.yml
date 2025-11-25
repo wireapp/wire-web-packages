@@ -97,17 +97,11 @@ jobs:
           !startsWith(env.TITLE, 'test')
         run: yarn release
 
-<<<<<<< Updated upstream
-      # Beta release (current dev behavior)
-      - name: Release beta versions (Trusted Publishing)
-        if: env.BRANCH_NAME == 'dev'
-=======
       # Automatic beta release on dev (push / PR merge)
       - name: Release beta versions (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'dev' &&
           github.event_name != 'workflow_dispatch'
->>>>>>> Stashed changes
         run: yarn release:beta
 
       # Manual force publish beta on dev via "Run workflow" button
