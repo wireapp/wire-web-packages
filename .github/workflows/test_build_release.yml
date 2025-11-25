@@ -5,6 +5,17 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Force publish?'
+        required: true
+        default: 'none'
+        type: choice
+        options:
+          - none
+          - beta
+          - latest
 
 permissions:
   id-token: write # Required for Trusted Publishing
@@ -14,8 +25,9 @@ jobs:
   test_build_release:
     runs-on: ubuntu-latest
     env:
-      COMMITTER: ${{github.event.head_commit.committer.name}}
-      COMMIT_URL: ${{github.event.head_commit.url}}
+      COMMITTER: ${{ github.event.head_commit.committer.name || 'Otto the Bot' }}
+      COMMIT_URL: ${{ github.event.head_commit.url || format('{0}/{1}', github.server_url, github.repository) }}
+      FORCE_PUBLISH: ${{ github.event.inputs.force_publish || 'none' }}
 
     steps:
       - name: Checkout
@@ -28,7 +40,7 @@ jobs:
         run: |
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "TAG=$(git tag --points-at ${{github.sha}})" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{github.sha}} | head -n 1)" >> $GITHUB_ENV
 
       - name: Set TITLE
         env:
@@ -76,18 +88,43 @@ jobs:
           git config --global user.email webapp+otto@wire.com
           git config --global user.name "Otto the Bot"
 
-      # Stable release (current main behavior)
+      # Automatic stable release on main (push / PR merge)
       - name: Release (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
+          github.event_name != 'workflow_dispatch' &&
           !startsWith(env.TITLE, 'chore') &&
           !startsWith(env.TITLE, 'test')
         run: yarn release
 
+<<<<<<< Updated upstream
       # Beta release (current dev behavior)
       - name: Release beta versions (Trusted Publishing)
         if: env.BRANCH_NAME == 'dev'
+=======
+      # Automatic beta release on dev (push / PR merge)
+      - name: Release beta versions (Trusted Publishing)
+        if: |
+          env.BRANCH_NAME == 'dev' &&
+          github.event_name != 'workflow_dispatch'
+>>>>>>> Stashed changes
         run: yarn release:beta
+
+      # Manual force publish beta on dev via "Run workflow" button
+      - name: Manual force publish beta (Trusted Publishing)
+        if: |
+          env.BRANCH_NAME == 'dev' &&
+          github.event_name == 'workflow_dispatch' &&
+          env.FORCE_PUBLISH == 'beta'
+        run: yarn release:beta --force-publish
+
+      # Manual force publish latest on main via "Run workflow" button
+      - name: Manual force publish latest (Trusted Publishing)
+        if: |
+          env.BRANCH_NAME == 'main' &&
+          github.event_name == 'workflow_dispatch' &&
+          env.FORCE_PUBLISH == 'latest'
+        run: yarn release --force-publish
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
