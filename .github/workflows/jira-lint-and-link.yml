@@ -14,5 +14,5 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           jira-token: ${{ secrets.JIRA_TOKEN }}
           jira-base-url: https://wearezeta.atlassian.net
-          skip-branches: '^(dev|master|release\/*)$'
+          skip-branches: '^(master|release\/*)$'
           fail-when-jira-issue-not-found: true
