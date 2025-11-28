@@ -120,16 +120,16 @@ jobs:
       - name: Release (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'main' &&
-          github.event_name != 'workflow_dispatch' &&
-          !startsWith(env.TITLE, 'chore') &&
-          !startsWith(env.TITLE, 'test')
+          github.event_name != 'workflow_dispatch'
         run: yarn release
 
       # Automatic beta release on dev (push / merge)
       - name: Release beta versions (Trusted Publishing)
         if: |
           env.BRANCH_NAME == 'dev' &&
-          github.event_name != 'workflow_dispatch'
+          github.event_name != 'workflow_dispatch' &&
+          !startsWith(env.TITLE, 'chore') &&
+          !startsWith(env.TITLE, 'test')
         run: yarn release:beta
 
       # Manual force publish beta on dev via "Run workflow" button
