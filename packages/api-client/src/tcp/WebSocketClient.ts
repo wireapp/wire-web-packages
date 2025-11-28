@@ -319,4 +319,8 @@ export class WebSocketClient extends EventEmitter {
 
     this.socket.send(jsonEvent);
   }
+
+  public checkHealth(): Promise<boolean> {
+    return this.socket.checkHealth();
+  }
 }
