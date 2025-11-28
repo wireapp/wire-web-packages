@@ -17,6 +17,7 @@
  *
  */
 
+import {RawAxiosRequestConfig} from 'axios';
 import {
   NodeServiceApi,
   RestLookupRequest,
@@ -33,6 +34,7 @@ import {
   RestNodeLocator,
   RestActionOptionsCopyMove,
   RestNamespaceValuesResponse,
+  GetByUuidFlagsEnum,
 } from 'cells-sdk-ts';
 
 import {CellsStorage} from './CellsStorage/CellsStorage';
@@ -318,12 +320,20 @@ export class CellsAPI {
     return result.data.Versions;
   }
 
-  async getNode({id}: {id: string}): Promise<RestNode> {
+  async getNode({
+    id,
+    flags,
+    options,
+  }: {
+    id: string;
+    flags?: Array<GetByUuidFlagsEnum>;
+    options?: RawAxiosRequestConfig;
+  }): Promise<RestNode> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
 
-    const result = await this.client.getByUuid(id);
+    const result = await this.client.getByUuid(id, flags, options);
 
     return result.data;
   }
