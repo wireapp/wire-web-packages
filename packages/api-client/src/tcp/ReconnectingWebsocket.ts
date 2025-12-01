@@ -175,7 +175,7 @@ export class ReconnectingWebsocket {
 
   private readonly sendPing = (): void => {
     if (!this.socket) {
-      this.logger.debug('WebSocket Instance does not exist, skipping ping');
+      this.logger.debug('WebSocket instance does not exist, skipping ping');
       return;
     }
 
