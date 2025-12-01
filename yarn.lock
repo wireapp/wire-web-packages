@@ -9458,7 +9458,7 @@ __metadata:
     axios: 1.12.2
     axios-retry: 4.5.0
     browser-sync: 3.0.4
-    cells-sdk-ts: 0.1.1-alpha16
+    cells-sdk-ts: 0.1.1-alpha17
     concurrently: 9.2.1
     cross-env: 10.1.0
     dotenv: 17.2.3
@@ -11534,12 +11534,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cells-sdk-ts@npm:0.1.1-alpha16":
-  version: 0.1.1-alpha16
-  resolution: "cells-sdk-ts@npm:0.1.1-alpha16"
+"cells-sdk-ts@npm:0.1.1-alpha17":
+  version: 0.1.1-alpha17
+  resolution: "cells-sdk-ts@npm:0.1.1-alpha17"
   dependencies:
     axios: ^1.9.0
-  checksum: 413d92a7202b5e5046ac237b09c54641c66da6581aa921d887651e9b401a9232a8d56050b2ec36edceb73d3a475d9382baa5f9e9ad8953f2f84ed634af7cfdf7
+  checksum: ced3bc8b030c360930eecf863d486ec1ffa502142746f15b8f45ee491524c640411f847fdf32f5ff7e127c08361b0d81f5c8adee7b3517ab02ff0af671990e05
   languageName: node
   linkType: hard
 
