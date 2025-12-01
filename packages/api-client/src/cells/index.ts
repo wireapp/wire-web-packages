@@ -19,5 +19,4 @@
 
 export * from './CellsAPI';
 export type {GetByUuidFlagsEnum as NodeFlags} from 'cells-sdk-ts';
-export type {RestNode as Node} from 'cells-sdk-ts';
-export type {RawAxiosRequestConfig as RequestConfig} from 'axios';
+export type {Node} from './CellsAPI.schema';
