@@ -13,7 +13,7 @@
     "@testing-library/dom": "^10.0.0",
     "@types/babel__core": "^7",
     "@types/jest": "^29.2.0",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.17.0",
     "@wireapp/eslint-config": "workspace:^",
