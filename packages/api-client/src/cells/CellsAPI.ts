@@ -39,7 +39,7 @@ import logdown from 'logdown';
 
 import {LogFactory} from '@wireapp/commons';
 
-import {RestNodeSchema} from './CellsAPI.schema';
+import {Node, RestNodeSchema} from './CellsAPI.schema';
 import {CellsStorage} from './CellsStorage/CellsStorage';
 import {S3Service} from './CellsStorage/S3Service';
 
@@ -325,7 +325,7 @@ export class CellsAPI {
     return result.data.Versions;
   }
 
-  async getNode({id, flags}: {id: string; flags?: Array<GetByUuidFlagsEnum>}): Promise<RestNode> {
+  async getNode({id, flags}: {id: string; flags?: Array<GetByUuidFlagsEnum>}): Promise<Node> {
     if (!this.client || !this.storageService) {
       throw new Error(CONFIGURATION_ERROR);
     }
