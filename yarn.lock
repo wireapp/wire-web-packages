@@ -7891,14 +7891,14 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-webpack5-compiler-swc@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@storybook/addon-webpack5-compiler-swc@npm:4.0.1"
+  version: 4.0.2
+  resolution: "@storybook/addon-webpack5-compiler-swc@npm:4.0.2"
   dependencies:
     "@swc/core": ^1.13.5
     swc-loader: ^0.2.6
   peerDependencies:
-    storybook: ^9.0.0 || ^10.0.0-0
-  checksum: 8f935e91ce39d8032e9912ff015d2feb66b8682422251bcde5fd90a829834b8c5dbffa88303c73b6eac261987d275a2c69e7e942ac587bb2c17c0cc8374110a3
+    storybook: ^9.0.0 || ^10.0.0-0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
+  checksum: 2f116e2532072c2876b8ce6ad12d1fc093e879267c2753ddb864f21b809946bfef00dc26d5cb528f9f2c8664a2ae7f6a0888939754faaaedf5a4b05b6ff8d7df
   languageName: node
   linkType: hard
 
