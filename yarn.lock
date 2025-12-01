@@ -2996,13 +2996,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css-prettifier@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "@emotion/css-prettifier@npm:1.1.4"
+"@emotion/css-prettifier@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@emotion/css-prettifier@npm:1.2.0"
   dependencies:
     "@emotion/memoize": ^0.9.0
     stylis: 4.2.0
-  checksum: e80e143e5bcdd8775319825496a4bd5e12a04eadb344a3ddba8a211584ba26bbec014b470e224d94c93a8cd206f21f5e6c81c65b1517fe1f4b5d6e928ead2620
+  checksum: 2049d99c6501ace742a286d3a4a75b55f19e1508187fb9c267b12d68f0e7b1e4b4f9d27167cd892c392ed0d10d2ec542a2fabd5d3a6a41225612a1f4bd4a7b6b
   languageName: node
   linkType: hard
 
@@ -3024,24 +3024,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:11.13.0":
-  version: 11.13.0
-  resolution: "@emotion/jest@npm:11.13.0"
+"@emotion/jest@npm:11.14.2":
+  version: 11.14.2
+  resolution: "@emotion/jest@npm:11.14.2"
   dependencies:
     "@babel/runtime": ^7.18.3
-    "@emotion/css-prettifier": ^1.1.4
+    "@emotion/css-prettifier": ^1.2.0
     chalk: ^4.1.0
     specificity: ^0.4.1
     stylis: 4.2.0
   peerDependencies:
-    "@types/jest": ^26.0.14 || ^27.0.0 || ^28.0.0 || ^29.0.0
+    "@types/jest": ^26.0.14 || ^27.0.0 || ^28.0.0 || ^29.0.0 || ^30.0.0
     enzyme-to-json: ^3.2.1
   peerDependenciesMeta:
     "@types/jest":
       optional: true
     enzyme-to-json:
       optional: true
-  checksum: 1bbf80c639b46f53cb7104e2c035ba293e58a1d2afbe9f14ee32cc711cd239ad03a4a372d60d77342a13310865efdb2503559a4e05f68e92e9a9e896d54f3421
+  checksum: 46a271d9aa8868fb20a9e8573bdbd546bff2e4b28ce0bac176cb9f237a51285d94455b72b110ee0b48f4fe82a4c2c04c4de821190d87b595a02767cd3e794aba
   languageName: node
   linkType: hard
 
@@ -10330,7 +10330,7 @@ __metadata:
     "@babel/preset-typescript": 7.26.0
     "@chromatic-com/storybook": ^3.2.4
     "@emotion/babel-preset-css-prop": ^11.12.0
-    "@emotion/jest": 11.13.0
+    "@emotion/jest": 11.14.2
     "@emotion/react": ^11.10.4
     "@radix-ui/react-accordion": 1.2.11
     "@radix-ui/react-dropdown-menu": 2.1.14
