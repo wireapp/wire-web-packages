@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.92.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.91.0...@wireapp/api-client@27.92.0) (2025-12-02)
+
+### Features
+
+* update cellsAPI getNode schema [WPB-21650] ([#7660](https://github.com/wireapp/wire-web-packages/issues/7660)) ([#7661](https://github.com/wireapp/wire-web-packages/issues/7661)) ([bfe11c0](https://github.com/wireapp/wire-web-packages/commit/bfe11c01362d0b5bafce09c686baee2faf73fe47))
+
 # [27.91.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.90.0...@wireapp/api-client@27.91.0) (2025-12-02)
 
 ### Features
