@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.91.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.90.0...@wireapp/api-client@27.91.0) (2025-12-02)
+
+### Features
+
+* update cells-sdk and add api wrappers for collabora [WPB-21650] ([#7651](https://github.com/wireapp/wire-web-packages/issues/7651)) ([#7659](https://github.com/wireapp/wire-web-packages/issues/7659)) ([5fc0d09](https://github.com/wireapp/wire-web-packages/commit/5fc0d092d3d5669869a043b0f8755f48011e3576))
+
 # [27.90.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/api-client@27.89.2...@wireapp/api-client@27.90.0) (2025-11-17)
 
 ### Features
