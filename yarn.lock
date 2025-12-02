@@ -9452,7 +9452,7 @@ __metadata:
     "@types/ws": 8.5.14
     "@wireapp/commons": "workspace:^"
     "@wireapp/priority-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.53.0
+    "@wireapp/protocol-messaging": 1.55.0
     "@wireapp/store-engine": "workspace:^"
     "@wireapp/store-engine-fs": "workspace:^"
     axios: 1.12.2
@@ -9573,7 +9573,7 @@ __metadata:
     "@wireapp/cryptobox": 12.8.0
     "@wireapp/priority-queue": "workspace:^"
     "@wireapp/promise-queue": "workspace:^"
-    "@wireapp/protocol-messaging": 1.53.0
+    "@wireapp/protocol-messaging": 1.55.0
     "@wireapp/store-engine": "workspace:^"
     axios: 1.12.2
     bazinga64: "workspace:^"
@@ -9729,15 +9729,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wireapp/protocol-messaging@npm:1.53.0":
-  version: 1.53.0
-  resolution: "@wireapp/protocol-messaging@npm:1.53.0"
+"@wireapp/protocol-messaging@npm:1.55.0":
+  version: 1.55.0
+  resolution: "@wireapp/protocol-messaging@npm:1.55.0"
   dependencies:
     long: 5.2.0
     protobufjs: 7.2.5
     protobufjs-cli: 1.1.2
     typescript: 4.8.4
-  checksum: 7655d6b27be816206688c6eac56c4f68484aa0c4c5e1a11a2cd7e17636c8a4123053d994edb2de468bbb5bd6fa9d5f51514fad88ddc10e9d85d6714844ce9f3c
+  checksum: 111db983a2511354362c08cbb3cb5196d2ab627cc1d0e98898351a6658d4733f6f71e0ad5951950fb6a774274fc30710480eb805f69fc11098959cf9dd0a2e75
   languageName: node
   linkType: hard
 
