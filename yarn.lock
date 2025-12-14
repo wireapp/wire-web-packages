@@ -388,9 +388,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/lib-storage@npm:3.946.0":
-  version: 3.946.0
-  resolution: "@aws-sdk/lib-storage@npm:3.946.0"
+"@aws-sdk/lib-storage@npm:3.948.0":
+  version: 3.948.0
+  resolution: "@aws-sdk/lib-storage@npm:3.948.0"
   dependencies:
     "@smithy/abort-controller": ^4.2.5
     "@smithy/middleware-endpoint": ^4.3.14
@@ -400,8 +400,8 @@ __metadata:
     stream-browserify: 3.0.0
     tslib: ^2.6.2
   peerDependencies:
-    "@aws-sdk/client-s3": ^3.946.0
-  checksum: 18ff1044ec8d9d149931408987bdcd5d21e93156434ef58705343c80ec406836494f606cb018c49c6e1faa5870d38718dac63b4f7d30452c1c491bf73fd85dc1
+    "@aws-sdk/client-s3": ^3.948.0
+  checksum: 6eee3d8220952d521a3b9dc3397445f8863b768921af7c1d57fd60c9e9572a5fdca452a1fadc98d410c6deb20fac2fad1ca7c4c82a4789afa9e86ef742a77a3f
   languageName: node
   linkType: hard
 
@@ -9484,7 +9484,7 @@ __metadata:
   resolution: "@wireapp/api-client@workspace:packages/api-client"
   dependencies:
     "@aws-sdk/client-s3": 3.948.0
-    "@aws-sdk/lib-storage": 3.946.0
+    "@aws-sdk/lib-storage": 3.948.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/axios": ^0.14.0
