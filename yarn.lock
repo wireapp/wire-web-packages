@@ -4482,15 +4482,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/changed@npm:4.9.4":
-  version: 4.9.4
-  resolution: "@lerna-lite/changed@npm:4.9.4"
+"@lerna-lite/changed@npm:4.10.2":
+  version: 4.10.2
+  resolution: "@lerna-lite/changed@npm:4.10.2"
   dependencies:
-    "@lerna-lite/cli": 4.9.4
-    "@lerna-lite/core": 4.9.4
-    "@lerna-lite/list": 4.9.4
-    "@lerna-lite/listable": 4.9.4
-  checksum: e12cea463393895b671c3d80ee0373c70beee0efe8080f395274536604a55c908b65677cc71e52bdc75fbe3ffb809349a2b18aa1791ae93343d144f39a961001
+    "@lerna-lite/cli": 4.10.2
+    "@lerna-lite/core": 4.10.2
+    "@lerna-lite/list": 4.10.2
+    "@lerna-lite/listable": 4.10.2
+  checksum: b75d5690ce978d0a256362b7163eb947d197e600dc0d2161f1a49cf1d62e95f6f762a7d6527ad5e63f96c82d9db3ad87afad93e97b15c8f4603aef9c6f178d9b
   languageName: node
   linkType: hard
 
@@ -4729,25 +4729,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/list@npm:4.9.4":
-  version: 4.9.4
-  resolution: "@lerna-lite/list@npm:4.9.4"
+"@lerna-lite/list@npm:4.10.2":
+  version: 4.10.2
+  resolution: "@lerna-lite/list@npm:4.10.2"
   dependencies:
-    "@lerna-lite/cli": 4.9.4
-    "@lerna-lite/core": 4.9.4
-    "@lerna-lite/listable": 4.9.4
-  checksum: 9cbacfd0c3afcf5172db2bce385dbd35801ba203a6cfac0eed28fb54ace0db179eff503d8364625d58f7d4958defd108a4c8f9f5cd6a226f649016ae43909fd9
+    "@lerna-lite/cli": 4.10.2
+    "@lerna-lite/core": 4.10.2
+    "@lerna-lite/listable": 4.10.2
+  checksum: 2db9eb5e8de571714d5f8784fe8baf3c6598f78d12bf78ffcad89792dfba2d56dd3af5356f1ee1146de81b8bde0129dbfb6e9061a6753698d06512eacd110d34
   languageName: node
   linkType: hard
 
-"@lerna-lite/listable@npm:4.9.4":
-  version: 4.9.4
-  resolution: "@lerna-lite/listable@npm:4.9.4"
+"@lerna-lite/listable@npm:4.10.2":
+  version: 4.10.2
+  resolution: "@lerna-lite/listable@npm:4.10.2"
   dependencies:
-    "@lerna-lite/core": 4.9.4
+    "@lerna-lite/core": 4.10.2
     columnify: ^1.6.0
     tinyrainbow: ^3.0.3
-  checksum: 99df986db6e8afa1779d15cd19d38b9451a3adbf204f893648277cd4ec551165607c03085422cd6cd28641c2cd4ba45eb0d5c94e320cd29188f51b9a7aa2f05e
+  checksum: 726bf28d00a0e8655d43c2fe0bc35183bce123b50fe99e66b0cd623211fb4f73abcd721977cadc3c637ef44426884e3a98736bde50957ef81aa0651b5df1139f
   languageName: node
   linkType: hard
 
@@ -22281,7 +22281,7 @@ __metadata:
     "@babel/core": ^7.19.6
     "@babel/eslint-parser": ^7.19.1
     "@emotion/eslint-plugin": ^11.10.0
-    "@lerna-lite/changed": 4.9.4
+    "@lerna-lite/changed": 4.10.2
     "@lerna-lite/cli": 3.12.1
     "@lerna-lite/publish": 4.9.4
     "@lerna-lite/run": 4.10.2
