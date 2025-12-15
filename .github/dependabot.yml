@@ -7,7 +7,7 @@ updates:
       day: sunday
       time: '16:00'
       timezone: 'Europe/Berlin'
-    target-branch: dev
+    target-branch: main
     open-pull-requests-limit: 99
     ignore:
       # Freeze typescript minor and major versions updates
@@ -24,4 +24,4 @@ updates:
     open-pull-requests-limit: 10
     schedule:
       interval: 'daily'
-    target-branch: dev
+    target-branch: main
