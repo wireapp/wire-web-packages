@@ -9965,7 +9965,7 @@ __metadata:
   resolution: "@wireapp/telemetry@workspace:packages/telemetry"
   dependencies:
     "@types/node": ^22.0.0
-    countly-sdk-web: 24.11.4
+    countly-sdk-web: 25.4.4
     rimraf: 6.1.2
     typescript: ^5.0.4
     vite: ^6.0.1
@@ -12439,10 +12439,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"countly-sdk-web@npm:24.11.4":
-  version: 24.11.4
-  resolution: "countly-sdk-web@npm:24.11.4"
-  checksum: f76cca37cb57ca3e865bdc1a56ebc5f687de0afdfee1e4c95cae30f12630674bb34b676713051c0b79950889e9ddee8d40abe9478f81a6db1d8a1b71ff2ef2cd
+"countly-sdk-web@npm:25.4.4":
+  version: 25.4.4
+  resolution: "countly-sdk-web@npm:25.4.4"
+  checksum: 93952deeefc36174f6887b23bbb08edf6f7c8d6bac552ab97985df7d07800720a6f2c9cc7947f1df6d20e284bd8f21533bba113e98499b4f272479163451bff9
   languageName: node
   linkType: hard
 
