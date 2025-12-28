@@ -8861,21 +8861,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:7.17.0":
-  version: 7.17.0
-  resolution: "@typescript-eslint/parser@npm:7.17.0"
+"@typescript-eslint/parser@npm:8.50.1":
+  version: 8.50.1
+  resolution: "@typescript-eslint/parser@npm:8.50.1"
   dependencies:
-    "@typescript-eslint/scope-manager": 7.17.0
-    "@typescript-eslint/types": 7.17.0
-    "@typescript-eslint/typescript-estree": 7.17.0
-    "@typescript-eslint/visitor-keys": 7.17.0
+    "@typescript-eslint/scope-manager": 8.50.1
+    "@typescript-eslint/types": 8.50.1
+    "@typescript-eslint/typescript-estree": 8.50.1
+    "@typescript-eslint/visitor-keys": 8.50.1
     debug: ^4.3.4
   peerDependencies:
-    eslint: ^8.56.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: f0525317af174b5547d0a7ed8eadbbb7bbc1da9e9ab86882ed616b0ffb053170818a48cab2aaa627001ee991ee559630fbe5ad632b3df7cdf4a2b1b07a571907
+    eslint: ^8.57.0 || ^9.0.0
+    typescript: ">=4.8.4 <6.0.0"
+  checksum: a3790781278f224748e0c9b5e800c5a6b240b14fd45d85819ec603117637505cdafae615fd01d614214994b2285caebae5926a2101f4cf5982dd5d8980f0fb9d
   languageName: node
   linkType: hard
 
@@ -9819,7 +9817,7 @@ __metadata:
     "@types/eslint": ^8
     "@types/prettier": ^3
     "@typescript-eslint/eslint-plugin": 7.17.0
-    "@typescript-eslint/parser": 7.17.0
+    "@typescript-eslint/parser": 8.50.1
     eslint: ^8
     eslint-config-prettier: ^10
     eslint-import-resolver-alias: ^1.1.2
@@ -22466,7 +22464,7 @@ __metadata:
     "@types/jest": ^29.2.0
     "@types/node": ^22.0.0
     "@typescript-eslint/eslint-plugin": 7.17.0
-    "@typescript-eslint/parser": 7.17.0
+    "@typescript-eslint/parser": 8.50.1
     "@wireapp/eslint-config": "workspace:^"
     eslint: 8.57.0
     eslint-config-prettier: 10.1.8
