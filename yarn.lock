@@ -3645,10 +3645,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:^9.0.0":
-  version: 9.9.0
-  resolution: "@faker-js/faker@npm:9.9.0"
-  checksum: bbc5b57c3b0f480d26dea9fc8e40a5c1bd4d2b0ad8c9d7d22ac4650d0d9f959469af4f2c443c34ff64b7a7d3b9135ce525eae2a1e5822b9223257e184036efd0
+"@faker-js/faker@npm:^10.2.0":
+  version: 10.2.0
+  resolution: "@faker-js/faker@npm:10.2.0"
+  checksum: 7f3a138f0f1e61b5d22a39c9d182729225d2cb907baf6cb98e2421206a012faf6b5cd65c5114deebb317df451f7cea439cd61c9b40822a55bc7faa8c7bde8729
   languageName: node
   linkType: hard
 
@@ -9551,7 +9551,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wireapp/core@workspace:packages/core"
   dependencies:
-    "@faker-js/faker": ^9.0.0
+    "@faker-js/faker": ^10.2.0
     "@swc/core": ^1.3.10
     "@swc/jest": ^0.2.23
     "@types/jest": ^29.2.0
