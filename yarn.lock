@@ -7551,6 +7551,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/instrumenter@npm:8.6.15":
+  version: 8.6.15
+  resolution: "@storybook/instrumenter@npm:8.6.15"
+  dependencies:
+    "@storybook/global": ^5.0.0
+    "@vitest/utils": ^2.1.1
+  peerDependencies:
+    storybook: ^8.6.15
+  checksum: 8e6b7df1b80ae5181bd1cb025cd51953f5f4774ef5cf1c281d91bf958f9198c935c7d93383e2d3b5c9ec9c6d04b3aea0422040270c65209cdcb594476f0a0a7d
+  languageName: node
+  linkType: hard
+
 "@storybook/manager-api@npm:8.6.14":
   version: 8.6.14
   resolution: "@storybook/manager-api@npm:8.6.14"
@@ -7668,7 +7680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/test@npm:8.6.14, @storybook/test@npm:^8.5.2":
+"@storybook/test@npm:8.6.14":
   version: 8.6.14
   resolution: "@storybook/test@npm:8.6.14"
   dependencies:
@@ -7682,6 +7694,23 @@ __metadata:
   peerDependencies:
     storybook: ^8.6.14
   checksum: 996c7d623017f924f61cd44ba84df1844d2b72bddff76cbb3b0f9e76e1de02f4e63e56598ecfea557ba873359b0c5c5a0e1bc7f1811887dc647f83143233a88b
+  languageName: node
+  linkType: hard
+
+"@storybook/test@npm:^8.5.2":
+  version: 8.6.15
+  resolution: "@storybook/test@npm:8.6.15"
+  dependencies:
+    "@storybook/global": ^5.0.0
+    "@storybook/instrumenter": 8.6.15
+    "@testing-library/dom": 10.4.0
+    "@testing-library/jest-dom": 6.5.0
+    "@testing-library/user-event": 14.5.2
+    "@vitest/expect": 2.0.5
+    "@vitest/spy": 2.0.5
+  peerDependencies:
+    storybook: ^8.6.15
+  checksum: c4adc4848f6297328155b170400649ee124085b820013c5541c21c4b0f82ff6cd3985ceb7dcd02a3bc97c1023c86128b37fd1c739e2618fb661954d7093a8b91
   languageName: node
   linkType: hard
 
