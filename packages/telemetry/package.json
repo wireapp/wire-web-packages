@@ -15,7 +15,7 @@
   },
   "version": "0.3.7",
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^25.0.3",
     "rimraf": "6.1.2",
     "typescript": "^5.0.4",
     "vite": "^6.0.1",
