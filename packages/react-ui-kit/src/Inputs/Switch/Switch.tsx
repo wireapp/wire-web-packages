@@ -53,9 +53,9 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
       showLoading,
       disabled,
       loadingColor = COLOR.BLUE,
-      activatedColor = COLOR.BLUE,
+      activatedColor,
       activatedColorDark,
-      deactivatedColor = '#d2d2d2',
+      deactivatedColor,
       deactivatedColorDark,
       disabledColor,
       disabledColorDark,
@@ -69,10 +69,15 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     const switchTheme = theme?.Switch;
 
     const resolvedActivatedColor =
-      (isDarkTheme ? activatedColorDark : activatedColor) ?? switchTheme?.activatedColor ?? COLOR.BLUE;
+      (isDarkTheme ? activatedColorDark ?? activatedColor : activatedColor) ??
+      switchTheme?.activatedColor ??
+      COLOR.BLUE;
     const resolvedDeactivatedColor =
-      (isDarkTheme ? deactivatedColorDark : deactivatedColor) ?? switchTheme?.deactivatedColor ?? '#d2d2d2';
-    const resolvedDisabledColor = (isDarkTheme ? disabledColorDark : disabledColor) ?? switchTheme?.disabledColor;
+      (isDarkTheme ? deactivatedColorDark ?? deactivatedColor : deactivatedColor) ??
+      switchTheme?.deactivatedColor ??
+      '#d2d2d2';
+    const resolvedDisabledColor =
+      (isDarkTheme ? disabledColorDark ?? disabledColor : disabledColor) ?? switchTheme?.disabledColor;
 
     return (
       <div css={wrapperStyles}>
