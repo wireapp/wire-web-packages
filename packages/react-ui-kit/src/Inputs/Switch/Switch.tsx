@@ -84,7 +84,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           name={name}
           onChange={event => onToggle(event.target.checked)}
           onKeyDown={event => {
-            if (event.key == 'Enter') {
+            if (event.key === 'Enter') {
               onToggle(!(event.target as HTMLInputElement).checked);
             }
           }}
