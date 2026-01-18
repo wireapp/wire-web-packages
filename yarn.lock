@@ -11376,7 +11376,7 @@ __metadata:
     "@types/node": ^22.0.0
     cross-env: 10.1.0
     jest: ^29.2.1
-    libsodium-wrappers-sumo: 0.8.0
+    libsodium-wrappers-sumo: 0.8.1
     rimraf: 6.1.2
     ts-node: 10.9.2
     typescript: ^5.0.4
@@ -18560,12 +18560,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libsodium-wrappers-sumo@npm:0.8.0":
-  version: 0.8.0
-  resolution: "libsodium-wrappers-sumo@npm:0.8.0"
+"libsodium-wrappers-sumo@npm:0.8.1":
+  version: 0.8.1
+  resolution: "libsodium-wrappers-sumo@npm:0.8.1"
   dependencies:
     libsodium-sumo: ^0.8.0
-  checksum: de6454f3303c5bb04605b27241ad5fa0d53a4de48f04eef4176ccb4965acd2c795596a999f6e42f45b6a42f15e8126ecd755571a8bd45af3386cf460a48f2cc9
+  checksum: dc8b287225603a8989e421ea3e23529b62f23818939c08c1b24625d801c101acc06fabbfc633a355e523bc523ad6fbfa741660d876ff45cf162495564dc571df
   languageName: node
   linkType: hard
 
