@@ -2,7 +2,8 @@
   "command": {
     "publish": {
       "conventionalCommits": true,
-      "message": "chore: Publish [skip ci]"
+      "message": "chore: Publish [skip ci]",
+      "ignore": ["packages/api-client", "packages/core"]
     }
   },
   "exact": true,
