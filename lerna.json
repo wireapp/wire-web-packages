@@ -3,7 +3,7 @@
     "publish": {
       "conventionalCommits": true,
       "message": "chore: Publish [skip ci]",
-      "ignore": ["packages/api-client", "packages/core"]
+      "ignore": ["@wireapp/api-client", "@wireapp/core"]
     }
   },
   "exact": true,
