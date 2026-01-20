@@ -64,7 +64,7 @@ jobs:
           echo "Validating branch (${BRANCH_NAME})..."
 
           # Only allow manual publish from main
-          if [[ "${BRANCH_NAME}" != "main" && "${BRANCH_NAME}" != "chore/try_again" ]]; then
+          if [[ "${BRANCH_NAME}" != "main" ]]; then
             echo "Error: Manual publish is only allowed from 'main' branch (got '${BRANCH_NAME}')."
             exit 1
           fi
@@ -112,7 +112,7 @@ jobs:
       # Manual force publish on main via "Run workflow" button
       - name: Manual force publish (Trusted Publishing)
         if: |
-          (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'chore/try_again') &&
+          env.BRANCH_NAME == 'main' &&
           github.event_name == 'workflow_dispatch' &&
           env.FORCE_PUBLISH == 'true'
         run: yarn release:force
