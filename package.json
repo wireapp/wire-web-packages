@@ -71,7 +71,7 @@
     "new-version": "lerna version --sync-workspace-lock",
     "new-publish": "lerna publish from-package",
     "release": "yarn new-version && yarn new-publish",
-    "test": "lerna run build --include-dependencies --since && lerna run test --since --parallel",
+    "test": "lerna run test --since --parallel",
     "test:all": "lerna run test",
     "test:coverage": "lerna run test:coverage",
     "prepare": "husky install"
