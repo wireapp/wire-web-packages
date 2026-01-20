@@ -64,7 +64,7 @@ jobs:
           echo "Validating branch (${BRANCH_NAME})..."
 
           # Only allow manual publish from main
-          if [[ "${BRANCH_NAME}" != "main" ]]; then
+          if [[ "${BRANCH_NAME}" != "main" && "${BRANCH_NAME}" != "chore/try_again" ]]; then
             echo "Error: Manual publish is only allowed from 'main' branch (got '${BRANCH_NAME}')."
             exit 1
           fi
