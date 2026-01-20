@@ -112,10 +112,10 @@ jobs:
       # Manual force publish on main via "Run workflow" button
       - name: Manual force publish (Trusted Publishing)
         if: |
-          env.BRANCH_NAME == 'main' &&
+          (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'chore/try_again') &&
           github.event_name == 'workflow_dispatch' &&
           env.FORCE_PUBLISH == 'true'
-        run: yarn release --force-publish
+        run: yarn release:force
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
