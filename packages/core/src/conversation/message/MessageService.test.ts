@@ -75,11 +75,14 @@ function generateRecipients(users: TestUser[]): QualifiedUserClients {
   }, {});
 }
 
-function fakeEncrypt(_: unknown, recipients: QualifiedUserClients): Promise<{payloads: QualifiedOTRRecipients}> {
+function fakeEncrypt(
+  plainText: Uint8Array,
+  recipients: QualifiedUserClients,
+): Promise<{payloads: QualifiedOTRRecipients}> {
   const encryptedPayload = Object.entries(recipients).reduce((acc, [domain, users]) => {
     acc[domain] = Object.entries(users).reduce((userClients, [userId, clients]) => {
       userClients[userId] = clients.reduce((payloads, client) => {
-        payloads[client] = new Uint8Array();
+        payloads[client] = plainText;
         return payloads;
       }, {} as any);
       return userClients;
@@ -136,6 +139,66 @@ describe('MessageService', () => {
         conversationId: {id: 'convid', domain: 'domain'},
       });
       expect(apiClient.api.conversation.postOTRMessage).toHaveBeenCalled();
+      expect(result).toEqual({...baseMessageSendingStatus, failed: undefined});
+    });
+
+    it('encrypts a message individually for each device if message content is small', async () => {
+      const [messageService, {apiClient}] = await buildMessageService();
+
+      const postOTRMessageSpy = jest
+        .spyOn(apiClient.api.conversation, 'postOTRMessage')
+        .mockResolvedValue(baseMessageSendingStatus);
+
+      const shortText = 'a'.repeat(100);
+      const result = await messageService.sendMessage(
+        clientId,
+        generateRecipients(generateUsers(30, 10)),
+        createMessage(shortText),
+        {conversationId},
+      );
+      expect(postOTRMessageSpy).toHaveBeenCalledWith(conversationId.id, conversationId.domain, expect.any(Object));
+      const payload = postOTRMessageSpy.mock.calls[0][2];
+      // We do not expect any assetData
+      expect(payload.blob.length).toBe(0);
+
+      payload.recipients.forEach(recipient => {
+        recipient.entries?.forEach(entry => {
+          entry.clients?.forEach(client => {
+            // Every client payload should have the text encrypted for them
+            expect(client.text.length).toBeGreaterThan(shortText.length);
+          });
+        });
+      });
+      expect(result).toEqual({...baseMessageSendingStatus, failed: undefined});
+    });
+
+    it('sends a message as external if the content is too big', async () => {
+      const [messageService, {apiClient}] = await buildMessageService();
+
+      const postOTRMessageSpy = jest
+        .spyOn(apiClient.api.conversation, 'postOTRMessage')
+        .mockResolvedValue(baseMessageSendingStatus);
+
+      const longText = 'a'.repeat(10000);
+      const result = await messageService.sendMessage(
+        clientId,
+        generateRecipients(generateUsers(30, 10)),
+        createMessage(longText),
+        {conversationId},
+      );
+      expect(postOTRMessageSpy).toHaveBeenCalledWith(conversationId.id, conversationId.domain, expect.any(Object));
+      const payload = postOTRMessageSpy.mock.calls[0][2];
+      // We expect the actual encrypted payload to be in the blob field of the payload
+      expect(payload.blob.length).toBeGreaterThanOrEqual(longText.length);
+
+      payload.recipients.forEach(recipient => {
+        recipient.entries?.forEach(entry => {
+          entry.clients?.forEach(client => {
+            // Every client payload should have a very short text
+            expect(client.text.length).toBeLessThanOrEqual(200);
+          });
+        });
+      });
       expect(result).toEqual({...baseMessageSendingStatus, failed: undefined});
     });
 
