@@ -115,7 +115,7 @@ jobs:
           env.BRANCH_NAME == 'main' &&
           github.event_name == 'workflow_dispatch' &&
           env.FORCE_PUBLISH == 'true'
-        run: yarn release --force-publish
+        run: yarn release:force
 
       - name: Notify CI error
         if: failure() && github.event_name != 'pull_request'
