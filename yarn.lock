@@ -9954,7 +9954,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wireapp/store-engine@5.1.17, @wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
+"@wireapp/store-engine@npm:4.9.8":
+  version: 4.9.8
+  resolution: "@wireapp/store-engine@npm:4.9.8"
+  dependencies:
+    "@types/node": ~14
+  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
+  languageName: node
+  linkType: hard
+
+"@wireapp/store-engine@npm:5.1.17":
+  version: 5.1.17
+  resolution: "@wireapp/store-engine@npm:5.1.17"
+  checksum: f0a3a1f5761b39322a908c39385fa074221d44300abda8f78368bec6f47997bec6ea1ebc088c83a39613cad09958e50ca4288f4123a1a553040ca1d3ba827b80
+  languageName: node
+  linkType: hard
+
+"@wireapp/store-engine@workspace:^, @wireapp/store-engine@workspace:packages/store-engine":
   version: 0.0.0-use.local
   resolution: "@wireapp/store-engine@workspace:packages/store-engine"
   dependencies:
@@ -9968,15 +9984,6 @@ __metadata:
     typescript: ^5.0.4
   languageName: unknown
   linkType: soft
-
-"@wireapp/store-engine@npm:4.9.8":
-  version: 4.9.8
-  resolution: "@wireapp/store-engine@npm:4.9.8"
-  dependencies:
-    "@types/node": ~14
-  checksum: bfe5e4522127eb0edcceabdc5c8e2dafc33a8dfa2a984364e1057e5a4784ea1a0e43c1ad760f9d49f40ab9e72db33b2fa24a073e76c53417b14f291c69f0906e
-  languageName: node
-  linkType: hard
 
 "@wireapp/telemetry@workspace:packages/telemetry":
   version: 0.0.0-use.local
