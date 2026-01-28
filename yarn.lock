@@ -2903,18 +2903,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chromatic-com/storybook@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "@chromatic-com/storybook@npm:3.2.4"
+"@chromatic-com/storybook@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@chromatic-com/storybook@npm:5.0.0"
   dependencies:
-    chromatic: ^11.15.0
+    "@neoconfetti/react": ^1.0.0
+    chromatic: ^13.3.4
     filesize: ^10.0.12
     jsonfile: ^6.1.0
-    react-confetti: ^6.1.0
     strip-ansi: ^7.1.0
   peerDependencies:
-    storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
-  checksum: fdf128484242c820cbd6304d8180dc2a245ae9d9d6cb9ef827f7be90abdf99677031e588d66e33c18af4c31acddceecba363084c00ea3f7d9d0a95930791c6d8
+    storybook: ^0.0.0-0 || ^10.1.0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
+  checksum: 897d05427e1dd4eeac0115d1ad9657549d9bef12c17cc78ae381619027d286e86471e8eb05aafd7bbaf9829ff0783fa4fc6a391233dfa2d41eb415d6d2cfaa3a
   languageName: node
   linkType: hard
 
@@ -4987,6 +4987,13 @@ __metadata:
     "@emnapi/runtime": ^1.4.3
     "@tybys/wasm-util": ^0.10.0
   checksum: 676271082b2e356623faa1fefd552a82abb8c00f8218e333091851456c52c81686b98f77fcd119b9b2f4f215d924e4b23acd6401d9934157c80da17be783ec3d
+  languageName: node
+  linkType: hard
+
+"@neoconfetti/react@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@neoconfetti/react@npm:1.0.0"
+  checksum: 32f1be33bb489b4d529e2a55d8e8f909a3d70c3442677c2057c75e1b63c0eceecdf008edcfddb58c7511f198a4e28a05ad452e03fdba27de76c81be46c1c98a7
   languageName: node
   linkType: hard
 
@@ -9907,7 +9914,7 @@ __metadata:
     "@babel/preset-env": 7.28.6
     "@babel/preset-react": 7.26.3
     "@babel/preset-typescript": 7.26.0
-    "@chromatic-com/storybook": ^3.2.4
+    "@chromatic-com/storybook": ^5.0.0
     "@emotion/babel-preset-css-prop": ^11.12.0
     "@emotion/jest": 11.14.2
     "@emotion/react": ^11.10.4
@@ -11799,9 +11806,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromatic@npm:^11.15.0":
-  version: 11.25.2
-  resolution: "chromatic@npm:11.25.2"
+"chromatic@npm:^13.3.4":
+  version: 13.3.5
+  resolution: "chromatic@npm:13.3.5"
   peerDependencies:
     "@chromatic-com/cypress": ^0.*.* || ^1.0.0
     "@chromatic-com/playwright": ^0.*.* || ^1.0.0
@@ -11814,7 +11821,7 @@ __metadata:
     chroma: dist/bin.js
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
-  checksum: 98ed8d0ace5ebbcd2228f4c4fb0d09fb9c86fb94a5ba8e3a1ef602792f0ad73d57efffa7158caf5af8e2b34daa0f90fa2c2752367a4c84e42fdd5daf29815c27
+  checksum: 782daf2aa3683b018686bb0c6da017cd8d128f676c909bcd629d92ae802d35d1de988a9e6790b59e4f6aa8d38bbcbddaac66607442c9b33a53e6d9bfd0810619
   languageName: node
   linkType: hard
 
@@ -21383,17 +21390,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-confetti@npm:^6.1.0":
-  version: 6.2.2
-  resolution: "react-confetti@npm:6.2.2"
-  dependencies:
-    tween-functions: ^1.2.0
-  peerDependencies:
-    react: ^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0
-  checksum: df470c7fae00c1db6b50562469916f900f1beaf3fcd3c735146e5c55cc3e79bb142851d10b8b9b493e347a016c94156b50564ca9ec4f9864ea02d2eae5fb9559
-  languageName: node
-  linkType: hard
-
 "react-docgen-typescript@npm:^2.2.2":
   version: 2.2.2
   resolution: "react-docgen-typescript@npm:2.2.2"
@@ -24369,13 +24365,6 @@ __metadata:
     debug: ^4.4.1
     make-fetch-happen: ^15.0.0
   checksum: c4a92ec90f5efa74111fef7d6511e5f42c00a1e8b425d7bf4620aa7b318b46d3eabbcc1f73f434d4c5a7e0b021b848595cd0f43f66285d1a3d024fbd10bfcb22
-  languageName: node
-  linkType: hard
-
-"tween-functions@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "tween-functions@npm:1.2.0"
-  checksum: 880708d680eff5c347ddcb9f922ad121703a91c78ce308ed309073e73a794b633eb0b80589a839365803f150515ad34c9646809ae8a0e90f09e62686eefb1ab6
   languageName: node
   linkType: hard
 
