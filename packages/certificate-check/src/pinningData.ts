@@ -253,22 +253,25 @@ export const VERISIGN_CLASS3_G5_ROOT: string =
 // =============================================================================
 
 export const KNOWN_PINS: PinningData[] = [
-  // Wire webapp domains - will use ACM certs (Amazon CAs)
-  // Currently on DigiCert, will migrate to ACM
+  // Wire webapp domains - currently DigiCert, may migrate to ACM or Let's Encrypt
   {
     issuerRootCerts: [
-      DIGICERT_GLOBAL_ROOT_G2,  // Current DigiCert cert
-      AMAZON_ROOT_CA_1,         // Future ACM cert
-      AMAZON_ROOT_CA_2,         // Backup Amazon root
+      DIGICERT_GLOBAL_ROOT_G2,    // Current DigiCert cert
+      AMAZON_ROOT_CA_1,           // Future ACM cert
+      AMAZON_ROOT_CA_2,           // Backup Amazon root
+      LETSENCRYPT_ISRG_ROOT_X1,   // Future Let's Encrypt cert
+      LETSENCRYPT_ISRG_ROOT_X2,   // Backup LE root (ECDSA)
     ],
     publicKeyInfo: [],
     url: /^app\.wire\.com$/i,
   },
   {
     issuerRootCerts: [
-      DIGICERT_GLOBAL_ROOT_G2,  // Current DigiCert cert
-      AMAZON_ROOT_CA_1,         // Future ACM cert
-      AMAZON_ROOT_CA_2,         // Backup Amazon root
+      DIGICERT_GLOBAL_ROOT_G2,    // Current DigiCert cert
+      AMAZON_ROOT_CA_1,           // Future ACM cert
+      AMAZON_ROOT_CA_2,           // Backup Amazon root
+      LETSENCRYPT_ISRG_ROOT_X1,   // Future Let's Encrypt cert
+      LETSENCRYPT_ISRG_ROOT_X2,   // Backup LE root (ECDSA)
     ],
     publicKeyInfo: [],
     url: /^(www\.)?wire\.com$/i,

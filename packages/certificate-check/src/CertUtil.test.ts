@@ -123,6 +123,28 @@ describe('verifyPinning', () => {
     expect(pinningResult.errorMessage).toBeUndefined();
   });
 
+  it('accepts Let\'s Encrypt Root CA for wire.com (future LE migration)', () => {
+    const certificatePath = path.join(__dirname, '../spec/helpers/wire.com-wildcard.der');
+    const leRootCertPath = path.join(__dirname, '../spec/helpers/ISRG-Root-X1.pem');
+
+    const certFile = fs.readFileSync(certificatePath);
+    const leRootCertFile = fs.readFileSync(leRootCertPath, 'utf-8');
+
+    // Simulates future Let's Encrypt cert chain
+    const certData: ElectronCertificate = {
+      data: buildCert(certFile),
+      issuerCert: {
+        data: leRootCertFile, // ISRG Root X1 is in trusted roots for wire.com
+      },
+    };
+
+    const pinningResult = verifyPinning('wire.com', certData);
+
+    // ISRG Root X1 is in the trusted roots for wire.com
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(true);
+    expect(pinningResult.errorMessage).toBeUndefined();
+  });
+
   it('checks for the correct root certificate', () => {
     const certificatePath = path.join(
       __dirname,
