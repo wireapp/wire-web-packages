@@ -47,23 +47,79 @@ describe('getFingerprint', () => {
 });
 
 describe('verifyPinning', () => {
-  it('verifies the certificate for wire.com', () => {
+  it('verifies the certificate for wire.com with CA-based pinning', () => {
     const certificatePath = path.join(__dirname, '../spec/helpers/wire.com-wildcard.der');
     const issuerCertPath = path.join(__dirname, '../spec/helpers/wire.com-issuer.der');
+    const rootCertPath = path.join(__dirname, '../spec/helpers/DigiCert-Global-Root-G2.pem');
 
     const certFile = fs.readFileSync(certificatePath);
     const issuerCertFile = fs.readFileSync(issuerCertPath);
+    const rootCertFile = fs.readFileSync(rootCertPath, 'utf-8');
 
+    // Full certificate chain: leaf -> intermediate -> root
     const certData: ElectronCertificate = {
       data: buildCert(certFile),
       issuerCert: {
         data: buildCert(issuerCertFile),
+        issuerCert: {
+          data: rootCertFile,
+        },
       },
     };
 
     const pinningResult = verifyPinning('wire.com', certData);
 
+    // CA-based pinning: verify issuer root cert matches allowed CAs
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(true);
+    // publicKeyInfo is now empty, so this is vacuously true
     expect(pinningResult.verifiedPublicKeyInfo).toBe(true);
+    expect(pinningResult.errorMessage).toBeUndefined();
+  });
+
+  it('rejects certificate with unknown root CA', () => {
+    const certificatePath = path.join(__dirname, '../spec/helpers/wire.com-wildcard.der');
+    const wrongRootCertPath = path.join(
+      __dirname,
+      '../spec/helpers/VeriSign-Class-3-Public-Primary-Certification-Authority-G4.pem',
+    );
+
+    const certFile = fs.readFileSync(certificatePath);
+    const wrongRootCertFile = fs.readFileSync(wrongRootCertPath, 'utf-8');
+
+    // Certificate chain with wrong root CA
+    const certData: ElectronCertificate = {
+      data: buildCert(certFile),
+      issuerCert: {
+        data: wrongRootCertFile, // Wrong CA - G4 is not in trusted roots for wire.com
+      },
+    };
+
+    const pinningResult = verifyPinning('wire.com', certData);
+
+    // Should fail root cert verification
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(false);
+    expect(pinningResult.errorMessage).toMatch(/none of .* could be verified/);
+  });
+
+  it('accepts Amazon Root CA for wire.com (future ACM migration)', () => {
+    const certificatePath = path.join(__dirname, '../spec/helpers/wire.com-wildcard.der');
+    const amazonRootCertPath = path.join(__dirname, '../spec/helpers/Amazon-Root-CA-1.pem');
+
+    const certFile = fs.readFileSync(certificatePath);
+    const amazonRootCertFile = fs.readFileSync(amazonRootCertPath, 'utf-8');
+
+    // Simulates future ACM cert chain with Amazon root
+    const certData: ElectronCertificate = {
+      data: buildCert(certFile),
+      issuerCert: {
+        data: amazonRootCertFile, // Amazon Root CA is in trusted roots for wire.com
+      },
+    };
+
+    const pinningResult = verifyPinning('wire.com', certData);
+
+    // Amazon Root CA 1 is in the trusted roots for wire.com
+    expect(pinningResult.verifiedIssuerRootCerts).toBe(true);
     expect(pinningResult.errorMessage).toBeUndefined();
   });
 
