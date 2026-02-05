@@ -24,7 +24,7 @@ import {Title} from './Title';
 import {COLOR} from '../../Identity';
 
 const meta = {
-  title: 'Typography/Title',
+  title: 'Typography/Title-test',
   component: Title,
   parameters: {
     layout: 'centered',
