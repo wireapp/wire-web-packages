@@ -9737,7 +9737,7 @@ __metadata:
     commander: 14.0.1
     cross-env: 10.1.0
     deepmerge-ts: 6.0.0
-    dotenv-defaults: 5.0.2
+    dotenv-defaults: 6.0.0
     fake-indexeddb: ^5.0.2
     hash.js: 1.1.7
     http-status-codes: 2.3.0
@@ -13147,12 +13147,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-defaults@npm:5.0.2":
-  version: 5.0.2
-  resolution: "dotenv-defaults@npm:5.0.2"
+"dotenv-defaults@npm:6.0.0":
+  version: 6.0.0
+  resolution: "dotenv-defaults@npm:6.0.0"
   dependencies:
-    dotenv: ^14.0.0
-  checksum: a45b1c56d037f1606ce0bbc9097f42c044a22c76acf10b94c2e2506bf7cac8ab633b5b1c654217040e172f87acd1620054258b9df48120258ccb7f8352cfbbce
+    dotenv: ^16.4.7
+  checksum: 166ca2e0a04408388ab2c320eaefbf87851a7eebdcc9c87e98ff144dcd7bce10f91ce472a31b69dc2a28429def1c66fdc324e59c80e2fad41bf22b01369673ff
   languageName: node
   linkType: hard
 
@@ -13160,13 +13160,6 @@ __metadata:
   version: 17.2.3
   resolution: "dotenv@npm:17.2.3"
   checksum: fde23eb88649041ec7a0f6a47bbe59cac3c454fc2007cf2e40b9c984aaf0636347218c56cfbbf067034b0a73f530a2698a19b4058695787eb650ec69fe234624
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^14.0.0":
-  version: 14.3.2
-  resolution: "dotenv@npm:14.3.2"
-  checksum: 86c06758915d6facc35275f4a7fafc16705b6f3b44befaa8abca91367991efc8ff8db5437d3cc14778231d19fb97610fe82d60f8a53ba723cdb69fe4171439aa
   languageName: node
   linkType: hard
 
