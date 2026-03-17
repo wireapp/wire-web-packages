@@ -20,7 +20,7 @@
 import {SVGIcon, SVGIconProps} from './SVGIcon';
 
 export const CircleIcon = (props: SVGIconProps) => (
-  <SVGIcon realWidth={16} realHeight={16} {...props}>
-    <circle cx="8" cy="8" r="7.2" stroke="currentColor" strokeWidth="1.6"></circle>
+  <SVGIcon realWidth={16} realHeight={16} {...props} fill="none">
+    <circle cx="8" cy="8" r="7.2" stroke="black" stroke-width="1.6"/>
   </SVGIcon>
 );
