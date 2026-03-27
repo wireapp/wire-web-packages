@@ -4,7 +4,7 @@
     "@wireapp/core": "workspace:^",
     "@wireapp/protocol-messaging": "1.52.0",
     "@wireapp/store-engine": "workspace:^",
-    "file-type": "16.5.4",
+    "file-type": "21.3.1",
     "logdown": "^3.3.1",
     "uuid": "9.0.1"
   },
