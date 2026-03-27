@@ -8,7 +8,7 @@
   ],
   "main": "lib/index",
   "devDependencies": {
-    "rimraf": "6.1.2",
+    "rimraf": "6.1.3",
     "typescript": "^5.0.4"
   },
   "scripts": {
