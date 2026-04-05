@@ -7869,92 +7869,108 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-darwin-arm64@npm:1.15.10"
+"@swc/core-darwin-arm64@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-darwin-arm64@npm:1.15.24"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-darwin-x64@npm:1.15.10"
+"@swc/core-darwin-x64@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-darwin-x64@npm:1.15.24"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.15.10"
+"@swc/core-linux-arm-gnueabihf@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.15.24"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.15.10"
+"@swc/core-linux-arm64-gnu@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.15.24"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-linux-arm64-musl@npm:1.15.10"
+"@swc/core-linux-arm64-musl@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-arm64-musl@npm:1.15.24"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-linux-x64-gnu@npm:1.15.10"
+"@swc/core-linux-ppc64-gnu@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-ppc64-gnu@npm:1.15.24"
+  conditions: os=linux & cpu=ppc64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-s390x-gnu@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-s390x-gnu@npm:1.15.24"
+  conditions: os=linux & cpu=s390x & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-x64-gnu@npm:1.15.24"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-linux-x64-musl@npm:1.15.10"
+"@swc/core-linux-x64-musl@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-linux-x64-musl@npm:1.15.24"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.15.10"
+"@swc/core-win32-arm64-msvc@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.15.24"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.15.10"
+"@swc/core-win32-ia32-msvc@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.15.24"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.15.10":
-  version: 1.15.10
-  resolution: "@swc/core-win32-x64-msvc@npm:1.15.10"
+"@swc/core-win32-x64-msvc@npm:1.15.24":
+  version: 1.15.24
+  resolution: "@swc/core-win32-x64-msvc@npm:1.15.24"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
 "@swc/core@npm:^1.13.5, @swc/core@npm:^1.3.10":
-  version: 1.15.10
-  resolution: "@swc/core@npm:1.15.10"
+  version: 1.15.24
+  resolution: "@swc/core@npm:1.15.24"
   dependencies:
-    "@swc/core-darwin-arm64": 1.15.10
-    "@swc/core-darwin-x64": 1.15.10
-    "@swc/core-linux-arm-gnueabihf": 1.15.10
-    "@swc/core-linux-arm64-gnu": 1.15.10
-    "@swc/core-linux-arm64-musl": 1.15.10
-    "@swc/core-linux-x64-gnu": 1.15.10
-    "@swc/core-linux-x64-musl": 1.15.10
-    "@swc/core-win32-arm64-msvc": 1.15.10
-    "@swc/core-win32-ia32-msvc": 1.15.10
-    "@swc/core-win32-x64-msvc": 1.15.10
+    "@swc/core-darwin-arm64": 1.15.24
+    "@swc/core-darwin-x64": 1.15.24
+    "@swc/core-linux-arm-gnueabihf": 1.15.24
+    "@swc/core-linux-arm64-gnu": 1.15.24
+    "@swc/core-linux-arm64-musl": 1.15.24
+    "@swc/core-linux-ppc64-gnu": 1.15.24
+    "@swc/core-linux-s390x-gnu": 1.15.24
+    "@swc/core-linux-x64-gnu": 1.15.24
+    "@swc/core-linux-x64-musl": 1.15.24
+    "@swc/core-win32-arm64-msvc": 1.15.24
+    "@swc/core-win32-ia32-msvc": 1.15.24
+    "@swc/core-win32-x64-msvc": 1.15.24
     "@swc/counter": ^0.1.3
-    "@swc/types": ^0.1.25
+    "@swc/types": ^0.1.26
   peerDependencies:
     "@swc/helpers": ">=0.5.17"
   dependenciesMeta:
@@ -7967,6 +7983,10 @@ __metadata:
     "@swc/core-linux-arm64-gnu":
       optional: true
     "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-ppc64-gnu":
+      optional: true
+    "@swc/core-linux-s390x-gnu":
       optional: true
     "@swc/core-linux-x64-gnu":
       optional: true
@@ -7981,7 +8001,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 89f832d1639b0a8685cc6ac579bf57b582c3b1707992d5b627f83c1d03e71edb4fd3c62e45f25f4d581189f206139306dbddfd0a58e81fdb07deacdf20c8b35f
+  checksum: f3c2cf446132d2659101efa61a9c529b055e3834bf2316c9af0d986e56840360386b91dba661a1b0645d0dc6faa95793d05bd20e3ab893834183cf242f146c35
   languageName: node
   linkType: hard
 
@@ -8005,12 +8025,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/types@npm:^0.1.25":
-  version: 0.1.25
-  resolution: "@swc/types@npm:0.1.25"
+"@swc/types@npm:^0.1.26":
+  version: 0.1.26
+  resolution: "@swc/types@npm:0.1.26"
   dependencies:
     "@swc/counter": ^0.1.3
-  checksum: 8e8ec73913aa42ee574c2a5a95fb6a95f19c5f011e66ed3faf773aa26f731e3f9a8b8e4d9e1887124166504253ee9e16d87f292e0ea1411d6170a4d1b327ba25
+  checksum: 24e6520c3f13e65799b95843f37839b9a80b67db7e15cc2f92b98cd70f501edcd004eaa376aac979a2739795e147a5b969f49df3bb9a4681123b94e5cad58951
   languageName: node
   linkType: hard
 
