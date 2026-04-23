@@ -1,0 +1,105 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits"],
+  "labels": ["renovate"],
+  "timezone": "Europe/Berlin",
+  "dependencyDashboard": true,
+  "rebaseWhen": "conflicted",
+  "prConcurrentLimit": 5,
+  "configMigration": true,
+  "minimumReleaseAge": "3 days",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "schedule": ["* * * * *"]
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["minor", "major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["react-test-renderer"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["@lerna-lite/**"],
+      "groupName": "lerna lite"
+    },
+    {
+      "extends": ["monorepo:typescript-eslint"],
+      "groupName": "typescript-eslint"
+    },
+    {
+      "matchPackageNames": [
+        "@babel/eslint-parser",
+        "eslint",
+        "@types/eslint",
+        "@emotion/eslint-plugin",
+        "@wireapp/eslint-config",
+        "eslint-config-prettier",
+        "eslint-import-resolver-alias",
+        "eslint-import-resolver-typescript",
+        "eslint-plugin-better-styled-components",
+        "eslint-plugin-header",
+        "eslint-plugin-import",
+        "eslint-plugin-jest",
+        "eslint-plugin-jest-dom",
+        "eslint-plugin-jsdoc",
+        "eslint-plugin-jsx-a11y",
+        "eslint-plugin-no-unsanitized",
+        "eslint-plugin-prettier",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-simple-import-sort",
+        "eslint-plugin-testing-library",
+        "eslint-plugin-unused-imports"
+      ],
+      "groupName": "eslint tooling"
+    },
+    {
+      "matchPackageNames": [
+        "jest",
+        "babel-jest",
+        "jest-environment-jsdom",
+        "@swc/jest",
+        "@types/jest",
+        "@testing-library/dom",
+        "@testing-library/jest-dom",
+        "@testing-library/react",
+        "@testing-library/user-event",
+        "jest-websocket-mock"
+      ],
+      "groupName": "test tooling"
+    },
+    {
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "react runtime and types"
+    },
+    {
+      "matchPackageNames": [
+        "@storybook/addon-essentials",
+        "@storybook/addon-interactions",
+        "@storybook/addon-onboarding",
+        "@storybook/addon-themes",
+        "@storybook/addon-webpack5-compiler-swc",
+        "@storybook/blocks",
+        "@storybook/react",
+        "@storybook/react-webpack5",
+        "@storybook/test",
+        "@chromatic-com/storybook",
+        "storybook"
+      ],
+      "groupName": "storybook tooling"
+    }
+  ]
+}
