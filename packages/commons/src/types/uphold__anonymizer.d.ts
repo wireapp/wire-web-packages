@@ -19,7 +19,7 @@
 
 declare module '@uphold/anonymizer' {
   export interface AnonymizerOptions {
-    whitelist?: string[];
+    whitelist: string[];
   }
 
   export interface AnonymizeFunction {
