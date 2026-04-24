@@ -17,6 +17,8 @@
  *
  */
 
+import {anonymize} from '../anonymizer';
+
 export function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -44,7 +46,8 @@ export function serializeArgs(args: any[]): any[] {
       result = arg.length > maxSize ? `${arg.slice(0, maxSize - 15)}... [truncated]` : arg;
     } else if (typeof arg === 'object' && arg !== null) {
       try {
-        result = safeJsonStringify(arg);
+        const anonymized = anonymize(arg);
+        result = safeJsonStringify(anonymized);
       } catch (e) {
         result = '[Unserializable Object]';
       }

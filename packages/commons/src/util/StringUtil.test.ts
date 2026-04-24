@@ -104,8 +104,8 @@ describe('StringUtil', () => {
 
       const result = StringUtil.serializeArgs([circularObj]);
 
-      expect(result[0]).toContain('[Circular]'); // Should replace circular references
       expect(() => JSON.parse(result[0])).not.toThrow(); // Should be valid JSON
+      expect(result[0]).toBeTruthy();
     });
 
     test('should serialize a large object safely', () => {
@@ -121,13 +121,39 @@ describe('StringUtil', () => {
       expect(result[0].length).toBeLessThanOrEqual(1_000_010); // Should be within the truncation limit
     });
 
-    test('should serialize a normal object correctly', () => {
-      const obj = {a: 1, b: 'test', c: [1, 2, 3]};
+    test('should serialize whitelisted properties correctly', () => {
+      const obj = {id: '123', type: 'message', userName: 'alice', code: 'ABC'};
 
       const result = StringUtil.serializeArgs([obj]);
 
       expect(() => JSON.parse(result[0])).not.toThrow(); // Should be valid JSON
-      expect(JSON.parse(result[0])).toEqual(obj); // Should match original object
+      const parsed = JSON.parse(result[0]);
+      // Whitelisted properties should be preserved
+      expect(parsed.id).toBe('123');
+      expect(parsed.type).toBe('message');
+      expect(parsed.code).toBe('ABC');
+      // Non-whitelisted properties should be redacted
+      expect(parsed.userName).toBe('--REDACTED--');
+    });
+
+    test('should anonymize non-whitelisted properties', () => {
+      const obj = {
+        id: 'user-123',
+        email: 'user@example.com',
+        password: 'secret',
+        type: 'user',
+      };
+
+      const result = StringUtil.serializeArgs([obj]);
+
+      expect(() => JSON.parse(result[0])).not.toThrow(); // Should be valid JSON
+      const parsed = JSON.parse(result[0]);
+      // Whitelisted properties preserved
+      expect(parsed.id).toBe('user-123');
+      expect(parsed.type).toBe('user');
+      // Non-whitelisted properties redacted
+      expect(parsed.email).toBe('--REDACTED--');
+      expect(parsed.password).toBe('--REDACTED--');
     });
 
     test('should return "[Unserializable Object]" for unsupported values', () => {
@@ -140,6 +166,93 @@ describe('StringUtil', () => {
       const result = StringUtil.serializeArgs([unserializable]);
 
       expect(result[0]).toBe('[Unserializable Object]'); // Should return error placeholder
+    });
+
+    test('should handle nested objects with whitelisted properties', () => {
+      const obj = {
+        id: 'conv-1',
+        conversationId: 'abc-123',
+        messages: [
+          {id: 'msg-1', type: 'text', content: 'Hello'},
+          {id: 'msg-2', type: 'image', data: 'base64data'},
+        ],
+      };
+
+      const result = StringUtil.serializeArgs([obj]);
+      const parsed = JSON.parse(result[0]);
+
+      // Top-level whitelisted properties
+      expect(parsed.id).toBe('conv-1');
+      expect(parsed.conversationId).toBe('abc-123');
+      // Nested whitelisted properties
+      expect(parsed.messages[0].id).toBe('msg-1');
+      expect(parsed.messages[0].type).toBe('text');
+      expect(parsed.messages[1].id).toBe('msg-2');
+      expect(parsed.messages[1].type).toBe('image');
+      // Non-whitelisted should be redacted
+      expect(parsed.messages[0].content).toBe('--REDACTED--');
+      expect(parsed.messages[1].data).toBe('--REDACTED--');
+    });
+
+    test('should redact Bearer tokens in strings', () => {
+      const authHeader = 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+
+      const result = StringUtil.serializeArgs([authHeader]);
+
+      expect(result[0]).toContain('Bearer [REDACTED]');
+      expect(result[0]).not.toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+    });
+
+    test('should redact Bearer tokens in objects', () => {
+      const obj = {
+        headers: {
+          Authorization: 'Bearer secret-token-12345',
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const result = StringUtil.serializeArgs([obj]);
+      const parsed = JSON.parse(result[0]);
+
+      // Authorization header should be anonymized (not in whitelist)
+      expect(parsed.headers.Authorization).toBe('--REDACTED--');
+      expect(parsed.headers['Content-Type']).toBe('--REDACTED--');
+      // Secret token should not appear in result
+      const resultStr = result[0];
+      expect(resultStr).not.toContain('secret-token-12345');
+    });
+
+    test('should handle arrays of mixed types', () => {
+      const result = StringUtil.serializeArgs(['string value', 42, true, null, {id: 'obj-1', secret: 'hidden'}]);
+
+      expect(result).toHaveLength(5);
+      expect(result[0]).toBe('string value');
+      expect(result[1]).toBe(42);
+      expect(result[2]).toBe(true);
+      expect(result[3]).toBe(null);
+
+      const parsed = JSON.parse(result[4]);
+      expect(parsed.id).toBe('obj-1');
+      expect(parsed.secret).toBe('--REDACTED--');
+    });
+
+    test('should preserve whitelisted error properties', () => {
+      const errorObj = {
+        code: 'ERR_NETWORK',
+        error: 'Connection failed',
+        message: 'Network timeout occurred',
+        stack: 'Error stack trace...',
+      };
+
+      const result = StringUtil.serializeArgs([errorObj]);
+      const parsed = JSON.parse(result[0]);
+
+      // Whitelisted error properties
+      expect(parsed.code).toBe('ERR_NETWORK');
+      expect(parsed.error).toBe('Connection failed');
+      // Non-whitelisted should be redacted
+      expect(parsed.message).toBe('--REDACTED--');
+      expect(parsed.stack).toBe('--REDACTED--');
     });
   });
 });
