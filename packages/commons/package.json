@@ -12,6 +12,7 @@
     "utils"
   ],
   "dependencies": {
+    "@uphold/anonymizer": "^6.0.2",
     "ansi-regex": "5.0.1",
     "fs-extra": "11.3.3",
     "logdown": "3.3.1",

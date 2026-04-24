@@ -17,9 +17,14 @@
  *
  */
 
-export * as CommonConfig from './config/CommonConfig';
+declare module '@uphold/anonymizer' {
+  export interface AnonymizerOptions {
+    whitelist?: string[];
+  }
 
-export * from './anonymizer';
-export * from './LogFactory';
-export * from './util/';
-export * from './TypedEventEmitter';
+  export interface AnonymizeFunction {
+    <T>(value: T): T;
+  }
+
+  export function anonymizer(options: AnonymizerOptions): AnonymizeFunction;
+}

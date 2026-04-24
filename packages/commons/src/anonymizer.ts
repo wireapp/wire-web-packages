@@ -17,9 +17,21 @@
  *
  */
 
-export * as CommonConfig from './config/CommonConfig';
+import {anonymizer} from '@uphold/anonymizer';
 
-export * from './anonymizer';
-export * from './LogFactory';
-export * from './util/';
-export * from './TypedEventEmitter';
+export const anonymize = anonymizer({
+  whitelist: [
+    '**.id',
+    '**.type',
+    '**.domain',
+    '**.code',
+    '**.error',
+    '**.groupId',
+    '**.conversationId',
+    '**.clientId',
+    '**.userCount',
+    '**.numberOfUpdates',
+    '**.storeName',
+    '**.eventType',
+  ],
+});
