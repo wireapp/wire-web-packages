@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.78.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.77.0...@wireapp/react-ui-kit@9.78.0) (2026-06-16)
+
+### Features
+
+* add conversation settings icon [WPB-26186] ([#8132](https://github.com/wireapp/wire-web-packages/issues/8132)) ([49173ec](https://github.com/wireapp/wire-web-packages/commit/49173ec77b25419940ed740589e2cff3e11c8fd6))
+
 # [9.77.0](https://github.com/wireapp/wire-web-packages/compare/@wireapp/react-ui-kit@9.76.0...@wireapp/react-ui-kit@9.77.0) (2026-06-03)
 
 ### Features
