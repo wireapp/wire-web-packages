@@ -31,9 +31,12 @@ jobs:
           if [[ $TAG =~ ^(@[^/]+/[^@]+)@(.+)$ ]]; then
             PACKAGE="${BASH_REMATCH[1]}"
             VERSION="${BASH_REMATCH[2]}"
+            # Replace forward slash with hyphen for artifact name
+            PACKAGE_SAFE="${PACKAGE//\//-}"
             echo "package=$PACKAGE" >> $GITHUB_OUTPUT
             echo "version=$VERSION" >> $GITHUB_OUTPUT
             echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "package-safe=$PACKAGE_SAFE" >> $GITHUB_OUTPUT
             echo "Parsed - Package: $PACKAGE, Version: $VERSION, Tag: $TAG" >> $GITHUB_STEP_SUMMARY
           else
             echo "Invalid tag format. Expected: @wireapp/package@version"
@@ -49,22 +52,17 @@ jobs:
             git checkout "$TAG"
           else
             echo "❌ Tag not found: $TAG"
-            echo "Available tags:"
-            git tag -l '@wireapp/*' | sort
             exit 1
           fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: 'yarn'
 
       - name: Install dependencies
         run: yarn --immutable
-
-      - name: Build
-        run: yarn dist
 
       - name: Run tests with coverage
         run: yarn test -- --coverage --coverageReporters=lcov
@@ -74,7 +72,7 @@ jobs:
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ steps.parse.outputs.package }}-${{ steps.parse.outputs.version }}
+          name: coverage-report-${{ steps.parse.outputs.package-safe }}-${{ steps.parse.outputs.version }}
           path: |
             coverage/
             **/*coverage*
@@ -88,6 +86,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${{ steps.parse.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "**Package:** ${{ steps.parse.outputs.package }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
