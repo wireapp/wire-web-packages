@@ -65,17 +65,17 @@ jobs:
         run: yarn --immutable
 
       - name: Run tests with coverage
-        run: yarn test -- --coverage --coverageReporters=lcov
+        run: yarn workspace "${{ steps.parse.outputs.package }}" test --coverage --coverageReporters=lcov --verbose 2>&1 | tee test-output.log
         env:
           PACKAGE: ${{ steps.parse.outputs.package }}
 
-      - name: Upload coverage reports
+      - name: Upload test output and coverage
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ steps.parse.outputs.package-safe }}-${{ steps.parse.outputs.version }}
           path: |
-            coverage/
-            **/*coverage*
+            test-output.log
+            **/coverage/
           retention-days: 30
           if-no-files-found: warn
 
@@ -86,9 +86,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${{ steps.parse.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "**Package:** ${{ steps.parse.outputs.package }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
