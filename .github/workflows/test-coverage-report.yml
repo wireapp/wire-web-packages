@@ -1,0 +1,92 @@
+name: Test & Coverage Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag (e.g., @wireapp/core@46.47.8)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test_coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse tag input
+        id: parse
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+
+          # Extract package name and version from tag
+          # Format: @wireapp/package@version
+          if [[ $TAG =~ ^(@[^/]+/[^@]+)@(.+)$ ]]; then
+            PACKAGE="${BASH_REMATCH[1]}"
+            VERSION="${BASH_REMATCH[2]}"
+            echo "package=$PACKAGE" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "Parsed - Package: $PACKAGE, Version: $VERSION, Tag: $TAG" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Invalid tag format. Expected: @wireapp/package@version"
+            exit 1
+          fi
+
+      - name: Validate and checkout tag
+        run: |
+          TAG="${{ steps.parse.outputs.tag }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "✅ Tag found: $TAG"
+            git checkout "$TAG"
+          else
+            echo "❌ Tag not found: $TAG"
+            echo "Available tags:"
+            git tag -l '@wireapp/*' | sort
+            exit 1
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn dist
+
+      - name: Run tests with coverage
+        run: yarn run test --verbose --coverage --coverage-reporters=lcov
+        env:
+          PACKAGE: ${{ steps.parse.outputs.package }}
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ steps.parse.outputs.package }}-${{ steps.parse.outputs.version }}
+          path: |
+            coverage/
+            **/*coverage*
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ steps.parse.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Package:** ${{ steps.parse.outputs.package }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
