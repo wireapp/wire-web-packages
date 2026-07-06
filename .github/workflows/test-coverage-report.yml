@@ -45,6 +45,7 @@ jobs:
           TAG="${{ steps.parse.outputs.tag }}"
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "✅ Tag found: $TAG"
+            echo "Checking out tag: $TAG"
             git checkout "$TAG"
           else
             echo "❌ Tag not found: $TAG"
@@ -66,7 +67,7 @@ jobs:
         run: yarn dist
 
       - name: Run tests with coverage
-        run: yarn run test --verbose --coverage --coverage-reporters=lcov
+        run: yarn test -- --coverage --coverageReporters=lcov
         env:
           PACKAGE: ${{ steps.parse.outputs.package }}
 
