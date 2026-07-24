@@ -4,7 +4,7 @@
     "@types/webrtc": "0.0.30",
     "@wireapp/avs": "6.7.19",
     "@wireapp/core": "workspace:^",
-    "axios": "^0.27.2"
+    "axios": "^1.15.0"
   },
   "description": "Adds audio/video/signaling (AVS) functionality for Wire bots.",
   "devDependencies": {
