@@ -17,16 +17,10 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
+// Polyfill TextEncoder/TextDecoder for jsdom
+const {TextEncoder, TextDecoder} = require('util');
 
-module.exports = {
-  ...baseConfig,
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(cheerio|domutils|parse5|parse5-htmlparser2-tree-adapter|domelementtype)/)',
-  ],
-  moduleNameMapper: {
-    '^cheerio$': require.resolve('./src/__mocks__/cheerio.js'),
-  },
-};
+Object.assign(global, {
+  TextEncoder,
+  TextDecoder,
+});

@@ -17,16 +17,13 @@
  *
  */
 
-const baseConfig = require('../../jest.config.base');
-
+// Mock cheerio for testing
 module.exports = {
-  ...baseConfig,
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(cheerio|domutils|parse5|parse5-htmlparser2-tree-adapter|domelementtype)/)',
-  ],
-  moduleNameMapper: {
-    '^cheerio$': require.resolve('./src/__mocks__/cheerio.js'),
-  },
+  load: jest.fn(() => ({
+    find: jest.fn(() => ({
+      attr: jest.fn(() => ''),
+      text: jest.fn(() => ''),
+      each: jest.fn(),
+    })),
+  })),
 };
