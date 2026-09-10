@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "lib",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "exclude": ["node_modules", "src/test", "src/**/*.test.ts"],
+  "include": ["src"]
+}
