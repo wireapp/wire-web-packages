@@ -23,35 +23,45 @@ jobs:
 
       - name: Parse tag input
         id: parse
+        env:
+          TAG_INPUT: ${{ inputs.tag }}
         run: |
-          TAG="${{ github.event.inputs.tag }}"
+          set -euo pipefail
+
+          TAG="${TAG_INPUT}"
 
           # Extract package name and version from tag
           # Format: @wireapp/package@version
-          if [[ $TAG =~ ^(@[^/]+/[^@]+)@(.+)$ ]]; then
+          # Reject whitespace because GitHub output files are line-oriented.
+          if [[ "${TAG}" =~ ^(@[^/[:space:]]+/[^@[:space:]]+)@([^[:space:]]+)$ ]]; then
             PACKAGE="${BASH_REMATCH[1]}"
             VERSION="${BASH_REMATCH[2]}"
             # Replace forward slash with hyphen for artifact name
             PACKAGE_SAFE="${PACKAGE//\//-}"
-            echo "package=$PACKAGE" >> $GITHUB_OUTPUT
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-            echo "tag=$TAG" >> $GITHUB_OUTPUT
-            echo "package-safe=$PACKAGE_SAFE" >> $GITHUB_OUTPUT
-            echo "Parsed - Package: $PACKAGE, Version: $VERSION, Tag: $TAG" >> $GITHUB_STEP_SUMMARY
+            {
+              printf 'package=%s\n' "${PACKAGE}"
+              printf 'version=%s\n' "${VERSION}"
+              printf 'package-safe=%s\n' "${PACKAGE_SAFE}"
+            } >> "${GITHUB_OUTPUT}"
+            printf 'Parsed - Package: %s, Version: %s, Tag: %s\n' "${PACKAGE}" "${VERSION}" "${TAG}" >> "${GITHUB_STEP_SUMMARY}"
           else
             echo "Invalid tag format. Expected: @wireapp/package@version"
             exit 1
           fi
 
       - name: Validate and checkout tag
+        env:
+          TAG_INPUT: ${{ inputs.tag }}
         run: |
-          TAG="${{ steps.parse.outputs.tag }}"
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "✅ Tag found: $TAG"
-            echo "Checking out tag: $TAG"
-            git checkout "$TAG"
+          set -euo pipefail
+
+          TAG="${TAG_INPUT}"
+          if git rev-parse "${TAG}" >/dev/null 2>&1; then
+            echo "✅ Tag found: ${TAG}"
+            echo "Checking out tag: ${TAG}"
+            git checkout "${TAG}"
           else
-            echo "❌ Tag not found: $TAG"
+            echo "❌ Tag not found: ${TAG}"
             exit 1
           fi
 
@@ -68,9 +78,12 @@ jobs:
         run: yarn dist
 
       - name: Run tests with coverage
-        run: yarn workspace "${{ steps.parse.outputs.package }}" test --coverage --coverageReporters=lcov --verbose 2>&1 | tee test-output.log
         env:
           PACKAGE: ${{ steps.parse.outputs.package }}
+        run: |
+          set -euo pipefail
+
+          yarn workspace "${PACKAGE}" test --coverage --coverageReporters=lcov --verbose 2>&1 | tee "test-output.log"
 
       - name: Upload test output and coverage
         uses: actions/upload-artifact@v4
@@ -84,11 +97,19 @@ jobs:
 
       - name: Generate summary
         if: always()
+        env:
+          TAG_INPUT: ${{ inputs.tag }}
+          PACKAGE: ${{ steps.parse.outputs.package }}
+          VERSION: ${{ steps.parse.outputs.version }}
         run: |
-          echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Tag:** ${{ steps.parse.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Package:** ${{ steps.parse.outputs.package }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.parse.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Coverage report generated and available for download" >> $GITHUB_STEP_SUMMARY
+          set -euo pipefail
+
+          {
+            echo "## Test Coverage Report"
+            echo ""
+            printf '**Tag:** %s\n' "${TAG_INPUT}"
+            printf '**Package:** %s\n' "${PACKAGE}"
+            printf '**Version:** %s\n' "${VERSION}"
+            echo ""
+            echo "✅ Coverage report generated and available for download"
+          } >> "${GITHUB_STEP_SUMMARY}"
