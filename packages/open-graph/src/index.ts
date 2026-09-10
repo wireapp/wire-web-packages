@@ -19,7 +19,8 @@
 
 import {fetchOpenGraphData, parseHTML, getHTML} from './openGraphParser';
 
-export type {FetchOptions, ParserOptions} from './openGraphParser';
+export type {FetchedResource, FetchOptions, ParserOptions} from './openGraphParser';
+export {fetchResource} from './openGraphParser';
 export type {LookupFunction, ResolvedAddress, SafeTarget} from './safeUrl';
 export {isPrivateAddress, resolveSafeUrl} from './safeUrl';
 

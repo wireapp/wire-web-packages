@@ -21,7 +21,7 @@ import {EventEmitter} from 'events';
 import https = require('https');
 import {PassThrough} from 'stream';
 
-import {getHTML} from './openGraphParser';
+import {fetchResource, getHTML} from './openGraphParser';
 import {LookupFunction} from './safeUrl';
 
 const PUBLIC_V4 = '93.184.216.34';
@@ -244,5 +244,63 @@ describe('getHTML', () => {
     await getHTML('https://example.com', 'ua', {lookup: lookupTable({'example.com': PUBLIC_V4}), timeoutMs: 1234});
 
     expect(recorded[0].options.timeout).toBe(1234);
+  });
+
+  it('decodes the body using the charset from the content type', async () => {
+    const koi8r = Buffer.from([240, 210, 201, 215, 197, 212, 32, 201, 218, 32, 206, 207, 203, 193, 33]);
+    enqueueResponses([{statusCode: 200, headers: {'content-type': 'text/html; charset=koi8-r'}, body: koi8r}]);
+
+    const html = await getHTML('https://example.com', 'ua', {lookup: lookupTable({'example.com': PUBLIC_V4})});
+
+    expect(html).toBe('Привет из нока!');
+  });
+
+  it('falls back to utf-8 for an unknown charset', async () => {
+    enqueueResponses([
+      {statusCode: 200, headers: {'content-type': 'text/html; charset=invalid'}, body: Buffer.from('héllo', 'utf8')},
+    ]);
+
+    const html = await getHTML('https://example.com', 'ua', {lookup: lookupTable({'example.com': PUBLIC_V4})});
+
+    expect(html).toBe('héllo');
+  });
+});
+
+describe('fetchResource', () => {
+  it('returns the raw body and content type of any resource', async () => {
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+    enqueueResponses([{statusCode: 200, headers: {'content-type': 'image/png'}, body: png}]);
+
+    const resource = await fetchResource('https://example.com/a.png', 'ua', {
+      lookup: lookupTable({'example.com': PUBLIC_V4}),
+    });
+
+    expect(resource.body.equals(png)).toBe(true);
+    expect(resource.contentType).toBe('image/png');
+    expect(resource.url).toBe('https://example.com/a.png');
+  });
+
+  it('applies the same target validation as getHTML', async () => {
+    enqueueResponses([]);
+
+    await expect(
+      fetchResource('https://intranet.example.com/a.png', 'ua', {
+        lookup: lookupTable({'intranet.example.com': '10.0.0.9'}),
+      }),
+    ).rejects.toThrow(/private/);
+    expect(recorded).toHaveLength(0);
+  });
+
+  it('reports the final URL after redirects', async () => {
+    enqueueResponses([
+      {statusCode: 302, headers: {location: '/b.png'}},
+      {statusCode: 200, headers: {'content-type': 'image/png'}, body: 'x'},
+    ]);
+
+    const resource = await fetchResource('https://example.com/a.png', 'ua', {
+      lookup: lookupTable({'example.com': PUBLIC_V4}),
+    });
+
+    expect(resource.url).toBe('https://example.com/b.png');
   });
 });

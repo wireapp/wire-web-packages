@@ -370,7 +370,7 @@ function requestPinned(target: SafeTarget, userAgent: string, timeoutMs: number)
   });
 }
 
-function readBody(response: IncomingMessage, maxBodyLength: number): Promise<string> {
+function readBody(response: IncomingMessage, maxBodyLength: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     let received = 0;
@@ -379,7 +379,7 @@ function readBody(response: IncomingMessage, maxBodyLength: number): Promise<str
     const finish = () => {
       if (!settled) {
         settled = true;
-        resolve(Buffer.concat(chunks).subarray(0, maxBodyLength).toString('utf8'));
+        resolve(Buffer.concat(chunks).subarray(0, maxBodyLength));
       }
     };
 
@@ -396,14 +396,19 @@ function readBody(response: IncomingMessage, maxBodyLength: number): Promise<str
   });
 }
 
+export interface FetchedResource {
+  body: Buffer;
+  contentType: string;
+  url: string;
+}
+
 /**
- * Fetch HTML from a public https URL.
+ * Fetch any resource from a public https URL.
  *
  * Every hop, including redirects, is validated by resolveSafeUrl and the connection is
- * pinned to the validated address. Only text/html responses are accepted and the body is
- * capped at maxBodyLength bytes.
+ * pinned to the validated address. The body is capped at maxBodyLength bytes.
  */
-export async function getHTML(url: string, userAgent: string, options?: FetchOptions): Promise<string> {
+export async function fetchResource(url: string, userAgent: string, options?: FetchOptions): Promise<FetchedResource> {
   const maxRedirects = options?.maxRedirects ?? DEFAULT_MAX_REDIRECTS;
   const maxBodyLength = options?.maxBodyLength ?? DEFAULT_MAX_BODY_LENGTH;
   const timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -433,14 +438,34 @@ export async function getHTML(url: string, userAgent: string, options?: FetchOpt
       throw new Error(`Request failed with HTTP status code: ${status}`);
     }
 
-    const contentType = String(response.headers['content-type'] ?? '').trim();
-    if (!/^text\/html\b/i.test(contentType)) {
-      response.resume();
-      throw new Error(`Unsupported content type "${contentType}", expected text/html`);
-    }
-
-    return readBody(response, maxBodyLength);
+    return {
+      body: await readBody(response, maxBodyLength),
+      contentType: String(response.headers['content-type'] ?? '').trim(),
+      url: target.url.href,
+    };
   }
+}
+
+function decodeBody(body: Buffer, contentType: string): string {
+  const charset = /charset=["']?([^;"'\s]+)/i.exec(contentType)?.[1] ?? 'utf-8';
+  try {
+    return new TextDecoder(charset).decode(body);
+  } catch {
+    return body.toString('utf8');
+  }
+}
+
+/**
+ * Fetch HTML from a public https URL. Only text/html responses are accepted.
+ */
+export async function getHTML(url: string, userAgent: string, options?: FetchOptions): Promise<string> {
+  const {body, contentType} = await fetchResource(url, userAgent, options);
+
+  if (!/^text\/html\b/i.test(contentType)) {
+    throw new Error(`Unsupported content type "${contentType}", expected text/html`);
+  }
+
+  return decodeBody(body, contentType);
 }
 
 /**
