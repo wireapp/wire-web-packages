@@ -266,7 +266,7 @@ export function parseHTML(html: string, options?: ParserOptions): OpenGraphMetad
 
       if (typeof ptr[key] === 'string') {
         // if it's a string, convert it
-        ptr[key] = {'': ptr[key]};
+        ptr[key] = Object.assign(Object.create(null), {'': ptr[key]});
       } else if (ptr[key] === undefined) {
         // create a new key
         ptr[key] = Object.create(null);
