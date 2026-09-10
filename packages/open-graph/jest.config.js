@@ -21,12 +21,8 @@ const baseConfig = require('../../jest.config.base');
 
 module.exports = {
   ...baseConfig,
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: 'node',
   transformIgnorePatterns: [
     'node_modules/(?!(cheerio|domutils|parse5|parse5-htmlparser2-tree-adapter|domelementtype)/)',
   ],
-  moduleNameMapper: {
-    '^cheerio$': require.resolve('./src/__mocks__/cheerio.js'),
-  },
 };

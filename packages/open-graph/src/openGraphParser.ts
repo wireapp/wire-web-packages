@@ -21,6 +21,11 @@ import * as cheerio from 'cheerio';
 import createDOMPurify from 'dompurify';
 import {JSDOM} from 'jsdom';
 
+import {IncomingMessage} from 'http';
+import {request, RequestOptions} from 'https';
+
+import {LookupFunction, resolveSafeUrl, SafeTarget} from './safeUrl';
+
 /**
  * Represents Open Graph metadata properties
  */
@@ -46,13 +51,25 @@ export interface OpenGraphImage {
   alt?: string;
 }
 
-interface ParserOptions {
+export interface FetchOptions {
+  lookup?: LookupFunction;
+  maxRedirects?: number;
+  maxBodyLength?: number;
+  timeoutMs?: number;
+}
+
+export interface ParserOptions extends FetchOptions {
   userAgent?: string;
   sanitization?: Record<string, unknown>;
   maxContentLength?: number;
   maxPropertyLength?: number;
   strict?: boolean;
 }
+
+const DEFAULT_MAX_REDIRECTS = 3;
+const DEFAULT_MAX_BODY_LENGTH = 1_000_000;
+const DEFAULT_TIMEOUT_MS = 10_000;
+const REDIRECT_STATUS_CODES = new Set([301, 302, 303, 307, 308]);
 
 // Shorthand properties mapping
 const shorthandProperties: Record<string, string> = {
@@ -184,10 +201,6 @@ export function parseHTML(html: string, options?: ParserOptions): OpenGraphMetad
       }
       return false;
     });
-  }
-
-  if (options?.strict) {
-    return {} as OpenGraphMetadata;
   }
 
   if (!namespace) {
@@ -333,25 +346,101 @@ export function parseHTML(html: string, options?: ParserOptions): OpenGraphMetad
   return meta as OpenGraphMetadata;
 }
 
-/**
- * Fetch HTML from URL
- */
-export async function getHTML(url: string, userAgent: string): Promise<string> {
-  // Handle protocol-less URLs
-  const purl = new URL(url, 'https://');
-  const fullUrl = purl.href;
+function requestPinned(target: SafeTarget, userAgent: string, timeoutMs: number): Promise<IncomingMessage> {
+  const pinnedLookup: RequestOptions['lookup'] = (_hostname, lookupOptions, callback) => {
+    const wantsAll = typeof lookupOptions === 'object' && lookupOptions !== null && lookupOptions.all;
+    if (wantsAll) {
+      (callback as (err: null, addresses: Array<{address: string; family: number}>) => void)(null, [
+        {address: target.address, family: target.family},
+      ]);
+    } else {
+      (callback as (err: null, address: string, family: number) => void)(null, target.address, target.family);
+    }
+  };
 
-  const response = await fetch(fullUrl, {
-    headers: {
-      'User-Agent': userAgent,
-    },
+  return new Promise((resolve, reject) => {
+    const req = request(
+      target.url,
+      {headers: {'User-Agent': userAgent}, lookup: pinnedLookup, timeout: timeoutMs},
+      resolve,
+    );
+    req.on('timeout', () => req.destroy(new Error('Request timed out')));
+    req.on('error', reject);
+    req.end();
   });
+}
 
-  if (!response.ok) {
-    throw new Error(`Request failed with HTTP status code: ${response.status}`);
+function readBody(response: IncomingMessage, maxBodyLength: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let received = 0;
+    let settled = false;
+
+    const finish = () => {
+      if (!settled) {
+        settled = true;
+        resolve(Buffer.concat(chunks).subarray(0, maxBodyLength).toString('utf8'));
+      }
+    };
+
+    response.on('data', (chunk: Buffer) => {
+      chunks.push(chunk);
+      received += chunk.length;
+      if (received >= maxBodyLength) {
+        response.destroy();
+        finish();
+      }
+    });
+    response.on('end', finish);
+    response.on('error', reject);
+  });
+}
+
+/**
+ * Fetch HTML from a public https URL.
+ *
+ * Every hop, including redirects, is validated by resolveSafeUrl and the connection is
+ * pinned to the validated address. Only text/html responses are accepted and the body is
+ * capped at maxBodyLength bytes.
+ */
+export async function getHTML(url: string, userAgent: string, options?: FetchOptions): Promise<string> {
+  const maxRedirects = options?.maxRedirects ?? DEFAULT_MAX_REDIRECTS;
+  const maxBodyLength = options?.maxBodyLength ?? DEFAULT_MAX_BODY_LENGTH;
+  const timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+
+  let current = url;
+
+  for (let hop = 0; ; hop++) {
+    const target = await resolveSafeUrl(current, options?.lookup);
+    const response = await requestPinned(target, userAgent, timeoutMs);
+    const status = response.statusCode ?? 0;
+
+    if (REDIRECT_STATUS_CODES.has(status)) {
+      response.resume();
+      const location = response.headers.location;
+      if (!location) {
+        throw new Error(`Redirect (${status}) without a location header`);
+      }
+      if (hop >= maxRedirects) {
+        throw new Error(`Too many redirects (limit ${maxRedirects})`);
+      }
+      current = new URL(location, target.url).href;
+      continue;
+    }
+
+    if (status < 200 || status >= 300) {
+      response.resume();
+      throw new Error(`Request failed with HTTP status code: ${status}`);
+    }
+
+    const contentType = String(response.headers['content-type'] ?? '').trim();
+    if (!/^text\/html\b/i.test(contentType)) {
+      response.resume();
+      throw new Error(`Unsupported content type "${contentType}", expected text/html`);
+    }
+
+    return readBody(response, maxBodyLength);
   }
-
-  return response.text();
 }
 
 /**
@@ -359,11 +448,6 @@ export async function getHTML(url: string, userAgent: string): Promise<string> {
  */
 export async function fetchOpenGraphData(url: string, options?: ParserOptions): Promise<OpenGraphMetadata> {
   const userAgent = options?.userAgent || 'OpenGraphParser (https://github.com/wireapp/wire-web-packages)';
-
-  try {
-    const html = await getHTML(url, userAgent);
-    return parseHTML(html, options);
-  } catch (error) {
-    throw error;
-  }
+  const html = await getHTML(url, userAgent, options);
+  return parseHTML(html, options);
 }

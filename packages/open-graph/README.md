@@ -50,14 +50,37 @@ getOpenGraphDataAsync(url, (error, metadata) => {
 });
 ```
 
-### Direct Access to openGraph Function
+### Parsing HTML you already have
 
 ```typescript
 import {openGraph} from '@wireapp/open-graph';
 
-openGraph('https://example.com', (err, meta) => {
-  console.log(meta);
+const meta = openGraph('<html><head><meta property="og:title" content="Example"></head></html>');
+console.log(meta.title); // "Example"
+```
+
+## Fetching and security
+
+`getHTML` and everything built on it only fetch **https** URLs. A URL without a scheme is treated as https; `http:` and every other scheme are rejected. Before a connection is opened, the hostname is resolved and every returned address is checked against loopback, private, link-local, multicast and other non-routable ranges, including IPv4 addresses embedded in IPv6 forms. The connection is then pinned to the address that was checked, so a DNS rebinding between check and connect cannot redirect the request to an internal host. Redirects are followed at most three times and every hop goes through the same validation.
+
+Responses must be `text/html`, are capped at 1 MB, and time out after 10 seconds. These limits can be adjusted through the options of `fetchOpenGraphData`:
+
+```typescript
+import {fetchOpenGraphData} from '@wireapp/open-graph';
+
+const meta = await fetchOpenGraphData('https://example.com', {
+  maxRedirects: 1,
+  maxBodyLength: 500_000,
+  timeoutMs: 5_000,
 });
+```
+
+The guard is exported for callers that fetch related resources themselves, for example preview images:
+
+```typescript
+import {resolveSafeUrl, isPrivateAddress} from '@wireapp/open-graph';
+
+const {url, address} = await resolveSafeUrl(imageUrl); // throws for http, credentials, private targets
 ```
 
 ## Types
@@ -106,4 +129,5 @@ interface OpenGraphImage {
 
 ## Dependencies
 
-- **[open-graph](https://github.com/wireapp/node-open-graph)** - The core Open Graph parser
+- **cheerio** - HTML parsing
+- **dompurify** with **jsdom** - content sanitization

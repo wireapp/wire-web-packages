@@ -32,7 +32,7 @@ describe('@wireapp/open-graph', () => {
     });
 
     it('should return null on error', async () => {
-      const result = await getOpenGraphDataSafe('http://invalid-url-that-will-fail-12345.test');
+      const result = await getOpenGraphDataSafe('https://invalid-url-that-will-fail-12345.invalid');
       expect(result).toBeNull();
     });
   });
