@@ -1,6 +1,6 @@
 {
   "name": "@wireapp/open-graph",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "GPL-3.0",
   "description": "Open Graph metadata parser and utilities for Wire web applications.",
   "repository": "https://github.com/wireapp/wire-web-packages/tree/main/packages/open-graph",
