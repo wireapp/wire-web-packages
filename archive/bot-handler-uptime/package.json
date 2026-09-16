@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "3.8.2",
-    "@types/moment-duration-format": "2.2.3",
+    "@types/moment-duration-format": "2.2.7",
     "jasmine": "3.8.0",
     "ts-node": "10.9.1"
   },
