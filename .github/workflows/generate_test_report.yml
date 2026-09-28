@@ -1,5 +1,7 @@
 name: Generate test reports
 
+run-name: Generate test reports for ${{ inputs.commit }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -16,10 +18,76 @@ jobs:
       UNIT_TEST_REPORT_FILE: './unit-tests.log'
 
     steps:
-      - name: Checkout
+      - name: Checkout workflow source
         uses: actions/checkout@v4.2.2
         with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Capture canonical Node.js version
+        id: canonical_node
+        run: |
+          set -euo pipefail
+
+          if [[ ! -s .nvmrc ]]; then
+            echo '::error::The workflow source does not contain a non-empty .nvmrc.'
+            exit 1
+          fi
+
+          nodeVersion="$(tr -d '[:space:]' < .nvmrc)"
+          echo "version=${nodeVersion}" >> "${GITHUB_OUTPUT}"
+          printf 'Canonical Node.js version: %s\n' "${nodeVersion}"
+
+      - name: Checkout requested commit
+        id: checkout_requested_commit
+        uses: actions/checkout@v4.2.2
+        continue-on-error: true
+        with:
           ref: ${{ inputs.commit }}
+
+      - name: Verify requested commit
+        id: verify_tested_commit
+        if: always()
+        env:
+          CHECKOUT_OUTCOME: ${{ steps.checkout_requested_commit.outcome }}
+          REQUESTED_COMMIT_SHA: ${{ inputs.commit }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${CHECKOUT_OUTCOME}" != 'success' ]]; then
+            echo "::error::Unable to check out requested commit '${REQUESTED_COMMIT_SHA}'."
+            exit 1
+          fi
+
+          if [[ ! "${REQUESTED_COMMIT_SHA}" =~ ^[0-9a-fA-F]{7,64}$ ]]; then
+            echo "::error::The commit input must be a hexadecimal commit SHA: '${REQUESTED_COMMIT_SHA}'."
+            exit 1
+          fi
+
+          if ! resolvedRequestedCommitSha="$(git rev-parse --verify --quiet --end-of-options "${REQUESTED_COMMIT_SHA}^{commit}")"; then
+            echo "::error::The requested commit '${REQUESTED_COMMIT_SHA}' does not resolve to a commit."
+            exit 1
+          fi
+
+          actualCheckedOutCommitSha="$(git rev-parse HEAD)"
+          if [[ "${actualCheckedOutCommitSha}" != "${resolvedRequestedCommitSha}" ]]; then
+            echo "::error::Checked out '${actualCheckedOutCommitSha}', but requested '${resolvedRequestedCommitSha}'."
+            exit 1
+          fi
+
+          echo "TESTED_COMMIT_SHA=${actualCheckedOutCommitSha}" >> "${GITHUB_ENV}"
+          {
+            echo '## Generate test report'
+            echo ''
+            printf -- '- Workflow dispatch ref SHA: `%s`\n' "${GITHUB_SHA}"
+            printf -- '- Requested commit SHA: `%s`\n' "${REQUESTED_COMMIT_SHA}"
+            printf -- '- Tested commit SHA: `%s`\n' "${actualCheckedOutCommitSha}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Initialize test report
+        run: |
+          set -euo pipefail
+          : > "${UNIT_TEST_REPORT_FILE}"
 
       - name: Set TITLE
         env:
@@ -32,9 +100,10 @@ jobs:
           access_token: ${{github.token}}
 
       - name: Setup Node.js
+        id: setup_node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: '${{ steps.canonical_node.outputs.version }}'
           cache: 'yarn'
 
       - name: Authenticate git clone
@@ -43,23 +112,54 @@ jobs:
         run: echo -e "machine github.com\n  login ${GH_TOKEN}" > ~/.netrc
 
       - name: Install JS dependencies
+        id: install_dependencies
         run: yarn --immutable
 
       - name: Build
+        id: build
         run: yarn dist
 
       - name: Test
+        id: run_tests
+        continue-on-error: true
         run: |
           set -o pipefail
-          yarn test:all --stream -- --verbose --coverage --coverage_reporters=lcov 2>&1 | tee ${{ env.UNIT_TEST_REPORT_FILE }}
-          echo -e "COMMIT SHA = ${{ inputs.commit }}" >> ${{ env.UNIT_TEST_REPORT_FILE }}
-          echo -e "TEST RUN DATE = $(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${{ env.UNIT_TEST_REPORT_FILE }}
+          yarn test:all --stream -- --verbose --coverage --coverage_reporters=lcov 2>&1 | tee "${UNIT_TEST_REPORT_FILE}"
+
+      - name: Finalize test report
+        if: ${{ always() && steps.verify_tested_commit.outcome == 'success' }}
+        env:
+          SETUP_NODE_OUTCOME: ${{ steps.setup_node.outcome }}
+          INSTALL_DEPENDENCIES_OUTCOME: ${{ steps.install_dependencies.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          TEST_OUTCOME: ${{ steps.run_tests.outcome }}
+        run: |
+          set -euo pipefail
+
+          {
+            printf '\nTESTED COMMIT SHA = %s\n' "${TESTED_COMMIT_SHA}"
+            printf 'TEST RUN DATE = %s\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            printf 'SETUP NODE STEP OUTCOME = %s\n' "${SETUP_NODE_OUTCOME}"
+            printf 'INSTALL DEPENDENCIES STEP OUTCOME = %s\n' "${INSTALL_DEPENDENCIES_OUTCOME}"
+            printf 'BUILD STEP OUTCOME = %s\n' "${BUILD_OUTCOME}"
+            printf 'TEST STEP OUTCOME = %s\n' "${TEST_OUTCOME}"
+          } >> "${UNIT_TEST_REPORT_FILE}"
 
       - name: Upload unit-tests.log to S3
+        id: upload_test_report
+        if: ${{ always() && steps.verify_tested_commit.outcome == 'success' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.WEBTEAM_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.WEBTEAM_AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-1
         run: |
-          TIMESTAMP=$(date -u +'%Y%m%dT%H%M%SZ')
-          aws s3 cp ${{ env.UNIT_TEST_REPORT_FILE }} s3://wire-webapp/unit-tests-web-packages-${TIMESTAMP}-${{ inputs.commit }}.log
+          set -euo pipefail
+
+          REPORT_TIMESTAMP="$(date -u +'%Y%m%dT%H%M%SZ')"
+          aws s3 cp "${UNIT_TEST_REPORT_FILE}" "s3://wire-webapp/unit-tests-web-packages-${REPORT_TIMESTAMP}-${TESTED_COMMIT_SHA}.log"
+
+      - name: Fail workflow if tests failed
+        if: ${{ always() && steps.run_tests.outcome == 'failure' }}
+        run: |
+          echo "::error::Tests failed for checked-out commit '${TESTED_COMMIT_SHA}'."
+          exit 1
