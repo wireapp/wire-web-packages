@@ -2,7 +2,7 @@
   "dependencies": {
     "@wireapp/bot-api": "workspace:^",
     "@wireapp/core": "workspace:^",
-    "moment": "2.29.4",
+    "moment": "2.31.0",
     "moment-duration-format": "2.3.2"
   },
   "devDependencies": {
