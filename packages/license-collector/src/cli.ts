@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /*
  * Wire
  * Copyright (C) 2019 Wire Swiss GmbH
@@ -18,8 +17,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
-/* eslint-disable header/header */
 
 import {readFileSync, writeJSON} from 'fs-extra';
 
