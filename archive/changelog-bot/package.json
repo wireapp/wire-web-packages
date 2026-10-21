@@ -10,7 +10,7 @@
   },
   "description": "A changelog notification bot.",
   "devDependencies": {
-    "@types/generate-changelog": "1.8.1",
+    "@types/generate-changelog": "1.8.3",
     "generate-changelog": "1.8.0",
     "logdown": "3.3.1"
   },
