@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "3.8.2",
-    "@types/readable-stream": "2.3.9",
+    "@types/readable-stream": "2.3.15",
     "@types/uuid": "9.0.8",
     "cross-env": "7.0.3",
     "dotenv-defaults": "2.0.2",
