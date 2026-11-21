@@ -3,7 +3,9 @@
   "extends": ["config:recommended", ":semanticCommits"],
   "labels": ["renovate"],
   "timezone": "Europe/Berlin",
-  "dependencyDashboard": true,
+  "dependencyDashboard": {
+    "enabled": true
+  },
   "rebaseWhen": "conflicted",
   "prConcurrentLimit": 5,
   "configMigration": true,
@@ -82,7 +84,12 @@
       "groupName": "test tooling"
     },
     {
-      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
       "groupName": "react runtime and types"
     },
     {
